@@ -1,10 +1,11 @@
-namespace Game4 {
+namespace Starburst {
+
+using Engine;
+using Starburst;
 
 public class Program {
     public static void Main(string[] args) {
-        using (GameImpl game = new GameImpl()) {
-            game.Run();
-        }
+        Game_Engine.run(new Starburst_Game_Impl());
     }
 }
 
