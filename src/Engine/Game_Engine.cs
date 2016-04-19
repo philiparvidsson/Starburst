@@ -43,7 +43,7 @@ public class Game_Engine : Game {
     protected override void Update(GameTime game_time) {
         float t  = (float)game_time.TotalGameTime.TotalSeconds;
         float dt = (float)game_time.ElapsedGameTime.TotalSeconds;
-
+      
         foreach (var subsystem in subsystems) {
             subsystem.update(t, dt);
         }

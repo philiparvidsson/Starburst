@@ -50,6 +50,8 @@
     <Compile Include="src\Engine\Subsystems\Sprite_Renderer.cs" />
     <Compile Include="src\Game.cs" />
     <Compile Include="src\Program.cs" />
+    <Compile Include="src\Starburst\Entities\Ball.cs" />
+    <Compile Include="src\Starburst\Starburst.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -59,11 +61,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <MonoGameContentReference Include="src\Game\Content\Content.mgcb" />
+    <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
-    <Folder Include="src\Game\Entities\" />
+    <Content Include="src\Starburst\Content\ball.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="src\Starburst\Content\Content.mgcb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

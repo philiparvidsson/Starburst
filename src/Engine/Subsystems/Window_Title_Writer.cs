@@ -21,15 +21,9 @@ namespace Engine.Subsystems {
 
                 if (elapsedTime > 1)
                 {
-                    elapsedTime += dt;
-
-                    if (elapsedTime > 1)
-                    {
-                        elapsedTime -= 1;
-                        fps.frameRate = fps.frameCounter;
-                        fps.frameCounter = 0;
-
-                    }
+                    elapsedTime -= 1;
+                    fps.frameRate = fps.frameCounter;
+                    fps.frameCounter = 0;
                 }
             }
         }
@@ -42,8 +36,9 @@ namespace Engine.Subsystems {
                 var fps = entity.get_component<FpsCounter>();
 
                 fps.frameCounter++;
+                var window = Game_Engine.inst().Window;
+                window.Title = fps.frameRate.ToString(); 
 
-                Console.WriteLine(fps.frameRate);
             }
         }
 
