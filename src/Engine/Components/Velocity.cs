@@ -12,7 +12,7 @@ using System.Collections.Generic;
  * CLASSES
  *----------------------------------------------*/
 
-public class C_Velocity : Base_Component {
+public class C_Velocity : Component {
     public float x;
     public float y;
 }

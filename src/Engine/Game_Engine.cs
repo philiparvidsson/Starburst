@@ -66,15 +66,30 @@ public class Game_Engine : Game {
 
     private readonly List<Base_Subsystem> subsystems = new List<Base_Subsystem>();
 
-    public readonly List<Base_Entity> entities = new List<Base_Entity>();
+    private readonly Dictionary<Int64, Entity> entities = new Dictionary<Int64, Entity>();
 
     public static void run(Game_Impl game_impl) {
         s_inst = new Game_Engine(game_impl);
         s_inst.Run();
     }
 
+    public Entity[] get_entities() {
+        return (new List<Entity>(entities.Values)).ToArray();
+    }
+
     public static Game_Engine inst() {
         return (s_inst);
+    }
+
+    private static Int64 s_next_entity_id = 1;
+
+    public Int64 add_entity(params Component[] components) {
+        Int64 id = s_next_entity_id++;
+
+        entities[id] = new Entity();
+        entities[id].add_components(components);
+
+        return (id);
     }
 
     public void add_subsystem(Base_Subsystem subsystem) {
