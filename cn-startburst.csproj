@@ -39,16 +39,19 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="src\Engine\Components\FpsCounter.cs" />
     <Compile Include="src\Engine\Components\Position.cs" />
     <Compile Include="src\Engine\Components\Sprite.cs" />
     <Compile Include="src\Engine\Components\Velocity.cs" />
     <Compile Include="src\Engine\Core.cs" />
     <Compile Include="src\Engine\Game_Engine.cs" />
+    <Compile Include="src\Engine\Subsystems\Window_Title_Writer.cs" />
     <Compile Include="src\Engine\Subsystems\Position_Integrator.cs" />
     <Compile Include="src\Engine\Subsystems\Sprite_Renderer.cs" />
     <Compile Include="src\Game.cs" />
-    <Compile Include="src\Game\Entities\Ball.cs" />
     <Compile Include="src\Program.cs" />
+    <Compile Include="src\Starburst\Entities\Ball.cs" />
+    <Compile Include="src\Starburst\Starburst.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -58,13 +61,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="src\Game\Content\ball.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <MonoGameContentReference Include="src\Game\Content\Content.mgcb" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\Starburst\Content\ball.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="src\Starburst\Content\Content.mgcb" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
