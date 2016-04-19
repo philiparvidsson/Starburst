@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 public static class Ball {
 
-    public static Component[] create()  {
+    public static Component[] create_components()  {
         return new Component[] {
              new C_Position(),
              new C_Velocity() { x = 5.0f, y = 92.0f },

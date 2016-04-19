@@ -43,7 +43,7 @@ public class Game_Engine : Game {
     protected override void Update(GameTime game_time) {
         float t  = (float)game_time.TotalGameTime.TotalSeconds;
         float dt = (float)game_time.ElapsedGameTime.TotalSeconds;
-      
+
         foreach (var subsystem in subsystems) {
             subsystem.update(t, dt);
         }
@@ -81,15 +81,17 @@ public class Game_Engine : Game {
         return (s_inst);
     }
 
-    private  Int64 s_next_entity_id = 1;
+    private Int64 next_entity_id = 1;
 
-    public Int64 add_entity(params Component[] components) {
-        Int64 id = s_next_entity_id++;
+    public Entity  create_entity(params Component[] components) {
+        var entity = new Entity();
+        entity.id = next_entity_id++;
 
-        entities[id] = new Entity();
-        entities[id].add_components(components);
+        entity.add_components(components);
 
-        return (id);
+        entities[entity.id] = entity;
+
+        return (entity);
     }
 
     public void add_subsystem(Base_Subsystem subsystem) {

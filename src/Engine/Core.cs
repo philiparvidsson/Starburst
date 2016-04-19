@@ -22,11 +22,6 @@ public class Entity {
     // Unique entity id, set by the game engine.
     public Int64 id;
 
-    private static Int64 s_id = 1;
-
-    public Entity() {
-        id = s_id++;
-    }
 
     // Adds the specified components to the entity.
     public void add_components(params Component[] components) {

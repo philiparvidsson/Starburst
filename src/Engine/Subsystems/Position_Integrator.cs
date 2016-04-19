@@ -16,7 +16,7 @@ public class Position_Integrator : Base_Subsystem {
             if (position == null
              || velocity == null)
             {
-                break;
+                continue;
             }
 
             position.x += velocity.x * dt;

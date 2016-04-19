@@ -28,7 +28,7 @@ public class Sprite_Renderer : Base_Subsystem {
             if (position == null
              || sprite   == null)
             {
-                break;
+                continue;
             }
 
             sprite_batch.Draw(sprite.texture, new Vector2(position.x, position.y), Color.White);

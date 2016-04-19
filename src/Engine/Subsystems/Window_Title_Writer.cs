@@ -36,7 +36,7 @@ namespace Engine.Subsystems {
             {
                 var entity = entities[i];
                 var fps = entity.get_component<FpsCounter>();
-                if (fps !=null) { 
+                if (fps !=null) {
                     fps.frameCounter++;
                     var window = Game_Engine.inst().Window;
                     window.Title = fps.frameRate.ToString();
