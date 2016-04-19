@@ -45,7 +45,7 @@ public class Game_Engine : Game {
         float dt = (float)game_time.ElapsedGameTime.TotalSeconds;
 
         foreach (var subsystem in subsystems) {
-            subsystem.update(dt);
+            subsystem.update(t, dt);
         }
 
         game_impl.update(t, dt);
@@ -56,7 +56,7 @@ public class Game_Engine : Game {
         float dt = (float)game_time.ElapsedGameTime.TotalSeconds;
 
         foreach (var subsystem in subsystems) {
-            subsystem.draw(dt);
+            subsystem.draw(t, dt);
         }
 
         game_impl.draw(t, dt);
@@ -87,13 +87,6 @@ public class Game_Engine : Game {
 
     public T get_content<T>(string asset) {
         return (Content.Load<T>(asset));
-    }
-
-
-    public void update(float dt) {
-        foreach (var subsystem in subsystems) {
-            subsystem.update(dt);
-        }
     }
 }
 

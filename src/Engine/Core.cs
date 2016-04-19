@@ -49,19 +49,24 @@ public class Base_Entity {
 // Base subsystem class for all game subsystems.
 public abstract class Base_Subsystem {
     // Override this to perform draw operations (normally 60 calls per sec?)
-    public virtual void draw(float dt) {}
+    public virtual void draw(float t, float dt) {}
 
     // Override to perform update logic (unlimited calls per sec?)
-    public virtual void update(float dt) {}
+    public virtual void update(float t, float dt) {}
 }
 
+// Client implementation wrapper.
 public abstract class Game_Impl {
+    // Client performs init here.
     public virtual void init() {}
 
+    // Client performs cleanup here.
     public virtual void cleanup() {}
 
+    // Client update logic.
     public virtual void update(float t, float dt) {}
 
+    // Client draw operations.
     public virtual void draw(float t, float dt) {
     }
 }

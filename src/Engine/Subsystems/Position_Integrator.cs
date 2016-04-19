@@ -4,7 +4,7 @@ using Engine.Components;
 using Engine.Core;
 
 public class Position_Integrator : Base_Subsystem {
-    public override void update(float dt) {
+    public override void update(float t, float dt) {
         var entities = Game_Engine.inst().entities;
 
         int n = entities.Count;
