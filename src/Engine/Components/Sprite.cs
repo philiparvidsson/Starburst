@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
  * CLASSES
  *----------------------------------------------*/
 
-public class C_Sprite : Base_Component {
+public class C_Sprite : Component {
     public Texture2D texture;
 
     public C_Sprite() {

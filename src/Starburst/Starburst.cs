@@ -15,7 +15,7 @@ public class Starburst_Game_Impl : Game_Impl {
             new Engine.Subsystems.Window_Title_Writer()
         );
 
-        Game_Engine.inst().entities.Add(new Ball());
+        Game_Engine.inst().add_entity(Ball.create());
     }
 }
 

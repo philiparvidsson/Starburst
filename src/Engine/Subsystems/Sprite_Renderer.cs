@@ -14,12 +14,12 @@ public class Sprite_Renderer : Base_Subsystem {
     }
 
     public override void draw(float t, float dt) {
-        var entities = Game_Engine.inst().entities;
+        var entities = Game_Engine.inst().get_entities();
 
         sprite_batch.GraphicsDevice.Clear(Color.White);
         sprite_batch.Begin();
 
-        int n = entities.Count;
+        int n = entities.Length;
         for (int i = 0; i < n; i++) {
             var entity   = entities[i];
             var position = entity.get_component<C_Position>();
