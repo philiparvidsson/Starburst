@@ -10,34 +10,37 @@ namespace Engine.Subsystems {
 
         public override void update(float t, float dt)
         {
-            int n = Game_Engine.inst().entities.Count;
+            var entities = Game_Engine.inst().get_entities();
+            int n = entities.Length;
             for (int i = 0; i < n; i++)
             {
-                var entity = Game_Engine.inst().entities[i];
+                var entity = entities[i];
                 var fps = entity.get_component<FpsCounter>();
-
-
-                elapsedTime += dt;
-
-                if (elapsedTime > 1)
+                if (fps != null)
                 {
-                    elapsedTime -= 1;
-                    fps.frameRate = fps.frameCounter;
-                    fps.frameCounter = 0;
+                    elapsedTime += dt;
+
+                    if (elapsedTime > 1)
+                    {
+                        elapsedTime -= 1;
+                        fps.frameRate = fps.frameCounter;
+                        fps.frameCounter = 0;
+                    }
                 }
             }
         }
         public override void draw(float t, float dt)
         {
-            int n = Game_Engine.inst().entities.Count;
-            for (int i = 0; i < n; i++)
+            var entities = Game_Engine.inst().get_entities();
+            int n = entities.Length; for (int i = 0; i < n; i++)
             {
-                var entity = Game_Engine.inst().entities[i];
+                var entity = entities[i];
                 var fps = entity.get_component<FpsCounter>();
-
-                fps.frameCounter++;
-                var window = Game_Engine.inst().Window;
-                window.Title = fps.frameRate.ToString(); 
+                if (fps !=null) { 
+                    fps.frameCounter++;
+                    var window = Game_Engine.inst().Window;
+                    window.Title = fps.frameRate.ToString();
+                }
 
             }
         }
