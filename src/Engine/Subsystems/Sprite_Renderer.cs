@@ -13,7 +13,7 @@ public class Sprite_Renderer : Base_Subsystem {
         this.sprite_batch = sprite_batch;
     }
 
-    public override void draw(float dt) {
+    public override void draw(GameTime gameTime) {
         sprite_batch.GraphicsDevice.Clear(Color.White);
         sprite_batch.Begin();
 

@@ -30,7 +30,9 @@ public class GameImpl : Game {
         engine.init();
         engine.add_subsystems(
             new Engine.Subsystems.Position_Integrator(),
-            new Engine.Subsystems.Sprite_Renderer(new SpriteBatch(GraphicsDevice))
+            new Engine.Subsystems.Sprite_Renderer(new SpriteBatch(GraphicsDevice)),
+            new Engine.Subsystems.Window_Title_Writer()
+
         );
 
         var ball = engine.create_entity<global::Game.Entities.Ball>();
@@ -52,14 +54,14 @@ public class GameImpl : Game {
     protected override void Update(GameTime gameTime) {
         // TODO: Add your update logic here
         float dt = 1.0f / 60.0f;
-        engine.update(dt);
+        engine.update(gameTime);
 
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime) {
         float dt = 1.0f / 60.0f;
-        engine.draw(dt);
+        engine.draw(gameTime);
 
         base.Draw(gameTime);
     }

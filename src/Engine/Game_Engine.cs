@@ -1,14 +1,14 @@
 namespace Engine {
 
-using Engine.Core;
-using Engine.Subsystems;
+    using Engine.Core;
+    using Engine.Subsystems;
 
-using System;
-using System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 
-using Microsoft.Xna.Framework.Content;
-
-public class Game_Engine {
+    using Microsoft.Xna.Framework.Content;
+    using Microsoft.Xna.Framework;
+    public class Game_Engine {
     private readonly ContentManager content;
 
     private Int64 next_entity_id = 1;
@@ -49,15 +49,15 @@ public class Game_Engine {
     public void init() {
     }
 
-    public void draw(float dt) {
+    public void draw(GameTime gameTime) {
         foreach (var subsystem in subsystems) {
-            subsystem.draw(dt);
+            subsystem.draw(gameTime);
         }
     }
 
-    public void update(float dt) {
+    public void update(GameTime gameTime) {
         foreach (var subsystem in subsystems) {
-            subsystem.update(dt);
+            subsystem.update(gameTime);
         }
     }
 }

@@ -39,11 +39,13 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="src\Engine\Components\FpsCounter.cs" />
     <Compile Include="src\Engine\Components\Position.cs" />
     <Compile Include="src\Engine\Components\Sprite.cs" />
     <Compile Include="src\Engine\Components\Velocity.cs" />
     <Compile Include="src\Engine\Core.cs" />
     <Compile Include="src\Engine\Game_Engine.cs" />
+    <Compile Include="src\Engine\Subsystems\Window_Title_Writer.cs" />
     <Compile Include="src\Engine\Subsystems\Position_Integrator.cs" />
     <Compile Include="src\Engine\Subsystems\Sprite_Renderer.cs" />
     <Compile Include="src\Game.cs" />

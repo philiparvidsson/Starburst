@@ -1,18 +1,18 @@
 namespace Engine.Core {
+    using Microsoft.Xna.Framework;
+    /*------------------------------------------------
+     * USINGS
+     *----------------------------------------------*/
 
-/*------------------------------------------------
- * USINGS
- *----------------------------------------------*/
+    using System;
+    using System.Collections.Generic;
 
-using System;
-using System.Collections.Generic;
+    /*------------------------------------------------
+     * CLASSES
+     *----------------------------------------------*/
 
-/*------------------------------------------------
- * CLASSES
- *----------------------------------------------*/
-
-// Base component class for all game components.
-public abstract class Base_Component {}
+    // Base component class for all game components.
+    public abstract class Base_Component {}
 
 // Base entity class for all game entities.
 public class Base_Entity {
@@ -49,10 +49,10 @@ public abstract class Base_Subsystem {
     public Game_Engine game;
 
     // Override this to perform draw operations (normally 60 calls per sec?)
-    public virtual void draw(float dt) {}
+    public virtual void draw(GameTime gameTime) {}
 
     // Override to perform update logic (unlimited calls per sec?)
-    public virtual void update(float dt) {}
+    public virtual void update(GameTime gameTime) {}
 }
 
 }
