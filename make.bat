@@ -13,7 +13,7 @@
 set BaseDir=%cd%
 
 :: Directory where game content is located.
-set ContentDir=%BaseDir%\src\Game\Content
+set ContentDir=%BaseDir%\src\Starburst\Content
 
 :: Intermediate directory.
 set IntermDir=%BaseDir%\obj
