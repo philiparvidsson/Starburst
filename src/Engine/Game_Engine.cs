@@ -81,7 +81,7 @@ public class Game_Engine : Game {
         return (s_inst);
     }
 
-    private static Int64 s_next_entity_id = 1;
+    private  Int64 s_next_entity_id = 1;
 
     public Int64 add_entity(params Component[] components) {
         Int64 id = s_next_entity_id++;
