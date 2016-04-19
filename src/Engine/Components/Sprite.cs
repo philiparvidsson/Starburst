@@ -14,6 +14,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 public class C_Sprite : Base_Component {
     public Texture2D texture;
+
+    public C_Sprite() {
+    }
 }
 
 }

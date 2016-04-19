@@ -6,26 +6,26 @@ namespace Engine.Subsystems {
     using System;
     public class Window_Title_Writer : Base_Subsystem
     {
-        TimeSpan elapsedTime = TimeSpan.Zero;
+        float elapsedTime = 0;
 
-        public override void update(GameTime gameTime)
+        public override void update(float t, float dt)
         {
-            int n = game.entities.Count;
+            int n = Game_Engine.inst().entities.Count;
             for (int i = 0; i < n; i++)
             {
-                var entity = game.entities[i];
+                var entity = Game_Engine.inst().entities[i];
                 var fps = entity.get_component<FpsCounter>();
 
 
-                elapsedTime += gameTime.ElapsedGameTime;
+                elapsedTime += dt;
 
-                if (elapsedTime > TimeSpan.FromSeconds(1))
+                if (elapsedTime > 1)
                 {
-                    elapsedTime += gameTime.ElapsedGameTime;
+                    elapsedTime += dt;
 
-                    if (elapsedTime > TimeSpan.FromSeconds(1))
+                    if (elapsedTime > 1)
                     {
-                        elapsedTime -= TimeSpan.FromSeconds(1);
+                        elapsedTime -= 1;
                         fps.frameRate = fps.frameCounter;
                         fps.frameCounter = 0;
 
@@ -33,12 +33,12 @@ namespace Engine.Subsystems {
                 }
             }
         }
-        public override void draw(GameTime gameTime)
+        public override void draw(float t, float dt)
         {
-            int n = game.entities.Count;
+            int n = Game_Engine.inst().entities.Count;
             for (int i = 0; i < n; i++)
             {
-                var entity = game.entities[i];
+                var entity = Game_Engine.inst().entities[i];
                 var fps = entity.get_component<FpsCounter>();
 
                 fps.frameCounter++;

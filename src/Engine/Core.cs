@@ -1,29 +1,32 @@
 namespace Engine.Core {
-    using Microsoft.Xna.Framework;
-    /*------------------------------------------------
-     * USINGS
-     *----------------------------------------------*/
 
-    using System;
-    using System.Collections.Generic;
+/*------------------------------------------------
+ * USINGS
+ *----------------------------------------------*/
 
-    /*------------------------------------------------
-     * CLASSES
-     *----------------------------------------------*/
+using System;
+using System.Collections.Generic;
 
-    // Base component class for all game components.
-    public abstract class Base_Component {}
+/*------------------------------------------------
+ * CLASSES
+ *----------------------------------------------*/
+
+// Base component class for all game components.
+public abstract class Base_Component {}
 
 // Base entity class for all game entities.
 public class Base_Entity {
     // Components attached to this entity.
      readonly Dictionary<Type, Base_Component> components = new Dictionary<Type, Base_Component>();
 
-    // The game engine that the entity exists in.
-    public Game_Engine game;
-
     // Unique entity id, set by the game engine.
     public Int64 id;
+
+    private static Int64 s_id = 1;
+
+    public Base_Entity() {
+        id = s_id++;
+    }
 
     // Adds the specified components to the entity.
     public void add_components(params Base_Component[] components) {
@@ -45,14 +48,27 @@ public class Base_Entity {
 
 // Base subsystem class for all game subsystems.
 public abstract class Base_Subsystem {
-    // The game that the subsystem exists in.
-    public Game_Engine game;
-
     // Override this to perform draw operations (normally 60 calls per sec?)
-    public virtual void draw(GameTime gameTime) {}
+    public virtual void draw(float t, float dt) {}
 
     // Override to perform update logic (unlimited calls per sec?)
-    public virtual void update(GameTime gameTime) {}
+    public virtual void update(float t, float dt) {}
+}
+
+// Client implementation wrapper.
+public abstract class Game_Impl {
+    // Client performs init here.
+    public virtual void init() {}
+
+    // Client performs cleanup here.
+    public virtual void cleanup() {}
+
+    // Client update logic.
+    public virtual void update(float t, float dt) {}
+
+    // Client draw operations.
+    public virtual void draw(float t, float dt) {
+    }
 }
 
 }

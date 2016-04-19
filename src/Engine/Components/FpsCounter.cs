@@ -6,7 +6,7 @@ namespace Engine.Components
 {
     public class FpsCounter : Base_Component
     {
-        public int frameRate { get; set; }
-        public int frameCounter { get; set;}
+        public float frameRate { get; set; }
+        public float frameCounter { get; set;}
     }
 }
