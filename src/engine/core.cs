@@ -77,7 +77,7 @@ public abstract class Game_State {
     // @To-do: Clean this crap up.
     Entity[] r = new Entity[1000];
 
-    public Entity[] get_entities(out int num_components, params Type[] component_types) {
+    public Entity[] get_entities(out int num_entities, params Type[] component_types) {
         int index = 0;
         foreach (var entry in entities) {
             var entity = entry.Value;
@@ -96,7 +96,7 @@ public abstract class Game_State {
             }
         }
 
-        num_components = index;
+        num_entities = index;
 
         return (r);
     }

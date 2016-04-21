@@ -22,10 +22,10 @@ using Microsoft.Xna.Framework.Graphics;
 public abstract class Fab5_Game : Game {
     private readonly GraphicsDeviceManager graphics;
 
-    protected abstract void init();
-    protected abstract void cleanup();
-    protected abstract void update(float t, float dt);
-    protected abstract void draw(float t, float dt);
+    protected virtual void init() {}
+    protected virtual void cleanup() {}
+    protected virtual void update(float t, float dt) {}
+    protected virtual void draw(float t, float dt) {}
 
     public Fab5_Game() {
         graphics = new GraphicsDeviceManager(this);
@@ -73,11 +73,11 @@ public abstract class Fab5_Game : Game {
         draw(t, dt);
     }
 
-    public Entity[] get_entities(out int num_components, params Type[] component_types) {
-        num_components = 0;
+    public Entity[] get_entities(out int num_entities, params Type[] component_types) {
+        num_entities = 0;
 
         if (states.Count > 0) {
-            return (states.Peek().get_entities(out num_components, component_types));
+            return (states.Peek().get_entities(out num_entities, component_types));
         }
 
         return (null);
