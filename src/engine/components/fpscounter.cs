@@ -1,8 +1,8 @@
 ﻿
-using Engine.Core;
+using Fab5.Engine.Core;
 
 
-namespace Engine.Components
+namespace Fab5.Engine.Components
 {
     public class FpsCounter : Component
     {
