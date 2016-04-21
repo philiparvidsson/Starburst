@@ -29,8 +29,16 @@ public class Sprite_Renderer : Subsystem {
             var entity   = entities[i];
             var position = entity.get_component<Position>();
             var sprite   = entity.get_component<Sprite>();
+            var angle    = entity.get_component<Angle>();
 
-            sprite_batch.Draw(sprite.texture, new Vector2(position.x, position.y), Color.White);
+            if (angle == null)
+                sprite_batch.Draw(sprite.texture, new Vector2(position.x, position.y), Color.White);
+            else
+                sprite_batch.Draw(sprite.texture, 
+                    new Vector2(position.x, position.y), 
+                    color: Color.White, 
+                    rotation: angle.angle, 
+                    origin: new Vector2(sprite.texture.Width/2, sprite.texture.Height/2));
         }
 
         sprite_batch.End();
