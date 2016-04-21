@@ -1,10 +1,10 @@
-namespace Engine.Components {
+namespace Fab5.Engine.Components {
 
 /*------------------------------------------------
  * USINGS
  *----------------------------------------------*/
 
-using Engine.Core;
+using Fab5.Engine.Core;
 
 using Microsoft.Xna.Framework.Graphics;
 
@@ -12,11 +12,8 @@ using Microsoft.Xna.Framework.Graphics;
  * CLASSES
  *----------------------------------------------*/
 
-public class C_Sprite : Component {
+public class Sprite : Component {
     public Texture2D texture;
-
-    public C_Sprite() {
-    }
 }
 
 }

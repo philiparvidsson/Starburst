@@ -1,10 +1,10 @@
-namespace Engine.Components {
+namespace Fab5.Engine.Components {
 
 /*------------------------------------------------
  * USINGS
  *----------------------------------------------*/
 
-using Engine.Core;
+using Fab5.Engine.Core;
 
 using System.Collections.Generic;
 
@@ -12,7 +12,7 @@ using System.Collections.Generic;
  * CLASSES
  *----------------------------------------------*/
 
-public class C_Velocity : Component {
+public class Velocity : Component {
     public float x;
     public float y;
 }

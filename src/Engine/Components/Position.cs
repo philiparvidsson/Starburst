@@ -1,16 +1,16 @@
-namespace Engine.Components {
+namespace Fab5.Engine.Components {
 
 /*------------------------------------------------
  * USINGS
  *----------------------------------------------*/
 
-using Engine.Core;
+using Fab5.Engine.Core;
 
 /*------------------------------------------------
  * CLASSES
  *----------------------------------------------*/
 
-public class C_Position : Component {
+public class Position : Component {
     public float x;
     public float y;
 }

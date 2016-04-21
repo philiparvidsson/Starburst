@@ -1,23 +1,33 @@
-namespace Starburst {
+namespace Fab5.Starburst {
 
-using Engine;
-using Engine.Components;
-using Engine.Core;
+using Fab5.Engine;
+using Fab5.Engine.Components;
+using Fab5.Engine.Core;
+using Fab5.Engine.Subsystems;
 
-using Starburst.Entities;
+using Fab5.Starburst.States;
 
 using Microsoft.Xna.Framework.Graphics;
 
-public class Starburst_Game_Impl : Game_Impl {
-    public override void init() {
-        Game_Engine.inst().add_subsystems(
-            new Engine.Subsystems.Position_Integrator(),
-            new Engine.Subsystems.Sprite_Renderer(new SpriteBatch(Game_Engine.inst().GraphicsDevice))
-            new Engine.Subsystems.Window_Title_Writer()
-        );
+// Starburst game implementation.
+public class Starburst : Fab5_Game {
+    protected override void init() {
+        enter_state(new Falling_Ball_State());
+    }
 
-        Game_Engine.inst().create_entity(Ball.create_components());
-        Game_Engine.inst().create_entity(new FpsCounter());
+    protected override void cleanup() {
+    }
+
+    protected override void update(float t, float dt) {
+    }
+
+    protected override void draw(float t, float dt) {
+    }
+
+    static void Main() {
+        using (var game = new Starburst()) {
+            game.run();
+        }
     }
 }
 
