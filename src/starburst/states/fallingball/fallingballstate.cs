@@ -25,7 +25,7 @@ public class Falling_Ball_State : Game_State {
             new Position() { x = 10.0f, y = 10.0f },
             new Text() {
                 font = Starburst.inst().get_content<SpriteFont>("arial"),
-                format = "this is a bitchin' string!" });
+                format = "saaatana perkele daska kuken i bastuaggregatet!" });
     }
 
     public override void update(float t, float dt) {
