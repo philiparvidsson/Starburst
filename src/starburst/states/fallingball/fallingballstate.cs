@@ -15,11 +15,17 @@ public class Falling_Ball_State : Game_State {
         add_subsystems(
             new Position_Integrator(),
             new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
+            new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
             new Window_Title_Writer()
         );
 
         create_entity(Ball.create_components());
         create_entity(new FpsCounter());
+        create_entity(
+            new Position() { x = 10.0f, y = 10.0f },
+            new Text() {
+                font = Starburst.inst().get_content<SpriteFont>("arial"),
+                format = "this is a bitchin' string!" });
     }
 
     public override void update(float t, float dt) {

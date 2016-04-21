@@ -13,6 +13,8 @@ using Microsoft.Xna.Framework.Graphics;
  *----------------------------------------------*/
 
 public class Text : Component {
+    public SpriteFont font;
+
     public string format;
 
     public object[] args;

@@ -27,8 +27,12 @@ public class Text_Renderer : Subsystem {
             var position = entity.get_component<Position>();
             var text     = entity.get_component<Text>();
 
-            // här ska det ritas text
-            //sprite_batch.Draw(sprite.texture, new Vector2(position.x, position.y), Color.White);
+            var str = text.format;
+
+            // @To-do: Interpolate string here.
+
+            sprite_batch.DrawString(text.font, str, new Vector2(position.x, position.y), Color.Black);
+
         }
 
         sprite_batch.End();
