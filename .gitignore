@@ -2,7 +2,4 @@
 bin
 obj
 
-# Visual Studio is retarded...
-Content
-
 *.*~
