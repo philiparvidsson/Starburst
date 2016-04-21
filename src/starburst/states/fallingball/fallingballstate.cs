@@ -14,10 +14,12 @@ public class Falling_Ball_State : Game_State {
     public override void init() {
         add_subsystems(
             new Position_Integrator(),
-            new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice))
+            new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
+            new Window_Title_Writer()
         );
 
         create_entity(Ball.create_components());
+        create_entity(new FpsCounter());
     }
 
     public override void update(float t, float dt) {
