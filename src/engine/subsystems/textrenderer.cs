@@ -31,7 +31,7 @@ public class Text_Renderer : Subsystem {
 
             // @To-do: Interpolate string here.
 
-            sprite_batch.DrawString(text.font, str, new Vector2(position.x, position.y), Color.Black);
+            sprite_batch.DrawString(text.font, str, new Vector2(position.x, position.y), Color.Black, 0.0f, Vector2.Zero, 1.0f, SpriteEffects.None, 0.5f);
 
         }
 
