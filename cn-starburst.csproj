@@ -39,6 +39,7 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="src\engine\components\backgroundmusic.cs" />
     <Compile Include="src\engine\components\fpscounter.cs" />
     <Compile Include="src\engine\components\position.cs" />
     <Compile Include="src\engine\components\sprite.cs" />
@@ -46,6 +47,7 @@
     <Compile Include="src\engine\core.cs" />
     <Compile Include="src\engine\game.cs" />
     <Compile Include="src\engine\subsystems\positionintegrater.cs" />
+    <Compile Include="src\engine\subsystems\sound.cs" />
     <Compile Include="src\engine\subsystems\spriterenderer.cs" />
     <Compile Include="src\engine\subsystems\window_title_writer.cs" />
     <Compile Include="src\starburst\starburst.cs" />
