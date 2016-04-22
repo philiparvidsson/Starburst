@@ -41,14 +41,17 @@
   <ItemGroup>
     <Compile Include="src\engine\components\angle.cs" />
     <Compile Include="src\engine\components\backgroundmusic.cs" />
+    <Compile Include="src\engine\components\fab5soundeffect.cs" />
     <Compile Include="src\engine\components\fpscounter.cs" />
     <Compile Include="src\engine\components\inputhandler.cs" />
     <Compile Include="src\engine\components\position.cs" />
     <Compile Include="src\engine\components\sprite.cs" />
     <Compile Include="src\engine\components\text.cs" />
+    <Compile Include="src\engine\components\ttl.cs" />
     <Compile Include="src\engine\components\velocity.cs" />
     <Compile Include="src\engine\core.cs" />
     <Compile Include="src\engine\game.cs" />
+    <Compile Include="src\engine\subsystems\entitylifetime.cs" />
     <Compile Include="src\engine\subsystems\inputhandler_system.cs" />
     <Compile Include="src\engine\subsystems\positionintegrater.cs" />
     <Compile Include="src\engine\subsystems\sound.cs" />
@@ -59,6 +62,8 @@
     <Compile Include="src\starburst\states\fallingball\entities\ball.cs" />
     <Compile Include="src\starburst\states\fallingball\entities\player_ship.cs" />
     <Compile Include="src\starburst\states\fallingball\fallingballstate.cs" />
+    <Compile Include="src\starburst\states\playing\entities\playership.cs" />
+    <Compile Include="src\starburst\states\playing\playingstate.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -69,6 +74,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="src\starburst\content\ball.png" />
+    <Content Include="src\starburst\content\ship.png" />
+    <Content Include="src\starburst\content\sound\ContactLoop.wav" />
+    <Content Include="src\starburst\content\sound\SpaceCube.wav" />
+    <Content Include="src\starburst\content\sound\SpaceLoungeLoop.wav" />
   </ItemGroup>
   <ItemGroup>
     <None Include="make.bat" />

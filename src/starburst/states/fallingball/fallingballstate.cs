@@ -9,7 +9,6 @@ namespace Fab5.Starburst.States
     using Fab5.Starburst.States.Falling_Ball.Entities;
     using Microsoft.Xna.Framework.Graphics;
 
-
     public class Falling_Ball_State : Game_State
     {
 
@@ -19,8 +18,9 @@ namespace Fab5.Starburst.States
                 new Position_Integrator(),
                 new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
                 new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
-                new Inputhandler_System(),
-                new Window_Title_Writer());
+                new Window_Title_Writer(),
+                new Sound()
+            );
 
             create_entity(Player_Ship.create_components());
             create_entity(Ball.create_components());
@@ -32,11 +32,12 @@ namespace Fab5.Starburst.States
                     font = Starburst.inst().get_content<SpriteFont>("arial"),
                     format = "saaatana perkele daska kuken i bastuaggregatet!"
                 });
+
+            create_entity(new BackgroundMusic("sound/SpaceLoungeLoop", true));
         }
 
         public override void update(float t, float dt)
         {
-            base.update(t, dt);
 
             if (t > 2.0f)
             {
@@ -46,5 +47,3 @@ namespace Fab5.Starburst.States
 
     }
 }
-
-

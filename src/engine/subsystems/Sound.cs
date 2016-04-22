@@ -13,6 +13,7 @@ namespace Fab5.Engine.Subsystems
             int num_components;
             var entities = Fab5_Game.inst().get_entities(out num_components,
                 typeof(BackgroundMusic));
+                //typeof(Fab5SoundEffect));
 
             for (int i = 0; i < num_components; i++)
             {
@@ -25,8 +26,13 @@ namespace Fab5.Engine.Subsystems
                     MediaPlayer.IsRepeating = music.IsRepeat;
                     music.IsSongStarted = true;
                 }
+         
 
             }
+        }
+        public override void cleanup()
+        {
+            MediaPlayer.Stop();
         }
     }
 }

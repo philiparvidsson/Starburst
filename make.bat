@@ -69,8 +69,8 @@ for /R %ContentDir% %%Q in (*.jpg; *.png; *.spritefont) do (
 )
 
 :: TODO: Figure out a way to differentiate songs and sounds effects.
-for /R %ContentDir% %%Q in (*.mp3) do (
-    call set "Content=%%Content%% /processor:SoundEffectProcessor /build:"%%Q""
+for /R %ContentDir% %%Q in (*.mp3; *.wav) do (
+    call set "Content=%%Content%% /processor:SongProcessor /build:"%%Q""
 )
 
 :: Find source code files.
