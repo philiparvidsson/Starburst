@@ -1,11 +1,17 @@
 namespace Fab5.Engine.Core {
 
+/*
+ * This is the core of the game engine, structured in a single, concise file
+ * like this because the C# convention of one-class-one-file is retarded.
+ */
+
 /*------------------------------------------------
  * USINGS
  *----------------------------------------------*/
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 /*------------------------------------------------
  * CLASSES
@@ -54,18 +60,23 @@ public class Entity {
     }
 }
 
+// Represents a single game state (for example, some main menu state or in-game
+// state). Entities are contained in states.
 public abstract class Game_State {
-
+    // The subsystems that the game state is using.
     private readonly List<Subsystem> subsystems = new List<Subsystem>();
 
+    // Entities in the game state.
     private readonly Dictionary<Int64, Entity> entities = new Dictionary<Int64, Entity>();
 
-    private Int64 next_entity_id = 1;
+    // Entity id counter. Static to make sure all entity ids are unique.
+    private static Int64 next_entity_id = 1;
 
+    // Creates an entity from the specified components and assigns an id to it.
     public Entity create_entity(params Component[] components) {
         var entity = new Entity();
-        entity.id = next_entity_id++;
 
+        entity.id = Interlocked.Increment(ref next_entity_id);
         entity.add_components(components);
 
         entities[entity.id] = entity;
@@ -73,12 +84,19 @@ public abstract class Game_State {
         return (entity);
     }
 
-    // @To-do: This crap can't handle more than 1000 entities.
-    // @To-do: Clean this crap up.
-    Entity[] r = new Entity[1000];
+    // @To-do: Realloc this when the results are too big.
+    // This field is used to store entity results. Reusing this array lets us
+    // avoid reallocs on every call to the get_entities() method.
+    private Entity[] entity_results = new Entity[128];
 
-    public Entity[] get_entities(out int num_entities, params Type[] component_types) {
+    // Retrieves all entities containing the specified component types. Do not
+    // use the .Length-attribute of the returned array to iterate through the
+    // results, but rather the num_entities out-parameter.
+    public Entity[] get_entities(out int num_entities,
+                                 params Type[] component_types)
+    {
         int index = 0;
+
         foreach (var entry in entities) {
             var entity = entry.Value;
 
@@ -88,28 +106,26 @@ public abstract class Game_State {
 
                 if (!entity.has_component(type)) {
                     has_all_component_types = false;
+                    break;
                 }
             }
 
             if (has_all_component_types) {
-                r[index++] = entity;
+                entity_results[index++] = entity;
             }
         }
 
         num_entities = index;
 
-        return (r);
+        return (entity_results);
     }
 
-
-    public void add_subsystem(Subsystem subsystem) {
-        subsystems.Add(subsystem);
-    }
-
+    // Adds the specified subsystems to the state.
     public void add_subsystems(params Subsystem[] subsystems) {
         this.subsystems.AddRange(subsystems);
     }
 
+    // @To-do: init cleanup etc should probably be internal protected.
     public virtual void init() {
     }
 
