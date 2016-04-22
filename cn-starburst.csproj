@@ -49,6 +49,7 @@
     <Compile Include="src\engine\components\velocity.cs" />
     <Compile Include="src\engine\core.cs" />
     <Compile Include="src\engine\game.cs" />
+    <Compile Include="src\engine\subsystems\inputhandler_system.cs" />
     <Compile Include="src\engine\subsystems\positionintegrater.cs" />
     <Compile Include="src\engine\subsystems\sound.cs" />
     <Compile Include="src\engine\subsystems\spriterenderer.cs" />
