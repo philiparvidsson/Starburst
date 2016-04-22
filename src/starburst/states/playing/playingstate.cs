@@ -65,6 +65,8 @@ public class Playing_State : Game_State {
     }
 
     public override void update(float t, float dt) {
+        base.update(t, dt);
+
         if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape)) {
             Starburst.inst().Exit();
         }
