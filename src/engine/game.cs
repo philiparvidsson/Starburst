@@ -60,6 +60,8 @@ public abstract class Fab5_Game : Game {
         }
 
         update(t, dt);
+
+        GC.Collect();
     }
 
     protected  override void Draw(GameTime game_time) {
