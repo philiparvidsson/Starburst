@@ -28,6 +28,12 @@ public class Entity {
     // Unique entity id, set by the game engine.
     public Int64 id;
 
+    public Game_State state;
+
+    public void destroy() {
+        state.remove_entity(id);
+    }
+
     // Adds the specified components to the entity.
     public void add_components(params Component[] components) {
         int n = components.Length;
@@ -77,11 +83,16 @@ public abstract class Game_State {
         var entity = new Entity();
 
         entity.id = Interlocked.Increment(ref next_entity_id);
+        entity.state = this;
         entity.add_components(components);
 
         entities[entity.id] = entity;
 
         return (entity);
+    }
+
+    public void remove_entity(Int64 id) {
+        entities.Remove(id);
     }
 
     // @To-do: Realloc this when the results are too big.
