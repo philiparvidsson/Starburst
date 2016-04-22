@@ -45,20 +45,21 @@ public class Playing_State : Game_State {
             new Particle_Emitter() {
                 emit_fn = () => {
                     return new Component[] {
-                        new Position() { x = playerpos.x, y = playerpos.y },
+                        new Position() { x = playerpos.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f,
+                                         y = playerpos.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f },
                         new Velocity() { x = playervel.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 190.0f * (float)(rand.NextDouble()+0.5),
                                          y = playervel.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 190.0f * (float)(rand.NextDouble()+0.5) },
                         new Sprite() {
                             texture = Starburst.inst().get_content<Texture2D>("particle")
                         },
-                        new TTL() { time = 0.5f + (float)(rand.NextDouble() * 0.1f) }
+                        new TTL() { time = 0.2f + (float)(rand.NextDouble() * 0.1f) }
 //                        new Bounding_Circle() { radius = 1.0f },
 //                        new Mass() { mass = 0.0f }
 
                     };
                 },
-                interval = 0.1f,
-                num_particles_per_emit = 40
+                interval = 0.05f,
+                num_particles_per_emit = 20
             }
         });
 
