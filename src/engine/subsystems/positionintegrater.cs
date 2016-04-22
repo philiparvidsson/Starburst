@@ -19,27 +19,8 @@ public class Position_Integrator : Subsystem {
             var position = entity.get_component<Position>();
             var velocity = entity.get_component<Velocity>();
             var angle    = entity.get_component<Angle>();
-            var input    = entity.get_component<Inputhandler>();
-
-            if (input != null)
-            {
-                // Det här borde ju rimligtvis göras i en hanterare för input..
-                input.keyboardState = Keyboard.GetState();
-
-                if (input.keyboardState.IsKeyDown(Keys.Left))
-                    angle.angle -= 0.05f;
-
-                if (input.keyboardState.IsKeyDown(Keys.Right))
-                    angle.angle += 0.05f;
-
-                if (input.keyboardState.IsKeyDown(Keys.Up))
-                    velocity.x += 0.03f;
-                else {
-                    velocity.x -= 0.1f;
-                    if (velocity.x < 0)
-                        velocity.x = 0;
-                }
-            }
+           
+            
             if (angle == null)
             {
                 position.x += velocity.x * dt;
