@@ -2,8 +2,6 @@ namespace Fab5.Engine.Subsystems {
 
 using Fab5.Engine.Components;
 using Fab5.Engine.Core;
-    using System;
-    using Microsoft.Xna.Framework.Input;
 
 public class Position_Integrator : Subsystem {
     public override void update(float t, float dt) {
