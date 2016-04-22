@@ -130,6 +130,10 @@ public abstract class Game_State {
     }
 
     public virtual void cleanup() {
+        foreach (var subsystem in subsystems)
+        {
+            subsystem.cleanup();
+        }
     }
 
     public virtual void update(float t, float dt) {
@@ -153,6 +157,8 @@ public abstract class Subsystem {
 
     // Override to perform update logic (unlimited calls per sec?)
     public virtual void update(float t, float dt) {}
-}
+    public virtual void cleanup() {}
+
+    }
 
 }

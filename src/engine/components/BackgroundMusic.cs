@@ -7,10 +7,11 @@ namespace Fab5.Engine.Components
 {
     public class BackgroundMusic : Component
     {
-        public BackgroundMusic(String file)
+        public BackgroundMusic(String file, bool isRepeat)
         {
             File = file;
             IsSongStarted = false;
+            IsRepeat = isRepeat;
         }
         public Song BackSong { get; set; }
         public bool IsSongStarted { get; set; }

@@ -15,7 +15,8 @@ namespace Fab5.Starburst.States {
             new Position_Integrator(),
             new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
             new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
-            new Window_Title_Writer()
+            new Window_Title_Writer(),
+            new Sound()
         );
 
         create_entity(Player_Ship.create_components());
@@ -26,6 +27,8 @@ namespace Fab5.Starburst.States {
             new Text() {
                 font = Starburst.inst().get_content<SpriteFont>("arial"),
                 format = "saaatana perkele daska kuken i bastuaggregatet!" });
+
+        create_entity(new BackgroundMusic("sound/SpaceLoungeLoop",true));
     }
 
     public override void update(float t, float dt) {

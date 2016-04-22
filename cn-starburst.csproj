@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="src\engine\components\angle.cs" />
     <Compile Include="src\engine\components\backgroundmusic.cs" />
+    <Compile Include="src\engine\components\fab5soundeffect.cs" />
     <Compile Include="src\engine\components\fpscounter.cs" />
     <Compile Include="src\engine\components\inputhandler.cs" />
     <Compile Include="src\engine\components\position.cs" />
@@ -68,6 +69,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="src\starburst\content\ball.png" />
+    <Content Include="src\starburst\content\sound\ContactLoop.wav" />
+    <Content Include="src\starburst\content\sound\SpaceCube.wav" />
+    <Content Include="src\starburst\content\sound\SpaceLoungeLoop.wav" />
   </ItemGroup>
   <ItemGroup>
     <None Include="make.bat" />
