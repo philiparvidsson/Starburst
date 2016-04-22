@@ -21,7 +21,7 @@ public class Sprite_Renderer : Subsystem {
         );
 
         // @To-do: Should not be done here.
-        sprite_batch.GraphicsDevice.Clear(Color.White);
+        sprite_batch.GraphicsDevice.Clear(Color.Black);
 
         sprite_batch.Begin();
 
@@ -34,10 +34,10 @@ public class Sprite_Renderer : Subsystem {
             if (angle == null)
                 sprite_batch.Draw(sprite.texture, new Vector2(position.x, position.y), Color.White);
             else
-                sprite_batch.Draw(sprite.texture, 
-                    new Vector2(position.x, position.y), 
-                    color: Color.White, 
-                    rotation: angle.angle, 
+                sprite_batch.Draw(sprite.texture,
+                    new Vector2(position.x, position.y),
+                    color: Color.White,
+                    rotation: angle.angle,
                     origin: new Vector2(sprite.texture.Width/2, sprite.texture.Height/2));
         }
 
