@@ -46,19 +46,28 @@ public class Playing_State : Game_State {
                 emit_fn = () => {
                     return new Component[] {
                         new Position() { x = playerpos.x, y = playerpos.y },
-                        new Velocity() { x = playervel.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 80.0f * (float)(rand.NextDouble()+0.5),
-                                         y = playervel.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 80.0f * (float)(rand.NextDouble()+0.5) },
+                        new Velocity() { x = playervel.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 190.0f * (float)(rand.NextDouble()+0.5),
+                                         y = playervel.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 190.0f * (float)(rand.NextDouble()+0.5) },
                         new Sprite() {
                             texture = Starburst.inst().get_content<Texture2D>("particle")
                         },
-                        new TTL() { time = 2.5f }
+                        new TTL() { time = 0.5f + (float)(rand.NextDouble() * 0.1f) }
+//                        new Bounding_Circle() { radius = 1.0f },
+//                        new Mass() { mass = 0.0f }
 
                     };
                 },
-                interval = 0.1f
+                interval = 0.1f,
+                num_particles_per_emit = 40
             }
         });
 
+    }
+
+    public override void update(float t, float dt) {
+        if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape)) {
+            Starburst.inst().Exit();
+        }
     }
 
 }

@@ -97,10 +97,15 @@ public class Collision_Solver : Subsystem {
                 impulse_x *= fac;
                 impulse_y *= fac;
 
-                velocity1.x += impulse_x / m1;
-                velocity1.y += impulse_y / m1;
-                velocity2.x -= impulse_x / m2;
-                velocity2.y -= impulse_y / m2;
+                if (m1 > 0.0f) {
+                    velocity1.x += impulse_x / m1;
+                    velocity1.y += impulse_y / m1;
+                }
+
+                if (m2 > 0.0f) {
+                    velocity2.x -= impulse_x / m2;
+                    velocity2.y -= impulse_y / m2;
+                }
 
             }
         }
