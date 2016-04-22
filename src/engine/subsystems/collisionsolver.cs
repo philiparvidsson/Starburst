@@ -108,21 +108,3 @@ public class Collision_Solver : Subsystem {
 }
 
 }
-/*    points:  s1, s2
-    vectors: a, b, c, d, impulse, impact
-    floats:  ImpactSpeed, mass1, mass2
-The speed of the impact is easy to calculate. The speed we're interested in is only that along the line of impulse. So first calculate the difference between the impact velocities and the impulse vector:
-
-    impact  = b - a
-    impulse = normalise(s2 - s1)
-Now, to calculate the component of one vector along another, we take a dot product:
-    ImpactSpeed = dotproduct(impact, impuse)
-Note: This is an unnormalised dot product. You do not divide by the magnitude of the vectors, so no square root is required.
-Now, the impulse is multiplied by the impact speed and the masses:
-
-    impulse = impulse * square_root(ImpactSpeed * mass1 * mass2)
-and the impulse can be applied to the initial velocities to get the resultant velocities:
-
-    c = a + impulse / mass1
-    d = b - impulse / mass2
-    */
