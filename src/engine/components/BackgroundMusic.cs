@@ -12,6 +12,8 @@ namespace Fab5.Engine.Components
             File = file;
             IsSongStarted = false;
             IsRepeat = isRepeat;
+            BackSong = Fab5_Game.inst().Content.Load<Song>(file);
+
         }
         public Song BackSong { get; set; }
         public bool IsSongStarted { get; set; }

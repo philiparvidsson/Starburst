@@ -50,9 +50,11 @@
     <Compile Include="src\engine\components\ttl.cs" />
     <Compile Include="src\engine\components\velocity.cs" />
     <Compile Include="src\engine\core.cs" />
+    <Compile Include="src\engine\Fab5Event.cs" />
     <Compile Include="src\engine\game.cs" />
     <Compile Include="src\engine\subsystems\entitylifetime.cs" />
     <Compile Include="src\engine\subsystems\inputhandler_system.cs" />
+    <Compile Include="src\engine\subsystems\messagequeue_system.cs" />
     <Compile Include="src\engine\subsystems\positionintegrater.cs" />
     <Compile Include="src\engine\subsystems\sound.cs" />
     <Compile Include="src\engine\subsystems\spriterenderer.cs" />
@@ -61,6 +63,7 @@
     <Compile Include="src\starburst\starburst.cs" />
     <Compile Include="src\starburst\states\fallingball\entities\ball.cs" />
     <Compile Include="src\starburst\states\fallingball\entities\player_ship.cs" />
+    <Compile Include="src\starburst\states\playing\entities\soundmanager.cs" />
     <Compile Include="src\starburst\states\fallingball\fallingballstate.cs" />
     <Compile Include="src\starburst\states\playing\entities\playership.cs" />
     <Compile Include="src\starburst\states\playing\playingstate.cs" />

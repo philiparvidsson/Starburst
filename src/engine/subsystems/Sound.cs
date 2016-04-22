@@ -3,6 +3,7 @@ using Fab5.Engine.Core;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using System;
+using System.Linq;
 
 namespace Fab5.Engine.Subsystems
 {
@@ -12,8 +13,8 @@ namespace Fab5.Engine.Subsystems
         {
             int num_components;
             var entities = Fab5_Game.inst().get_entities(out num_components,
-                typeof(BackgroundMusic));
-                //typeof(Fab5SoundEffect));
+                typeof(BackgroundMusic),
+                typeof(Fab5SoundEffect));
 
             for (int i = 0; i < num_components; i++)
             {
@@ -21,13 +22,20 @@ namespace Fab5.Engine.Subsystems
                 var music = entity.get_component<BackgroundMusic>();
                 if (!music.IsSongStarted)
                 {
-                    music.BackSong = Fab5_Game.inst().Content.Load<Song>(music.File);
                     MediaPlayer.Play(music.BackSong);
                     MediaPlayer.IsRepeating = music.IsRepeat;
                     music.IsSongStarted = true;
+                    MediaPlayer.IsMuted = true;
                 }
-         
-
+                var gameinst = Fab5_Game.inst();
+                var keypressed = gameinst.MessagesQueue.Where(x => x.EventType == "KeyPressed").ToList();
+                foreach(var item in keypressed)
+                {
+                    if(item.EventName == "Fire") {
+                        var effect = entity.get_component<Fab5SoundEffect>();
+                        effect.SoundEffect.Play();
+                    }
+                }
             }
         }
         public override void cleanup()

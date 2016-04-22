@@ -69,8 +69,9 @@ public class Entity {
 // Represents a single game state (for example, some main menu state or in-game
 // state). Entities are contained in states.
 public abstract class Game_State {
-    // The subsystems that the game state is using.
-    private readonly List<Subsystem> subsystems = new List<Subsystem>();
+
+        // The subsystems that the game state is using.
+        private readonly List<Subsystem> subsystems = new List<Subsystem>();
 
     // Entities in the game state.
     private readonly Dictionary<Int64, Entity> entities = new Dictionary<Int64, Entity>();

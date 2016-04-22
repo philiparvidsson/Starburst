@@ -37,8 +37,12 @@
                         velocity.x += (float)(Math.Cos(angle.angle)) * 4.3f;
                         velocity.y += (float)(Math.Sin(angle.angle)) * 4.3f;
                     }
-                }
+                    //fire on left controll
+                    if(input.keyboardState.IsKeyDown(Keys.LeftControl))
+                        Fab5_Game.inst().MessagesQueue.Add(new Fab5Event() { EventName = "Fire", EventType = "KeyPressed", Time = DateTime.Now });
+
             }
+        }
     }
 
 }

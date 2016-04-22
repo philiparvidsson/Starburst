@@ -17,13 +17,12 @@ public override void init() {
         new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
         new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
         new Window_Title_Writer(),
-        new Sound()
+        new Sound(),
+        new MessageQueue_System()
     );
         create_entity(new FpsCounter());
         create_entity(Player_Ship.create_components());
-        create_entity(new BackgroundMusic("sound/SpaceLoungeLoop", true));
-
-
+        create_entity(soundmanager.create_components());
         }
 
     }
