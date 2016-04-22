@@ -20,9 +20,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 // Abstract game base class for using the Fab5 engine in games. :-)
 public abstract class Fab5_Game : Game {
-    public List<Fab5Event> MessagesQueue = new List<Fab5Event>();
-
-    protected readonly GraphicsDeviceManager GraphicsMgr;
+    public readonly GraphicsDeviceManager GraphicsMgr;
 
     protected virtual void init() {}
     protected virtual void cleanup() {}
@@ -53,6 +51,10 @@ public abstract class Fab5_Game : Game {
         cleanup();
     }
 
+    public void Quit() {
+        this.Exit();
+    }
+
     protected override void Update(GameTime game_time) {
         float t  = (float)game_time.TotalGameTime.TotalSeconds;
         float dt = (float)game_time.ElapsedGameTime.TotalSeconds;
@@ -62,6 +64,8 @@ public abstract class Fab5_Game : Game {
         }
 
         update(t, dt);
+
+        GC.Collect();
     }
 
     protected  override void Draw(GameTime game_time) {

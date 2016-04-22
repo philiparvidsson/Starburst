@@ -99,7 +99,7 @@ public abstract class Game_State {
     // @To-do: Realloc this when the results are too big.
     // This field is used to store entity results. Reusing this array lets us
     // avoid reallocs on every call to the get_entities() method.
-    private Entity[] entity_results = new Entity[128];
+    private Entity[] entity_results = new Entity[1024*1024];
 
     // Retrieves all entities containing the specified component types. Do not
     // use the .Length-attribute of the returned array to iterate through the
@@ -134,6 +134,10 @@ public abstract class Game_State {
 
     // Adds the specified subsystems to the state.
     public void add_subsystems(params Subsystem[] subsystems) {
+        foreach (Subsystem subsystem in subsystems) {
+            subsystem.state = this;
+        }
+
         this.subsystems.AddRange(subsystems);
     }
 
@@ -164,6 +168,8 @@ public abstract class Game_State {
 
 // Base subsystem class for all game subsystems.
 public abstract class Subsystem {
+    public Game_State state;
+
     // Override this to perform draw operations (normally 60 calls per sec?)
     public virtual void draw(float t, float dt) {}
 
