@@ -133,6 +133,10 @@ public abstract class Game_State {
 
     // Adds the specified subsystems to the state.
     public void add_subsystems(params Subsystem[] subsystems) {
+        foreach (Subsystem subsystem in subsystems) {
+            subsystem.state = this;
+        }
+
         this.subsystems.AddRange(subsystems);
     }
 
@@ -163,6 +167,8 @@ public abstract class Game_State {
 
 // Base subsystem class for all game subsystems.
 public abstract class Subsystem {
+    public Game_State state;
+
     // Override this to perform draw operations (normally 60 calls per sec?)
     public virtual void draw(float t, float dt) {}
 

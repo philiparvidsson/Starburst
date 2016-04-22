@@ -89,7 +89,7 @@ if "%Target%"=="all" (
     echo Building content...
     if not exist "%OutputDir%" mkdir %OutputDir%
     if not exist "%IntermDir%" mkdir %IntermDir%
-    %Mgcb% %MgcbFlags% %Content%
+    %Mgcb% %MgcbFlags% %Content%>NUL
 ) else if "%Target%"=="program" (
     echo Building program...
     if not exist "%OutputDir%" mkdir %OutputDir%
