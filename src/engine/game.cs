@@ -20,7 +20,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 // Abstract game base class for using the Fab5 engine in games. :-)
 public abstract class Fab5_Game : Game {
-    protected readonly GraphicsDeviceManager GraphicsMgr;
+    public readonly GraphicsDeviceManager GraphicsMgr;
 
     protected virtual void init() {}
     protected virtual void cleanup() {}
