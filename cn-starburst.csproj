@@ -41,9 +41,12 @@
   <ItemGroup>
     <Compile Include="src\engine\components\angle.cs" />
     <Compile Include="src\engine\components\backgroundmusic.cs" />
+    <Compile Include="src\engine\components\boundingcircle.cs" />
     <Compile Include="src\engine\components\fab5soundeffect.cs" />
     <Compile Include="src\engine\components\fpscounter.cs" />
     <Compile Include="src\engine\components\inputhandler.cs" />
+    <Compile Include="src\engine\components\mass.cs" />
+    <Compile Include="src\engine\components\particleemitter.cs" />
     <Compile Include="src\engine\components\position.cs" />
     <Compile Include="src\engine\components\sprite.cs" />
     <Compile Include="src\engine\components\text.cs" />
@@ -51,8 +54,10 @@
     <Compile Include="src\engine\components\velocity.cs" />
     <Compile Include="src\engine\core.cs" />
     <Compile Include="src\engine\game.cs" />
+    <Compile Include="src\engine\subsystems\collisionsolver.cs" />
     <Compile Include="src\engine\subsystems\entitylifetime.cs" />
     <Compile Include="src\engine\subsystems\inputhandler_system.cs" />
+    <Compile Include="src\engine\subsystems\particlesystem.cs" />
     <Compile Include="src\engine\subsystems\positionintegrater.cs" />
     <Compile Include="src\engine\subsystems\sound.cs" />
     <Compile Include="src\engine\subsystems\spriterenderer.cs" />
@@ -62,46 +67,22 @@
     <Compile Include="src\starburst\states\fallingball\entities\ball.cs" />
     <Compile Include="src\starburst\states\fallingball\entities\player_ship.cs" />
     <Compile Include="src\starburst\states\fallingball\fallingballstate.cs" />
+    <Compile Include="src\starburst\states\playing\entities\dummy.cs" />
     <Compile Include="src\starburst\states\playing\entities\playership.cs" />
     <Compile Include="src\starburst\states\playing\playingstate.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
+      <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="src\starburst\content\backdrops\backdrop1.png" />
-    <Content Include="src\starburst\content\backdrops\backdrop2.png" />
-    <Content Include="src\starburst\content\backdrops\backdrop3.png" />
-    <Content Include="src\starburst\content\backdrops\backdrop4.png" />
-    <Content Include="src\starburst\content\backdrops\backdrop5.png" />
-    <Content Include="src\starburst\content\backdrops\backdrop6.png" />
-    <Content Include="src\starburst\content\backdrops\backdrop7.png" />
-    <Content Include="src\starburst\content\backdrops\stardrop.png" />
     <Content Include="src\starburst\content\ball.png" />
+    <Content Include="src\starburst\content\dummy.png" />
+    <Content Include="src\starburst\content\particle.png" />
     <Content Include="src\starburst\content\ship.png" />
-    <Content Include="src\starburst\content\ships\ship1.png" />
-    <Content Include="src\starburst\content\ships\ship10.png" />
-    <Content Include="src\starburst\content\ships\ship11.png" />
-    <Content Include="src\starburst\content\ships\ship12.png" />
-    <Content Include="src\starburst\content\ships\ship13.png" />
-    <Content Include="src\starburst\content\ships\ship14.png" />
-    <Content Include="src\starburst\content\ships\ship15.png" />
-    <Content Include="src\starburst\content\ships\ship16.png" />
-    <Content Include="src\starburst\content\ships\ship17.png" />
-    <Content Include="src\starburst\content\ships\ship18.png" />
-    <Content Include="src\starburst\content\ships\ship19.png" />
-    <Content Include="src\starburst\content\ships\ship2.png" />
-    <Content Include="src\starburst\content\ships\ship3.png" />
-    <Content Include="src\starburst\content\ships\ship4.png" />
-    <Content Include="src\starburst\content\ships\ship5.png" />
-    <Content Include="src\starburst\content\ships\ship6.png" />
-    <Content Include="src\starburst\content\ships\ship7.png" />
-    <Content Include="src\starburst\content\ships\ship8.png" />
-    <Content Include="src\starburst\content\ships\ship9.png" />
     <Content Include="src\starburst\content\sound\ContactLoop.wav" />
     <Content Include="src\starburst\content\sound\SpaceCube.wav" />
     <Content Include="src\starburst\content\sound\SpaceLoungeLoop.wav" />
@@ -115,6 +96,8 @@
   <ItemGroup>
     <Folder Include="doc\" />
     <Folder Include="Properties\" />
+    <Folder Include="src\starburst\content\backdrops\" />
+    <Folder Include="src\starburst\content\ships\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

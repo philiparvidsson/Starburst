@@ -69,7 +69,7 @@ public class Playing_State : Game_State {
         base.update(t, dt);
 
         if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape)) {
-            Starburst.inst().Exit();
+                Starburst.inst().Quit();
         }
     }
 
