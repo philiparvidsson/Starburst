@@ -1,5 +1,7 @@
-﻿namespace Fab5.src.engine.subsystems
+﻿namespace Fab5.Engine.Subsystems
 {
+    using System;
+
     using Fab5.Engine.Components;
     using Fab5.Engine.Core;
     using Microsoft.Xna.Framework.Input;
@@ -22,29 +24,21 @@
                     var velocity = entity.get_component<Velocity>();
                     var angle = entity.get_component<Angle>();
                     var input = entity.get_component<Inputhandler>();
-                
+
                     input.keyboardState = Keyboard.GetState();
 
                     if (input.keyboardState.IsKeyDown(Keys.Left))
-                        angle.angle -= 0.05f;
+                        angle.angle -= 3.5f * dt;
 
                     if (input.keyboardState.IsKeyDown(Keys.Right))
-                        angle.angle += 0.05f;
+                        angle.angle += 3.5f * dt;
 
-                    if (input.keyboardState.IsKeyDown(Keys.Up))
-                        velocity.x += 0.03f;
-                    else
-                    {
-                        velocity.x -= 0.1f;
-                        if (velocity.x < 0)
-                            velocity.x = 0;
+                    if (input.keyboardState.IsKeyDown(Keys.Up)) {
+                        velocity.x += (float)(Math.Cos(angle.angle)) * 4.3f;
+                        velocity.y += (float)(Math.Sin(angle.angle)) * 4.3f;
                     }
-                    
                 }
             }
     }
 
 }
-
-
-

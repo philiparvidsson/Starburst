@@ -13,6 +13,11 @@ using Microsoft.Xna.Framework.Graphics;
 public class Starburst : Fab5_Game {
     protected override void init() {
         enter_state(new Playing_State());
+
+        GraphicsMgr.PreferredBackBufferWidth = 1280;
+        GraphicsMgr.PreferredBackBufferHeight = 720;
+
+        GraphicsMgr.ApplyChanges();
     }
 
     protected override void cleanup() {

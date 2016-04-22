@@ -13,10 +13,10 @@ public class Playing_State : Game_State {
 public override void init() {
     add_subsystems(
         new Position_Integrator(),
+        new Inputhandler_System(),
         new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
         new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
-        new Window_Title_Writer(),
-        new Lifetime_Manager()
+        new Window_Title_Writer()
     );
 
     create_entity(Player_Ship.create_components());
