@@ -85,3 +85,9 @@
 /processorParam:TextureFormat=Color
 /build:particle.png
 
+#begin sound/effects/Minigun.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/Minigun.wav
+

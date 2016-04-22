@@ -20,7 +20,8 @@
                 new Sprite()
                 {
                     texture = Starburst.inst().get_content<Texture2D>("ship")
-                },
+                }
+,
                 new Bounding_Circle() { radius = 20.0f },
                 new Mass() { mass = 15.0f }
             };

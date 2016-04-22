@@ -25,7 +25,6 @@ namespace Fab5.Engine.Subsystems
                     MediaPlayer.Play(music.BackSong);
                     MediaPlayer.IsRepeating = music.IsRepeat;
                     music.IsSongStarted = true;
-                    MediaPlayer.IsMuted = true;
                 }
                 var gameinst = Fab5_Game.inst();
                 var keypressed = gameinst.MessagesQueue.Where(x => x.EventType == "KeyPressed").ToList();

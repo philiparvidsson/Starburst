@@ -29,8 +29,7 @@ public class Playing_State : Game_State {
 
         create_entity(new FpsCounter());
         var player = create_entity(Player_Ship.create_components());
-        create_entity(new BackgroundMusic("sound/SpaceLoungeLoop", true));
-
+        create_entity(SoundManager.create_components());
         create_entity(Dummy.create_components());
 
         var p2 = create_entity(Dummy.create_components()).get_component<Position>();

@@ -9,7 +9,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class soundmanager
+    public class SoundManager
     {
         public static Component[] create_components() {
             return new Component[]{
