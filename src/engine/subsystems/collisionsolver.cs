@@ -60,14 +60,8 @@ public class Collision_Solver : Subsystem {
         var c2     = e2.get_component<Bounding_Circle>();
         var p1     = e1.get_component<Position>();
         var p2     = e2.get_component<Position>();
-        var v1     = e1.get_component<Velocity>();
-        var v2     = e2.get_component<Velocity>();
-        var m1     = e1.get_component<Mass>()?.mass ?? 1.0f;
-        var m2     = e2.get_component<Mass>()?.mass ?? 1.0f;
         var p_x    = p2.x - p1.x;
         var p_y    = p2.y - p1.y;
-        var v_x    = v1.x - v2.x;
-        var v_y    = v1.y - v2.y;
         var r2     = p_x*p_x + p_y*p_y;
         var r2_max = (c1.radius+c2.radius) * (c1.radius+c2.radius);
 
@@ -77,11 +71,16 @@ public class Collision_Solver : Subsystem {
             return;
         }
 
-        // Calculate penetration.
-        var r  = (float)Math.Sqrt(r2);
-        var p  = c1.radius+c2.radius - r;
-        var f1 = 1.0f - m1/(m1+m2);
-        var f2 = 1.0f - m2/(m1+m2);
+        var r   = (float)Math.Sqrt(r2);
+        var p   = c1.radius+c2.radius - r;
+        var v1  = e1.get_component<Velocity>();
+        var v2  = e2.get_component<Velocity>();
+        var v_x = v1.x - v2.x;
+        var v_y = v1.y - v2.y;
+        var m1  = e1.get_component<Mass>()?.mass ?? 1.0f;
+        var m2  = e2.get_component<Mass>()?.mass ?? 1.0f;
+        var f1  = 1.0f - m1/(m1+m2);
+        var f2  = 1.0f - m2/(m1+m2);
 
         // Normalize difference in position.
         p_x /= r;
