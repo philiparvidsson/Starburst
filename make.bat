@@ -28,7 +28,7 @@ set SourcesDir=%BaseDir%\src
 set Exe=Program.exe
 
 :: Build tool paths.
-set Csc="C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+set Csc="C:\Program Files (x86)\MSBuild\14.0\Bin\amd64\csc.exe"
 set Mgcb="C:\Program Files (x86)\MSBuild\MonoGame\v3.0\Tools\MGCB.exe"
 
 :: Build tool flags.
@@ -64,12 +64,15 @@ if "%Target%"=="" set Target=all
 :: Find content and build it with MGCB.
 set Content=
 
-for /R %ContentDir% %%Q in (*.jpg; *.png; *.spritefont) do (
+for /R %ContentDir% %%Q in (*.fx; *.jpg; *.png; *.spritefont) do (
     call set "Content=%%Content%% /build:"%%Q""
 )
 
-:: TODO: Figure out a way to differentiate songs and sounds effects.
-for /R %ContentDir% %%Q in (*.mp3; *.wav) do (
+for /R %ContentDir%\sound\effects %%Q in (*.mp3; *.wav) do (
+    call set "Content=%%Content%% /processor:SoundEffectProcessor /build:"%%Q""
+)
+
+for %%Q in (%ContentDir%\sound\*.mp3; %ContentDir%\sound\*.wav) do (
     call set "Content=%%Content%% /processor:SongProcessor /build:"%%Q""
 )
 

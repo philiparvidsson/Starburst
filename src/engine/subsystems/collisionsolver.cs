@@ -5,8 +5,11 @@ using Fab5.Engine.Core;
 
 using System;
 
+// Solves collision between bounding circles.
 public class Collision_Solver : Subsystem {
     public override void update(float t, float dt) {
+        // Collisions occur at an instant so who cares about dt?
+
         int num_components;
 
         var entities = Fab5_Game.inst().get_entities(out num_components,
@@ -15,100 +18,100 @@ public class Collision_Solver : Subsystem {
             typeof (Velocity)
         );
 
-        // @To-do: Implement quad tree or spatial  grid here.
+        // @To-do: Implement a quad tree or spatial grid here to reduce the
+        //         number of candidates for collision testing.
         for (int i = 0; i < num_components; i++) {
-            var entity1          = entities[i];
-            var bounding_circle1 = entity1.get_component<Bounding_Circle>();
-            var position1        = entity1.get_component<Position>();
-            var velocity1        = entity1.get_component<Velocity>();
-            var mass1            = entity1.get_component<Mass>();
+            var e1 = entities[i];
+            var c1 = e1.get_component<Bounding_Circle>();
+            var p1 = e1.get_component<Position>();
+            var v1 = e1.get_component<Velocity>();
+            var m1 = e1.get_component<Mass>()?.mass ?? 1.0f;
 
-            if (position1.x < 0.0f) {
-                position1.x = 0.0f;
-                velocity1.x *= -1.0f;
+            if (p1.x < 0.0f) {
+                p1.x = 0.0f;
+                v1.x *= -1.0f;
             }
 
-            if (position1.x > 1279.0f) {
-                position1.x = 1279.0f;
-                velocity1.x *= -1.0f;
+            if (p1.x > 1279.0f) {
+                p1.x = 1279.0f;
+                v1.x *= -1.0f;
             }
 
-            if (position1.y < 0.0f) {
-                position1.y = 0.0f;
-                velocity1.y *= -1.0f;
+            if (p1.y < 0.0f) {
+                p1.y = 0.0f;
+                v1.y *= -1.0f;
             }
 
-            if (position1.y > 719.0f) {
-                position1.y = 719.0f;
-                velocity1.y *= -1.0f;
+            if (p1.y > 719.0f) {
+                p1.y = 719.0f;
+                v1.y *= -1.0f;
             }
-
 
             for (int j = (i+1); j < num_components; j++) {
-                var entity2          = entities[j];
-                var bounding_circle2 = entity2.get_component<Bounding_Circle>();
-                var position2        = entity2.get_component<Position>();
-                var velocity2        = entity2.get_component<Velocity>();
-                var mass2            = entity2.get_component<Mass>();
+                var e2 = entities[j];
 
-                var r_sum = (bounding_circle1.radius + bounding_circle2.radius);
-                var r2    = r_sum * r_sum;// Square sum of radii to avoid roots!
-                var d_x   = position2.x - position1.x;
-                var d_y   = position2.y - position1.y;
-                var d2_x  = d_x * d_x;
-                var d2_y  = d_y * d_y;
-                var d2    = d2_x + d2_y;
-
-                if (d2 > r2 || d2 <= 0.000001f) {
-                    // Squared distance is greater than squared radii, no collision!
-                    continue;
-                }
-
-                var d = (float)Math.Sqrt(d2);
-
-                d_x /= d2;
-                d_y /= d2;
-
-                position1.x -= r_sum * d_x;
-                position1.y -= r_sum * d_y;
-                position2.x += r_sum * d_x;
-                position2.y += r_sum * d_y;
-
-                // Impulse and impact vectors ftw
-                var impact_x  = velocity2.x - velocity1.x;
-                var impact_y  = velocity2.y - velocity1.y;
-                var impulse_x = position2.x - position1.x;
-                var impulse_y = position2.y - position1.y;
-                var r         = (float)Math.Sqrt((impulse_x * impulse_x) + (impulse_y * impulse_y));
-
-                impulse_x /= r;
-                impulse_y /= r;
-
-                var m1 = 1.0f;
-                var m2 = 1.0f;
-
-                if (mass1 != null) m1 = mass1.mass;
-                if (mass2 != null) m2 = mass2.mass;
-
-                // Dot product to get impulse factor lewl
-                var imp = (impulse_x * impact_x + impulse_y * impact_y);
-                var fac = (float)(imp * Math.Sqrt(m1 * m2));
-
-                impulse_x *= fac;
-                impulse_y *= fac;
-
-                if (m1 > 0.0f) {
-                    velocity1.x += impulse_x / m1;
-                    velocity1.y += impulse_y / m1;
-                }
-
-                if (m2 > 0.0f) {
-                    velocity2.x -= impulse_x / m2;
-                    velocity2.y -= impulse_y / m2;
-                }
-
+                resolve_collision(e1, e2);
             }
         }
+    }
+
+    private void resolve_collision(Entity e1, Entity e2) {
+        var c1     = e1.get_component<Bounding_Circle>();
+        var c2     = e2.get_component<Bounding_Circle>();
+        var p1     = e1.get_component<Position>();
+        var p2     = e2.get_component<Position>();
+        var v1     = e1.get_component<Velocity>();
+        var v2     = e2.get_component<Velocity>();
+        var m1     = e1.get_component<Mass>()?.mass ?? 1.0f;
+        var m2     = e2.get_component<Mass>()?.mass ?? 1.0f;
+        var p_x    = p2.x - p1.x;
+        var p_y    = p2.y - p1.y;
+        var v_x    = v1.x - v2.x;
+        var v_y    = v1.y - v2.y;
+        var r2     = p_x*p_x + p_y*p_y;
+        var r2_max = (c1.radius+c2.radius) * (c1.radius+c2.radius);
+
+        if (r2 < 0.0000001f || r2 > r2_max) {
+            // No penetration or full penetration (which cannot be
+            // solved in a sane way).
+            return;
+        }
+
+        // Calculate penetration.
+        var r  = (float)Math.Sqrt(r2);
+        var p  = c1.radius+c2.radius - r;
+        var f1 = 1.0f - m1/(m1+m2);
+        var f2 = 1.0f - m2/(m1+m2);
+
+        // Normalize difference in position.
+        p_x /= r;
+        p_y /= r;
+
+        // Move apart to fix penetration.
+        p1.x -= p_x*p*f1;
+        p1.y -= p_y*p*f1;
+        p2.x += p_x*p*f2;
+        p2.y += p_y*p*f2;
+
+        // Dot product to get cosine of angle between the two vectors
+        // times the magnitude of v.
+        var d = p_x*v_x + p_y*v_y;
+
+        if (d < 0.0f) {
+            // Moving away from each other.
+            return;
+        }
+
+        // @To-do: Multiply with restitution here.
+
+        // Newton's third law.
+        p_x *= d*2.0f;
+        p_y *= d*2.0f;
+
+        v1.x -= p_x*f1;
+        v1.y -= p_y*f1;
+        v2.x += p_x*f2;
+        v2.y += p_y*f2;
     }
 }
 
