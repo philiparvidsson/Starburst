@@ -25,7 +25,6 @@ public class Collision_Solver : Subsystem {
             var c1 = e1.get_component<Bounding_Circle>();
             var p1 = e1.get_component<Position>();
             var v1 = e1.get_component<Velocity>();
-            var m1 = e1.get_component<Mass>()?.mass ?? 1.0f;
 
             if (p1.x < 0.0f) {
                 p1.x = 0.0f;
