@@ -55,16 +55,16 @@ public class Collision_Solver : Subsystem {
     }
 
     private void resolve_collision(Entity e1, Entity e2) {
-        var c1     = e1.get_component<Bounding_Circle>();
-        var c2     = e2.get_component<Bounding_Circle>();
         var p1     = e1.get_component<Position>();
         var p2     = e2.get_component<Position>();
         var p_x    = p2.x - p1.x;
         var p_y    = p2.y - p1.y;
         var r2     = p_x*p_x + p_y*p_y;
-        var r2_max = (c1.radius+c2.radius) * (c1.radius+c2.radius);
+        var c1     = e1.get_component<Bounding_Circle>();
+        var c2     = e2.get_component<Bounding_Circle>();
+        var r2_min = (c1.radius+c2.radius) * (c1.radius+c2.radius);
 
-        if (r2 < 0.00001f || r2 > r2_max) {
+        if (r2 < 0.00001f || r2 > r2_min) {
             // No penetration or full penetration (which cannot be
             // solved in a sane way).
             return;
