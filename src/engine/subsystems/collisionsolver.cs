@@ -26,23 +26,23 @@ public class Collision_Solver : Subsystem {
             var p1 = e1.get_component<Position>();
             var v1 = e1.get_component<Velocity>();
 
-            if (p1.x < 0.0f) {
-                p1.x = 0.0f;
+            if (p1.x < c1.radius) {
+                p1.x = c1.radius;
                 v1.x *= -1.0f;
             }
 
-            if (p1.x > 1279.0f) {
-                p1.x = 1279.0f;
+            if (p1.x > 1279.0f-c1.radius) {
+                p1.x = 1279.0f-c1.radius;
                 v1.x *= -1.0f;
             }
 
-            if (p1.y < 0.0f) {
-                p1.y = 0.0f;
+            if (p1.y < c1.radius) {
+                p1.y = c1.radius;
                 v1.y *= -1.0f;
             }
 
-            if (p1.y > 719.0f) {
-                p1.y = 719.0f;
+            if (p1.y > 719.0f-c1.radius) {
+                p1.y = 719.0f-c1.radius;
                 v1.y *= -1.0f;
             }
 
@@ -64,7 +64,7 @@ public class Collision_Solver : Subsystem {
         var r2     = p_x*p_x + p_y*p_y;
         var r2_max = (c1.radius+c2.radius) * (c1.radius+c2.radius);
 
-        if (r2 < 0.0000001f || r2 > r2_max) {
+        if (r2 < 0.00001f || r2 > r2_max) {
             // No penetration or full penetration (which cannot be
             // solved in a sane way).
             return;
@@ -85,7 +85,7 @@ public class Collision_Solver : Subsystem {
         p_x /= r;
         p_y /= r;
 
-        // Move apart to fix penetration.
+        // Move apart to solve penetration.
         p1.x -= p_x*p*f1;
         p1.y -= p_y*p*f1;
         p2.x += p_x*p*f2;
@@ -100,7 +100,7 @@ public class Collision_Solver : Subsystem {
             return;
         }
 
-        // @To-do: Multiply with restitution here.
+        // @To-do: Apply restitution factor here.
 
         // Newton's third law.
         p_x *= d*2.0f;
