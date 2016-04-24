@@ -10,9 +10,9 @@ public class Collision_Solver : Subsystem {
     public override void update(float t, float dt) {
         // Collisions occur at an instant so who cares about dt?
 
-        int num_components;
+        int num_entities;
 
-        var entities = Fab5_Game.inst().get_entities(out num_components,
+        var entities = Fab5_Game.inst().get_entities(out num_entities,
             typeof (Bounding_Circle),
             typeof (Position),
             typeof (Velocity)
@@ -20,7 +20,7 @@ public class Collision_Solver : Subsystem {
 
         // @To-do: Implement a quad tree or spatial grid here to reduce the
         //         number of candidates for collision testing.
-        for (int i = 0; i < num_components; i++) {
+        for (int i = 0; i < num_entities; i++) {
             var e1 = entities[i];
             var c1 = e1.get_component<Bounding_Circle>();
             var p1 = e1.get_component<Position>();
@@ -47,7 +47,7 @@ public class Collision_Solver : Subsystem {
                 v1.y *= -1.0f;
             }
 
-            for (int j = (i+1); j < num_components; j++) {
+            for (int j = (i+1); j < num_entities; j++) {
                 var e2 = entities[j];
 
                 resolve_collision(e1, e2);
