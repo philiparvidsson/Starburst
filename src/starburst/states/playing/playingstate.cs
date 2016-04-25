@@ -49,6 +49,9 @@ public class Playing_State : Game_State {
         var player = create_entity(Player_Ship.create_components());
         var player2 = create_entity(Player_Ship.create_components());
 
+        player2.get_component<Position>().x = 400;
+        player2.get_component<Position>().y = 400;
+
         create_entity(SoundManager.create_components());
         create_entity(Dummy.create_components());
 
@@ -85,16 +88,18 @@ public class Playing_State : Game_State {
                         new Velocity() { x = playervel.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 190.0f * (float)(rand.NextDouble()+0.5),
                                          y = playervel.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 190.0f * (float)(rand.NextDouble()+0.5) },
                         new Sprite() {
-                            texture = Starburst.inst().get_content<Texture2D>("particle")
+                            texture = Starburst.inst().get_content<Texture2D>("particle"),
+                            color = Color.White * 0.8f,
+                            scale = 0.9f + (float)rand.NextDouble() * 1.3f
                         },
-                        new TTL() { time = 0.2f + (float)(rand.NextDouble() * 0.1f) }
+                        new TTL() { time = 0.2f + (float)(rand.NextDouble() * 0.3f) }
 //                        new Bounding_Circle() { radius = 1.0f },
 //                        new Mass() { mass = 0.0f }
 
                     };
                 },
                 interval = 0.05f,
-                num_particles_per_emit = 20
+                num_particles_per_emit = 30
             }
         });
 

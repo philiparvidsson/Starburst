@@ -149,7 +149,7 @@ namespace Fab5.Engine.Subsystems {
         private void drawSprites(SpriteBatch sprite_batch, Camera camera, int num_components, Entity[] entities, float dt)
         {
             sprite_batch.Begin(SpriteSortMode.FrontToBack,
-                BlendState.AlphaBlend, null, null, null, null,
+                BlendState.Additive, null, null, null, null,
                 transformMatrix: camera.getViewMatrix(camera.viewport));
 
             for (int i = 0; i < num_components; i++)
