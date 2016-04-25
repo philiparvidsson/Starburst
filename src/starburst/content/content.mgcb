@@ -139,3 +139,15 @@
 /processorParam:TextureFormat=Color
 /build:asteroid.png
 
+#begin sound/effects/bang1.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/bang1.mp3
+
+#begin sound/effects/bang2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/bang2.mp3
+
