@@ -29,6 +29,7 @@ namespace Fab5.Engine.Subsystems {
         int currentPlayerNumber, prevPlayerNumber;
         SpriteBatch sprite_batch;
         Viewport defaultViewport;
+        BG_Renderer bgRender;
 
         public Rendering_System(GraphicsDevice graphicsDevice) {
             sprite_batch = new SpriteBatch(graphicsDevice);
@@ -40,7 +41,7 @@ namespace Fab5.Engine.Subsystems {
             // kör uppdatering av viewports och kameror
             updatePlayers();
 
-
+            bgRender = new BG_Renderer();
 
  	        base.init();
         }
@@ -138,7 +139,7 @@ namespace Fab5.Engine.Subsystems {
                 var currentPlayerPosition = currentPlayer.get_component<Position>();
                 cameras[p].position = currentPlayerPosition;
 
-                //drawBackground(sprite_batch, currentPlayerPosition);
+                bgRender.drawBackground(sprite_batch, currentPlayerPosition, current);
                 //drawHUD(sprite_batch, entity, currentPlayerNumber);
                 drawSprites(sprite_batch, current, num_components, entities, dt);
             }

@@ -117,6 +117,7 @@ public abstract class Game_State {
     public Entity[] get_entities(out int num_entities,
                                  params Type[] component_types)
     {
+            entity_results = new Entity[1024];
         int index = 0;
 
         foreach (var entry in entities) {

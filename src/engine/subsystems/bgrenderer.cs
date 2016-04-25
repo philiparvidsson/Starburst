@@ -8,38 +8,18 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
-    public class BG_Renderer : Subsystem
+    public class BG_Renderer
     {
-        private readonly SpriteBatch sprite_batch;
-
-        public BG_Renderer(SpriteBatch sprite_batch)
-        {
-            this.sprite_batch = sprite_batch;
-        }
-
-        public override void draw(float t, float dt)
+        public void drawBackground(SpriteBatch sprite_batch, Position playerPosition, Camera camera)
         {
             int num_entities;
-            Position player_pos = null;
-
-            /* Get position of player */
-            var players = Fab5_Game.inst().get_entities(out num_entities,
-                typeof(Inputhandler),
-                typeof(Position));
-            for (int i = 0; i < num_entities; i++)
-            {
-                var player = players[i];
-                player_pos = player.get_component<Position>();
-            }
-            /**/
-
-            sprite_batch.GraphicsDevice.Clear(Color.Black);
-
-            sprite_batch.Begin();
 
             var tities = Fab5_Game.inst().get_entities(out num_entities,
             typeof(Backdrop));
 
+            sprite_batch.Begin(SpriteSortMode.FrontToBack,
+                BlendState.AlphaBlend, null, null, null, null,
+                transformMatrix: camera.getViewMatrix(camera.viewport));
 
             for (int j = 0; j < num_entities; j++)
             {
@@ -50,20 +30,18 @@
                     continue;
 
                 sprite_batch.Draw(bgtexture.backdrop,
-                    destinationRectangle: new Rectangle(0 - (int)(player_pos.x / 10),
-                        0 - (int)(player_pos.y / 10),
+                    destinationRectangle: new Rectangle(0 - (int)(playerPosition.x / 100),
+                        0 - (int)(playerPosition.y / 100),
                         bgtexture.backdrop.Width*2,
                         bgtexture.backdrop.Height*2),
                     origin: new Vector2(bgtexture.backdrop.Width / 2, bgtexture.backdrop.Height / 2));
                 sprite_batch.Draw(bgtexture.stardrop,
-                    destinationRectangle: new Rectangle(0 - (int)(player_pos.x / 5),
-                        0 - (int)(player_pos.y / 5),
+                    destinationRectangle: new Rectangle(0 - (int)(playerPosition.x / 10),
+                        0 - (int)(playerPosition.y / 10),
                         bgtexture.stardrop.Width*2,
                         bgtexture.stardrop.Height*2),
                     origin: new Vector2(bgtexture.stardrop.Width / 2, bgtexture.stardrop.Height / 2),
                     color: (Color.White));
-
-
             }
             sprite_batch.End();
         }

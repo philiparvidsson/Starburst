@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Fab5.Engine.Components {
-    class Camera : Component {
+    public class Camera : Component {
         public float zoom;
         public Position position;
         public Matrix transformMatrix;
