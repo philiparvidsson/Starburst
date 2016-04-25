@@ -24,7 +24,8 @@ public class Playing_State : Game_State {
             new Collision_Solver(),
             new Sound(),
             new Particle_System(),
-            new Lifetime_Manager()
+            new Lifetime_Manager(),
+            new MessageQueue_System() 
         );
 
         create_entity(new FpsCounter());
