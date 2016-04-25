@@ -146,6 +146,7 @@ public abstract class Game_State {
     public void add_subsystems(params Subsystem[] subsystems) {
         foreach (Subsystem subsystem in subsystems) {
             subsystem.state = this;
+            subsystem.init();
         }
 
         this.subsystems.AddRange(subsystems);
@@ -188,6 +189,7 @@ public abstract class Subsystem {
     // Override to perform update logic (unlimited calls per sec?)
     public virtual void update(float t, float dt) {}
     public virtual void cleanup() {}
+    public virtual void init() {}
 
     }
 

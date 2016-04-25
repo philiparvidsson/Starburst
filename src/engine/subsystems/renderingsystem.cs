@@ -10,16 +10,16 @@ using Microsoft.Xna.Framework;
 
 namespace Fab5.Engine.Subsystems {
     class Rendering_System : Subsystem {
-        /** 
+        /**
         * Camera, Viewport, Entity (med InputHandler)
-        * 
+        *
         * initialize:
         * loopa igenom alla spelare (alla entiteter med inputhandlers)
         * ställ in viewports och kameror baserat på hur många inputs
-        * 
+        *
         * update:
         * uppdatera kameran för att centreras på kopplade spelarens position
-        * 
+        *
         * draw:
         * kör spriterenderer och textrenderer på varje viewport
         **/
@@ -44,10 +44,10 @@ namespace Fab5.Engine.Subsystems {
 
  	        base.init();
         }
-        
-            
 
-            
+
+
+
         private void updatePlayers() {
             // ev hantering för om inga spelare hittas?
 
@@ -83,12 +83,12 @@ namespace Fab5.Engine.Subsystems {
 
             prevPlayerNumber = currentPlayerNumber;
         }
-        
+
         public override void update(float t, float dt) {
             base.update(t, dt);
 
-            /** 
-             * uppdatera kameran för att centreras på kopplade spelarens position 
+            /**
+             * uppdatera kameran för att centreras på kopplade spelarens position
              * (görs nu i draw för att onödigt att ändra kamera när det ändå inte renderas)
              **/
             /*
@@ -124,7 +124,7 @@ namespace Fab5.Engine.Subsystems {
 
              /*
              * Loopa igenom kameror
-             * 
+             *
              * För varje kamera,
              * kör den vanliga draw-loopen baserat på kamerans viewport
              */
@@ -140,12 +140,13 @@ namespace Fab5.Engine.Subsystems {
 
                 //drawBackground(sprite_batch, currentPlayerPosition);
                 //drawHUD(sprite_batch, entity, currentPlayerNumber);
-                drawSprites(sprite_batch, current, num_components, entities);
+                drawSprites(sprite_batch, current, num_components, entities, dt);
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;
             base.draw(t, dt);
         }
-        private void drawSprites(SpriteBatch sprite_batch, Camera camera, int num_components, Entity[] entities)
+
+        private void drawSprites(SpriteBatch sprite_batch, Camera camera, int num_components, Entity[] entities, float dt)
         {
             sprite_batch.Begin(SpriteSortMode.FrontToBack,
                 BlendState.AlphaBlend, null, null, null, null,
@@ -154,27 +155,69 @@ namespace Fab5.Engine.Subsystems {
             for (int i = 0; i < num_components; i++)
             {
                 var entity = entities[i];
-                var position = entity.get_component<Position>();
-                var sprite = entity.get_component<Sprite>();
-                var angle = entity.get_component<Angle>();
 
-                if (angle == null)
-                    sprite_batch.Draw(sprite.texture, new Vector2(position.x, position.y), Color.White);
-                else
-                    sprite_batch.Draw(
-                        texture: sprite.texture,
-                        position: new Vector2(position.x, position.y),
-                        sourceRectangle: null,
-                        color: Color.White,
-                        rotation: angle.angle,
-                        origin: new Vector2(sprite.texture.Width * .5f, sprite.texture.Height * .5f),
-                        scale: 1f,
-                        effects: SpriteEffects.None,
-                        layerDepth: sprite.depth
-                        );
+                draw_sprite(entity, dt);
             }
 
             sprite_batch.End();
         }
+
+        public void draw_sprite(Entity entity, float dt) {
+            var position = entity.get_component<Position>();
+            var sprite   = entity.get_component<Sprite>();
+            var angle    = entity.get_component<Angle>()?.angle ?? 0.0f;
+
+            int frame_width  = sprite.frame_width;
+            int frame_height = sprite.frame_height;
+
+            int frame_x = sprite.frame_x;
+            int frame_y = sprite.frame_y;
+
+            if (frame_width == 0.0f) {
+                frame_width = sprite.texture.Width;
+                frame_height = sprite.texture.Height;
+            }
+
+            var source_rect = new Rectangle(0, 0, frame_width, frame_height);
+
+            if (sprite.num_frames > 1) {
+                sprite.frame_timer += dt;
+                if (sprite.frame_timer > (1.0f/sprite.fps)) {
+                    sprite.frame_counter++;
+                    sprite.frame_timer -= (1.0f/sprite.fps);
+
+                    sprite.frame_x += sprite.frame_width;
+                    if (sprite.frame_x >= sprite.texture.Width || sprite.frame_counter >= sprite.num_frames) {
+                        sprite.frame_x = 0;
+
+                        if (sprite.frame_counter >= sprite.num_frames) {
+                            sprite.frame_counter = 0;
+                            sprite.frame_y = 0;
+                        }
+                        else {
+                            sprite.frame_y += sprite.frame_height;
+                            if (sprite.frame_y >= sprite.texture.Height || sprite.frame_counter >= sprite.num_frames) {
+                                sprite.frame_y = 0;
+                                sprite.frame_counter = 0;
+                            }
+                        }
+                    }
+                }
+
+                source_rect = new Rectangle(sprite.frame_x, sprite.frame_y, frame_width, frame_height);
+            }
+
+            sprite_batch.Draw(sprite.texture,
+                              new Vector2(position.x, position.y),
+                              source_rect,
+                              sprite.color,
+                              angle,
+                              new Vector2(frame_width/2.0f, frame_height/2.0f),
+                              sprite.scale,
+                              SpriteEffects.None,
+                              0.5f);
+
+    }
+
     }
 }

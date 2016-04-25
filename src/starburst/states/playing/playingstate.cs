@@ -21,7 +21,7 @@ public class Playing_State : Game_State {
         var x = data.c_x;
         var y = data.c_y;
 
-        Func<Sprite> fn = () => new Sprite() { texture = Starburst.inst().get_content<Texture2D>("particle"), color = Color.Black };
+        Func<Sprite> fn = () => new Sprite() { texture = Starburst.inst().get_content<Texture2D>("particle"), color = Color.White };
         create_entity(Particle_System.explosion(x, y, fn));
     }
 
@@ -29,8 +29,9 @@ public class Playing_State : Game_State {
         add_subsystems(
             new Position_Integrator(),
             new Inputhandler_System(),
-            new BG_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
-            new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
+//            new BG_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
+            //new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
+            new Rendering_System(Starburst.inst().GraphicsDevice),
             new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
             new Window_Title_Writer(),
             new Collision_Solver(),
