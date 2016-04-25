@@ -6,6 +6,7 @@ using Fab5.Engine.Core;
 using Fab5.Engine.Subsystems;
 
 using Fab5.Starburst.States.Playing.Entities;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using System;
@@ -14,12 +15,23 @@ public class Playing_State : Game_State {
 
     public static System.Random rand = new System.Random();
 
+    public override void on_message(string msg, dynamic data) {
+        var p1 = data.entity1.get_component<Position>();
+
+        var x = data.c_x;
+        var y = data.c_y;
+
+        Func<Sprite> fn = () => new Sprite() { texture = Starburst.inst().get_content<Texture2D>("particle"), color = Color.White };
+        create_entity(Particle_System.explosion(x, y, fn));
+    }
+
     public override void init() {
         add_subsystems(
             new Position_Integrator(),
             new Inputhandler_System(),
-            new BG_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
-            new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
+//            new BG_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
+            //new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
+            new Rendering_System(Starburst.inst().GraphicsDevice),
             new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
             new Window_Title_Writer(),
             new Collision_Solver(),
@@ -30,7 +42,7 @@ public class Playing_State : Game_State {
         );
 
         create_entity(Back_drop.create_components()).get_component<Backdrop>();
-        
+
         create_entity(new FpsCounter());
         var player = create_entity(Player_Ship.create_components());
         create_entity(SoundManager.create_components());
@@ -81,7 +93,7 @@ public class Playing_State : Game_State {
                 num_particles_per_emit = 20
             }
         });
-        
+
 
     }
 
