@@ -25,6 +25,9 @@ public class Sprite : Component {
     public int frame_counter;
 
     public Texture2D texture;
+
+    public float scale = 1.0f;
+
 }
 
 }

@@ -77,7 +77,7 @@ public class Sprite_Renderer : Subsystem {
                               Color.White,
                               angle,
                               new Vector2(frame_width/2.0f, frame_height/2.0f),
-                              1.0f, // scale,
+                              sprite.scale,
                               SpriteEffects.None,
                               0.5f);
         }

@@ -8,7 +8,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 public static class Dummy {
 
+    static int frame = 13;
+    static System.Random rand = new System.Random();
+
     public static Component[] create_components() {
+        frame *= 17;
+        frame = (frame % 20);
+        var ascale = 0.5f + (float)rand.NextDouble() * 1.0f;
+
         return new Component[] {
             new Angle() { angle = 0 },
             new Position() {x = 600, y = 200 },
@@ -18,10 +25,12 @@ public static class Dummy {
                 frame_width = 72,
                 frame_height = 72,
                 num_frames = 19,
-                fps = 15.0f,
+                fps = 12.0f + (float)rand.NextDouble() * 5.0f,
+                frame_counter = frame,
+                scale = ascale
             },
-            new Bounding_Circle() { radius = 32.0f },
-            new Mass() { mass = 30.0f }
+            new Bounding_Circle() { radius = 32.0f * ascale },
+            new Mass() { mass = 30.0f * ascale * ascale * ascale }
         };
     }
 
