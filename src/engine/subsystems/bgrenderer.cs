@@ -61,7 +61,7 @@
                         bgtexture.stardrop.Width*2,
                         bgtexture.stardrop.Height*2),
                     origin: new Vector2(bgtexture.stardrop.Width / 2, bgtexture.stardrop.Height / 2),
-                    color: (Color.White * 0.5f));
+                    color: (Color.White));
 
 
             }
