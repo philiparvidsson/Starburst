@@ -31,8 +31,10 @@ namespace Fab5.Engine.Subsystems
                 foreach(var item in keypressed)
                 {
                     if(item.EventName == "Fire") {
+                        
                         var effect = entity.get_component<Fab5SoundEffect>();
-                        effect.SoundEffect.Play();
+                        var ins = effect.SoundEffect.CreateInstance();
+                        ins.Play();
                     }
                 }
             }
