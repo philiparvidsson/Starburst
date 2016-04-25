@@ -22,28 +22,27 @@ public class Collision_Solver : Subsystem {
         //         number of candidates for collision testing.
         for (int i = 0; i < num_entities; i++) {
             var e1  = entities[i];
-            var c1  = e1.get_component<Bounding_Circle>();
             var p1  = e1.get_component<Position>();
             var v1  = e1.get_component<Velocity>();
             var rc1 = e1.get_component<Mass>()?.restitution_coeff ?? 1.0f;
 
-            if (p1.x < c1.radius) {
-                p1.x = c1.radius;
+            if (p1.x < -1500.0f) {
+                p1.x = -1500.0f;
                 v1.x = -v1.x * rc1;
             }
 
-            if (p1.x > 1279.0f-c1.radius) {
-                p1.x = 1279.0f-c1.radius;
+            if (p1.x > 1500.0f) {
+                p1.x = 1500.0f;
                 v1.x = -v1.x * rc1;
             }
 
-            if (p1.y < c1.radius) {
-                p1.y = c1.radius;
+            if (p1.y < -1500.0f) {
+                p1.y = -1500.0f;
                 v1.y = -v1.y * rc1;
             }
 
-            if (p1.y > 719.0f-c1.radius) {
-                p1.y = 719.0f-c1.radius;
+            if (p1.y > 1500.0f) {
+                p1.y = 1500.0f;
                 v1.y = -v1.y * rc1;
             }
 
