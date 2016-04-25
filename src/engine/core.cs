@@ -106,19 +106,14 @@ public abstract class Game_State {
         entities.Remove(id);
     }
 
-    // @To-do: Realloc this when the results are too big.
-    // This field is used to store entity results. Reusing this array lets us
-    // avoid reallocs on every call to the get_entities() method.
-    private Entity[] entity_results = new Entity[1024*1024];
-
     // Retrieves all entities containing the specified component types. Do not
     // use the .Length-attribute of the returned array to iterate through the
     // results, but rather the num_entities out-parameter.
     public Entity[] get_entities(out int num_entities,
                                  params Type[] component_types)
+
     {
-            entity_results = new Entity[1024];
-        int index = 0;
+        var results = new List<Entity>(128);
 
         foreach (var entry in entities) {
             var entity = entry.Value;
@@ -134,13 +129,13 @@ public abstract class Game_State {
             }
 
             if (has_all_component_types) {
-                entity_results[index++] = entity;
+                results.Add(entity);
             }
         }
 
-        num_entities = index;
+        num_entities = results.Count;
 
-        return (entity_results);
+        return (results.ToArray());
     }
 
     // Adds the specified subsystems to the state.

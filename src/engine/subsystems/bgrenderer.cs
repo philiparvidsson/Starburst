@@ -19,18 +19,16 @@
             typeof(Backdrop));
 
             sprite_batch.Begin(SpriteSortMode.BackToFront,
-                BlendState.Additive, null, null, null, null,
-                transformMatrix: camera.getViewMatrix(camera.viewport));
+                BlendState.Additive, null, null, null, null
+                               /*transformMatrix: camera.getViewMatrix(camera.viewport)*/);
 
             for (int j = 0; j < num_entities; j++)
             {
                 var entity = tities[j];
                 var bgtexture = entity.get_component<Backdrop>();
                 
-                if (bgtexture == null)
-                    continue;
 
-                var fac1 = 0.01f;
+                var fac1 = 0.05f;
                 sprite_batch.Draw(bgtexture.backdrop,
                                   Vector2.Zero,
                                   null,
@@ -42,7 +40,7 @@
                                   SpriteEffects.None,
                                   1.0f);
 
-                var fac2 = 0.1f;
+                var fac2 = 0.25f;
                 sprite_batch.Draw(bgtexture.stardrop,
                                   Vector2.Zero,
                                   null,

@@ -22,7 +22,11 @@ public class Playing_State : Game_State {
             var x = data.c_x;
             var y = data.c_y;
 
-            Func<Sprite> fn = () => new Sprite() { texture = Starburst.inst().get_content<Texture2D>("particle"), color = new Color(0.4f, 0.3f, 0.1f), blend_mode = Sprite.BM_ADD };
+            Func<Sprite> fn = () => new Sprite() {
+                texture = Starburst.inst().get_content<Texture2D>("particle"),
+                color = new Color(0.4f, 0.3f, 0.1f),
+                blend_mode = Sprite.BM_ADD,
+                scale = 0.5f + (float)rand.NextDouble()};
             create_entity(Particle_System.explosion(x, y, fn));
         }
     }
@@ -53,27 +57,17 @@ public class Playing_State : Game_State {
         player2.get_component<Position>().y = 400;
 
         create_entity(SoundManager.create_components());
-        create_entity(Dummy.create_components());
 
-        var p2 = create_entity(Dummy.create_components()).get_component<Position>();
-        p2.x = 800.0f;
-        p2.y = 300.0f;
+        for (int i = 0; i < 75; i++) {
 
-        var p3 = create_entity(Dummy.create_components()).get_component<Position>();
-        p3.x = 900.0f;
-        p3.y = 700.0f;
-
-        var p4 = create_entity(Dummy.create_components()).get_component<Position>();
-        p4.x = 100.0f;
-        p4.y = 400.0f;
-
-        var p5 = create_entity(Dummy.create_components()).get_component<Position>();
-        p5.x = 200.0f;
-        p5.y = 200.0f;
-
-        var p6 = create_entity(Dummy.create_components()).get_component<Position>();
-        p6.x = 1100.0f;
-        p6.y = 500.0f;
+            var asteroid = create_entity(Dummy.create_components());
+            var ap = asteroid.get_component<Position>();
+            var av = asteroid.get_component<Velocity>();
+            ap.x = -1500 + 3000 * (float)rand.NextDouble();
+            ap.y = -1500 + 3000 * (float)rand.NextDouble();
+            //av.x = -150 + 300 * (float)rand.NextDouble();
+            //av.y = -150 + 300 * (float)rand.NextDouble();
+        }
 
         var playerpos = player.get_component<Position>();
         var playervel = player.get_component<Velocity>();
