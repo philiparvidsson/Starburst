@@ -21,7 +21,7 @@ public class Playing_State : Game_State {
         var x = data.c_x;
         var y = data.c_y;
 
-        Func<Sprite> fn = () => new Sprite() { texture = Starburst.inst().get_content<Texture2D>("particle"), color = Color.White };
+        Func<Sprite> fn = () => new Sprite() { texture = Starburst.inst().get_content<Texture2D>("particle"), color = new Color(0.4f, 0.3f, 0.1f) };
         create_entity(Particle_System.explosion(x, y, fn));
     }
 
