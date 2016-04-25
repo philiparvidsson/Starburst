@@ -27,13 +27,13 @@
 
                 input.keyboardState = Keyboard.GetState();
 
-                if (input.keyboardState.IsKeyDown(Keys.Left))
+                if (input.keyboardState.IsKeyDown(input.left))
                     angle.angle -= 3.5f * dt;
 
-                if (input.keyboardState.IsKeyDown(Keys.Right))
+                if (input.keyboardState.IsKeyDown(input.right))
                     angle.angle += 3.5f * dt;
 
-                if (input.keyboardState.IsKeyDown(Keys.Up))
+                if (input.keyboardState.IsKeyDown(input.up))
                 {
                     velocity.x += (float)(Math.Cos(angle.angle)) * 4.3f;
                     velocity.y += (float)(Math.Sin(angle.angle)) * 4.3f;

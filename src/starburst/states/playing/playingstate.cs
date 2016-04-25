@@ -47,6 +47,8 @@ public class Playing_State : Game_State {
 
         create_entity(new FpsCounter());
         var player = create_entity(Player_Ship.create_components());
+        var player2 = create_entity(Player_Ship.create_components());
+
         create_entity(SoundManager.create_components());
         create_entity(Dummy.create_components());
 

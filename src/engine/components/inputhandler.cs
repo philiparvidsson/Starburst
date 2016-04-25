@@ -15,5 +15,10 @@
     public class Inputhandler : Component
     {
         public KeyboardState keyboardState;
+
+        public Keys left  = Keys.Left;
+        public Keys right = Keys.Right;
+        public Keys up    = Keys.Up;
+        public Keys down  = Keys.Down;
     }
 }
