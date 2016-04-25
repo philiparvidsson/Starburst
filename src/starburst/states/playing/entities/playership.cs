@@ -6,6 +6,7 @@
 
     using Microsoft.Xna.Framework.Input;
     using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework;
 
     public static class Player_Ship
     {
@@ -32,7 +33,8 @@
                 new Velocity() {x = 0.0f, y = 0.0f },
                 new Sprite()
                 {
-                    texture = Starburst.inst().get_content<Texture2D>("ships/ship11")
+                    texture = Starburst.inst().get_content<Texture2D>("ships/ship11"),
+                    color = new Color(0.6f, 0.9f, 1.0f)
                 }
 ,
                 new Bounding_Circle() { radius = 20.0f },

@@ -35,8 +35,16 @@
 
                 if (input.keyboardState.IsKeyDown(input.up))
                 {
-                    velocity.x += (float)(Math.Cos(angle.angle)) * 4.3f;
-                    velocity.y += (float)(Math.Sin(angle.angle)) * 4.3f;
+                    var acc = 380.0f * dt;
+                    velocity.x += (float)(Math.Cos(angle.angle)) * acc;
+                    velocity.y += (float)(Math.Sin(angle.angle)) * acc;
+
+                    var speed = (float)Math.Sqrt(velocity.x*velocity.x + velocity.y*velocity.y);
+
+                    if (speed > 290.0f) {
+                        velocity.x = 290.0f*(velocity.x / speed);
+                        velocity.y = 290.0f*(velocity.y / speed);
+                    }
                 }
                 //fire on left controll
                 if (input.keyboardState.IsKeyDown(Keys.LeftControl))

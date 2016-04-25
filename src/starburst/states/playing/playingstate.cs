@@ -139,7 +139,13 @@ public class Playing_State : Game_State {
         base.update(t, dt);
 
         if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape)) {
-                Starburst.inst().Quit();
+            Starburst.inst().Quit();
+        }
+
+        if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftAlt) &&
+            Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter))
+        {
+            Starburst.inst().GraphicsMgr.ToggleFullScreen();
         }
     }
 
