@@ -20,9 +20,6 @@ public class Sprite_Renderer : Subsystem {
             typeof (Sprite)
         );
 
-        // @To-do: Should not be done here.
-        sprite_batch.GraphicsDevice.Clear(Color.Black);
-
         sprite_batch.Begin();
 
         for (int i = 0; i < num_components; i++) {

@@ -18,6 +18,7 @@ public class Playing_State : Game_State {
         add_subsystems(
             new Position_Integrator(),
             new Inputhandler_System(),
+            new BG_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
             new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
             new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
             new Window_Title_Writer(),
@@ -28,6 +29,8 @@ public class Playing_State : Game_State {
             new MessageQueue_System()
         );
 
+        create_entity(Back_drop.create_components()).get_component<Backdrop>();
+        
         create_entity(new FpsCounter());
         var player = create_entity(Player_Ship.create_components());
         create_entity(SoundManager.create_components());
@@ -78,6 +81,7 @@ public class Playing_State : Game_State {
                 num_particles_per_emit = 20
             }
         });
+        
 
     }
 

@@ -42,7 +42,7 @@ public abstract class Fab5_Game : Game {
     }
 
     protected override void LoadContent() {
-    }
+        }
 
     protected override void UnloadContent() {
         // TODO: Unload any non ContentManager content here

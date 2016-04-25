@@ -19,7 +19,7 @@
                 new Velocity() {x = 0.0f, y = 0.0f },
                 new Sprite()
                 {
-                    texture = Starburst.inst().get_content<Texture2D>("ship")
+                    texture = Starburst.inst().get_content<Texture2D>("ships/ship11")
                 }
 ,
                 new Bounding_Circle() { radius = 20.0f },
