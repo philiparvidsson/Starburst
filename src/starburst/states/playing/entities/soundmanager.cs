@@ -12,9 +12,15 @@
     public class SoundManager
     {
         public static Component[] create_components() {
+            var backlib = new BackgroundMusicLibrary();
+            backlib.Library = new List<BackgroundMusic>() {
+                        new BackgroundMusic("sound/SpaceLoungeLoop", true),
+                        new BackgroundMusic("sound/ContactLoop", true),
+                        new BackgroundMusic("sound/SpaceCube", true)
+            };
             return new Component[]{
-                new BackgroundMusic("sound/SpaceLoungeLoop", true),
-                new Fab5SoundEffect("sound/effects/Minigun")
+                new Fab5SoundEffect("sound/effects/Minigun"),
+                (Component)backlib
             };
         }
     }

@@ -15,7 +15,9 @@ namespace Fab5.Engine.Components
             File = file;
             SoundEffect = Fab5_Game.inst().Content.Load<SoundEffect>(file);
         }
-        public String File { get; set; }
+        public string Desc { get; set; }
+        public string File { get; set; }
         public SoundEffect SoundEffect { get; set; }
     }
 }
+

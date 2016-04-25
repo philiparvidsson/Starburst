@@ -42,6 +42,7 @@
     <Compile Include="src\engine\components\angle.cs" />
     <Compile Include="src\engine\components\backdrop.cs" />
     <Compile Include="src\engine\components\backgroundmusic.cs" />
+    <Compile Include="src\engine\components\backgroundmusiclibrary.cs" />
     <Compile Include="src\engine\components\boundingcircle.cs" />
     <Compile Include="src\engine\components\fab5soundeffect.cs" />
     <Compile Include="src\engine\components\fpscounter.cs" />
