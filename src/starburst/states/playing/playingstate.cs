@@ -16,13 +16,15 @@ public class Playing_State : Game_State {
     public static System.Random rand = new System.Random();
 
     public override void on_message(string msg, dynamic data) {
-        var p1 = data.entity1.get_component<Position>();
+        if (msg == "collision") {
+            var p1 = data.entity1.get_component<Position>();
 
-        var x = data.c_x;
-        var y = data.c_y;
+            var x = data.c_x;
+            var y = data.c_y;
 
-        Func<Sprite> fn = () => new Sprite() { texture = Starburst.inst().get_content<Texture2D>("particle"), color = new Color(0.4f, 0.3f, 0.1f) };
-        create_entity(Particle_System.explosion(x, y, fn));
+            Func<Sprite> fn = () => new Sprite() { texture = Starburst.inst().get_content<Texture2D>("particle"), color = new Color(0.4f, 0.3f, 0.1f) };
+            create_entity(Particle_System.explosion(x, y, fn));
+        }
     }
 
     public override void init() {
