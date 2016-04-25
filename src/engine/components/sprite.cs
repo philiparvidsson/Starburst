@@ -6,6 +6,7 @@ namespace Fab5.Engine.Components {
 
 using Fab5.Engine.Core;
 
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 /*------------------------------------------------
@@ -27,6 +28,8 @@ public class Sprite : Component {
     public Texture2D texture;
 
     public float scale = 1.0f;
+
+    public Color color = Color.White;
 
 }
 

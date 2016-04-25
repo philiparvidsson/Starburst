@@ -100,6 +100,11 @@ public class Collision_Solver : Subsystem {
             return;
         }
 
+
+        var c_x = p1.x + p_x*c1.radius;
+        var c_y = p1.y + p_y*c1.radius;
+        Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = e2, c_x = c_x, c_y = c_y });
+
         // @To-do: Apply restitution factor here.
 
         // Newton's third law.

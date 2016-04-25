@@ -71,7 +71,7 @@ public class Sprite_Renderer : Subsystem {
             sprite_batch.Draw(sprite.texture,
                               new Vector2(position.x, position.y),
                               source_rect,
-                              Color.White,
+                              sprite.color,
                               angle,
                               new Vector2(frame_width/2.0f, frame_height/2.0f),
                               sprite.scale,

@@ -27,6 +27,12 @@ public abstract class Fab5_Game : Game {
     protected virtual void update(float t, float dt) {}
     protected virtual void draw(float t, float dt) {}
 
+    public void message(string msg, dynamic data) {
+        if (states.Count > 0) {
+            states.Peek().on_message(msg, data);
+        }
+    }
+
     public Fab5_Game() {
         GraphicsMgr = new GraphicsDeviceManager(this);
 

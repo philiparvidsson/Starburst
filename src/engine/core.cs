@@ -70,14 +70,24 @@ public class Entity {
 // state). Entities are contained in states.
 public abstract class Game_State {
 
-        // The subsystems that the game state is using.
-        private readonly List<Subsystem> subsystems = new List<Subsystem>();
+    // The subsystems that the game state is using.
+    private readonly List<Subsystem> subsystems = new List<Subsystem>();
 
     // Entities in the game state.
     private readonly Dictionary<Int64, Entity> entities = new Dictionary<Int64, Entity>();
 
     // Entity id counter. Static to make sure all entity ids are unique.
     private static Int64 next_entity_id = 1;
+
+    internal void dispatch_message(string msg, object data) {
+        foreach (var subsystem in subsystems) {
+            subsystem.on_message(msg, data);
+        }
+    }
+
+    public virtual void on_message(string msg, dynamic data) {
+
+    }
 
     // Creates an entity from the specified components and assigns an id to it.
     public Entity create_entity(params Component[] components) {
@@ -169,6 +179,8 @@ public abstract class Game_State {
 // Base subsystem class for all game subsystems.
 public abstract class Subsystem {
     public Game_State state;
+
+    public  virtual void on_message(string msg, dynamic data) {}
 
     // Override this to perform draw operations (normally 60 calls per sec?)
     public virtual void draw(float t, float dt) {}
