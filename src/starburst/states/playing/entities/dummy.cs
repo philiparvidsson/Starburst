@@ -5,6 +5,7 @@ using Fab5.Engine.Core;
 using Fab5.Engine;
 
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 public static class Dummy {
 
@@ -26,8 +27,10 @@ public static class Dummy {
                 frame_height = 72,
                 num_frames = 19,
                 fps = 12.0f + (float)rand.NextDouble() * 5.0f,
+                frame_timer = (float)rand.NextDouble(),
                 frame_counter = frame,
-                scale = ascale
+                scale = ascale,
+                color = new Color(0.7f, 8.0f, 1.0f)
             },
             new Bounding_Circle() { radius = 32.0f * ascale },
             new Mass() { mass = 30.0f * ascale * ascale * ascale }

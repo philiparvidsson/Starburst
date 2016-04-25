@@ -22,7 +22,7 @@ public class Playing_State : Game_State {
             var x = data.c_x;
             var y = data.c_y;
 
-            Func<Sprite> fn = () => new Sprite() { texture = Starburst.inst().get_content<Texture2D>("particle"), color = new Color(0.4f, 0.3f, 0.1f) };
+            Func<Sprite> fn = () => new Sprite() { texture = Starburst.inst().get_content<Texture2D>("particle"), color = new Color(0.4f, 0.3f, 0.1f), blend_mode = Sprite.BM_ADD };
             create_entity(Particle_System.explosion(x, y, fn));
         }
     }
@@ -79,31 +79,60 @@ public class Playing_State : Game_State {
         var playervel = player.get_component<Velocity>();
         var playerrot = player.get_component<Angle>();
 
-        var pemit = create_entity(new Component[] {
+        var pemit1 = create_entity(new Component[] {
             new Particle_Emitter() {
                 emit_fn = () => {
                     return new Component[] {
                         new Position() { x = playerpos.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f,
                                          y = playerpos.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f },
-                        new Velocity() { x = playervel.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 190.0f * (float)(rand.NextDouble()+0.5),
-                                         y = playervel.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 190.0f * (float)(rand.NextDouble()+0.5) },
+                        new Velocity() { x = playervel.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 250.0f * (float)(rand.NextDouble()+0.5),
+                                         y = playervel.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 250.0f * (float)(rand.NextDouble()+0.5) },
                         new Sprite() {
                             texture = Starburst.inst().get_content<Texture2D>("particle"),
-                            color = Color.White * 0.8f,
-                            scale = 0.9f + (float)rand.NextDouble() * 1.3f
+                            color = Color.White * 0.3f,
+                            scale = 0.9f + (float)rand.NextDouble() * 1.3f,
+                            blend_mode = Sprite.BM_ADD
                         },
-                        new TTL() { time = 0.2f + (float)(rand.NextDouble() * 0.3f) }
+                        new TTL() { time = 0.05f + (float)(rand.NextDouble() * 0.05f) }
 //                        new Bounding_Circle() { radius = 1.0f },
 //                        new Mass() { mass = 0.0f }
 
                     };
                 },
-                interval = 0.05f,
-                num_particles_per_emit = 30
+                interval = 0.02f,
+                num_particles_per_emit = 10
             }
         });
 
+        var playerpos2 = player2.get_component<Position>();
+        var playervel2 = player2.get_component<Velocity>();
+        var playerrot2 = player2.get_component<Angle>();
 
+
+        var pemit2 = create_entity(new Component[] {
+            new Particle_Emitter() {
+                emit_fn = () => {
+                    return new Component[] {
+                        new Position() { x = playerpos2.x - (float)Math.Cos(playerrot2.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f,
+                                         y = playerpos2.y - (float)Math.Sin(playerrot2.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f },
+                        new Velocity() { x = playervel2.x - (float)Math.Cos(playerrot2.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 250.0f * (float)(rand.NextDouble()+0.5),
+                                         y = playervel2.y - (float)Math.Sin(playerrot2.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 250.0f * (float)(rand.NextDouble()+0.5) },
+                        new Sprite() {
+                            texture = Starburst.inst().get_content<Texture2D>("particle"),
+                            color = Color.White * 0.3f,
+                            scale = 0.9f + (float)rand.NextDouble() * 1.3f,
+                            blend_mode = Sprite.BM_ADD
+                        },
+                        new TTL() { time = 0.05f + (float)(rand.NextDouble() * 0.05f) }
+//                        new Bounding_Circle() { radius = 1.0f },
+//                        new Mass() { mass = 0.0f }
+
+                    };
+                },
+                interval = 0.02f,
+                num_particles_per_emit = 10
+            }
+        });
     }
 
     public override void update(float t, float dt) {

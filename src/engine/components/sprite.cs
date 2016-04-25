@@ -14,6 +14,9 @@ using Microsoft.Xna.Framework.Graphics;
  *----------------------------------------------*/
 
 public class Sprite : Component {
+    public const int BM_ALPHA = 1;
+    public const int BM_ADD = 2;
+
     public float fps = 15.0f;
     public float frame_timer;
     public int num_frames = 1;
@@ -30,6 +33,8 @@ public class Sprite : Component {
     public float scale = 1.0f;
 
     public Color color = Color.White;
+
+    public int blend_mode = BM_ALPHA;
 
 }
 

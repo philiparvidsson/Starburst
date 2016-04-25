@@ -21,29 +21,30 @@ public class Collision_Solver : Subsystem {
         // @To-do: Implement a quad tree or spatial grid here to reduce the
         //         number of candidates for collision testing.
         for (int i = 0; i < num_entities; i++) {
-            var e1 = entities[i];
-            var c1 = e1.get_component<Bounding_Circle>();
-            var p1 = e1.get_component<Position>();
-            var v1 = e1.get_component<Velocity>();
+            var e1  = entities[i];
+            var c1  = e1.get_component<Bounding_Circle>();
+            var p1  = e1.get_component<Position>();
+            var v1  = e1.get_component<Velocity>();
+            var rc1 = e1.get_component<Mass>()?.restitution_coeff ?? 1.0f;
 
             if (p1.x < c1.radius) {
                 p1.x = c1.radius;
-                v1.x *= -1.0f;
+                v1.x = -v1.x * rc1;
             }
 
             if (p1.x > 1279.0f-c1.radius) {
                 p1.x = 1279.0f-c1.radius;
-                v1.x *= -1.0f;
+                v1.x = -v1.x * rc1;
             }
 
             if (p1.y < c1.radius) {
                 p1.y = c1.radius;
-                v1.y *= -1.0f;
+                v1.y = -v1.y * rc1;
             }
 
             if (p1.y > 719.0f-c1.radius) {
                 p1.y = 719.0f-c1.radius;
-                v1.y *= -1.0f;
+                v1.y = -v1.y * rc1;
             }
 
             for (int j = (i+1); j < num_entities; j++) {
@@ -78,6 +79,8 @@ public class Collision_Solver : Subsystem {
         var v_y = v1.y - v2.y;
         var m1  = e1.get_component<Mass>()?.mass ?? 1.0f;
         var m2  = e2.get_component<Mass>()?.mass ?? 1.0f;
+        var rc1 = e1.get_component<Mass>()?.restitution_coeff ?? 1.0f;
+        var rc2 = e2.get_component<Mass>()?.restitution_coeff ?? 1.0f;
         var f1  = 1.0f - m1/(m1+m2);
         var f2  = 1.0f - m2/(m1+m2);
 
@@ -110,6 +113,10 @@ public class Collision_Solver : Subsystem {
         // Newton's third law.
         p_x *= d*2.0f;
         p_y *= d*2.0f;
+
+        // Apply restitution coefficients.
+        f1 *= rc1*rc2;
+        f2 *= rc1*rc2;
 
         v1.x -= p_x*f1;
         v1.y -= p_y*f1;

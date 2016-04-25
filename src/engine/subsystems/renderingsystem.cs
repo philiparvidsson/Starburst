@@ -129,7 +129,20 @@ namespace Fab5.Engine.Subsystems {
              * För varje kamera,
              * kör den vanliga draw-loopen baserat på kamerans viewport
              */
+            for (int i = 0; i < num_components; i++) {
+                update_sprite(entities[i], dt);
+                var s1 = entities[i].get_component<Sprite>();
 
+                for (int j = (i+1); j < num_components; j++) {
+                    var s2 = entities[j].get_component<Sprite>();
+
+                    if (s1.blend_mode > s2.blend_mode) {
+                        var tmp = entities[i];
+                        entities[i] = entities[j];
+                        entities[j] = tmp;
+                    }
+                }
+            }
             for (int p = 0; p < currentPlayerNumber; p++)
             {
                 Camera current = cameras[p];
@@ -141,7 +154,7 @@ namespace Fab5.Engine.Subsystems {
 
                 bgRender.drawBackground(sprite_batch, currentPlayerPosition, current);
                 //drawHUD(sprite_batch, entity, currentPlayerNumber);
-                drawSprites(sprite_batch, current, num_components, entities, dt);
+                drawSprites(sprite_batch, current, num_components, entities, 0.0f);
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;
             base.draw(t, dt);
@@ -149,13 +162,32 @@ namespace Fab5.Engine.Subsystems {
 
         private void drawSprites(SpriteBatch sprite_batch, Camera camera, int num_components, Entity[] entities, float dt)
         {
-            sprite_batch.Begin(SpriteSortMode.FrontToBack,
-                BlendState.Additive, null, null, null, null,
-                transformMatrix: camera.getViewMatrix(camera.viewport));
+            int blend_mode = -1;
 
             for (int i = 0; i < num_components; i++)
             {
                 var entity = entities[i];
+
+                if (entity.get_component<Sprite>().blend_mode != blend_mode) {
+                    if (blend_mode != -1) {
+                        sprite_batch.End();
+                    }
+
+                    blend_mode = entity.get_component<Sprite>().blend_mode;
+
+                    BlendState bs = BlendState.AlphaBlend;
+
+                    if (entity.get_component<Sprite>().blend_mode == Sprite.BM_ALPHA) {
+                        bs = BlendState.AlphaBlend;
+                    }
+                    else if (entity.get_component<Sprite>().blend_mode == Sprite.BM_ADD) {
+                        bs = BlendState.Additive;
+                    }
+
+                    sprite_batch.Begin(SpriteSortMode.FrontToBack,
+                                       bs, null, null, null, null,
+                                       transformMatrix: camera.getViewMatrix(camera.viewport));
+                }
 
                 draw_sprite(entity, dt);
             }
@@ -163,23 +195,8 @@ namespace Fab5.Engine.Subsystems {
             sprite_batch.End();
         }
 
-        public void draw_sprite(Entity entity, float dt) {
-            var position = entity.get_component<Position>();
+        private void update_sprite(Entity entity, float dt) {
             var sprite   = entity.get_component<Sprite>();
-            var angle    = entity.get_component<Angle>()?.angle ?? 0.0f;
-
-            int frame_width  = sprite.frame_width;
-            int frame_height = sprite.frame_height;
-
-            int frame_x = sprite.frame_x;
-            int frame_y = sprite.frame_y;
-
-            if (frame_width == 0.0f) {
-                frame_width = sprite.texture.Width;
-                frame_height = sprite.texture.Height;
-            }
-
-            var source_rect = new Rectangle(0, 0, frame_width, frame_height);
 
             if (sprite.num_frames > 1) {
                 sprite.frame_timer += dt;
@@ -204,7 +221,28 @@ namespace Fab5.Engine.Subsystems {
                         }
                     }
                 }
+            }
+        }
 
+        public void draw_sprite(Entity entity, float dt) {
+            var position = entity.get_component<Position>();
+            var sprite   = entity.get_component<Sprite>();
+            var angle    = entity.get_component<Angle>()?.angle ?? 0.0f;
+
+            int frame_width  = sprite.frame_width;
+            int frame_height = sprite.frame_height;
+
+            int frame_x = sprite.frame_x;
+            int frame_y = sprite.frame_y;
+
+            if (frame_width == 0.0f) {
+                frame_width = sprite.texture.Width;
+                frame_height = sprite.texture.Height;
+            }
+
+            var source_rect = new Rectangle(0, 0, frame_width, frame_height);
+
+            if (sprite.num_frames > 1) {
                 source_rect = new Rectangle(sprite.frame_x, sprite.frame_y, frame_width, frame_height);
             }
 

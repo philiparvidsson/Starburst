@@ -14,7 +14,7 @@
         {
             int i;
             Random random = new Random();
-            i = random.Next(1, 7);
+            i = 4;//random.Next(1, 7);
             string back = "backdrops/backdrop" +i;
 
             return new Component[]
