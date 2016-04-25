@@ -13,7 +13,21 @@ using Microsoft.Xna.Framework.Graphics;
  *----------------------------------------------*/
 
 public class Sprite : Component {
+    public float fps = 15.0f;
+    public float frame_timer;
+    public int num_frames = 1;
+
+    public int frame_x = 0;
+    public int frame_y = 0;
+    public int frame_width = 0;
+    public int frame_height = 0;
+
+    public int frame_counter;
+
     public Texture2D texture;
+
+    public float scale = 1.0f;
+
 }
 
 }

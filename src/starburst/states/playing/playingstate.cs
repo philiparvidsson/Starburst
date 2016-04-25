@@ -18,6 +18,7 @@ public class Playing_State : Game_State {
         add_subsystems(
             new Position_Integrator(),
             new Inputhandler_System(),
+            new BG_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
             new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
             new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
             new Window_Title_Writer(),
@@ -25,9 +26,11 @@ public class Playing_State : Game_State {
             new Sound(),
             new Particle_System(),
             new Lifetime_Manager(),
-            new MessageQueue_System() 
+            new MessageQueue_System()
         );
 
+        create_entity(Back_drop.create_components()).get_component<Backdrop>();
+        
         create_entity(new FpsCounter());
         var player = create_entity(Player_Ship.create_components());
         create_entity(SoundManager.create_components());
@@ -36,6 +39,22 @@ public class Playing_State : Game_State {
         var p2 = create_entity(Dummy.create_components()).get_component<Position>();
         p2.x = 800.0f;
         p2.y = 300.0f;
+
+        var p3 = create_entity(Dummy.create_components()).get_component<Position>();
+        p3.x = 900.0f;
+        p3.y = 700.0f;
+
+        var p4 = create_entity(Dummy.create_components()).get_component<Position>();
+        p4.x = 100.0f;
+        p4.y = 400.0f;
+
+        var p5 = create_entity(Dummy.create_components()).get_component<Position>();
+        p5.x = 200.0f;
+        p5.y = 200.0f;
+
+        var p6 = create_entity(Dummy.create_components()).get_component<Position>();
+        p6.x = 1100.0f;
+        p6.y = 500.0f;
 
         var playerpos = player.get_component<Position>();
         var playervel = player.get_component<Velocity>();
@@ -62,6 +81,7 @@ public class Playing_State : Game_State {
                 num_particles_per_emit = 20
             }
         });
+        
 
     }
 

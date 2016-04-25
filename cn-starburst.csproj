@@ -40,7 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="src\engine\components\angle.cs" />
-    <Compile Include="src\engine\components\backgroundmusiclibrary.cs" />
+    <Compile Include="src\engine\components\backdrop.cs" />
     <Compile Include="src\engine\components\backgroundmusic.cs" />
     <Compile Include="src\engine\components\boundingcircle.cs" />
     <Compile Include="src\engine\components\fab5soundeffect.cs" />
@@ -56,6 +56,7 @@
     <Compile Include="src\engine\core.cs" />
     <Compile Include="src\engine\fab5event.cs" />
     <Compile Include="src\engine\game.cs" />
+    <Compile Include="src\engine\subsystems\bgrenderer.cs" />
     <Compile Include="src\engine\subsystems\collisionsolver.cs" />
     <Compile Include="src\engine\subsystems\entitylifetime.cs" />
     <Compile Include="src\engine\subsystems\inputhandler_system.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="src\starburst\starburst.cs" />
     <Compile Include="src\starburst\states\fallingball\entities\ball.cs" />
     <Compile Include="src\starburst\states\fallingball\entities\player_ship.cs" />
+    <Compile Include="src\starburst\states\playing\entities\backdrop.cs" />
     <Compile Include="src\starburst\states\playing\entities\dummy.cs" />
     <Compile Include="src\starburst\states\playing\entities\soundmanager.cs" />
     <Compile Include="src\starburst\states\fallingball\fallingballstate.cs" />
@@ -83,10 +85,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="src\starburst\content\asteroid.png" />
+    <Content Include="src\starburst\content\backdrops\backdrop1.png" />
+    <Content Include="src\starburst\content\backdrops\backdrop2.png" />
+    <Content Include="src\starburst\content\backdrops\backdrop3.png" />
+    <Content Include="src\starburst\content\backdrops\backdrop4.png" />
+    <Content Include="src\starburst\content\backdrops\backdrop5.png" />
+    <Content Include="src\starburst\content\backdrops\backdrop6.png" />
+    <Content Include="src\starburst\content\backdrops\backdrop7.png" />
+    <Content Include="src\starburst\content\backdrops\stardrop.png" />
     <Content Include="src\starburst\content\ball.png" />
     <Content Include="src\starburst\content\dummy.png" />
     <Content Include="src\starburst\content\particle.png" />
+    <Content Include="src\starburst\content\shaders\test.fx" />
     <Content Include="src\starburst\content\ship.png" />
+    <Content Include="src\starburst\content\ships\ship1.png" />
+    <Content Include="src\starburst\content\ships\ship10.png" />
+    <Content Include="src\starburst\content\ships\ship11.png" />
+    <Content Include="src\starburst\content\ships\ship12.png" />
+    <Content Include="src\starburst\content\ships\ship13.png" />
+    <Content Include="src\starburst\content\ships\ship14.png" />
+    <Content Include="src\starburst\content\ships\ship15.png" />
+    <Content Include="src\starburst\content\ships\ship16.png" />
+    <Content Include="src\starburst\content\ships\ship17.png" />
+    <Content Include="src\starburst\content\ships\ship18.png" />
+    <Content Include="src\starburst\content\ships\ship19.png" />
+    <Content Include="src\starburst\content\ships\ship2.png" />
+    <Content Include="src\starburst\content\ships\ship3.png" />
+    <Content Include="src\starburst\content\ships\ship4.png" />
+    <Content Include="src\starburst\content\ships\ship5.png" />
+    <Content Include="src\starburst\content\ships\ship6.png" />
+    <Content Include="src\starburst\content\ships\ship7.png" />
+    <Content Include="src\starburst\content\ships\ship8.png" />
+    <Content Include="src\starburst\content\ships\ship9.png" />
     <Content Include="src\starburst\content\sound\ContactLoop.wav" />
     <Content Include="src\starburst\content\sound\effects\Minigun.wav" />
     <Content Include="src\starburst\content\sound\SpaceCube.wav" />
