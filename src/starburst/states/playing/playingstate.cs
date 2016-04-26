@@ -32,15 +32,21 @@ public class Playing_State : Game_State {
     }
 
     public override void init() {
+        // @To-do: Load map here.
+
+        var tile_map = new Tile_Map();
+
         add_subsystems(
             new Position_Integrator(),
             new Inputhandler_System(),
 //            new BG_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
             //new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
-            new Rendering_System(Starburst.inst().GraphicsDevice),
+            new Rendering_System(Starburst.inst().GraphicsDevice) {
+                tile_map = tile_map
+            },
             new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
             new Window_Title_Writer(),
-            new Collision_Solver(),
+            new Collision_Solver(tile_map),
             new Sound(),
             new Particle_System(),
             new Lifetime_Manager(),

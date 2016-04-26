@@ -7,6 +7,12 @@ using System;
 
 // Solves collision between bounding circles.
 public class Collision_Solver : Subsystem {
+    private readonly Tile_Map tile_map;
+
+    public Collision_Solver(Tile_Map tile_map) {
+        this.tile_map = tile_map;
+    }
+
     public override void update(float t, float dt) {
         // Collisions occur at an instant so who cares about dt?
 
@@ -26,23 +32,23 @@ public class Collision_Solver : Subsystem {
             var v1  = e1.get_component<Velocity>();
             var rc1 = e1.get_component<Mass>()?.restitution_coeff ?? 1.0f;
 
-            if (p1.x < -1500.0f) {
-                p1.x = -1500.0f;
+            if (p1.x < -2048.0f) {
+                p1.x = -2048.0f;
                 v1.x = -v1.x * rc1;
             }
 
-            if (p1.x > 1500.0f) {
-                p1.x = 1500.0f;
+            if (p1.x > 2048.0f) {
+                p1.x = 2048.0f;
                 v1.x = -v1.x * rc1;
             }
 
-            if (p1.y < -1500.0f) {
-                p1.y = -1500.0f;
+            if (p1.y < -2048.0f) {
+                p1.y = -2048.0f;
                 v1.y = -v1.y * rc1;
             }
 
-            if (p1.y > 1500.0f) {
-                p1.y = 1500.0f;
+            if (p1.y > 2048.0f) {
+                p1.y = 2048.0f;
                 v1.y = -v1.y * rc1;
             }
 

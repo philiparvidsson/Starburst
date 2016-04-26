@@ -30,13 +30,50 @@ namespace Fab5.Engine.Subsystems {
         SpriteBatch sprite_batch;
         Viewport defaultViewport;
         BG_Renderer bgRender;
+        public Tile_Map tile_map;
 
         public Rendering_System(GraphicsDevice graphicsDevice) {
             sprite_batch = new SpriteBatch(graphicsDevice);
             defaultViewport = graphicsDevice.Viewport;
         }
 
-        public override void  init()
+        private void draw_tile_map(SpriteBatch sprite_batch, Camera camera) {
+            sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
+
+            int tw     = 16;
+            int th     = 16;
+            int left   = (int)((camera.position.x+2048.0f) / tw);
+            int top    = (int)((camera.position.y+2048.0f) / th);
+            int right  = (int)(left + camera.viewport.Width / tw);
+            int bottom = (int)(top + camera.viewport.Height / th);
+
+            float xfrac = left*tw - camera.position.x-2048.0f;
+            float yfrac = top*th - camera.position.y-2048.0f;
+
+            System.Console.WriteLine(camera.position.x + ", " + camera.position.x);
+
+            float x = 0.0f;
+            for (int i = left; i <= right; i++) {
+                float y = 0.0f;
+                for (int j = top; j <= bottom; j++) {
+                    int o = i + (j*256);
+
+                    if (tile_map.tile_tex == null) {
+                        tile_map.tile_tex = Fab5_Game.inst().get_content<Texture2D>("tile");
+                    }
+
+                    if (tile_map.tiles[o] != 0)
+                        sprite_batch.Draw(tile_map.tile_tex, new Vector2(x+xfrac, y+yfrac), Color.White);
+
+                    y += 16.0f;
+                }
+
+                x += 16.0f;
+            }
+            sprite_batch.End();
+        }
+
+        public override void init()
         {
             // kör uppdatering av viewports och kameror
             updatePlayers();
@@ -154,6 +191,7 @@ namespace Fab5.Engine.Subsystems {
 
                 bgRender.drawBackground(sprite_batch, currentPlayerPosition, current);
                 //drawHUD(sprite_batch, entity, currentPlayerNumber);
+                draw_tile_map(sprite_batch, current);
                 drawSprites(sprite_batch, current, num_components, entities, 0.0f);
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;
