@@ -29,20 +29,30 @@
 
                 angle.ang_vel -= angle.ang_vel * 10.0f * dt;
 
-                if (input.keyboardState.IsKeyDown(input.left)) {
+                float turn = 0.0f;
+
+                turn = GamePad.GetState(input.gp_index).ThumbSticks.Left.X;
+
+                if (input.keyboardState.IsKeyDown(input.left))
+                    turn -= 1.0f;
+
+                if (input.keyboardState.IsKeyDown(input.right))
+                    turn += 1.0f;
+
+                if (turn < 0.0f) {
                     var ang_acc = 60.0f * dt;
 
-                    angle.ang_vel -= ang_acc;
+                    angle.ang_vel += ang_acc * turn;
 
                     if (angle.ang_vel < -5.0f) {
                         angle.ang_vel = -5.0f;
                     }
                 }
 
-                if (input.keyboardState.IsKeyDown(input.right)) {
+                if (turn > 0.0f) {
                     var ang_acc = 60.0f * dt;
 
-                    angle.ang_vel += ang_acc;
+                    angle.ang_vel += ang_acc * turn;
 
                     if (angle.ang_vel > 5.0f) {
                         angle.ang_vel = 5.0f;
@@ -54,15 +64,15 @@
                     velocity.y -= 0.5f * velocity.y * dt;
                 }
 
-                input.throttle = 0.0f; // read gamepad
+                input.throttle = GamePad.GetState(input.gp_index).Triggers.Right;
                 if (input.keyboardState.IsKeyDown(input.up))
                     input.throttle = 1.0f;
 
                 if (input.throttle > 0.0f)
                 {
                     var acc = 380.0f * dt;
-                    velocity.x += (float)(Math.Cos(angle.angle)) * acc;
-                    velocity.y += (float)(Math.Sin(angle.angle)) * acc;
+                    velocity.x += (float)(Math.Cos(angle.angle)) * acc * input.throttle;
+                    velocity.y += (float)(Math.Sin(angle.angle)) * acc * input.throttle;
 
                     var speed = (float)Math.Sqrt(velocity.x*velocity.x + velocity.y*velocity.y);
 

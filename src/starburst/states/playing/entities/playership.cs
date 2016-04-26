@@ -17,14 +17,16 @@
         static int lol = 1;
         public static Component[] create_components()
         {
-            var inputhandler = new Inputhandler();
+            var inputhandler = new Inputhandler() {
+            };
             if (lol == 2) {
                 // this ass code sucks
                 inputhandler = new Inputhandler() {
                     left  = Keys.A,
                     right = Keys.D,
                     up    = Keys.W,
-                    down  = Keys.S
+                    down  = Keys.S,
+                    gp_index = PlayerIndex.Two
                 };
             }
             string ship = "ships/ship1" + lol;

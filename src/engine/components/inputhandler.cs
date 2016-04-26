@@ -7,6 +7,7 @@
 
     using Fab5.Engine.Core;
     using Microsoft.Xna.Framework.Input;
+    using Microsoft.Xna.Framework;
 
     /*------------------------------------------------
      * CLASSES
@@ -20,6 +21,8 @@
         public Keys right = Keys.Right;
         public Keys up    = Keys.Up;
         public Keys down  = Keys.Down;
+
+        public PlayerIndex gp_index = PlayerIndex.One;
 
         public float throttle = 0.0f;
     }
