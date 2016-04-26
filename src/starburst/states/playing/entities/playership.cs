@@ -41,6 +41,7 @@
             {
             new Particle_Emitter() {
                 emit_fn = () => {
+                    if (rand.Next(0, 60) > 0) {
                     return new Component[] {
                         new Position() { x = playerpos.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f ,
                                          y = playerpos.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f },
@@ -58,6 +59,26 @@
 //                        new Mass() { mass = 0.0f }
 
                     };
+                    }
+                    else {
+                    return new Component[] {
+                        new Position() { x = playerpos.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f ,
+                                         y = playerpos.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f },
+                        new Velocity() { x = playervel.x*0.5f - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 1.5) * 90.0f * (float)(rand.NextDouble()+0.5) * (inputhandler.throttle+0.3f),
+                        y = playervel.y*0.5f - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 1.5) * 90.0f * (float)(rand.NextDouble()+0.5) * (inputhandler.throttle + 0.3f) },
+                        new Sprite() {
+                            texture = Starburst.inst().get_content<Texture2D>("particle"),
+                            color = new Color(1.0f, 0.7f, 0.2f) * 0.95f,
+                            scale = 0.4f + (float)rand.NextDouble() * 0.3f,
+                            blend_mode = Sprite.BM_ADD,
+                            layer_depth = 0.3f
+                        },
+                        new TTL() { alpha_fn = (x, max) => 1.0f - (x/max), max_time = 0.35f + (float)(rand.NextDouble() * 0.35f) }
+//                        new Bounding_Circle() { radius = 1.0f },
+//                        new Mass() { mass = 0.0f }
+
+                    };
+                    }
                 },
                 interval = 0.02f,
                 num_particles_per_emit = 10

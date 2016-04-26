@@ -115,6 +115,7 @@ public class Collision_Solver : Subsystem {
         var p = e1.get_component<Position>();
         var v = e1.get_component<Velocity>();
         var a = e1.get_component<Angle>();
+        var m = e1.get_component<Mass>();
 
         var r = (float)Math.Sqrt(n_x*n_x+n_y*n_y);
 
@@ -134,6 +135,11 @@ public class Collision_Solver : Subsystem {
         var d = 2.0f * (n_x*v.x+n_y*v.y);
         v.x -= d*n_x;
         v.y -= d*n_y;
+
+        if (m != null) {
+            v.x *= m.restitution_coeff;
+            v.y *= m.restitution_coeff;
+        }
 
 
     }

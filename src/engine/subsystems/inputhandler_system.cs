@@ -64,11 +64,11 @@
                     velocity.y -= 0.5f * velocity.y * dt;
                 }
 
-                input.throttle = GamePad.GetState(input.gp_index).Triggers.Right;
+                input.throttle = GamePad.GetState(input.gp_index).Triggers.Right - GamePad.GetState(input.gp_index).Triggers.Left;
                 if (input.keyboardState.IsKeyDown(input.up))
                     input.throttle = 1.0f;
 
-                if (input.throttle > 0.0f)
+                if (Math.Abs(input.throttle) > 0.01f)
                 {
                     var acc = 380.0f * dt;
                     velocity.x += (float)(Math.Cos(angle.angle)) * acc * input.throttle;
