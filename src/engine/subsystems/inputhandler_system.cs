@@ -34,8 +34,8 @@
 
                     angle.ang_vel -= ang_acc;
 
-                    if (angle.ang_vel < -4.0f) {
-                        angle.ang_vel = -4.0f;
+                    if (angle.ang_vel < -5.0f) {
+                        angle.ang_vel = -5.0f;
                     }
                 }
 
@@ -44,8 +44,8 @@
 
                     angle.ang_vel += ang_acc;
 
-                    if (angle.ang_vel > 4.0f) {
-                        angle.ang_vel = 4.0f;
+                    if (angle.ang_vel > 5.0f) {
+                        angle.ang_vel = 5.0f;
                     }
                 }
 
