@@ -61,6 +61,9 @@ namespace Fab5.Engine.Subsystems {
             for (int i = left; i <= right; i++) {
                 float y = 0.0f;
                 for (int j = top; j <= bottom; j++) {
+                    if (i < 0 || i > 255 || j < 0 || j > 255)
+                        continue;
+
                     int o = i + (j*256);
 
                     if (tile_map.tile_tex == null) {
@@ -115,8 +118,56 @@ namespace Fab5.Engine.Subsystems {
                 viewports[0] = top;
                 viewports[1] = bottom;
             }
+            else if(currentPlayerNumber == 3){
+                // 1/4 screen, handle sizes and positions
+                viewports = new Viewport[3];
+                cameras = new Camera[3];
+                Viewport topLeft = defaultViewport;
+                topLeft.Width = (int)(defaultViewport.Width * .5);
+                topLeft.Height = (int)(defaultViewport.Height * .5);
+
+                Viewport topRight = defaultViewport;
+                topRight.Width = (int)(defaultViewport.Width * .5);
+                topRight.Height = (int)(defaultViewport.Height * .5);
+                topRight.X = topLeft.Width;
+
+                Viewport bottom = defaultViewport;
+                bottom.Width = (int)(defaultViewport.Width * .5);
+                bottom.Height = (int)(defaultViewport.Height * .5);
+                bottom.Y = topLeft.Height;
+
+                viewports[0] = topLeft;
+                viewports[1] = topRight;
+                viewports[2] = bottom;
+            }
             else {
                 // 1/4 screen, handle sizes and positions
+                viewports = new Viewport[4];
+                cameras = new Camera[4];
+                Viewport topLeft = defaultViewport;
+                topLeft.Width = (int)(defaultViewport.Width * .5);
+                topLeft.Height = (int)(defaultViewport.Height * .5);
+
+                Viewport topRight = defaultViewport;
+                topRight.Width = (int)(defaultViewport.Width * .5);
+                topRight.Height = (int)(defaultViewport.Height * .5);
+                topRight.X = topLeft.Width;
+
+                Viewport bottomLeft = defaultViewport;
+                bottomLeft.Width = (int)(defaultViewport.Width * .5);
+                bottomLeft.Height = (int)(defaultViewport.Height * .5);
+                bottomLeft.Y = topLeft.Height;
+
+                Viewport bottomRight = defaultViewport;
+                bottomRight.Width = (int)(defaultViewport.Width * .5);
+                bottomRight.Height = (int)(defaultViewport.Height * .5);
+                bottomRight.Y = topLeft.Height;
+                bottomRight.X = topLeft.Width;
+
+                viewports[0] = topLeft;
+                viewports[1] = topRight;
+                viewports[2] = bottomLeft;
+                viewports[3] = bottomRight;
             }
 
             // add cameras to each viewport
@@ -185,6 +236,20 @@ namespace Fab5.Engine.Subsystems {
                     }
                 }
             }
+
+            for (int i = 0; i < num_components; i++) {
+                var s1 = entities[i].get_component<Sprite>();
+                for (int j = (i+1); j < num_components; j++) {
+                    var s2 = entities[j].get_component<Sprite>();
+
+                    if (s1.layer_depth < s2.layer_depth) {
+                        var tmp = entities[i];
+                        entities[i] = entities[j];
+                        entities[j] = tmp;
+                    }
+                }
+            }
+
             for (int p = 0; p < currentPlayerNumber; p++)
             {
                 Camera current = cameras[p];
@@ -230,7 +295,7 @@ namespace Fab5.Engine.Subsystems {
                         bs = BlendState.Additive;
                     }
 
-                    sprite_batch.Begin(SpriteSortMode.FrontToBack,
+                    sprite_batch.Begin(SpriteSortMode.Immediate,
                                        bs, null, null, null, null,
                                        transformMatrix: camera.getViewMatrix(camera.viewport));
                 }
@@ -288,8 +353,7 @@ namespace Fab5.Engine.Subsystems {
                 frame_width = sprite.texture.Width;
                 frame_height = sprite.texture.Height;
             }
-
-            var source_rect = new Rectangle(0, 0, frame_width, frame_height);
+            var source_rect = entity.get_component<DrawArea>()?.rectangle ?? new Rectangle(0, 0, frame_width, frame_height);
 
             if (sprite.num_frames > 1) {
                 source_rect = new Rectangle(sprite.frame_x, sprite.frame_y, frame_width, frame_height);
@@ -300,10 +364,10 @@ namespace Fab5.Engine.Subsystems {
                               source_rect,
                               sprite.color,
                               angle,
-                              new Vector2(frame_width/2.0f, frame_height/2.0f),
+                              new Vector2(source_rect.Width/2.0f, source_rect.Height/2.0f),
                               sprite.scale,
                               SpriteEffects.None,
-                              0.5f);
+                              sprite.layer_depth);
 
     }
 

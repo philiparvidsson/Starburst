@@ -20,5 +20,7 @@
         public Keys right = Keys.Right;
         public Keys up    = Keys.Up;
         public Keys down  = Keys.Down;
+
+        public float throttle = 0.0f;
     }
 }

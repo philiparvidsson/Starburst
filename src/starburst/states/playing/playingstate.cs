@@ -15,8 +15,8 @@ public class Playing_State : Game_State {
 
     public static System.Random rand = new System.Random();
 
-        public override void on_message(string msg, dynamic data) { 
-            if (msg == "collision") { 
+        public override void on_message(string msg, dynamic data) {
+            if (msg == "collision") {
                 var p1 = data.entity1.get_component<Position>();
 
                 var x = data.c_x;
@@ -26,7 +26,8 @@ public class Playing_State : Game_State {
                     texture = Starburst.inst().get_content<Texture2D>("particle"),
                     color = new Color(0.4f, 0.3f, 0.1f),
                     blend_mode = Sprite.BM_ADD,
-                    scale = 0.5f + (float)rand.NextDouble()
+                    scale = 0.4f + (float)rand.NextDouble() * 0.3f,
+                    layer_depth = 0.9f
                 };
                 create_entity(Particle_System.explosion(x, y, fn));
             }
@@ -61,12 +62,24 @@ public class Playing_State : Game_State {
 
         player2.get_component<Position>().x = 400;
         player2.get_component<Position>().y = 400;
-            player2.get_component<Ship_Info>().hp_value = 50;
+        player2.get_component<Ship_Info>().hp_value = 50;
 
-        create_entity(SoundManager.create_backmusic_component());
+            var player3 = create_entity(Player_Ship.create_components());
+
+            player3.get_component<Position>().x = 500;
+            player3.get_component<Position>().y = 500;
+            player3.get_component<Ship_Info>().hp_value = 50;
+
+            var player4 = create_entity(Player_Ship.create_components());
+
+            player4.get_component<Position>().x = 400;
+            player4.get_component<Position>().y = 500;
+
+            create_entity(SoundManager.create_backmusic_component());
         create_entity(SoundManager.create_soundeffects_component());
 
-            for (int i = 0; i < 75; i++) {
+
+        for (int i = 0; i < 65; i++) {
 
             var asteroid = create_entity(Dummy.create_components());
             var ap = asteroid.get_component<Position>();
@@ -81,60 +94,8 @@ public class Playing_State : Game_State {
         var playervel = player.get_component<Velocity>();
         var playerrot = player.get_component<Angle>();
 
-        var pemit1 = create_entity(new Component[] {
-            new Particle_Emitter() {
-                emit_fn = () => {
-                    return new Component[] {
-                        new Position() { x = playerpos.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f,
-                                         y = playerpos.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f },
-                        new Velocity() { x = playervel.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 250.0f * (float)(rand.NextDouble()+0.5),
-                                         y = playervel.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 250.0f * (float)(rand.NextDouble()+0.5) },
-                        new Sprite() {
-                            texture = Starburst.inst().get_content<Texture2D>("particle"),
-                            color = Color.White * 0.3f,
-                            scale = 0.9f + (float)rand.NextDouble() * 1.3f,
-                            blend_mode = Sprite.BM_ADD
-                        },
-                        new TTL() { time = 0.05f + (float)(rand.NextDouble() * 0.05f) }
-//                        new Bounding_Circle() { radius = 1.0f },
-//                        new Mass() { mass = 0.0f }
 
-                    };
-                },
-                interval = 0.02f,
-                num_particles_per_emit = 10
-            }
-        });
-
-        var playerpos2 = player2.get_component<Position>();
-        var playervel2 = player2.get_component<Velocity>();
-        var playerrot2 = player2.get_component<Angle>();
-
-
-        var pemit2 = create_entity(new Component[] {
-            new Particle_Emitter() {
-                emit_fn = () => {
-                    return new Component[] {
-                        new Position() { x = playerpos2.x - (float)Math.Cos(playerrot2.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f,
-                                         y = playerpos2.y - (float)Math.Sin(playerrot2.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f },
-                        new Velocity() { x = playervel2.x - (float)Math.Cos(playerrot2.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 250.0f * (float)(rand.NextDouble()+0.5),
-                                         y = playervel2.y - (float)Math.Sin(playerrot2.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 250.0f * (float)(rand.NextDouble()+0.5) },
-                        new Sprite() {
-                            texture = Starburst.inst().get_content<Texture2D>("particle"),
-                            color = Color.White * 0.3f,
-                            scale = 0.9f + (float)rand.NextDouble() * 1.3f,
-                            blend_mode = Sprite.BM_ADD
-                        },
-                        new TTL() { time = 0.05f + (float)(rand.NextDouble() * 0.05f) }
-//                        new Bounding_Circle() { radius = 1.0f },
-//                        new Mass() { mass = 0.0f }
-
-                    };
-                },
-                interval = 0.02f,
-                num_particles_per_emit = 10
-            }
-        });
+        var ball = create_entity(Soccer_Ball.create_components());
     }
 
     public override void update(float t, float dt) {

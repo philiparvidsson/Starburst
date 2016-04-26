@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Fab5.Engine.Core;
 using Fab5.Engine.Components;
 
+// DEN HÄR SKA INTE VARA HÄR WTF
+using Fab5.Starburst.States.Playing.Entities;
+
 namespace Fab5.Engine.Subsystems {
     public class Weapon_System : Subsystem {
         Game_State gameState;
@@ -18,11 +21,17 @@ namespace Fab5.Engine.Subsystems {
         }
         public override void on_message(string msg, dynamic data) {
             if(msg.Equals("fire")) {
+                float dt = data.Dt;
                 Position position = data.Position;
                 Angle angle = data.Angle;
                 Weapon weapon = data.Weapon;
-                
-                //var shot = gameState.create_entity(Bullet_Factory.create_components(position, angle, weapon));
+
+                // kolla dt, räkna ner tid till nästa skott kan skjutas (baserat på fire rate)
+                weapon.timeSinceLastShot += dt;
+                if (weapon.timeSinceLastShot >= weapon.fire_rate) {
+                    var shot = gameState.create_entity(Bullet_Factory.create_components(position, angle, weapon));
+                    weapon.timeSinceLastShot = 0f;
+                }
             }
         }
     }

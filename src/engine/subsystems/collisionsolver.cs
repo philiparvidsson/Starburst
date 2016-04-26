@@ -4,6 +4,7 @@ using Fab5.Engine.Components;
 using Fab5.Engine.Core;
 
 using System;
+using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 
@@ -15,6 +16,24 @@ public class Collision_Solver : Subsystem {
         this.tile_map = tile_map;
     }
 
+    private IEnumerable<Entity> get_entities(Position p1, Bounding_Circle c1, Dictionary<uint, HashSet<Entity>> grid) {
+        uint left   = (uint)(p1.x - c1.radius + 2048.0f) / grid_size;
+        uint right  = (uint)(p1.x + c1.radius + 2048.0f) / grid_size;
+        uint top    = (uint)(p1.y - c1.radius + 2048.0f) / grid_size;
+        uint bottom = (uint)(p1.y + c1.radius + 2048.0f) / grid_size;
+
+        HashSet<Entity> entities = new HashSet<Entity>();
+        for (uint x = left; x <= right; x++) {
+            for (uint y = top; y <= bottom; y++) {
+                uint key = (y<<16)+x;
+                if (grid.ContainsKey(key)) entities.UnionWith(grid[key]);
+            }
+        }
+
+        return entities;
+    }
+
+    const uint grid_size = 32;
     public override void update(float t, float dt) {
         // Collisions occur at an instant so who cares about dt?
 
@@ -25,6 +44,30 @@ public class Collision_Solver : Subsystem {
             typeof (Position),
             typeof (Velocity)
         );
+
+        // Spatial grid ftw!
+        var grid = new Dictionary<uint, HashSet<Entity>>();
+        for (int i = 0; i < num_entities; i++) {
+            var e1  = entities[i];
+            var p1  = e1.get_component<Position>();
+            var c1  = e1.get_component<Bounding_Circle>();
+
+            uint left   = (uint)(p1.x - c1.radius + 2048.0f) / grid_size;
+            uint right  = (uint)(p1.x + c1.radius + 2048.0f) / grid_size;
+            uint top    = (uint)(p1.y - c1.radius + 2048.0f) / grid_size;
+            uint bottom = (uint)(p1.y + c1.radius + 2048.0f) / grid_size;
+
+            for (uint x = left; x <= right; x++) {
+                for (uint y = top; y <= bottom; y++) {
+                    uint key = (y<<16)+x;
+
+                    if (!grid.ContainsKey(key)) grid[key] = new HashSet<Entity>();
+                    grid[key].Add(e1);
+                }
+            }
+        }
+
+
 
         // @To-do: Implement a quad tree or spatial grid here to reduce the
         //         number of candidates for collision testing.
@@ -56,12 +99,43 @@ public class Collision_Solver : Subsystem {
 
             resolve_circle_map_collision(e1);
 
-            for (int j = (i+1); j < num_entities; j++) {
+            foreach (Entity e2 in get_entities(p1, e1.get_component<Bounding_Circle>(), grid)) {
+                resolve_circle_circle_collision(e1, e2);
+            }
+
+            /*for (int j = (i+1); j < num_entities; j++) {
                 var e2 = entities[j];
 
                 resolve_circle_circle_collision(e1, e2);
-            }
+            }*/
         }
+    }
+
+    private void collide(Entity e1, float c_x, float c_y, float n_x, float n_y) {
+        var p = e1.get_component<Position>();
+        var v = e1.get_component<Velocity>();
+        var a = e1.get_component<Angle>();
+
+        var r = (float)Math.Sqrt(n_x*n_x+n_y*n_y);
+
+        n_x /= r;
+        n_y /= r;
+
+        var p_x = -(c_y - p.y);
+        var p_y = c_x - p.x;
+
+        if (a != null) {
+            var w = v.x*p_x + v.y*p_y;
+            a.ang_vel -= w * 0.003f;
+
+//            System.Console.WriteLine(p_x + ", " + p_y);
+        }
+
+        var d = 2.0f * (n_x*v.x+n_y*v.y);
+        v.x -= d*n_x;
+        v.y -= d*n_y;
+
+
     }
 
     private bool has_tile(int x, int y) {
@@ -95,9 +169,9 @@ public class Collision_Solver : Subsystem {
              && (v.x > 0.0f))
             {
                 p.x = c_x - c.radius;
-                v.x *= -1.0f;
 
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
+                collide(e1, c_x, c_y, -1.0f, 0.0f);
                 return true;
             }
         }
@@ -112,7 +186,7 @@ public class Collision_Solver : Subsystem {
              && (v.x < 0.0f))
             {
                 p.x = c_x + c.radius;
-                v.x *= -1.0f;
+                collide(e1, c_x, c_y, 1.0f, 0.0f);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
                 return true;
             }
@@ -145,7 +219,7 @@ public class Collision_Solver : Subsystem {
              && (v.y > 0.0f))
             {
                 p.y = c_y - c.radius;
-                v.y *= -1.0f;
+                collide(e1, c_x, c_y, 0.0f, -1.0f);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
                 return true;
             }
@@ -161,7 +235,7 @@ public class Collision_Solver : Subsystem {
              && (v.y < 0.0f))
             {
                 p.y = c_y + c.radius;
-                v.y *= -1.0f;
+                collide(e1, c_x, c_y, 0.0f, 1.0f);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
                 return true;
             }
@@ -171,6 +245,7 @@ public class Collision_Solver : Subsystem {
     }
 
     private bool resolve_circle_tile_collision(Entity e1, int x, int y) {
+        if (x < 0 || x > 255 || y < 0 || y > 255) return false;
         if (tile_map.tiles[x+y*256] == 0) {
             return false;
         }
@@ -290,12 +365,23 @@ public class Collision_Solver : Subsystem {
             return;
         }
 
-
         var c_x = p1.x + p_x*c1.radius;
         var c_y = p1.y + p_y*c1.radius;
         Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = e2, c_x = c_x, c_y = c_y });
 
-        // @To-do: Apply restitution factor here.
+        var n_x = -p_y;
+        var n_y = p_x;
+        var w = v_x*n_x + v_y*n_y;
+
+        var a1 = e1.get_component<Angle>();
+        if (a1 != null && m1 >= 0.0f) {
+            a1.ang_vel += 0.05f * (a1.ang_vel-w) * (1.0f- m1/(m1+m2));
+        }
+
+        var a2 = e2.get_component<Angle>();
+        if (a2 != null && m2 > 0.0f) {
+            a2.ang_vel += 0.05f * (a2.ang_vel-w) * (1.0f - m2/(m1+m2));
+        }
 
         // Newton's third law.
         p_x *= d*2.0f;

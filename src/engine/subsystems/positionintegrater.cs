@@ -16,9 +16,16 @@ public class Position_Integrator : Subsystem {
             var entity   = entities[i];
             var position = entity.get_component<Position>();
             var velocity = entity.get_component<Velocity>();
+            var angle    = entity.get_component<Angle>();
 
             position.x += velocity.x * dt;
             position.y += velocity.y * dt;
+
+            if (angle != null) {
+                angle.angle += angle.ang_vel * dt;
+
+                angle.ang_vel -= 0.1f * angle.ang_vel * dt;
+            }
         }
     }
 }

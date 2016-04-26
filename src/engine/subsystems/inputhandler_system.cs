@@ -27,13 +27,38 @@
 
                 input.keyboardState = Keyboard.GetState();
 
-                if (input.keyboardState.IsKeyDown(input.left))
-                    angle.angle -= 4.1f * dt;
+                angle.ang_vel -= angle.ang_vel * 10.0f * dt;
 
-                if (input.keyboardState.IsKeyDown(input.right))
-                    angle.angle += 4.1f * dt;
+                if (input.keyboardState.IsKeyDown(input.left)) {
+                    var ang_acc = 60.0f * dt;
 
+                    angle.ang_vel -= ang_acc;
+
+                    if (angle.ang_vel < -5.0f) {
+                        angle.ang_vel = -5.0f;
+                    }
+                }
+
+                if (input.keyboardState.IsKeyDown(input.right)) {
+                    var ang_acc = 60.0f * dt;
+
+                    angle.ang_vel += ang_acc;
+
+                    if (angle.ang_vel > 5.0f) {
+                        angle.ang_vel = 5.0f;
+                    }
+                }
+
+                if (input.keyboardState.IsKeyDown(input.down)) {
+                    velocity.x -= 0.5f * velocity.x * dt;
+                    velocity.y -= 0.5f * velocity.y * dt;
+                }
+
+                input.throttle = 0.0f; // read gamepad
                 if (input.keyboardState.IsKeyDown(input.up))
+                    input.throttle = 1.0f;
+
+                if (input.throttle > 0.0f)
                 {
                     var acc = 380.0f * dt;
                     velocity.x += (float)(Math.Cos(angle.angle)) * acc;
@@ -54,8 +79,8 @@
                     // kolla fire rate, sedan skicka message (kanske att detta hellre ska skötas i weaponsystem för att hålla den logiken mer separerad):
                     // lagra när/hur länge sen vapnet avfyrades senast
                     // kolla vapnets fire rate för att avgöra om det ska skjutas igen i denna frame
-                    var message = new { Position = entity.get_component<Position>(), Angle = angle, Weapon = entity.get_component<Primary_Weapon>() , };
-                    
+
+                    var message = new { Position = entity.get_component<Position>(), Angle = angle, Weapon = entity.get_component<Primary_Weapon>() , Dt = dt };
                     Fab5_Game.inst().message("fire", message);
                     //, ev.powerups }
                 }

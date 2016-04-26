@@ -21,14 +21,14 @@ public class Particle_System : Subsystem {
                         new Velocity() { x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (100.0f + 50.0f * (float)rand.NextDouble()),
                                          y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (100.0f + 50.0f * (float)rand.NextDouble()) },
                         sprite_fn(),
-                        new TTL() { time = 0.2f + (float)(rand.NextDouble() * 0.1f) }
+                        new TTL() { max_time = 0.2f + (float)(rand.NextDouble() * 0.1f) }
 //                        new Bounding_Circle() { radius = 1.0f },
 //                        new Mass() { mass = 0.0f }
 
                     };
                 },
                 interval = 0.01f,
-                num_particles_per_emit = 5
+                num_particles_per_emit = 10 + rand.Next(0, 20)
             }
         };
     }

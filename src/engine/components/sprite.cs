@@ -36,6 +36,8 @@ public class Sprite : Component {
 
     public int blend_mode = BM_ALPHA;
 
+    public float layer_depth = 0.5f;
+
 }
 
 }
