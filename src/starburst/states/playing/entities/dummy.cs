@@ -27,7 +27,7 @@ public static class Dummy {
                 frame_width = 128,
                 frame_height = 128,
                 num_frames = 31,
-                fps = 19.0f + (float)rand.NextDouble() * 11.0f,
+                fps = 17.0f + (float)rand.NextDouble() * 15.0f,
                 frame_timer = (float)rand.NextDouble(),
                 frame_counter = frame,
                 scale = ascale,
