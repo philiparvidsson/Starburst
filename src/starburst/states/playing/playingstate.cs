@@ -65,8 +65,8 @@ public class Playing_State : Game_State {
             var av = asteroid.get_component<Velocity>();
             ap.x = -1500 + 3000 * (float)rand.NextDouble();
             ap.y = -1500 + 3000 * (float)rand.NextDouble();
-            //av.x = -150 + 300 * (float)rand.NextDouble();
-            //av.y = -150 + 300 * (float)rand.NextDouble();
+            av.x = -15 + 30 * (float)rand.NextDouble();
+            av.y = -15 + 30 * (float)rand.NextDouble();
         }
 
         var playerpos = player.get_component<Position>();

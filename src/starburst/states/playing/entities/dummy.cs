@@ -17,13 +17,20 @@ public static class Dummy {
         frame = (frame % 20);
         var ascale = 0.5f + (float)rand.NextDouble() * 1.0f;
         ascale *= 0.6f;
+        int i = rand.Next(0, 2);
+
+        string asset;
+        if (i == 0)
+            asset = "asteroid";
+        else
+            asset = "asteroid2";
 
         return new Component[] {
             new Angle() { angle = 0.1f * (float)rand.NextDouble() },
             new Position() {x = 600, y = 200 },
             new Velocity() {x = 0.0f, y = 0.0f },
             new Sprite() {
-                texture = Starburst.inst().get_content<Texture2D>("asteroid2"),
+                texture = Starburst.inst().get_content<Texture2D>(asset),
                 frame_width = 128,
                 frame_height = 128,
                 num_frames = 31,
