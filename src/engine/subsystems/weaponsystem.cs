@@ -21,8 +21,8 @@ namespace Fab5.Engine.Subsystems {
                 Position position = data.Position;
                 Angle angle = data.Angle;
                 Weapon weapon = data.Weapon;
-
-                var shot = gameState.create_entity(Bullet_Factory.create_components(position, angle, weapon));
+                
+                //var shot = gameState.create_entity(Bullet_Factory.create_components(position, angle, weapon));
             }
         }
     }

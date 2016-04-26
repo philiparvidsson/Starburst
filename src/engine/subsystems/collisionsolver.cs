@@ -325,17 +325,16 @@ public class Collision_Solver : Subsystem {
 
         var n_x = -p_y;
         var n_y = p_x;
-        var w = v_x*n_x + v_y*n_y * m1 * m2;
+        var w = v_x*n_x + v_y*n_y;
 
         var a1 = e1.get_component<Angle>();
         if (a1 != null && m1 >= 0.0f) {
-            a1.ang_vel -= w * 0.1f/m1;
+            a1.ang_vel -= 0.1f * w * (1.0f- m1/(m1+m2));
         }
 
         var a2 = e2.get_component<Angle>();
         if (a2 != null && m2 > 0.0f) {
-            var w = v_x*n_x + v_y*n_y;
-            a2.ang_vel -= w * 0.1f/m2;
+            a2.ang_vel -= 0.1f * w * (1.0f - m2/(m1+m2));
         }
 
         // Newton's third law.
