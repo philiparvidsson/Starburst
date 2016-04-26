@@ -23,7 +23,7 @@
                 new DrawArea() { rectangle = smallGreen },
                 new Velocity() { x = cfa*speed, y = sfa*speed },
                 new Bounding_Circle() { radius = 20 },
-                new TTL() { time = 5.0f }
+                new TTL() { max_time = 5.0f }
             };
         }
     }
