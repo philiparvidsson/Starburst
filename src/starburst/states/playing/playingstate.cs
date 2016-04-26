@@ -15,18 +15,19 @@ public class Playing_State : Game_State {
 
     public static System.Random rand = new System.Random();
 
-        public override void on_message(string msg, dynamic data)
-            if (msg == "collision")
+        public override void on_message(string msg, dynamic data) { 
+            if (msg == "collision") { 
                 var p1 = data.entity1.get_component<Position>();
 
                 var x = data.c_x;
                 var y = data.c_y;
 
-                Func<Sprite> fn = () => new Sprite()
+                Func<Sprite> fn = () => new Sprite() {
                     texture = Starburst.inst().get_content<Texture2D>("particle"),
                     color = new Color(0.4f, 0.3f, 0.1f),
                     blend_mode = Sprite.BM_ADD,
                     scale = 0.5f + (float)rand.NextDouble()
+                };
                 create_entity(Particle_System.explosion(x, y, fn));
             }
         }
@@ -49,7 +50,7 @@ public class Playing_State : Game_State {
             new Collision_Solver(tile_map),
             new Sound(),
             new Particle_System(),
-            new Lifetime_Manager()
+            new Lifetime_Manager(),
             new Weapon_System(this)
         );
         create_entity(Back_drop.create_components()).get_component<Backdrop>();

@@ -48,7 +48,7 @@
                 }
                 //fire on left controll
                 if (input.keyboardState.IsKeyDown(Keys.LeftControl)) {
-                    Fab5_Game.inst().MessagesQueue.Add(new Fab5Event() { EventName = "Fire", EventType = "KeyPressed", Time = DateTime.Now });
+                    //Fab5_Game.inst().MessagesQueue.Add(new Fab5Event() { EventName = "Fire", EventType = "KeyPressed", Time = DateTime.Now });
                     // nytt message system
 
                     // kolla fire rate, sedan skicka message (kanske att detta hellre ska skötas i weaponsystem för att hålla den logiken mer separerad):
