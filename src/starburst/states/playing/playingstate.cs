@@ -64,7 +64,18 @@ public class Playing_State : Game_State {
         player2.get_component<Position>().y = 400;
         player2.get_component<Ship_Info>().hp_value = 50;
 
-        create_entity(SoundManager.create_backmusic_component());
+            var player3 = create_entity(Player_Ship.create_components());
+
+            player3.get_component<Position>().x = 500;
+            player3.get_component<Position>().y = 500;
+            player3.get_component<Ship_Info>().hp_value = 50;
+
+            var player4 = create_entity(Player_Ship.create_components());
+
+            player4.get_component<Position>().x = 400;
+            player4.get_component<Position>().y = 500;
+
+            create_entity(SoundManager.create_backmusic_component());
         create_entity(SoundManager.create_soundeffects_component());
 
 

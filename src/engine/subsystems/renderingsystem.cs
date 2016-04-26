@@ -118,8 +118,56 @@ namespace Fab5.Engine.Subsystems {
                 viewports[0] = top;
                 viewports[1] = bottom;
             }
+            else if(currentPlayerNumber == 3){
+                // 1/4 screen, handle sizes and positions
+                viewports = new Viewport[3];
+                cameras = new Camera[3];
+                Viewport topLeft = defaultViewport;
+                topLeft.Width = (int)(defaultViewport.Width * .5);
+                topLeft.Height = (int)(defaultViewport.Height * .5);
+
+                Viewport topRight = defaultViewport;
+                topRight.Width = (int)(defaultViewport.Width * .5);
+                topRight.Height = (int)(defaultViewport.Height * .5);
+                topRight.X = topLeft.Width;
+
+                Viewport bottom = defaultViewport;
+                bottom.Width = (int)(defaultViewport.Width * .5);
+                bottom.Height = (int)(defaultViewport.Height * .5);
+                bottom.Y = topLeft.Height;
+
+                viewports[0] = topLeft;
+                viewports[1] = topRight;
+                viewports[2] = bottom;
+            }
             else {
                 // 1/4 screen, handle sizes and positions
+                viewports = new Viewport[4];
+                cameras = new Camera[4];
+                Viewport topLeft = defaultViewport;
+                topLeft.Width = (int)(defaultViewport.Width * .5);
+                topLeft.Height = (int)(defaultViewport.Height * .5);
+
+                Viewport topRight = defaultViewport;
+                topRight.Width = (int)(defaultViewport.Width * .5);
+                topRight.Height = (int)(defaultViewport.Height * .5);
+                topRight.X = topLeft.Width;
+
+                Viewport bottomLeft = defaultViewport;
+                bottomLeft.Width = (int)(defaultViewport.Width * .5);
+                bottomLeft.Height = (int)(defaultViewport.Height * .5);
+                bottomLeft.Y = topLeft.Height;
+
+                Viewport bottomRight = defaultViewport;
+                bottomRight.Width = (int)(defaultViewport.Width * .5);
+                bottomRight.Height = (int)(defaultViewport.Height * .5);
+                bottomRight.Y = topLeft.Height;
+                bottomRight.X = topLeft.Width;
+
+                viewports[0] = topLeft;
+                viewports[1] = topRight;
+                viewports[2] = bottomLeft;
+                viewports[3] = bottomRight;
             }
 
             // add cameras to each viewport

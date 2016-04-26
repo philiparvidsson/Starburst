@@ -28,6 +28,8 @@
                 };
             }
             string ship = "ships/ship1" + lol;
+            if (lol >= 3)
+                ship = "ships/qship11";
             lol++;
 
             var playerrot = new  Angle() { angle = 0 };
