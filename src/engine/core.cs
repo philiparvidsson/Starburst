@@ -83,10 +83,11 @@ public abstract class Game_State {
         foreach (var subsystem in subsystems) {
             subsystem.on_message(msg, data);
         }
+
+        on_message(msg, data);
     }
 
     public virtual void on_message(string msg, dynamic data) {
-        dispatch_message(msg,data);
     }
 
     // Creates an entity from the specified components and assigns an id to it.

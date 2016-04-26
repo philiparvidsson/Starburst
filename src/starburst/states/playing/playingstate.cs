@@ -15,17 +15,14 @@ public class Playing_State : Game_State {
 
     public static System.Random rand = new System.Random();
 
-        public override void on_message(string msg, dynamic data)
-        {
-            if (msg == "collision")
-            {
+        public override void on_message(string msg, dynamic data) { 
+            if (msg == "collision") { 
                 var p1 = data.entity1.get_component<Position>();
 
                 var x = data.c_x;
                 var y = data.c_y;
 
-                Func<Sprite> fn = () => new Sprite()
-                {
+                Func<Sprite> fn = () => new Sprite() {
                     texture = Starburst.inst().get_content<Texture2D>("particle"),
                     color = new Color(0.4f, 0.3f, 0.1f),
                     blend_mode = Sprite.BM_ADD,
@@ -34,7 +31,6 @@ public class Playing_State : Game_State {
                 create_entity(Particle_System.explosion(x, y, fn));
             }
         }
-    
 
     public override void init() {
         // @To-do: Load map here.
@@ -54,7 +50,8 @@ public class Playing_State : Game_State {
             new Collision_Solver(tile_map),
             new Sound(),
             new Particle_System(),
-            new Lifetime_Manager()
+            new Lifetime_Manager(),
+            new Weapon_System(this)
         );
         create_entity(Back_drop.create_components()).get_component<Backdrop>();
 
@@ -66,10 +63,9 @@ public class Playing_State : Game_State {
         player2.get_component<Position>().y = 400;
             player2.get_component<Ship_Info>().hp_value = 50;
 
-        create_entity(SoundManager.create_backmusic_component());
-        create_entity(SoundManager.create_soundeffects_component());
+        create_entity(SoundManager.create_components());
 
-            for (int i = 0; i < 75; i++) {
+        for (int i = 0; i < 75; i++) {
 
             var asteroid = create_entity(Dummy.create_components());
             var ap = asteroid.get_component<Position>();
