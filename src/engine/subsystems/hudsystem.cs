@@ -32,7 +32,6 @@
             int num_components;
             var entities = Fab5_Game.inst().get_entities(out num_components,
                 typeof(Hud_Component),
-                typeof(Position),
                 typeof(Sprite)
             );
 
@@ -43,26 +42,47 @@
             {
                 var entity = entities[i];
                 var hudValue = entity.get_component<Hud_Component>();
-                var position = entity.get_component<Position>();
                 var sprite = entity.get_component<Sprite>();
+                Position position = null;
 
-                sprite_batch.Draw(sprite.texture, new Vector2(position.x, position.y), Color.White);
+                if (hudValue.type == 1)
+                    position = new Position() { x = 20, y = Fab5_Game.inst().GraphicsDevice.Viewport.Height - 15 - sprite.texture.Height };
+                else if (hudValue.type == 2)
+                    position = new Position() { x = (Fab5_Game.inst().GraphicsDevice.Viewport.Width - sprite.texture.Width) / 2, y = Fab5_Game.inst().GraphicsDevice.Viewport.Height - 20 - sprite.texture.Height };
+
+                sprite_batch.Draw(sprite.texture, new Vector2(position.x, position.y), color: Color.White, layerDepth: 0);
 
                 if (hudValue.type == 1)
                 {
                     // X = 9, Y = 7, W = 68, H = 16 Coordinates for the filling in hpbar-sprite
 
-                    sprite_batch.Draw(sprite.texture, new Vector2(position.x + 9, position.y + 7), new Rectangle(9, 7, 68, 16), Color.Black);
-
-                    sprite_batch.Draw(sprite.texture, new Rectangle((int)position.x + 9, (int)position.y + 7, (int)(68 * (hudValue.value / 100)), 16), new Rectangle(9, 7, 68, 16), Color.Red);
+                    sprite_batch.Draw(sprite.texture, 
+                        new Vector2(position.x + 9, position.y + 7), 
+                        sourceRectangle: new Rectangle(9, 7, 68, 16), 
+                        color: Color.Black, 
+                        layerDepth: 0);
+                    
+                    sprite_batch.Draw(sprite.texture, 
+                        destinationRectangle: new Rectangle((int)position.x + 9, (int)position.y + 7, (int)(68 * (hudValue.value / 100)), 16), 
+                        sourceRectangle: new Rectangle(9, 7, 68, 16), 
+                        color: Color.Red, 
+                        layerDepth: 0);
                 }
                 else if (hudValue.type == 2)
                 {
                     // X = 10, Y = 6, W = 226, H = 8 Coordinates for the filling in energybar-sprite
 
-                    sprite_batch.Draw(sprite.texture, new Vector2(position.x + 10, position.y + 6), new Rectangle(10, 6, 226, 8), Color.Black);
+                    sprite_batch.Draw(sprite.texture, 
+                        new Vector2(position.x + 10, position.y + 6), 
+                        sourceRectangle: new Rectangle(10, 6, 226, 8), 
+                        color: Color.Black,
+                        layerDepth: 0);
 
-                    sprite_batch.Draw(sprite.texture, new Rectangle((int)position.x + 10, (int)position.y + 6, (int)(226 * (hudValue.value / 100)), 8), new Rectangle(10, 6, 226, 8), Color.Blue);
+                    sprite_batch.Draw(sprite.texture,
+                       destinationRectangle: new Rectangle((int)position.x + 10, (int)position.y + 6, (int)(226 * (hudValue.value / 100)), 8),
+                       sourceRectangle: new Rectangle(10, 6, 226, 8), 
+                       color: Color.Blue,
+                       layerDepth: 0);
                 }
             }
             sprite_batch.End();

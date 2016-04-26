@@ -16,7 +16,6 @@
             return new Component[]
             {
                 new Hud_Component(2, 1),
-                new Position() {x = (Starburst.inst().GraphicsDevice.Viewport.Width - temp.Width) / 2 , y = Starburst.inst().GraphicsDevice.Viewport.Height - 20 - temp.Height },
                 new Sprite()
                 {
                     texture = temp
