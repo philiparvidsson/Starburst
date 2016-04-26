@@ -10,7 +10,6 @@
 
     public static class Player_Ship
     {
-
         static int lol = 1;
         public static Component[] create_components()
         {
@@ -24,6 +23,7 @@
                     down  = Keys.S
                 };
             }
+            string ship = "ships/ship1" + lol;
             lol++;
             return new Component[]
             {
@@ -33,7 +33,7 @@
                 new Velocity() {x = 0.0f, y = 0.0f },
                 new Sprite()
                 {
-                    texture = Starburst.inst().get_content<Texture2D>("ships/ship11"),
+                    texture = Starburst.inst().get_content<Texture2D>(ship),
                     color = new Color(0.6f, 0.9f, 1.0f)
                 }
 ,

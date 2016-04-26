@@ -19,7 +19,7 @@
             typeof(Backdrop));
 
             sprite_batch.Begin(SpriteSortMode.BackToFront,
-                BlendState.Additive, null, null, null, null
+                BlendState.Additive,SamplerState.LinearWrap, null, null, null
                                /*transformMatrix: camera.getViewMatrix(camera.viewport)*/);
 
             for (int j = 0; j < num_entities; j++)
