@@ -46,8 +46,8 @@
                                   null,
                                   Color.White,
                                   0.0f,
-                                  new Vector2(bgtexture.backdrop.Width/2.0f  + playerPosition.x * fac2,
-                                              bgtexture.backdrop.Height/2.0f + playerPosition.y * fac2),
+                                  new Vector2(bgtexture.stardrop.Width/2.0f  + playerPosition.x * fac2,
+                                              bgtexture.stardrop.Height/2.0f + playerPosition.y * fac2),
                                   new Vector2(2.0f, 2.0f),
                                   SpriteEffects.None,
                                   0.9f);

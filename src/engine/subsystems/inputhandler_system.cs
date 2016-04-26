@@ -28,10 +28,10 @@
                 input.keyboardState = Keyboard.GetState();
 
                 if (input.keyboardState.IsKeyDown(input.left))
-                    angle.angle -= 3.5f * dt;
+                    angle.angle -= 4.1f * dt;
 
                 if (input.keyboardState.IsKeyDown(input.right))
-                    angle.angle += 3.5f * dt;
+                    angle.angle += 4.1f * dt;
 
                 if (input.keyboardState.IsKeyDown(input.up))
                 {
