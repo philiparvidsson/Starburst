@@ -19,7 +19,7 @@
                         new BackgroundMusic("sound/SpaceCube", true)
             };
             return new Component[]{
-                new Fab5SoundEffect("sound/effects/Minigun"),
+                new Fab5SoundEffect("sound/effects/Minigun","Minigun"),
                 (Component)backlib
             };
         }
