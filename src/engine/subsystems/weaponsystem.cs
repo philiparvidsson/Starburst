@@ -18,11 +18,17 @@ namespace Fab5.Engine.Subsystems {
         }
         public override void on_message(string msg, dynamic data) {
             if(msg.Equals("fire")) {
+                float dt = data.Dt;
                 Position position = data.Position;
                 Angle angle = data.Angle;
                 Weapon weapon = data.Weapon;
-                
-                //var shot = gameState.create_entity(Bullet_Factory.create_components(position, angle, weapon));
+
+                // kolla dt, räkna ner tid till nästa skott kan skjutas (baserat på fire rate)
+                weapon.timeSinceLastShot += dt;
+                if (weapon.timeSinceLastShot >= weapon.fire_rate) {
+                    weapon.timeSinceLastShot = 0f;
+                    var shot = gameState.create_entity(Bullet_Factory.create_components(position, angle, weapon));
+                }
             }
         }
     }

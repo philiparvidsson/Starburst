@@ -10,5 +10,6 @@
         public float damage;
         public float fire_rate;
         public string sound;
+        internal float timeSinceLastShot = 999f;
     }
 }
