@@ -24,7 +24,7 @@
          public static Component create_soundeffects_component() {
             var effectlib = new SoundLibrary();
             effectlib.Library = new List<Component>() {
-                new Fab5SoundEffect("sound/effects/Minigun","Minigun"),
+                new Fab5SoundEffect("sound/effects/Minigun","minigun"),
             };
             return (Component)effectlib;
         }

@@ -9,6 +9,6 @@
     public abstract class Weapon : Component {
         public float damage;
         public float fire_rate;
-        public Fab5SoundEffect sound;
+        public string sound;
     }
 }

@@ -48,11 +48,11 @@ namespace Fab5.Engine.Subsystems
                 var music = lib.Library.FirstOrDefault() as BackgroundMusic;
                 if (effect != null)
                 {
-                    if (msg == "Fire") { 
+                    if (msg == "fire") { 
                         var timesince = DateTime.Now - lib.LastChanged;
                         if (timesince.Seconds > 0.001)
                         {
-                            if (effect.Desc == data.Weapon)
+                            if (effect.Desc == data.Weapon.sound)
                                 effect.SoundEffect.Play();
                             lib.LastChanged = DateTime.Now;
                         }
@@ -60,7 +60,7 @@ namespace Fab5.Engine.Subsystems
                 }
                 if (music != null)
                 {
-                    if (msg == "SongChanged")
+                    if (msg == "songchanged")
                     {
                         var timesince = DateTime.Now - lib.LastChanged;
                         if (timesince.Seconds > 0.2)
@@ -76,7 +76,7 @@ namespace Fab5.Engine.Subsystems
                             lib.LastChanged = DateTime.Now;
                         }
                     }
-                    if (msg == "Mute")
+                    if (msg == "mute")
                     {
                         if (MediaPlayer.IsMuted)
                             MediaPlayer.IsMuted = false;
