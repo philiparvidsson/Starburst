@@ -38,7 +38,9 @@
                 },
                 new Ship_Info(100,100,100,100,100),
                 new Bounding_Circle() { radius = 20.0f },
-                new Mass() { mass = 15.0f }
+                new Mass() { mass = 15.0f },
+                new Primary_Weapon(),
+                new Secondary_Weapon()
             };
         }
     }

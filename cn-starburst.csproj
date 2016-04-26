@@ -44,6 +44,8 @@
     <Compile Include="src\engine\components\backdrop.cs" />
     <Compile Include="src\engine\components\backgroundmusic.cs" />
     <Compile Include="src\engine\components\backgroundmusiclibrary.cs" />
+    <Compile Include="src\engine\components\secondaryweapon.cs" />
+    <Compile Include="src\engine\components\primaryweapon.cs" />
     <Compile Include="src\engine\components\boundingcircle.cs" />
     <Compile Include="src\engine\components\camera.cs" />
     <Compile Include="src\engine\components\fab5soundeffect.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="src\engine\components\text.cs" />
     <Compile Include="src\engine\components\ttl.cs" />
     <Compile Include="src\engine\components\velocity.cs" />
+    <Compile Include="src\engine\components\weapon.cs" />
     <Compile Include="src\engine\core.cs" />
     <Compile Include="src\engine\game.cs" />
     <Compile Include="src\engine\subsystems\bgrenderer.cs" />
@@ -68,9 +71,11 @@
     <Compile Include="src\engine\subsystems\particlesystem.cs" />
     <Compile Include="src\engine\subsystems\positionintegrater.cs" />
     <Compile Include="src\engine\subsystems\renderingsystem.cs" />
+    <Compile Include="src\starburst\states\playing\entities\bullet_factory.cs" />
     <Compile Include="src\engine\subsystems\sound.cs" />
     <Compile Include="src\engine\subsystems\spriterenderer.cs" />
     <Compile Include="src\engine\subsystems\textrenderer.cs" />
+    <Compile Include="src\engine\subsystems\weaponsystem.cs" />
     <Compile Include="src\engine\subsystems\window_title_writer.cs" />
     <Compile Include="src\engine\tilemap.cs" />
     <Compile Include="src\starburst\starburst.cs" />
