@@ -16,7 +16,7 @@ public class Starburst : Fab5_Game {
         GraphicsMgr.PreferredBackBufferHeight = 720;
 
         GraphicsMgr.ApplyChanges();
-            GraphicsMgr.ToggleFullScreen();
+            //GraphicsMgr.ToggleFullScreen();
 
         enter_state(new Playing_State());
     }

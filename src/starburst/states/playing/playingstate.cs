@@ -50,7 +50,8 @@ public class Playing_State : Game_State {
             new Sound(),
             new Particle_System(),
             new Lifetime_Manager(),
-            new MessageQueue_System()
+            new MessageQueue_System(),
+            new Weapon_System(this)
         );
         create_entity(Back_drop.create_components()).get_component<Backdrop>();
 

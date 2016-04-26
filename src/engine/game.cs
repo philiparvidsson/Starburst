@@ -30,6 +30,7 @@ public abstract class Fab5_Game : Game {
     public void message(string msg, dynamic data) {
         if (states.Count > 0) {
             states.Peek().on_message(msg, data);
+            states.Peek().dispatch_message(msg, data);
         }
     }
 
