@@ -27,11 +27,27 @@
 
                 input.keyboardState = Keyboard.GetState();
 
-                if (input.keyboardState.IsKeyDown(input.left))
-                    angle.angle -= 4.1f * dt;
+                angle.ang_vel -= angle.ang_vel * 10.0f * dt;
 
-                if (input.keyboardState.IsKeyDown(input.right))
-                    angle.angle += 4.1f * dt;
+                if (input.keyboardState.IsKeyDown(input.left)) {
+                    var ang_acc = 60.0f * dt;
+
+                    angle.ang_vel -= ang_acc;
+
+                    if (angle.ang_vel < -4.0f) {
+                        angle.ang_vel = -4.0f;
+                    }
+                }
+
+                if (input.keyboardState.IsKeyDown(input.right)) {
+                    var ang_acc = 60.0f * dt;
+
+                    angle.ang_vel += ang_acc;
+
+                    if (angle.ang_vel > 4.0f) {
+                        angle.ang_vel = 4.0f;
+                    }
+                }
 
                 if (input.keyboardState.IsKeyDown(input.up))
                 {
@@ -55,7 +71,7 @@
                     // lagra när/hur länge sen vapnet avfyrades senast
                     // kolla vapnets fire rate för att avgöra om det ska skjutas igen i denna frame
                     var message = new { Position = entity.get_component<Position>(), Angle = angle, Weapon = entity.get_component<Primary_Weapon>() };
-                    
+
                     Fab5_Game.inst().message("fire", message);
                     //, ev.powerups }
                 }

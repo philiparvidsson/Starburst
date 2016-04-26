@@ -64,6 +64,33 @@ public class Collision_Solver : Subsystem {
         }
     }
 
+    private void collide(Entity e1, float c_x, float c_y, float n_x, float n_y) {
+        var p = e1.get_component<Position>();
+        var v = e1.get_component<Velocity>();
+        var a = e1.get_component<Angle>();
+
+        var r = (float)Math.Sqrt(n_x*n_x+n_y*n_y);
+
+        n_x /= r;
+        n_y /= r;
+
+        var p_x = -(c_y - p.y);
+        var p_y = c_x - p.x;
+
+        if (a != null) {
+            var w = v.x*p_x + v.y*p_y;
+            a.ang_vel -= w * 0.003f;
+
+//            System.Console.WriteLine(p_x + ", " + p_y);
+        }
+
+        var d = 2.0f * (n_x*v.x+n_y*v.y);
+        v.x -= d*n_x;
+        v.y -= d*n_y;
+
+
+    }
+
     private bool has_tile(int x, int y) {
         if (x < 0) return false;
         if (x > 255) return false;
@@ -95,9 +122,9 @@ public class Collision_Solver : Subsystem {
              && (v.x > 0.0f))
             {
                 p.x = c_x - c.radius;
-                v.x *= -1.0f;
 
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
+                collide(e1, c_x, c_y, -1.0f, 0.0f);
                 return true;
             }
         }
@@ -112,7 +139,7 @@ public class Collision_Solver : Subsystem {
              && (v.x < 0.0f))
             {
                 p.x = c_x + c.radius;
-                v.x *= -1.0f;
+                collide(e1, c_x, c_y, 1.0f, 0.0f);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
                 return true;
             }
@@ -145,7 +172,7 @@ public class Collision_Solver : Subsystem {
              && (v.y > 0.0f))
             {
                 p.y = c_y - c.radius;
-                v.y *= -1.0f;
+                collide(e1, c_x, c_y, 0.0f, -1.0f);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
                 return true;
             }
@@ -161,7 +188,7 @@ public class Collision_Solver : Subsystem {
              && (v.y < 0.0f))
             {
                 p.y = c_y + c.radius;
-                v.y *= -1.0f;
+                collide(e1, c_x, c_y, 0.0f, 1.0f);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
                 return true;
             }
@@ -296,7 +323,20 @@ public class Collision_Solver : Subsystem {
         var c_y = p1.y + p_y*c1.radius;
         Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = e2, c_x = c_x, c_y = c_y });
 
-        // @To-do: Apply restitution factor here.
+        var n_x = -p_y;
+        var n_y = p_x;
+        var w = v_x*n_x + v_y*n_y * m1 * m2;
+
+        var a1 = e1.get_component<Angle>();
+        if (a1 != null && m1 >= 0.0f) {
+            a1.ang_vel -= w * 0.1f/m1;
+        }
+
+        var a2 = e2.get_component<Angle>();
+        if (a2 != null && m2 > 0.0f) {
+            var w = v_x*n_x + v_y*n_y;
+            a2.ang_vel -= w * 0.1f/m2;
+        }
 
         // Newton's third law.
         p_x *= d*2.0f;

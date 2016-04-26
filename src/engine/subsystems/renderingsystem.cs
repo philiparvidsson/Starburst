@@ -188,6 +188,20 @@ namespace Fab5.Engine.Subsystems {
                     }
                 }
             }
+
+            for (int i = 0; i < num_components; i++) {
+                var s1 = entities[i].get_component<Sprite>();
+                for (int j = (i+1); j < num_components; j++) {
+                    var s2 = entities[j].get_component<Sprite>();
+
+                    if (s1.layer_depth < s2.layer_depth) {
+                        var tmp = entities[i];
+                        entities[i] = entities[j];
+                        entities[j] = tmp;
+                    }
+                }
+            }
+
             for (int p = 0; p < currentPlayerNumber; p++)
             {
                 Camera current = cameras[p];
@@ -233,7 +247,7 @@ namespace Fab5.Engine.Subsystems {
                         bs = BlendState.Additive;
                     }
 
-                    sprite_batch.Begin(SpriteSortMode.FrontToBack,
+                    sprite_batch.Begin(SpriteSortMode.Immediate,
                                        bs, null, null, null, null,
                                        transformMatrix: camera.getViewMatrix(camera.viewport));
                 }
@@ -306,7 +320,7 @@ namespace Fab5.Engine.Subsystems {
                               new Vector2(frame_width/2.0f, frame_height/2.0f),
                               sprite.scale,
                               SpriteEffects.None,
-                              0.5f);
+                              sprite.layer_depth);
 
     }
 

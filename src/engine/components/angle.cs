@@ -15,6 +15,7 @@
     public class Angle : Component
     {
         public float angle;
+        public float ang_vel = 0.0f;
     }
 
 }

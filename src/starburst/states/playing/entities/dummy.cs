@@ -26,7 +26,7 @@ public static class Dummy {
             asset = "asteroid2";
 
         return new Component[] {
-            new Angle() { angle = 0.1f * (float)rand.NextDouble() },
+            //new Angle() { angle = 0.1f * (float)rand.NextDouble() },
             new Position() {x = 600, y = 200 },
             new Velocity() {x = 0.0f, y = 0.0f },
             new Sprite() {

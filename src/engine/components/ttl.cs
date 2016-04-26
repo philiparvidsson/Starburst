@@ -12,6 +12,9 @@ using Fab5.Engine.Core;
 
 public class TTL : Component {
     public float time;
+    public float max_time;
+
+    public System.Func<float, float, float> alpha_fn;
 }
 
 }

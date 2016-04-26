@@ -15,8 +15,8 @@ public class Playing_State : Game_State {
 
     public static System.Random rand = new System.Random();
 
-        public override void on_message(string msg, dynamic data) { 
-            if (msg == "collision") { 
+        public override void on_message(string msg, dynamic data) {
+            if (msg == "collision") {
                 var p1 = data.entity1.get_component<Position>();
 
                 var x = data.c_x;
@@ -26,7 +26,8 @@ public class Playing_State : Game_State {
                     texture = Starburst.inst().get_content<Texture2D>("particle"),
                     color = new Color(0.4f, 0.3f, 0.1f),
                     blend_mode = Sprite.BM_ADD,
-                    scale = 0.5f + (float)rand.NextDouble()
+                    scale = 0.4f + (float)rand.NextDouble() * 0.3f,
+                    layer_depth = 0.9f
                 };
                 create_entity(Particle_System.explosion(x, y, fn));
             }
@@ -61,11 +62,11 @@ public class Playing_State : Game_State {
 
         player2.get_component<Position>().x = 400;
         player2.get_component<Position>().y = 400;
-            player2.get_component<Ship_Info>().hp_value = 50;
+        player2.get_component<Ship_Info>().hp_value = 50;
 
         create_entity(SoundManager.create_components());
 
-        for (int i = 0; i < 75; i++) {
+        for (int i = 0; i < 65; i++) {
 
             var asteroid = create_entity(Dummy.create_components());
             var ap = asteroid.get_component<Position>();
@@ -94,7 +95,7 @@ public class Playing_State : Game_State {
                             scale = 0.9f + (float)rand.NextDouble() * 1.3f,
                             blend_mode = Sprite.BM_ADD
                         },
-                        new TTL() { time = 0.05f + (float)(rand.NextDouble() * 0.05f) }
+                        new TTL() { max_time = 0.05f + (float)(rand.NextDouble() * 0.05f) }
 //                        new Bounding_Circle() { radius = 1.0f },
 //                        new Mass() { mass = 0.0f }
 
@@ -108,6 +109,8 @@ public class Playing_State : Game_State {
         var playerpos2 = player2.get_component<Position>();
         var playervel2 = player2.get_component<Velocity>();
         var playerrot2 = player2.get_component<Angle>();
+
+        var ball = create_entity(Soccer_Ball.create_components());
 
 
         var pemit2 = create_entity(new Component[] {
@@ -124,7 +127,7 @@ public class Playing_State : Game_State {
                             scale = 0.9f + (float)rand.NextDouble() * 1.3f,
                             blend_mode = Sprite.BM_ADD
                         },
-                        new TTL() { time = 0.05f + (float)(rand.NextDouble() * 0.05f) }
+                        new TTL() { max_time = 0.05f + (float)(rand.NextDouble() * 0.05f) }
 //                        new Bounding_Circle() { radius = 1.0f },
 //                        new Mass() { mass = 0.0f }
 
