@@ -74,6 +74,7 @@
     <Compile Include="src\engine\subsystems\spriterenderer.cs" />
     <Compile Include="src\engine\subsystems\textrenderer.cs" />
     <Compile Include="src\engine\subsystems\window_title_writer.cs" />
+    <Compile Include="src\engine\tilemap.cs" />
     <Compile Include="src\starburst\starburst.cs" />
     <Compile Include="src\starburst\states\playing\entities\backdrop.cs" />
     <Compile Include="src\starburst\states\playing\entities\dummy.cs" />
@@ -107,6 +108,7 @@
     <Content Include="src\starburst\content\sound\effects\Minigun.wav" />
     <Content Include="src\starburst\content\sound\SpaceCube.wav" />
     <Content Include="src\starburst\content\sound\SpaceLoungeLoop.wav" />
+    <Content Include="src\starburst\content\tile.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
