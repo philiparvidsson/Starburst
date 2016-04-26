@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Fab5.Engine.Core;
 using Fab5.Engine.Components;
 
+// DEN HÄR SKA INTE VARA HÄR WTF
+using Fab5.Starburst.States.Playing.Entities;
+
 namespace Fab5.Engine.Subsystems {
     public class Weapon_System : Subsystem {
         Game_State gameState;
