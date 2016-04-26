@@ -305,8 +305,7 @@ namespace Fab5.Engine.Subsystems {
                 frame_width = sprite.texture.Width;
                 frame_height = sprite.texture.Height;
             }
-
-            var source_rect = new Rectangle(0, 0, frame_width, frame_height);
+            var source_rect = entity.get_component<DrawArea>()?.rectangle ?? new Rectangle(0, 0, frame_width, frame_height);
 
             if (sprite.num_frames > 1) {
                 source_rect = new Rectangle(sprite.frame_x, sprite.frame_y, frame_width, frame_height);
@@ -317,7 +316,7 @@ namespace Fab5.Engine.Subsystems {
                               source_rect,
                               sprite.color,
                               angle,
-                              new Vector2(frame_width/2.0f, frame_height/2.0f),
+                              new Vector2(source_rect.Width/2.0f, source_rect.Height/2.0f),
                               sprite.scale,
                               SpriteEffects.None,
                               sprite.layer_depth);

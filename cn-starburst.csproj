@@ -40,6 +40,7 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="src\engine\components\drawarea.cs" />
     <Compile Include="src\engine\components\angle.cs" />
     <Compile Include="src\engine\components\backdrop.cs" />
     <Compile Include="src\engine\components\backgroundmusic.cs" />

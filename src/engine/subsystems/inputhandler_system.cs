@@ -70,7 +70,8 @@
                     // kolla fire rate, sedan skicka message (kanske att detta hellre ska skötas i weaponsystem för att hålla den logiken mer separerad):
                     // lagra när/hur länge sen vapnet avfyrades senast
                     // kolla vapnets fire rate för att avgöra om det ska skjutas igen i denna frame
-                    var message = new { Position = entity.get_component<Position>(), Angle = angle, Weapon = entity.get_component<Primary_Weapon>() , };
+
+                    var message = new { Position = entity.get_component<Position>(), Angle = angle, Weapon = entity.get_component<Primary_Weapon>() , Dt = t };
                     Fab5_Game.inst().message("fire", message);
                     //, ev.powerups }
                 }
