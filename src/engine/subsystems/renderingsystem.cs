@@ -92,6 +92,7 @@ namespace Fab5.Engine.Subsystems {
              * uppdatera kameran för att centreras på kopplade spelarens position
              * (görs nu i draw för att onödigt att ändra kamera när det ändå inte renderas)
              **/
+            Hudsystem.updateHUD();
             /*
             for (int i = 0; i < currentPlayerNumber; i++)
             {
@@ -153,7 +154,7 @@ namespace Fab5.Engine.Subsystems {
                 cameras[p].position = currentPlayerPosition;
 
                 bgRender.drawBackground(sprite_batch, currentPlayerPosition, current);
-                //drawHUD(sprite_batch, entity, currentPlayerNumber);
+                Hudsystem.drawHUD(sprite_batch, entities[0], currentPlayerNumber);
                 drawSprites(sprite_batch, current, num_components, entities, 0.0f);
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;
@@ -197,6 +198,9 @@ namespace Fab5.Engine.Subsystems {
 
         private void update_sprite(Entity entity, float dt) {
             var sprite   = entity.get_component<Sprite>();
+            var hud = entity.get_component<Hud_Component>();
+            if (hud != null)
+                return;
 
             if (sprite.num_frames > 1) {
                 sprite.frame_timer += dt;

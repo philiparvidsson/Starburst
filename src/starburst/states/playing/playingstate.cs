@@ -46,7 +46,8 @@ public class Playing_State : Game_State {
             new Lifetime_Manager(),
             new MessageQueue_System()
         );
-
+        create_entity(HPBar.create_components());
+            create_entity(EnergyBar.create_components());
         create_entity(Back_drop.create_components()).get_component<Backdrop>();
 
         create_entity(new FpsCounter());

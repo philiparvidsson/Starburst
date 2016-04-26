@@ -48,6 +48,7 @@
     <Compile Include="src\engine\components\camera.cs" />
     <Compile Include="src\engine\components\fab5soundeffect.cs" />
     <Compile Include="src\engine\components\fpscounter.cs" />
+    <Compile Include="src\engine\components\hudcomponent.cs" />
     <Compile Include="src\engine\components\inputhandler.cs" />
     <Compile Include="src\engine\components\mass.cs" />
     <Compile Include="src\engine\components\particleemitter.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="src\engine\subsystems\bgrenderer.cs" />
     <Compile Include="src\engine\subsystems\collisionsolver.cs" />
     <Compile Include="src\engine\subsystems\entitylifetime.cs" />
+    <Compile Include="src\engine\subsystems\hudsystem.cs" />
     <Compile Include="src\engine\subsystems\inputhandler_system.cs" />
     <Compile Include="src\engine\subsystems\messagequeue_system.cs" />
     <Compile Include="src\engine\subsystems\particlesystem.cs" />
@@ -74,6 +76,8 @@
     <Compile Include="src\starburst\starburst.cs" />
     <Compile Include="src\starburst\states\playing\entities\backdrop.cs" />
     <Compile Include="src\starburst\states\playing\entities\dummy.cs" />
+    <Compile Include="src\starburst\states\playing\entities\energybar.cs" />
+    <Compile Include="src\starburst\states\playing\entities\hpbar.cs" />
     <Compile Include="src\starburst\states\playing\entities\soundmanager.cs" />
     <Compile Include="src\starburst\states\playing\entities\playership.cs" />
     <Compile Include="src\starburst\states\playing\playingstate.cs" />
@@ -93,6 +97,8 @@
     <Content Include="src\starburst\content\backdrops\stardrop.png" />
     <Content Include="src\starburst\content\ball.png" />
     <Content Include="src\starburst\content\dummy.png" />
+    <Content Include="src\starburst\content\EnergyBar.png" />
+    <Content Include="src\starburst\content\HPBar.png" />
     <Content Include="src\starburst\content\particle.png" />
     <Content Include="src\starburst\content\shaders\test.fx" />
     <Content Include="src\starburst\content\ship.png" />
