@@ -46,8 +46,6 @@ public class Playing_State : Game_State {
             new Lifetime_Manager(),
             new MessageQueue_System()
         );
-        create_entity(HPBar.create_components());
-            create_entity(EnergyBar.create_components());
         create_entity(Back_drop.create_components()).get_component<Backdrop>();
 
         create_entity(new FpsCounter());
@@ -56,6 +54,7 @@ public class Playing_State : Game_State {
 
         player2.get_component<Position>().x = 400;
         player2.get_component<Position>().y = 400;
+            player2.get_component<Ship_Info>().hp_value = 50;
 
         create_entity(SoundManager.create_components());
 

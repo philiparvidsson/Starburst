@@ -53,6 +53,7 @@
     <Compile Include="src\engine\components\mass.cs" />
     <Compile Include="src\engine\components\particleemitter.cs" />
     <Compile Include="src\engine\components\position.cs" />
+    <Compile Include="src\engine\components\shipinfo.cs" />
     <Compile Include="src\engine\components\sprite.cs" />
     <Compile Include="src\engine\components\text.cs" />
     <Compile Include="src\engine\components\ttl.cs" />
@@ -76,8 +77,6 @@
     <Compile Include="src\starburst\starburst.cs" />
     <Compile Include="src\starburst\states\playing\entities\backdrop.cs" />
     <Compile Include="src\starburst\states\playing\entities\dummy.cs" />
-    <Compile Include="src\starburst\states\playing\entities\energybar.cs" />
-    <Compile Include="src\starburst\states\playing\entities\hpbar.cs" />
     <Compile Include="src\starburst\states\playing\entities\soundmanager.cs" />
     <Compile Include="src\starburst\states\playing\entities\playership.cs" />
     <Compile Include="src\starburst\states\playing\playingstate.cs" />

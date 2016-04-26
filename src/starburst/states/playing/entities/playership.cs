@@ -35,8 +35,8 @@
                 {
                     texture = Starburst.inst().get_content<Texture2D>(ship),
                     color = new Color(0.6f, 0.9f, 1.0f)
-                }
-,
+                },
+                new Ship_Info(100,100,100,100,100),
                 new Bounding_Circle() { radius = 20.0f },
                 new Mass() { mass = 15.0f }
             };

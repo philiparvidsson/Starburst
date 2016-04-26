@@ -30,6 +30,8 @@ namespace Fab5.Engine.Subsystems {
         SpriteBatch sprite_batch;
         Viewport defaultViewport;
         BG_Renderer bgRender;
+        Hudsystem hudsystem_instance;
+
 
         public Rendering_System(GraphicsDevice graphicsDevice) {
             sprite_batch = new SpriteBatch(graphicsDevice);
@@ -40,8 +42,8 @@ namespace Fab5.Engine.Subsystems {
         {
             // kör uppdatering av viewports och kameror
             updatePlayers();
-
             bgRender = new BG_Renderer();
+            this.hudsystem_instance = new Hudsystem();
 
  	        base.init();
         }
@@ -92,7 +94,6 @@ namespace Fab5.Engine.Subsystems {
              * uppdatera kameran för att centreras på kopplade spelarens position
              * (görs nu i draw för att onödigt att ändra kamera när det ändå inte renderas)
              **/
-            Hudsystem.updateHUD();
             /*
             for (int i = 0; i < currentPlayerNumber; i++)
             {
@@ -154,8 +155,8 @@ namespace Fab5.Engine.Subsystems {
                 cameras[p].position = currentPlayerPosition;
 
                 bgRender.drawBackground(sprite_batch, currentPlayerPosition, current);
-                Hudsystem.drawHUD(sprite_batch, entities[0], currentPlayerNumber);
                 drawSprites(sprite_batch, current, num_components, entities, 0.0f);
+                hudsystem_instance.drawHUD(sprite_batch, currentPlayer);
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;
             base.draw(t, dt);

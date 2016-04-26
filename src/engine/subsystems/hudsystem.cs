@@ -7,84 +7,55 @@
     using Microsoft.Xna.Framework.Graphics;
     using Engine;
 
-    public static class Hudsystem
+    public class Hudsystem
     {
 
-        public static void updateHUD()
+        Texture2D hpbar_texture = Fab5_Game.inst().get_content<Texture2D>("HPBar");
+        Texture2D energybar_texture = Fab5_Game.inst().get_content<Texture2D>("EnergyBar");
+
+        public  void drawHUD(SpriteBatch sprite_batch, Entity player)
         {
-            int num_ent;
-            var entities = Fab5_Game.inst().get_entities(out num_ent, typeof(Hud_Component));
-
-            for (int i = 0; i < num_ent; i++)
-            {
-                var entity = entities[i];
-                var hud_comp = entity.get_component<Hud_Component>();
-
-                hud_comp.value -= 1;
-                if (hud_comp.value == 0)
-                    hud_comp.value = 100;
-
-            }
-        }
-
-        public static void drawHUD(SpriteBatch sprite_batch, Entity incomingEntity, int currentPlayer)
-        {
-            int num_components;
-            var entities = Fab5_Game.inst().get_entities(out num_components,
-                typeof(Hud_Component),
-                typeof(Sprite)
-            );
-
             sprite_batch.Begin();
 
+            var ship_info = player.get_component<Ship_Info>();
+            Position hpposition;
+            Position energyposition;
 
-            for (int i = 0; i < num_components; i++)
-            {
-                var entity = entities[i];
-                var hudValue = entity.get_component<Hud_Component>();
-                var sprite = entity.get_component<Sprite>();
-                Position position = null;
+            hpposition = new Position() { x = 20, y = Fab5_Game.inst().GraphicsDevice.Viewport.Height - 15 - hpbar_texture.Height };
+            energyposition = new Position() { x = (Fab5_Game.inst().GraphicsDevice.Viewport.Width - energybar_texture.Width) / 2,
+                y = Fab5_Game.inst().GraphicsDevice.Viewport.Height - 20 - energybar_texture.Height };
 
-                if (hudValue.type == 1)
-                    position = new Position() { x = 20, y = Fab5_Game.inst().GraphicsDevice.Viewport.Height - 15 - sprite.texture.Height };
-                else if (hudValue.type == 2)
-                    position = new Position() { x = (Fab5_Game.inst().GraphicsDevice.Viewport.Width - sprite.texture.Width) / 2, y = Fab5_Game.inst().GraphicsDevice.Viewport.Height - 20 - sprite.texture.Height };
+            sprite_batch.Draw(hpbar_texture, new Vector2(hpposition.x, hpposition.y), color: Color.White);
+            sprite_batch.Draw(energybar_texture, new Vector2(energyposition.x, energyposition.y), color: Color.White);
 
-                sprite_batch.Draw(sprite.texture, new Vector2(position.x, position.y), color: Color.White, layerDepth: 0);
 
-                if (hudValue.type == 1)
-                {
-                    // X = 9, Y = 7, W = 68, H = 16 Coordinates for the filling in hpbar-sprite
+            
+            // X = 9, Y = 7, W = 68, H = 16 Coordinates for the filling in hpbar-sprite
 
-                    sprite_batch.Draw(sprite.texture, 
-                        new Vector2(position.x + 9, position.y + 7), 
-                        sourceRectangle: new Rectangle(9, 7, 68, 16), 
-                        color: Color.Black, 
-                        layerDepth: 0);
+            sprite_batch.Draw(hpbar_texture, 
+                new Vector2(hpposition.x + 9, hpposition.y + 7), 
+                sourceRectangle: new Rectangle(9, 7, 68, 16), 
+                color: Color.Black);
                     
-                    sprite_batch.Draw(sprite.texture, 
-                        destinationRectangle: new Rectangle((int)position.x + 9, (int)position.y + 7, (int)(68 * (hudValue.value / 100)), 16), 
-                        sourceRectangle: new Rectangle(9, 7, 68, 16), 
-                        color: Color.Red, 
-                        layerDepth: 0);
-                }
-                else if (hudValue.type == 2)
-                {
-                    // X = 10, Y = 6, W = 226, H = 8 Coordinates for the filling in energybar-sprite
+            sprite_batch.Draw(hpbar_texture, 
+                destinationRectangle: new Rectangle((int)hpposition.x + 9, (int)hpposition.y + 7, (int)(68 * (ship_info.hp_value / 100)), 16), 
+                sourceRectangle: new Rectangle(9, 7, 68, 16), 
+                color: Color.Red);
+        
+            // X = 10, Y = 6, W = 226, H = 8 Coordinates for the filling in energybar-sprite
 
-                    sprite_batch.Draw(sprite.texture, 
-                        new Vector2(position.x + 10, position.y + 6), 
-                        sourceRectangle: new Rectangle(10, 6, 226, 8), 
-                        color: Color.Black,
-                        layerDepth: 0);
+            sprite_batch.Draw(energybar_texture, 
+                new Vector2(energyposition.x + 10, energyposition.y + 6), 
+                sourceRectangle: new Rectangle(10, 6, 226, 8), 
+                color: Color.Black);
 
-                    sprite_batch.Draw(sprite.texture,
-                       destinationRectangle: new Rectangle((int)position.x + 10, (int)position.y + 6, (int)(226 * (hudValue.value / 100)), 8),
-                       sourceRectangle: new Rectangle(10, 6, 226, 8), 
-                       color: Color.Blue,
-                       layerDepth: 0);
-                }
-            }
+            sprite_batch.Draw(energybar_texture,
+                destinationRectangle: new Rectangle((int)energyposition.x + 10, (int)energyposition.y + 6, 
+                (int)(226 * (ship_info.energy_value / ship_info.top_energy)), 8),
+                sourceRectangle: new Rectangle(10, 6, 226, 8), 
+                color: Color.Blue);
+            
+            
             sprite_batch.End();
         }
     }
