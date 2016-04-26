@@ -34,7 +34,7 @@ public class Playing_State : Game_State {
                 create_entity(Particle_System.explosion(x, y, fn));
             }
         }
-    
+
 
     public override void init() {
         // @To-do: Load map here.
