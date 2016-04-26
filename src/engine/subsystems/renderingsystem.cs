@@ -30,7 +30,10 @@ namespace Fab5.Engine.Subsystems {
         SpriteBatch sprite_batch;
         Viewport defaultViewport;
         BG_Renderer bgRender;
+
         public Tile_Map tile_map;
+
+        Hudsystem hudsystem_instance;
 
         public Rendering_System(GraphicsDevice graphicsDevice) {
             sprite_batch = new SpriteBatch(graphicsDevice);
@@ -77,8 +80,8 @@ namespace Fab5.Engine.Subsystems {
         {
             // kör uppdatering av viewports och kameror
             updatePlayers();
-
             bgRender = new BG_Renderer();
+            this.hudsystem_instance = new Hudsystem();
 
  	        base.init();
         }
@@ -190,9 +193,12 @@ namespace Fab5.Engine.Subsystems {
                 cameras[p].position = currentPlayerPosition;
 
                 bgRender.drawBackground(sprite_batch, currentPlayerPosition, current);
+
+
                 //drawHUD(sprite_batch, entity, currentPlayerNumber);
                 draw_tile_map(sprite_batch, current);
                 drawSprites(sprite_batch, current, num_components, entities, 0.0f);
+                hudsystem_instance.drawHUD(sprite_batch, currentPlayer);
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;
             base.draw(t, dt);
@@ -235,6 +241,9 @@ namespace Fab5.Engine.Subsystems {
 
         private void update_sprite(Entity entity, float dt) {
             var sprite   = entity.get_component<Sprite>();
+            var hud = entity.get_component<Hud_Component>();
+            if (hud != null)
+                return;
 
             if (sprite.num_frames > 1) {
                 sprite.frame_timer += dt;
