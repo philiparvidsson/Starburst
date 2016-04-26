@@ -171,6 +171,7 @@ public class Collision_Solver : Subsystem {
     }
 
     private bool resolve_circle_tile_collision(Entity e1, int x, int y) {
+        if (x < 0 || x > 255 || y < 0 || y > 255) return false;
         if (tile_map.tiles[x+y*256] == 0) {
             return false;
         }
