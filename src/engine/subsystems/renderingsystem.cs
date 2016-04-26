@@ -81,7 +81,7 @@ namespace Fab5.Engine.Subsystems {
             // kör uppdatering av viewports och kameror
             updatePlayers();
             bgRender = new BG_Renderer();
-            this.hudsystem_instance = new Hudsystem();
+            this.hudsystem_instance = new Hudsystem(sprite_batch);
 
  	        base.init();
         }
@@ -198,7 +198,7 @@ namespace Fab5.Engine.Subsystems {
                 //drawHUD(sprite_batch, entity, currentPlayerNumber);
                 draw_tile_map(sprite_batch, current);
                 drawSprites(sprite_batch, current, num_components, entities, 0.0f);
-                hudsystem_instance.drawHUD(sprite_batch, currentPlayer);
+                hudsystem_instance.drawHUD(currentPlayer);
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;
             base.draw(t, dt);
