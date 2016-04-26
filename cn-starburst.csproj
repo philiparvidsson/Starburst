@@ -59,14 +59,12 @@
     <Compile Include="src\engine\components\ttl.cs" />
     <Compile Include="src\engine\components\velocity.cs" />
     <Compile Include="src\engine\core.cs" />
-    <Compile Include="src\engine\fab5event.cs" />
     <Compile Include="src\engine\game.cs" />
     <Compile Include="src\engine\subsystems\bgrenderer.cs" />
     <Compile Include="src\engine\subsystems\collisionsolver.cs" />
     <Compile Include="src\engine\subsystems\entitylifetime.cs" />
     <Compile Include="src\engine\subsystems\hudsystem.cs" />
     <Compile Include="src\engine\subsystems\inputhandler_system.cs" />
-    <Compile Include="src\engine\subsystems\messagequeue_system.cs" />
     <Compile Include="src\engine\subsystems\particlesystem.cs" />
     <Compile Include="src\engine\subsystems\positionintegrater.cs" />
     <Compile Include="src\engine\subsystems\renderingsystem.cs" />
@@ -74,6 +72,7 @@
     <Compile Include="src\engine\subsystems\spriterenderer.cs" />
     <Compile Include="src\engine\subsystems\textrenderer.cs" />
     <Compile Include="src\engine\subsystems\window_title_writer.cs" />
+    <Compile Include="src\engine\tilemap.cs" />
     <Compile Include="src\starburst\starburst.cs" />
     <Compile Include="src\starburst\states\playing\entities\backdrop.cs" />
     <Compile Include="src\starburst\states\playing\entities\dummy.cs" />
@@ -107,6 +106,7 @@
     <Content Include="src\starburst\content\sound\effects\Minigun.wav" />
     <Content Include="src\starburst\content\sound\SpaceCube.wav" />
     <Content Include="src\starburst\content\sound\SpaceLoungeLoop.wav" />
+    <Content Include="src\starburst\content\tile.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -48,11 +48,14 @@
                 }
                 //fire on left controll
                 if (input.keyboardState.IsKeyDown(Keys.LeftControl))
-                    Fab5_Game.inst().MessagesQueue.Add(new Fab5Event() { EventName = "Fire", EventType = "KeyPressed", Time = DateTime.Now });
+                    Fab5_Game.inst().message("Fire", new { Weapon = "Minigun" });
 
 
                 if (input.keyboardState.IsKeyDown(Keys.N))
-                    Fab5_Game.inst().MessagesQueue.Add(new Fab5Event() { EventName = "ChangeBackSong", EventType = "KeyPressed", Time = DateTime.Now });
+                    Fab5_Game.inst().message("ChangeBackSong", null);
+
+                if (input.keyboardState.IsKeyDown(Keys.M))
+                    Fab5_Game.inst().message("Mute", null);
             }
         }
     }
