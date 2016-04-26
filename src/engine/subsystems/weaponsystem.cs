@@ -26,8 +26,8 @@ namespace Fab5.Engine.Subsystems {
                 // kolla dt, räkna ner tid till nästa skott kan skjutas (baserat på fire rate)
                 weapon.timeSinceLastShot += dt;
                 if (weapon.timeSinceLastShot >= weapon.fire_rate) {
-                    weapon.timeSinceLastShot = 0f;
                     var shot = gameState.create_entity(Bullet_Factory.create_components(position, angle, weapon));
+                    weapon.timeSinceLastShot = 0f;
                 }
             }
         }

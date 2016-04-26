@@ -82,6 +82,7 @@
     <Compile Include="src\starburst\starburst.cs" />
     <Compile Include="src\starburst\states\playing\entities\backdrop.cs" />
     <Compile Include="src\starburst\states\playing\entities\dummy.cs" />
+    <Compile Include="src\starburst\states\playing\entities\soccerball.cs" />
     <Compile Include="src\starburst\states\playing\entities\soundmanager.cs" />
     <Compile Include="src\starburst\states\playing\entities\playership.cs" />
     <Compile Include="src\starburst\states\playing\playingstate.cs" />
@@ -100,6 +101,7 @@
     <Content Include="src\starburst\content\backdrops\backdrop1.png" />
     <Content Include="src\starburst\content\backdrops\stardrop.png" />
     <Content Include="src\starburst\content\ball.png" />
+    <Content Include="src\starburst\content\beams.png" />
     <Content Include="src\starburst\content\dummy.png" />
     <Content Include="src\starburst\content\EnergyBar.png" />
     <Content Include="src\starburst\content\HPBar.png" />
@@ -108,6 +110,8 @@
     <Content Include="src\starburst\content\ship.png" />
     <Content Include="src\starburst\content\ships\qship11.png" />
     <Content Include="src\starburst\content\ships\ship11.png" />
+    <Content Include="src\starburst\content\ships\ship12.png" />
+    <Content Include="src\starburst\content\soccerball.png" />
     <Content Include="src\starburst\content\sound\ContactLoop.wav" />
     <Content Include="src\starburst\content\sound\effects\bang1.mp3" />
     <Content Include="src\starburst\content\sound\effects\bang2.mp3" />
