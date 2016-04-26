@@ -86,7 +86,7 @@ public abstract class Game_State {
     }
 
     public virtual void on_message(string msg, dynamic data) {
-
+        dispatch_message(msg,data);
     }
 
     // Creates an entity from the specified components and assigns an id to it.

@@ -5,6 +5,8 @@ using Fab5.Engine.Core;
 
 using System;
 
+using Microsoft.Xna.Framework;
+
 // Solves collision between bounding circles.
 public class Collision_Solver : Subsystem {
     private readonly Tile_Map tile_map;
@@ -52,15 +54,195 @@ public class Collision_Solver : Subsystem {
                 v1.y = -v1.y * rc1;
             }
 
+            resolve_circle_map_collision(e1);
+
             for (int j = (i+1); j < num_entities; j++) {
                 var e2 = entities[j];
 
-                resolve_collision(e1, e2);
+                resolve_circle_circle_collision(e1, e2);
             }
         }
     }
 
-    private void resolve_collision(Entity e1, Entity e2) {
+    private bool has_tile(int x, int y) {
+        if (x < 0) return false;
+        if (x > 255) return false;
+        if (y < 0) return false;
+        if (y > 255) return false;
+
+        return tile_map.tiles[x+y*256] != 0;
+    }
+
+    private bool check_left_right(Entity e1, int x, int y) {
+        var p = e1.get_component<Position>();
+        var c = e1.get_component<Bounding_Circle>();
+        var v = e1.get_component<Velocity>();
+
+        bool check_right  = !has_tile(x+1, y);
+        bool check_left   = !has_tile(x-1, y);
+
+
+        int tw = 16;
+        int th = 16;
+
+        if (check_left) {
+            var c_x = x*tw - 2048.0f;
+            var c_y = p.y;
+
+            if ((p.y+c.radius >= (y*th - 2048.0f))
+             && (p.y-c.radius < ((y+1)*th - 2048.0f))
+             && (p.x+c.radius > c_x)
+             && (v.x > 0.0f))
+            {
+                p.x = c_x - c.radius;
+                v.x *= -1.0f;
+
+                Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
+                return true;
+            }
+        }
+
+        if (check_right) {
+            var c_x = (x+1)*tw - 2048.0f;
+            var c_y = p.y;
+
+            if ((p.y+c.radius >= (y*th - 2048.0f))
+             && (p.y-c.radius < ((y+1)*th - 2048.0f))
+             && (p.x-c.radius < c_x)
+             && (v.x < 0.0f))
+            {
+                p.x = c_x + c.radius;
+                v.x *= -1.0f;
+                Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool check_top_bottom(Entity e1, int x, int y) {
+        var p = e1.get_component<Position>();
+        var c = e1.get_component<Bounding_Circle>();
+        var v = e1.get_component<Velocity>();
+
+
+        bool check_top    = !has_tile(x, y-1);
+        bool check_bottom = !has_tile(x, y+1);
+
+
+        int tw = 16;
+        int th = 16;
+
+
+        if (check_top) {
+            var c_x = p.x;
+            var c_y = y*th - 2048.0f;
+
+            if ((p.x+c.radius >= (x*tw - 2048.0f))
+             && (p.x-c.radius < ((x+1)*tw - 2048.0f))
+             && (p.y+c.radius > c_y)
+             && (v.y > 0.0f))
+            {
+                p.y = c_y - c.radius;
+                v.y *= -1.0f;
+                Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
+                return true;
+            }
+        }
+
+        if (check_bottom) {
+            var c_x = p.x;
+            var c_y = (y+1)*th - 2048.0f;
+
+            if ((p.x+c.radius >= (x*tw - 2048.0f))
+             && (p.x-c.radius < ((x+1)*tw - 2048.0f))
+             && (p.y-c.radius < c_y)
+             && (v.y < 0.0f))
+            {
+                p.y = c_y + c.radius;
+                v.y *= -1.0f;
+                Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool resolve_circle_tile_collision(Entity e1, int x, int y) {
+        if (tile_map.tiles[x+y*256] == 0) {
+            return false;
+        }
+
+        var v = e1.get_component<Velocity>();
+        var c = e1.get_component<Bounding_Circle>();
+        var p = e1.get_component<Position>();
+
+        var tw = 16;
+        var th = 16;
+
+        var rect = Rectangle.Intersect(new Rectangle((int)(p.x-c.radius), (int)(p.y-c.radius),(int)(c.radius*2.0f),(int)(c.radius*2.0f)),
+                                       new Rectangle((int)(x*tw-2048.0f), (int)(y*th-2048.0f), tw, th));
+
+
+
+        if (rect.Width < rect.Height) {
+            return check_left_right(e1, x, y) || check_top_bottom(e1, x, y);
+        }
+        else {
+            return check_top_bottom(e1, x, y) || check_left_right(e1, x, y);
+        }
+    }
+
+    private void resolve_circle_map_collision(Entity e1) {
+        var p = e1.get_component<Position>();
+        var c = e1.get_component<Bounding_Circle>();
+
+        int tw     = 16;
+        int th     = 16;
+        int left   = (int)(p.x - c.radius+2048.0f) / tw;
+        int top    = (int)(p.y - c.radius+2048.0f) / th;
+        int right  = (int)(p.x + c.radius+2048.0f) / tw;
+        int bottom = (int)(p.y + c.radius+2048.0f) / th;
+
+        var v = e1.get_component<Velocity>();
+
+        int xs = -Math.Sign(v.x);
+        int ys = -Math.Sign(v.y);
+
+        if (xs < 0) {
+            var tmp = right;
+            right = left;
+            left = tmp;
+        }
+
+        if (ys < 0) {
+            var tmp = bottom;
+            bottom = top;
+            top = tmp;
+        }
+
+        if (Math.Abs(v.x) < Math.Abs(v.y)) {
+            for (int x = left; (xs > 0) ? x <= right : x >= right; x += xs) {
+                for (int y = top; (ys > 0) ? y <= bottom : y >= bottom; y += ys) {
+                    if (resolve_circle_tile_collision(e1, x, y))
+                        return;
+                }
+            }
+        }
+        else {
+
+            for (int y = top; (ys > 0) ? y <= bottom : y >= bottom; y += ys) {
+                for (int x = left; (xs > 0) ? x <= right : x >= right; x += xs) {
+                    if (resolve_circle_tile_collision(e1, x, y))
+                        return;
+                }
+            }
+        }
+    }
+
+    private void resolve_circle_circle_collision(Entity e1, Entity e2) {
         var p1     = e1.get_component<Position>();
         var p2     = e2.get_component<Position>();
         var p_x    = p2.x - p1.x;

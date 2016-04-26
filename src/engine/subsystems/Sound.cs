@@ -27,18 +27,39 @@ namespace Fab5.Engine.Subsystems
                     music.NowPlayingIndex = 0;
                     music.IsSongStarted = true;
                 }
+            }
+        }
+        public override void cleanup()
+        {
+            MediaPlayer.Stop();
+        }
+        public override void on_message(string msg, dynamic data)
+        {
+            int num_components;
+            var entities = Fab5_Game.inst().get_entities(out num_components,
+            typeof(BackgroundMusicLibrary),
+            typeof(Fab5SoundEffect));
 
-                var gameinst = Fab5_Game.inst();
-                var keypressed = gameinst.MessagesQueue.Where(x => x.EventType == "KeyPressed").ToList();
-                foreach(var item in keypressed)
+            if (msg == "Fire")
+            {
+                for (int i = 0; i < num_components; i++)
                 {
-                    if(item.EventName == "Fire"){
-                        var effect = entity.get_component<Fab5SoundEffect>();
-                        var ins = effect.SoundEffect.CreateInstance();
-                        ins.Play();
-                    }
-                    var timesince =  DateTime.Now- music.LastChanged;
-                    if(item.EventName == "ChangeBackSong" && timesince.Seconds > 0.2)
+                    var entity = entities[i];
+                    var effect = entity.get_component<Fab5SoundEffect>();
+
+                    if (effect.Desc == data.Weapon)
+                        effect.SoundEffect.CreateInstance().Play();
+                }
+            }
+
+            if (msg == "ChangeBackSong")
+            {
+                for (int i = 0; i < num_components; i++)
+                {
+                    var entity = entities[i];
+                    var music = entity.get_component<BackgroundMusicLibrary>();
+                    var timesince = DateTime.Now - music.LastChanged;
+                    if (timesince.Seconds > 0.2)
                     {
                         MediaPlayer.Stop();
                         music.NowPlayingIndex++;
@@ -54,10 +75,14 @@ namespace Fab5.Engine.Subsystems
                     }
                 }
             }
+            if (msg == "Mute"){
+                if (MediaPlayer.IsMuted)
+                    MediaPlayer.IsMuted = false;
+                else
+                    MediaPlayer.IsMuted = true;
+            }
+
         }
-        public override void cleanup()
-        {
-            MediaPlayer.Stop();
-        }
+
     }
 }

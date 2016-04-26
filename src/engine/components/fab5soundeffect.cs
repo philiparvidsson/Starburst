@@ -10,9 +10,10 @@ namespace Fab5.Engine.Components
 {
     public class Fab5SoundEffect : Component
     {
-        public Fab5SoundEffect(string file)
+        public Fab5SoundEffect(string file,string desc)
         {
             File = file;
+            Desc = desc;
             SoundEffect = Fab5_Game.inst().Content.Load<SoundEffect>(file);
         }
         public string Desc { get; set; }
