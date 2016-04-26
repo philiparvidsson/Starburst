@@ -12,6 +12,7 @@
         private static float rotationOffset = MathHelper.ToRadians(-90f);
         private static float shipRadian = 23f;
         private static float speed = 500f;
+        private static float lifeTime = 2f;
         public static Component[] create_components(Position position, Angle shipAngle, Weapon weapon) {
             double dAngle = (double)shipAngle.angle;
             float sfa = (float)Math.Sin(dAngle);
@@ -19,11 +20,11 @@
             return new Component[] {
                 new Position() { x = position.x + shipRadian * cfa, y =  position.y + shipRadian * sfa },
                 new Angle() { angle = shipAngle.angle + rotationOffset },
-                new Sprite() { texture = bulletTexture },
+                new Sprite() { texture = bulletTexture, layer_depth = 1 },
                 new DrawArea() { rectangle = smallGreen },
                 new Velocity() { x = cfa*speed, y = sfa*speed },
                 new Bounding_Circle() { radius = 20 },
-                new TTL() { time = 5.0f }
+                new TTL() { max_time = lifeTime }
             };
         }
     }
