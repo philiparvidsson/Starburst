@@ -57,31 +57,34 @@ namespace Fab5.Engine.Subsystems
                             lib.LastChanged = DateTime.Now;
                         }
                     }
+                    if (msg == "collision")
+                    {
+                        
+                    }
                 }
                 if (music != null)
                 {
-                    if (msg == "songchanged")
-                    {
-                        var timesince = DateTime.Now - lib.LastChanged;
-                        if (timesince.Seconds > 0.2)
+                    var timesince = DateTime.Now - lib.LastChanged;
+                    if (msg == "songchanged" && timesince.Seconds > 0.1)
                         {
                             MediaPlayer.Stop();
                             lib.NowPlayingIndex++;
                             if (lib.NowPlayingIndex == lib.Library.Count)
                                 lib.NowPlayingIndex = 0;
+                            music = lib.Library.ElementAt(lib.NowPlayingIndex) as BackgroundMusic;
                             Console.WriteLine("song changed to" + music.File);
                             MediaPlayer.Play(music.BackSong);
                             MediaPlayer.IsRepeating = music.IsRepeat;
                             lib.IsSongStarted = true;
                             lib.LastChanged = DateTime.Now;
                         }
-                    }
-                    if (msg == "mute")
+                    if (msg == "mute" && timesince.Seconds > 0.1)
                     {
                         if (MediaPlayer.IsMuted)
                             MediaPlayer.IsMuted = false;
                         else
                             MediaPlayer.IsMuted = true;
+                        lib.LastChanged = DateTime.Now;
                     }
                 }   
             }

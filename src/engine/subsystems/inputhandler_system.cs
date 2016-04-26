@@ -97,7 +97,7 @@
 
 
                 if (input.keyboardState.IsKeyDown(Keys.N))
-                    Fab5_Game.inst().message("changebacksong", null);
+                    Fab5_Game.inst().message("songchanged", null);
 
                 if (input.keyboardState.IsKeyDown(Keys.M))
                     Fab5_Game.inst().message("mute", null);
