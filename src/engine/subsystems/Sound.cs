@@ -13,19 +13,21 @@ namespace Fab5.Engine.Subsystems
         {
             int num_components;
             var entities = Fab5_Game.inst().get_entities(out num_components,
-                typeof(BackgroundMusicLibrary),
-                typeof(Fab5SoundEffect));
+                typeof(SoundLibrary));
 
             for (int i = 0; i < num_components; i++)
             {
                 var entity = entities[i];
-                var music = entity.get_component<BackgroundMusicLibrary>();
+                var music = entity.get_component<SoundLibrary>();
                 if (!music.IsSongStarted)
                 {
-                    MediaPlayer.Play(music.Library.FirstOrDefault().BackSong);
-                    MediaPlayer.IsRepeating = music.Library.FirstOrDefault().IsRepeat;
-                    music.NowPlayingIndex = 0;
-                    music.IsSongStarted = true;
+                    var bmusic = music.Library.FirstOrDefault() as BackgroundMusic;
+                    if (bmusic != null) { 
+                        MediaPlayer.Play(bmusic.BackSong);
+                        MediaPlayer.IsRepeating = bmusic.IsRepeat;
+                        music.NowPlayingIndex = 0;
+                        music.IsSongStarted = true;
+                    }
                 }
             }
         }
@@ -37,52 +39,52 @@ namespace Fab5.Engine.Subsystems
         {
             int num_components;
             var entities = Fab5_Game.inst().get_entities(out num_components,
-            typeof(BackgroundMusicLibrary),
-            typeof(Fab5SoundEffect));
-
-            if (msg == "Fire")
+            typeof(SoundLibrary));
+            for (int i = 0; i < num_components; i++)
             {
-                for (int i = 0; i < num_components; i++)
+                var entity = entities[i];
+                var lib = entity.get_component<SoundLibrary>();
+                var effect = lib.Library.FirstOrDefault() as Fab5SoundEffect;
+                var music = lib.Library.FirstOrDefault() as BackgroundMusic;
+                if (effect != null)
                 {
-                    var entity = entities[i];
-                    var effect = entity.get_component<Fab5SoundEffect>();
-
-                    if (effect.Desc == data.Weapon)
-                        effect.SoundEffect.CreateInstance().Play();
-                }
-            }
-
-            if (msg == "ChangeBackSong")
-            {
-                for (int i = 0; i < num_components; i++)
-                {
-                    var entity = entities[i];
-                    var music = entity.get_component<BackgroundMusicLibrary>();
-                    var timesince = DateTime.Now - music.LastChanged;
-                    if (timesince.Seconds > 0.2)
-                    {
-                        MediaPlayer.Stop();
-                        music.NowPlayingIndex++;
-                        if (music.NowPlayingIndex == music.Library.Count)
-                            music.NowPlayingIndex = 0;
-                        var song = music.Library.ElementAt(music.NowPlayingIndex);
-                        Console.WriteLine("song changed to" + song.File);
-
-                        MediaPlayer.Play(song.BackSong);
-                        MediaPlayer.IsRepeating = song.IsRepeat;
-                        music.IsSongStarted = true;
-                        music.LastChanged = DateTime.Now;
+                    if (msg == "Fire") { 
+                        var timesince = DateTime.Now - lib.LastChanged;
+                        if (timesince.Seconds > 0.001)
+                        {
+                            if (effect.Desc == data.Weapon)
+                                effect.SoundEffect.Play();
+                            lib.LastChanged = DateTime.Now;
+                        }
                     }
                 }
+                if (music != null)
+                {
+                    if (msg == "SongChanged")
+                    {
+                        var timesince = DateTime.Now - lib.LastChanged;
+                        if (timesince.Seconds > 0.2)
+                        {
+                            MediaPlayer.Stop();
+                            lib.NowPlayingIndex++;
+                            if (lib.NowPlayingIndex == lib.Library.Count)
+                                lib.NowPlayingIndex = 0;
+                            Console.WriteLine("song changed to" + music.File);
+                            MediaPlayer.Play(music.BackSong);
+                            MediaPlayer.IsRepeating = music.IsRepeat;
+                            lib.IsSongStarted = true;
+                            lib.LastChanged = DateTime.Now;
+                        }
+                    }
+                    if (msg == "Mute")
+                    {
+                        if (MediaPlayer.IsMuted)
+                            MediaPlayer.IsMuted = false;
+                        else
+                            MediaPlayer.IsMuted = true;
+                    }
+                }   
             }
-            if (msg == "Mute"){
-                if (MediaPlayer.IsMuted)
-                    MediaPlayer.IsMuted = false;
-                else
-                    MediaPlayer.IsMuted = true;
-            }
-
         }
-
     }
 }

@@ -66,9 +66,10 @@ public class Playing_State : Game_State {
         player2.get_component<Position>().y = 400;
             player2.get_component<Ship_Info>().hp_value = 50;
 
-        create_entity(SoundManager.create_components());
+        create_entity(SoundManager.create_backmusic_component());
+        create_entity(SoundManager.create_soundeffects_component());
 
-        for (int i = 0; i < 75; i++) {
+            for (int i = 0; i < 75; i++) {
 
             var asteroid = create_entity(Dummy.create_components());
             var ap = asteroid.get_component<Position>();

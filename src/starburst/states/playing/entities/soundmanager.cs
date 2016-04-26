@@ -11,17 +11,22 @@
 
     public class SoundManager
     {
-        public static Component[] create_components() {
-            var backlib = new BackgroundMusicLibrary();
-            backlib.Library = new List<BackgroundMusic>() {
+        public static Component create_backmusic_component() {
+            var backlib = new SoundLibrary();
+            backlib.Library = new List<Component>() {
                         new BackgroundMusic("sound/ContactLoop", true),
                         new BackgroundMusic("sound/SpaceLoungeLoop", true),
                         new BackgroundMusic("sound/SpaceCube", true)
             };
-            return new Component[]{
+            return (Component)backlib;
+
+        }
+         public static Component create_soundeffects_component() {
+            var effectlib = new SoundLibrary();
+            effectlib.Library = new List<Component>() {
                 new Fab5SoundEffect("sound/effects/Minigun","Minigun"),
-                (Component)backlib
             };
+            return (Component)effectlib;
         }
     }
 }

@@ -43,7 +43,7 @@
     <Compile Include="src\engine\components\angle.cs" />
     <Compile Include="src\engine\components\backdrop.cs" />
     <Compile Include="src\engine\components\backgroundmusic.cs" />
-    <Compile Include="src\engine\components\backgroundmusiclibrary.cs" />
+    <Compile Include="src\engine\components\soundlibrary.cs" />
     <Compile Include="src\engine\components\boundingcircle.cs" />
     <Compile Include="src\engine\components\camera.cs" />
     <Compile Include="src\engine\components\fab5soundeffect.cs" />
@@ -103,7 +103,12 @@
     <Content Include="src\starburst\content\ships\qship11.png" />
     <Content Include="src\starburst\content\ships\ship11.png" />
     <Content Include="src\starburst\content\sound\ContactLoop.wav" />
+    <Content Include="src\starburst\content\sound\effects\bang1.mp3" />
+    <Content Include="src\starburst\content\sound\effects\bang2.mp3" />
+    <Content Include="src\starburst\content\sound\effects\glassbreak.mp3" />
     <Content Include="src\starburst\content\sound\effects\Minigun.wav" />
+    <Content Include="src\starburst\content\sound\effects\rockslide_small.mp3" />
+    <Content Include="src\starburst\content\sound\effects\Smashing.mp3" />
     <Content Include="src\starburst\content\sound\SpaceCube.wav" />
     <Content Include="src\starburst\content\sound\SpaceLoungeLoop.wav" />
     <Content Include="src\starburst\content\tile.png" />
