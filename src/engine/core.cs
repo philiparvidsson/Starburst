@@ -114,7 +114,7 @@ public abstract class Game_State {
                                  params Type[] component_types)
 
     {
-        var results = new List<Entity>(128);
+        var results = new List<Entity>(1024);
 
         foreach (var entry in entities) {
             var entity = entry.Value;

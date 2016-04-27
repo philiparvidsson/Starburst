@@ -82,7 +82,7 @@
                     }
                 }
                 //fire on left controll
-                if (input.keyboardState.IsKeyDown(Keys.LeftControl)) {
+                if (input.keyboardState.IsKeyDown(Keys.LeftControl) || GamePad.GetState(input.gp_index).Buttons.X == ButtonState.Pressed) {
                     //Fab5_Game.inst().MessagesQueue.Add(new Fab5Event() { EventName = "Fire", EventType = "KeyPressed", Time = DateTime.Now });
                     // nytt message system
 
@@ -91,7 +91,7 @@
                     // kolla vapnets fire rate för att avgöra om det ska skjutas igen i denna frame
 
                     var message = new { Position = entity.get_component<Position>(), Angle = angle, Weapon = entity.get_component<Primary_Weapon>() , Dt = dt };
-                    Fab5_Game.inst().message("fire", message);
+                    Fab5_Game.inst().message("fire_key_pressed", message);
                     //, ev.powerups }
                 }
 

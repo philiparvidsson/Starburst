@@ -33,7 +33,7 @@ public class Particle_System : Subsystem {
         };
     }
 
-    public override void update(float t, float dt) {
+    public override void draw(float t, float dt) {
         int num_components;
 
         var entities = Fab5_Game.inst().get_entities(out num_components,
