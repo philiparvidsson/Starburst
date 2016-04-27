@@ -8,7 +8,7 @@ namespace Fab5.Engine.Components {
     public class Primary_Weapon : Weapon {
         public Primary_Weapon() {
             this.damage = 1;
-            this.sound = "minigun";
+            this.sound = "throw_knife";
             this.fire_rate = .5f;
         }
     }

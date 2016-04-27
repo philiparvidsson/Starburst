@@ -48,9 +48,10 @@ namespace Fab5.Engine.Subsystems
                 var music = lib.Library.FirstOrDefault() as BackgroundMusic;
                 if (effect != null)
                 {
-                    if (msg == "fire") { 
-                        if (effect.Desc == data.sound)
-                            effect.SoundEffect.Play();
+                    if (msg == "fire") {
+                        var filesInlib = lib.Library.Cast<Fab5SoundEffect>().ToList();
+                        effect = filesInlib.Where(x => x.Desc == data.sound).FirstOrDefault();
+                        effect.SoundEffect.Play();
                         lib.LastChanged = DateTime.Now;
                     }
                     if (msg == "collision")
@@ -61,39 +62,43 @@ namespace Fab5.Engine.Subsystems
                             texttureName1 = data.entity1.get_component<Sprite>().texture.Name;
                             System.Console.WriteLine(texttureName1);
                         }
-                        var tile = data.entity2 as Tile_Map;
-                        if (tile != null)
-                        {
-                            System.Console.WriteLine("tile");
-                        }
                         if (data.entity2 != null) {
                             texttureName2 = data.entity2.get_component<Sprite>().texture.Name;
                             System.Console.WriteLine(texttureName2);
                         }
+                        var filesInlib = lib.Library.Cast<Fab5SoundEffect>().ToList();
 
                         if (!string.IsNullOrEmpty(texttureName1) && !string.IsNullOrEmpty(texttureName2))
                         {
-                         
+
                             if (texttureName1.Contains("ship") && texttureName2.Contains("ship"))
                             {
-                                effect = lib.Library.ElementAt(1) as Fab5SoundEffect;
+                                effect = filesInlib.Where(x => x.Desc == "bang").FirstOrDefault();
                                 effect.SoundEffect.Play();
-                                lib.LastChanged = DateTime.Now;
                             }
                             if ((texttureName1.Contains("asteroid") && texttureName2.Contains("ship")) || (texttureName2.Contains("asteroid") && texttureName1.Contains("ship")))
                             {
-                                effect = lib.Library.ElementAt(3) as Fab5SoundEffect;
+                                effect = filesInlib.Where(x => x.Desc == "rockslide_small").FirstOrDefault();
                                 effect.SoundEffect.Play();
-                                lib.LastChanged = DateTime.Now;
+                            }
+                            if((texttureName1.Contains("ship") && texttureName2 == "soccerball") || (texttureName1 == "soccerball" && texttureName2.Contains("ship")))
+                            {
+                                effect = filesInlib.Where(x => x.Desc == "punch").FirstOrDefault();
+                                var inseffect = effect.SoundEffect.CreateInstance();
+                                inseffect.Volume = 1f;
+                                inseffect.Play();
+                            }
+                            if ((texttureName1.Contains("goal") && texttureName2 == "soccerball") || (texttureName1 == "soccerball" && texttureName2.Contains("goal")))
+                            {
+                                effect = filesInlib.Where(x => x.Desc == "Cheering").FirstOrDefault();
+                                effect.SoundEffect.Play();
                             }
                         }
-                        if (!string.IsNullOrEmpty(texttureName1))
+                        else if (!string.IsNullOrEmpty(texttureName1))
                         {
-                            effect = lib.Library.ElementAt(2) as Fab5SoundEffect;
+                            effect = filesInlib.Where(x => x.Desc == "bang2").FirstOrDefault();
                             effect.SoundEffect.Play();
-                            lib.LastChanged = DateTime.Now;
                         }
-
                     }
                 }
                 if (music != null)
