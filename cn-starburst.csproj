@@ -70,6 +70,7 @@
     <Compile Include="src\engine\subsystems\particlesystem.cs" />
     <Compile Include="src\engine\subsystems\positionintegrater.cs" />
     <Compile Include="src\engine\subsystems\renderingsystem.cs" />
+    <Compile Include="src\starburst\states\playing\collisionhandler.cs" />
     <Compile Include="src\starburst\states\playing\entities\bullet_factory.cs" />
     <Compile Include="src\engine\subsystems\sound.cs" />
     <Compile Include="src\engine\subsystems\spriterenderer.cs" />
@@ -99,10 +100,14 @@
     <Content Include="src\starburst\content\backdrops\backdrop1.png" />
     <Content Include="src\starburst\content\backdrops\stardrop.png" />
     <Content Include="src\starburst\content\ball.png" />
-    <Content Include="src\starburst\content\beams.png" />
+    <Content Include="src\starburst\content\beams1.png" />
+    <Content Include="src\starburst\content\beams2.png" />
     <Content Include="src\starburst\content\dummy.png" />
     <Content Include="src\starburst\content\EnergyBar.png" />
     <Content Include="src\starburst\content\HPBar.png" />
+    <Content Include="src\starburst\content\map\tile1.png" />
+    <Content Include="src\starburst\content\map\tile2.png" />
+    <Content Include="src\starburst\content\map\tile3.png" />
     <Content Include="src\starburst\content\particle.png" />
     <Content Include="src\starburst\content\shaders\test.fx" />
     <Content Include="src\starburst\content\ship.png" />
@@ -138,8 +143,9 @@
     <Content Include="src\starburst\content\sound\effects\UI_Misc23.wav" />
     <Content Include="src\starburst\content\sound\SpaceCube.wav" />
     <Content Include="src\starburst\content\sound\SpaceLoungeLoop.wav" />
+    <Content Include="src\starburst\content\splash.png" />
     <Content Include="src\starburst\content\tgrid.png" />
-    <Content Include="src\starburst\content\tile.png" />
+    <Content Include="src\starburst\content\wbound.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -147,6 +153,7 @@
     <None Include="README.md" />
     <MonoGameContentReference Include="src\starburst\content\content.mgcb" />
     <None Include="src\starburst\content\arial.spritefont" />
+    <None Include="src\starburst\content\sector034.spritefont" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="doc\" />
