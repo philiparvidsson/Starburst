@@ -70,15 +70,16 @@ public class Playing_State : Game_State {
 
         create_entity(new FpsCounter());
         var player = create_entity(Player_Ship.create_components());
-        var player2 = create_entity(Player_Ship.create_components());
+        //var player2 = create_entity(Player_Ship.create_components());
 
         //create_entity(World_Bounds.create_components());
 
         player1_pos = player.get_component<Position>();;
 
-        player2.get_component<Position>().x = 400;
+        /*player2.get_component<Position>().x = 400;
         player2.get_component<Position>().y = 400;
         player2.get_component<Ship_Info>().hp_value = 50;
+            player2.get_component<Score>().score = 100000000;*/
 
         /*var player3 = create_entity(Player_Ship.create_components());
 
