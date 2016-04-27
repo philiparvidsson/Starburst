@@ -29,7 +29,7 @@ public abstract class Fab5_Game : Game {
     public void message(string msg, dynamic data) {
         if (states.Count > 0) {
             states.Peek().on_message(msg, data);
-            states.Peek().dispatch_message(msg, data);
+            states.Peek().queue_message(msg, data);
         }
     }
 
@@ -72,8 +72,6 @@ public abstract class Fab5_Game : Game {
         }
 
         update(t, dt);
-
-        GC.Collect();
     }
 
     protected  override void Draw(GameTime game_time) {
@@ -87,12 +85,26 @@ public abstract class Fab5_Game : Game {
         }
 
         draw(t, dt);
+
+        if (states.Count > 0) {
+            states.Peek().dispatch_messages();
+        }
+
+        GC.Collect();
     }
 
     public Entity create_entity(params Component[] components) {
 
         if (states.Count > 0) {
             return (states.Peek().create_entity(components));
+        }
+
+        return (null);
+    }
+
+     public List<Entity> get_entities_fast(Type component_type) {
+        if (states.Count > 0) {
+            return (states.Peek().get_entities_fast(component_type));
         }
 
         return (null);

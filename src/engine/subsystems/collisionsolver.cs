@@ -34,20 +34,26 @@ public class Collision_Solver : Subsystem {
     public override void update(float t, float dt) {
         // Collisions occur at an instant so who cares about dt?
 
-        int num_entities;
+//        int num_entities;
 
-        var entities = Fab5_Game.inst().get_entities(out num_entities,
+        /*        var entities = Fab5_Game.inst().get_entities(out num_entities,
             typeof (Bounding_Circle),
             typeof (Position),
             typeof (Velocity)
-        );
+        );*/
 
         // Spatial grid ftw!
         var grid = new Dictionary<uint, HashSet<Entity>>();
-        for (int i = 0; i < num_entities; i++) {
-            var e1  = entities[i];
+//        for (int i = 0; i < num_entities; i++) {
+  //          var e1  = entities[i];
+        var entities = Fab5_Game.inst().get_entities_fast(typeof (Bounding_Circle));
+        foreach (var e1 in entities) {
             var p1  = e1.get_component<Position>();
             var c1  = e1.get_component<Bounding_Circle>();
+
+            if (p1 == null || c1 == null) {
+                continue;
+            }
 
             uint left   = (uint)(p1.x - c1.radius + 2048.0f) / grid_size;
             uint right  = (uint)(p1.x + c1.radius + 2048.0f) / grid_size;
@@ -68,47 +74,60 @@ public class Collision_Solver : Subsystem {
 
         // @To-do: Implement a quad tree or spatial grid here to reduce the
         //         number of candidates for collision testing.
-        HashSet<Entity> hash_set = new HashSet<Entity>();
-        for (int i = 0; i < num_entities; i++) {
-            var e1  = entities[i];
-            var p1  = e1.get_component<Position>();
-            var v1  = e1.get_component<Velocity>();
-            var rc1 = e1.get_component<Mass>()?.restitution_coeff ?? 1.0f;
+        System.Threading.ManualResetEvent mre = new System.Threading.ManualResetEvent(false);
+        int counter = entities.Count;
 
-            if (p1.x < -2048.0f) {
-                p1.x = -2048.0f;
-                v1.x = -v1.x * rc1;
-            }
+//        for (int i = 0; i < num_entities; i++) {
+        foreach (var entity in entities) {
+            System.Threading.ThreadPool.QueueUserWorkItem(o => {
+                var e1  = (Entity)o;//entities[(int)o];
+                var p1  = e1.get_component<Position>();
+                var v1  = e1.get_component<Velocity>();
+                var rc1 = e1.get_component<Mass>()?.restitution_coeff ?? 1.0f;
 
-            if (p1.x > 2048.0f) {
-                p1.x = 2048.0f;
-                v1.x = -v1.x * rc1;
-            }
+                if (p1 == null || v1 == null) {
+                    return;
+                }
 
-            if (p1.y < -2048.0f) {
-                p1.y = -2048.0f;
-                v1.y = -v1.y * rc1;
-            }
+                if (p1.x < -2048.0f) {
+                    p1.x = -2048.0f;
+                    v1.x = -v1.x * rc1;
+                }
 
-            if (p1.y > 2048.0f) {
-                p1.y = 2048.0f;
-                v1.y = -v1.y * rc1;
-            }
+                if (p1.x > 2048.0f) {
+                    p1.x = 2048.0f;
+                    v1.x = -v1.x * rc1;
+                }
 
-            resolve_circle_map_collision(e1);
+                if (p1.y < -2048.0f) {
+                    p1.y = -2048.0f;
+                    v1.y = -v1.y * rc1;
+                }
 
-            hash_set.Clear();
-            get_entities(p1, e1.get_component<Bounding_Circle>(), grid, hash_set);
-            foreach (Entity e2 in hash_set) {
-                resolve_circle_circle_collision(e1, e2);
-            }
+                if (p1.y > 2048.0f) {
+                    p1.y = 2048.0f;
+                    v1.y = -v1.y * rc1;
+                }
 
-            /*for (int j = (i+1); j < num_entities; j++) {
-                var e2 = entities[j];
+                resolve_circle_map_collision(e1);
 
-                resolve_circle_circle_collision(e1, e2);
-            }*/
+                HashSet<Entity> hash_set = new HashSet<Entity>();
+
+                get_entities(p1, e1.get_component<Bounding_Circle>(), grid, hash_set);
+                foreach (Entity e2 in hash_set) {
+                    if (e2 == e1) continue;
+                    if (resolve_circle_circle_collision(e1, e2)) {
+                        break;
+                    }
+                }
+
+                if (System.Threading.Interlocked.Decrement(ref counter) == 0) {
+                    mre.Set();
+                }
+            }, entity);
         }
+
+        mre.WaitOne();
     }
 
     private void collide(Entity e1, float c_x, float c_y, float n_x, float n_y) {
@@ -322,7 +341,7 @@ public class Collision_Solver : Subsystem {
         }
     }
 
-    private void resolve_circle_circle_collision(Entity e1, Entity e2) {
+    private bool resolve_circle_circle_collision(Entity e1, Entity e2) {
         var p1     = e1.get_component<Position>();
         var p2     = e2.get_component<Position>();
         var p_x    = p2.x - p1.x;
@@ -335,11 +354,11 @@ public class Collision_Solver : Subsystem {
         if (r2 < 0.00001f || r2 >= r2_min) {
             // No penetration or full penetration (which cannot be
             // solved in a sane way).
-            return;
+            return false;
         }
 
         var r   = (float)Math.Sqrt(r2);
-        var p   = c1.radius+c2.radius - r;
+        var p   = c1.radius+c2.radius - r + 0.001f; // <-- @To-Do: floating point sucks satans ass.
         var v1  = e1.get_component<Velocity>();
         var v2  = e2.get_component<Velocity>();
         var v_x = v1.x - v2.x;
@@ -367,7 +386,7 @@ public class Collision_Solver : Subsystem {
 
         if (d < 0.0f) {
             // Moving away from each other.
-            return;
+            return false;
         }
 
         var c_x = p1.x + p_x*c1.radius;
@@ -400,6 +419,8 @@ public class Collision_Solver : Subsystem {
         v1.y -= p_y*f1;
         v2.x += p_x*f2;
         v2.y += p_y*f2;
+
+        return true;
     }
 }
 

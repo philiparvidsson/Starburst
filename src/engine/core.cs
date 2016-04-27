@@ -13,17 +13,17 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-/*------------------------------------------------
- * CLASSES
- *----------------------------------------------*/
+    /*------------------------------------------------
+     * CLASSES
+     *----------------------------------------------*/
 
-// Base component class for all game components.
-public abstract class Component {} // @To-do: Could be an interface?
+    // Base component class for all game components.
+    public interface Component { };// @To-do: Could be an interface?
 
 // Base entity class for all game entities.
 public class Entity {
     // Components attached to this entity.
-    private readonly Dictionary<Type, Component> components = new Dictionary<Type, Component>();
+    internal readonly Dictionary<Type, Component> components = new Dictionary<Type, Component>();
 
     // Unique entity id, set by the game engine.
     public Int64 id;
@@ -76,22 +76,41 @@ public abstract class Game_State {
     // Entities in the game state.
     private readonly Dictionary<Int64, Entity> entities = new Dictionary<Int64, Entity>();
 
+    private class MsgInfo {
+        public string msg;
+        public object data;
+
+    }
+    private readonly System.Collections.Concurrent.ConcurrentQueue<MsgInfo> messages = new System.Collections.Concurrent.ConcurrentQueue<MsgInfo>();
+
     // Entity id counter. Static to make sure all entity ids are unique.
     private static Int64 next_entity_id = 1;
 
-    internal void dispatch_message(string msg, object data) {
-        foreach (var subsystem in subsystems) {
-            subsystem.on_message(msg, data);
+    internal void queue_message(string msg, object data) {
+        messages.Enqueue(new MsgInfo{msg = msg, data = data});
+    }
+
+    internal void dispatch_messages() {
+
+        MsgInfo msg;
+        while (messages.TryDequeue(out msg)) {
+
+            foreach (var subsystem in subsystems) {
+                subsystem.on_message(msg.msg, msg.data);
+            }
+
+            on_message(msg.msg, msg.data);
         }
 
-        on_message(msg, data);
     }
 
     public virtual void on_message(string msg, dynamic data) {
     }
 
     // Creates an entity from the specified components and assigns an id to it.
+    object dummy_lock = new object();
     public Entity create_entity(params Component[] components) {
+        lock (dummy_lock) {
         var entity = new Entity();
 
         entity.id = Interlocked.Increment(ref next_entity_id);
@@ -100,17 +119,49 @@ public abstract class Game_State {
 
         entities[entity.id] = entity;
 
+        foreach (Component comp in components) {
+            var type = comp.GetType();
+            if (!entity_dic.ContainsKey(type)) {
+                entity_dic[type] = new List<Entity>();
+            }
+
+            entity_dic[type].Add(entity);
+        }
+
+
         return (entity);
+        }
     }
 
     public void remove_entity(Int64 id) {
+        lock (dummy_lock) {
+        if (!entities.ContainsKey(id)) {
+            return;
+        }
+
+        var entity = entities[id];
+
+        foreach (var c in entity.components.Values) {
+            entity_dic[c.GetType()].Remove(entity);
+        }
+
         entities.Remove(id);
+        }
     }
 
     // Retrieves all entities containing the specified component types. Do not
     // use the .Length-attribute of the returned array to iterate through the
     // results, but rather the num_entities out-parameter.
     static List<Entity> results = new List<Entity>();
+
+    private readonly Dictionary<Type, List<Entity>> entity_dic = new Dictionary<Type, List<Entity>>();
+
+    public List<Entity> get_entities_fast(Type component_type) {
+        List<Entity> e = null;
+        entity_dic.TryGetValue(component_type, out e);
+        return e;
+    }
+
     public Entity[] get_entities(out int num_entities,
                                  params Type[] component_types)
 

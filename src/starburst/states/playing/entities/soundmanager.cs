@@ -27,7 +27,7 @@
                 new Fab5SoundEffect("sound/effects/Minigun","minigun"),
                 new Fab5SoundEffect("sound/effects/bang1","bang"),
                 new Fab5SoundEffect("sound/effects/bang2","bang2"),
-                new Fab5SoundEffect("sound/effects/rockslide_small","rockslide_small"),
+                new Fab5SoundEffect("sound/effects/rockslide_smallcombo","rockslide_small"),
                 new Fab5SoundEffect("sound/effects/Smashing","Smashing"),
                 new Fab5SoundEffect("sound/effects/missile_impact","missile_impact"),
                 new Fab5SoundEffect("sound/effects/Cheering","Cheering"),

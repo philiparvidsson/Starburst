@@ -325,12 +325,6 @@
 /processorParam:Quality=Best
 /build:sound/effects/glassbreak.mp3
 
-#begin sound/effects/rockslide_small.mp3
-/importer:Mp3Importer
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/rockslide_small.mp3
-
 #begin sound/effects/Smashing.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
@@ -433,12 +427,6 @@
 /processorParam:TextureFormat=Color
 /build:tgrid.png
 
-#begin sound/effects/BatmanPunch.mp3
-/importer:Mp3Importer
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/BatmanPunch.mp3
-
 #begin sound/effects/Cheering.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
@@ -457,9 +445,39 @@
 /processorParam:Quality=Best
 /build:sound/effects/SharpPunch.wav
 
-#begin sound/effects/throw_knife.mp3
+#begin sound/effects/BatmanPunch.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/BatmanPunch.wav
+
+#begin sound/effects/BatmanPunch2.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:sound/effects/throw_knife.mp3
+/build:sound/effects/BatmanPunch2.mp3
+
+#begin sound/effects/rockslide_small.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/rockslide_small.wav
+
+#begin sound/effects/rockslide_small.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/rockslide_small.mp3
+
+#begin sound/effects/rockslide_smallcombo.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/rockslide_smallcombo.wav
+
+#begin sound/effects/throw_knife.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/throw_knife.wav
 

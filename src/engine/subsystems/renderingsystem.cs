@@ -23,7 +23,7 @@ namespace Fab5.Engine.Subsystems {
         * draw:
         * kör spriterenderer och textrenderer på varje viewport
         **/
-        Entity[] players;
+        List<Entity> players;
         Viewport[] viewports;
         Camera[] cameras;
         int currentPlayerNumber, prevPlayerNumber;
@@ -46,7 +46,7 @@ namespace Fab5.Engine.Subsystems {
         }
 
         private void draw_backdrop(SpriteBatch sprite_batch, Position playerPosition) {
-            sprite_batch.Begin(SpriteSortMode.Immediate,
+            sprite_batch.Begin(SpriteSortMode.Deferred,
                 BlendState.Additive);
 
                 var fac1 = 0.05f;
@@ -78,7 +78,7 @@ namespace Fab5.Engine.Subsystems {
 
         Texture2D grid_tex;
         private void draw_tile_map(SpriteBatch sprite_batch, Camera camera) {
-            sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend); // <-- @To-do: OPAQUE!!
+            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend); // <-- @To-do: OPAQUE!!
 
             int tw     = 16;
             int th     = 16;
@@ -109,7 +109,7 @@ namespace Fab5.Engine.Subsystems {
 
                     int o = i + (j*256);
 
-                    //sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
+//                    sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
 
                     if (tile_map.tiles[o] != 0) {
                         var tile_tex = tile_map.tex[tile_map.tiles[o]-1];
@@ -233,6 +233,8 @@ namespace Fab5.Engine.Subsystems {
                 cameras[i].position = players[i].get_component<Position>();
             }*/
         }
+
+        int num_sprites_last_call;
         public override void draw(float t, float dt)
         {
             sprite_batch.GraphicsDevice.Clear(Color.Black);
@@ -240,9 +242,9 @@ namespace Fab5.Engine.Subsystems {
             // måla ut en eventuell bakgrund/border
 
             // hämta spelare och dess positioner
-            players = Fab5_Game.inst().get_entities(out currentPlayerNumber,
-                typeof(Inputhandler)
-            );
+            players = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler));
+
+            currentPlayerNumber = players.Count;
 
             // är det inte samma antal spelare som förut, räkna om antalet och gör om viewports o kameror (viewports, cameras)
             if (currentPlayerNumber != prevPlayerNumber)
@@ -253,10 +255,8 @@ namespace Fab5.Engine.Subsystems {
             // rita ut
 
             int num_entities;
-            var entities = Fab5_Game.inst().get_entities(out num_entities,
-                typeof(Position),
-                typeof(Sprite)
-            );
+            var entities = Fab5_Game.inst().get_entities_fast(typeof(Sprite));
+            num_entities = entities.Count;
 
              /*
              * Loopa igenom kameror
@@ -264,32 +264,63 @@ namespace Fab5.Engine.Subsystems {
              * För varje kamera,
              * kör den vanliga draw-loopen baserat på kamerans viewport
              */
-            for (int i = 0; i < num_entities; i++) {
-                var s1 = entities[i].get_component<Sprite>();
 
-                for (int j = (i+1); j < num_entities; j++) {
-                    var s2 = entities[j].get_component<Sprite>();
+            List<Entity> temp = new List<Entity>(256);
 
-                    if (s1.blend_mode > s2.blend_mode) {
-                        var tmp = entities[i];
-                        entities[i] = entities[j];
-                        entities[j] = tmp;
+            bool in_any_view = false;
+            foreach (Entity e in entities) {
+                var p = e.get_component<Position>();
+                var tex = e.get_component<Sprite>().texture;
+                foreach (Camera cam in cameras) {
+                    if ((p.x+tex.Width > cam.position.x - cam.viewport.Width/2.0f)
+                     || (p.x-tex.Width > cam.position.x - cam.viewport.Width/2.0f)
+                     || (p.y+tex.Height > cam.position.y - cam.viewport.Height/2.0f)
+                     || (p.y-tex.Height > cam.position.y - cam.viewport.Height/2.0f))
+                    {
+                        in_any_view = true;
+                        break;
                     }
+                }
+
+                if (in_any_view) {
+                    temp.Add(e);
                 }
             }
 
-            for (int i = 0; i < num_entities; i++) {
-                var s1 = entities[i].get_component<Sprite>();
-                for (int j = (i+1); j < num_entities; j++) {
-                    var s2 = entities[j].get_component<Sprite>();
+            entities = temp;
+            num_entities = entities.Count;
 
-                    if (s1.layer_depth < s2.layer_depth) {
-                        var tmp = entities[i];
-                        entities[i] = entities[j];
-                        entities[j] = tmp;
+            //if (num_entities != num_sprites_last_call) {
+                // Only re-sort on new sprites... lol
+                for (int i = 0; i < num_entities; i++) {
+                    var s1 = entities[i].get_component<Sprite>();
+
+                    for (int j = (i+1); j < num_entities; j++) {
+                        var s2 = entities[j].get_component<Sprite>();
+
+                        if (s1.blend_mode > s2.blend_mode) {
+                            var tmp = entities[i];
+                            entities[i] = entities[j];
+                            entities[j] = tmp;
+                        }
                     }
                 }
-            }
+
+                for (int i = 0; i < num_entities; i++) {
+                    var s1 = entities[i].get_component<Sprite>();
+                    for (int j = (i+1); j < num_entities; j++) {
+                        var s2 = entities[j].get_component<Sprite>();
+
+                        if (s1.layer_depth < s2.layer_depth) {
+                            var tmp = entities[i];
+                            entities[i] = entities[j];
+                            entities[j] = tmp;
+                        }
+                    }
+                }
+            //}
+
+            num_sprites_last_call = num_entities;
 
             for (int i = 0; i < num_entities; i++) {
                 update_sprite(entities[i], dt);
@@ -307,7 +338,6 @@ namespace Fab5.Engine.Subsystems {
                 draw_backdrop(sprite_batch, currentPlayerPosition);
 
 
-                //drawHUD(sprite_batch, entity, currentPlayerNumber);
                 draw_tile_map(sprite_batch, current);
                 drawSprites(sprite_batch, current, num_entities, entities, 0.0f);
                 hudsystem_instance.drawHUD(currentPlayer);
@@ -316,7 +346,7 @@ namespace Fab5.Engine.Subsystems {
             base.draw(t, dt);
         }
 
-        private void drawSprites(SpriteBatch sprite_batch, Camera camera, int num_entities, Entity[] entities, float dt)
+        private void drawSprites(SpriteBatch sprite_batch, Camera camera, int num_entities, List<Entity> entities, float dt)
         {
             int blend_mode = -1;
 
@@ -324,12 +354,13 @@ namespace Fab5.Engine.Subsystems {
             {
                 var entity = entities[i];
 
-                if (entity.get_component<Sprite>().blend_mode != blend_mode) {
+                var bm = entity.get_component<Sprite>().blend_mode;
+                if (bm != blend_mode) {
                     if (blend_mode != -1) {
                         sprite_batch.End();
                     }
 
-                    blend_mode = entity.get_component<Sprite>().blend_mode;
+                    blend_mode = bm;
 
                     BlendState bs = BlendState.AlphaBlend;
 
@@ -340,7 +371,7 @@ namespace Fab5.Engine.Subsystems {
                         bs = BlendState.Additive;
                     }
 
-                    sprite_batch.Begin(SpriteSortMode.Immediate,
+                    sprite_batch.Begin(SpriteSortMode.Deferred,
                                        bs, null, null, null, null,
                                        transformMatrix: camera.getViewMatrix(camera.viewport));
                 }
@@ -353,9 +384,6 @@ namespace Fab5.Engine.Subsystems {
 
         private void update_sprite(Entity entity, float dt) {
             var sprite   = entity.get_component<Sprite>();
-            var hud = entity.get_component<Hud_Component>();
-            if (hud != null)
-                return;
 
             if (sprite.num_frames > 1) {
                 sprite.frame_timer += dt;

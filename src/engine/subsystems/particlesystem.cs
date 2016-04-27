@@ -34,15 +34,22 @@ public class Particle_System : Subsystem {
     }
 
     public override void draw(float t, float dt) {
-        int num_components;
+        //int num_components;
 
-        var entities = Fab5_Game.inst().get_entities(out num_components,
-            typeof (Particle_Emitter)
-        );
+   //     var entities = Fab5_Game.inst().get_entities(out num_components,
+     //       typeof (Particle_Emitter)
+       // );
 
-        for (int i = 0; i < num_components; i++) {
-            var entity  = entities[i];
+//        for (int i = 0; i < num_components; i++) {
+
+  //          var entity  = entities[i];
+        foreach (var entity in Fab5_Game.inst().get_entities_fast(typeof (Particle_Emitter))) {
             var emitter = entity.get_component<Particle_Emitter>();
+
+            if (emitter == null) {
+                // Wtf?
+                continue;
+            }
 
             emitter.time_since_emit += dt;
             if (emitter.time_since_emit >= emitter.interval) {
