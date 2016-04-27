@@ -99,7 +99,8 @@
                 new Bounding_Circle() { radius = 20.0f },
                 new Mass() { mass = 15.0f },
                 new Primary_Weapon(),
-                new Secondary_Weapon()
+                new Secondary_Weapon(),
+                new Score()
             };
         }
     }

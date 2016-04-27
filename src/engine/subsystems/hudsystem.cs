@@ -29,6 +29,7 @@
             this.ship_info = player.get_component<Ship_Info>();
             drawHP();
             drawEnergy();
+            drawScore(player.get_component<Score>());
 
             sprite_batch.End();
         }
@@ -74,7 +75,30 @@
                 destinationRectangle: new Rectangle((int)energyposition.x + 10, (int)energyposition.y + 6,
                 (int)(226 * (ship_info.energy_value / ship_info.top_energy)), 8),
                 sourceRectangle: new Rectangle(10, 6, 226, 8),
-                color: Color.Blue);
+                color: Color.AliceBlue);
+        }
+
+        private void drawScore(Score score)
+        {
+            Position scoreposition;
+            scoreposition = new Position()
+            {
+                x = 10,
+                y = 10
+            };
+
+            int temp = score.score++;
+            string shit = "Score: " + temp.ToString();
+
+            Fab5_Game.inst().create_entity(
+                scoreposition,
+                new Text()
+                {
+                    font = Fab5_Game.inst().get_content<SpriteFont>("arial"),
+                    format = shit
+                }
+            );
+
         }
     }
 }
