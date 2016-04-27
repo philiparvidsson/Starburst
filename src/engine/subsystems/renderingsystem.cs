@@ -113,7 +113,7 @@ namespace Fab5.Engine.Subsystems {
 
                     int o = i + (j*256);
 
-                    //sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
+                    sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
 
                     if (tile_map.tiles[o] != 0)
                         sprite_batch.Draw(tile_map.tile_tex, new Vector2(x+xfrac, y+yfrac), Color.White);
@@ -306,8 +306,7 @@ namespace Fab5.Engine.Subsystems {
                 draw_backdrop(sprite_batch, currentPlayerPosition);
 
 
-                //drawHUD(sprite_batch, entity, currentPlayerNumber);
-                draw_tile_map(sprite_batch, current);
+                //draw_tile_map(sprite_batch, current);
                 drawSprites(sprite_batch, current, num_components, entities, 0.0f);
                 hudsystem_instance.drawHUD(currentPlayer);
             }
@@ -352,9 +351,6 @@ namespace Fab5.Engine.Subsystems {
 
         private void update_sprite(Entity entity, float dt) {
             var sprite   = entity.get_component<Sprite>();
-            var hud = entity.get_component<Hud_Component>();
-            if (hud != null)
-                return;
 
             if (sprite.num_frames > 1) {
                 sprite.frame_timer += dt;

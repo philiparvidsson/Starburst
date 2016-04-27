@@ -51,7 +51,6 @@
     <Compile Include="src\engine\components\camera.cs" />
     <Compile Include="src\engine\components\fab5soundeffect.cs" />
     <Compile Include="src\engine\components\fpscounter.cs" />
-    <Compile Include="src\engine\components\hudcomponent.cs" />
     <Compile Include="src\engine\components\inputhandler.cs" />
     <Compile Include="src\engine\components\mass.cs" />
     <Compile Include="src\engine\components\particleemitter.cs" />
