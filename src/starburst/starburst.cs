@@ -17,7 +17,7 @@ public class Starburst : Fab5_Game {
 
         GraphicsMgr.ApplyChanges();
 
-        enter_state(new Playing_State());
+        enter_state(new Splash_Screen_State());
     }
 
     protected override void cleanup() {
