@@ -5,6 +5,7 @@ using Fab5.Engine.Components;
 using Fab5.Engine.Core;
 using Fab5.Engine.Subsystems;
 
+using Fab5.Starburst.States.Playing;
 using Fab5.Starburst.States.Playing.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,10 +17,17 @@ public class Playing_State : Game_State {
 
     public static System.Random rand = new System.Random();
 
+    private Collision_Handler coll_handler;
+
 
     static float last_collision_t;
     public override void on_message(string msg, dynamic data) {
         if (msg == "collision") {
+            coll_handler.on_collision(data.entity1, data.entity2, data);
+            return;
+        }
+
+        /*        if (msg == "collision") {
             Entity player = null;
             Entity bullet = null;
 
@@ -72,7 +80,7 @@ public class Playing_State : Game_State {
             }
 
             create_entity(Particle_System.explosion(x, y, fn));
-        }
+        }*/
     }
 
     Tile_Map tile_map;
@@ -81,6 +89,8 @@ public class Playing_State : Game_State {
 
     public override void init() {
         Starburst.inst().IsMouseVisible = true;        // @To-do: Load map here.
+
+        coll_handler = new Collision_Handler(this);
 
         tile_map = new Tile_Map();
 
