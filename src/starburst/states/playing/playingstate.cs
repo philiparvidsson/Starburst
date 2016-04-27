@@ -19,9 +19,8 @@ public class Playing_State : Game_State {
 
     static float last_collision_t;
     public override void on_message(string msg, dynamic data) {
-
         var t = Starburst.inst().get_time();
-        if (t-last_collision_t < 0.01f) {
+        if (t-last_collision_t < 0.1f) {
             return;
         }
         last_collision_t = t;
@@ -73,6 +72,8 @@ public class Playing_State : Game_State {
         var player = create_entity(Player_Ship.create_components());
         var player2 = create_entity(Player_Ship.create_components());
 
+        //create_entity(World_Bounds.create_components());
+
         player1_pos = player.get_component<Position>();;
 
         player2.get_component<Position>().x = 400;
@@ -118,7 +119,7 @@ public class Playing_State : Game_State {
 
         var tw = 16;
         var th = 16;
-        var mx = (player1_pos.x + Mouse.GetState().X - 320 + 2048) / tw;
+        var mx = (player1_pos.x + Mouse.GetState().X - 640 + 2048) / tw;
         var my = (player1_pos.y + Mouse.GetState().Y - 360 + 2048) / th;
 
         if (mx >= 0 && mx <= 255 && my >= 0 && my <= 255) {
