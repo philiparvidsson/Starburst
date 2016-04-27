@@ -25,6 +25,10 @@
             var effectlib = new SoundLibrary();
             effectlib.Library = new List<Component>() {
                 new Fab5SoundEffect("sound/effects/Minigun","minigun"),
+                new Fab5SoundEffect("sound/effects/bang1","bang"),
+                new Fab5SoundEffect("sound/effects/bang2","bang2"),
+                new Fab5SoundEffect("sound/effects/rockslide_small","rockslide_small"),
+
             };
             return (Component)effectlib;
         }
