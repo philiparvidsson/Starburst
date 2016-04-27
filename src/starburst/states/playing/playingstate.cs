@@ -21,7 +21,7 @@ public class Playing_State : Game_State {
     public override void on_message(string msg, dynamic data) {
 
         var t = Starburst.inst().get_time();
-        if (t-last_collision_t < 0.01f) {
+        if (t-last_collision_t < 0.1f) {
             return;
         }
         last_collision_t = t;
