@@ -59,7 +59,34 @@ namespace Fab5.Engine.Subsystems
                     }
                     if (msg == "collision")
                     {
+                        string texttureName1 = null;
+                        string texttureName2 = null;
+                        if (data.entity1 != null)
+                            texttureName1 = data.entity1.get_component<Sprite>().texture.Name;
+                        if (data.entity2 != null)
+                            texttureName2 = data.entity2.get_component<Sprite>().texture.Name;
                         
+                        if(!string.IsNullOrEmpty(texttureName1) && !string.IsNullOrEmpty(texttureName2))
+                        {
+                            if (texttureName1.Contains("ship") && texttureName2.Contains("ship"))
+                            {
+                                effect = lib.Library.ElementAt(1) as Fab5SoundEffect;
+                                effect.SoundEffect.Play();
+                                lib.LastChanged = DateTime.Now;
+                            }
+                            if ((texttureName1.Contains("ship") && texttureName2.Contains("tile")) || (texttureName2.Contains("tile") && texttureName1.Contains("ship")))
+                            {
+                                effect = lib.Library.ElementAt(3) as Fab5SoundEffect;
+                                effect.SoundEffect.Play();
+                                lib.LastChanged = DateTime.Now;
+                            }
+                            if ((texttureName1.Contains("asteroid") && texttureName2.Contains("ship")) || (texttureName2.Contains("asteroid") && texttureName1.Contains("ship")))
+                            {
+                                effect = lib.Library.ElementAt(2) as Fab5SoundEffect;
+                                effect.SoundEffect.Play();
+                                lib.LastChanged = DateTime.Now;
+                            }
+                        }
                     }
                 }
                 if (music != null)
