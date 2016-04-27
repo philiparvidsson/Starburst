@@ -76,8 +76,9 @@ namespace Fab5.Engine.Subsystems {
 
         }
 
+        Texture2D grid_tex;
         private void draw_tile_map(SpriteBatch sprite_batch, Camera camera) {
-            sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
+            sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend); // <-- @To-do: OPAQUE!!
 
             int tw     = 16;
             int th     = 16;
@@ -93,6 +94,14 @@ namespace Fab5.Engine.Subsystems {
 
 //            System.Console.WriteLine(camera.position.x + ", " + camera.position.x);
 
+            if (grid_tex == null) {
+                grid_tex = Fab5_Game.inst().get_content<Texture2D>("tgrid");
+            }
+
+            if (tile_map.tile_tex == null) {
+                tile_map.tile_tex = Fab5_Game.inst().get_content<Texture2D>("tile");
+            }
+
             float x = 0.0f;
             for (int i = left; i <= right; i++) {
                 float y = 0.0f;
@@ -102,9 +111,7 @@ namespace Fab5.Engine.Subsystems {
 
                     int o = i + (j*256);
 
-                    if (tile_map.tile_tex == null) {
-                        tile_map.tile_tex = Fab5_Game.inst().get_content<Texture2D>("tile");
-                    }
+                    sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
 
                     if (tile_map.tiles[o] != 0)
                         sprite_batch.Draw(tile_map.tile_tex, new Vector2(x+xfrac, y+yfrac), Color.White);
