@@ -19,12 +19,31 @@ public class Playing_State : Game_State {
 
     static float last_collision_t;
     public override void on_message(string msg, dynamic data) {
-        var t = Starburst.inst().get_time();
-        if (t-last_collision_t < 0.1f) {
-            return;
-        }
-        last_collision_t = t;
         if (msg == "collision") {
+            Entity player = null;
+            Entity bullet = null;
+
+            var is_player_hit = false;
+
+            if (data.entity1 is Entity && data.entity2 is Entity) {
+                var n1 = data.entity1.get_component<Sprite>()?.texture.Name;
+                var n2 = data.entity2.get_component<Sprite>()?.texture.Name;
+
+                if ((n1.StartsWith("ships/ship1") && n2 == "beams") || (n2.StartsWith("ships/ship1") && n1 == "beams")) {
+                    is_player_hit = true;
+
+                    player = (n1 == "beams") ? data.entity2 : data.entity1;
+                    bullet = (n1 == "beams") ? data.entity1 : data.entity2;
+                }
+            }
+
+            var t = Starburst.inst().get_time();
+            if (t-last_collision_t < 0.1f && !is_player_hit) {
+                return;
+            }
+
+            last_collision_t = t;
+
             var p1 = data.entity1.get_component<Position>();
 
             var x = data.c_x;
@@ -37,6 +56,21 @@ public class Playing_State : Game_State {
                 scale = 0.4f + (float)rand.NextDouble() * 0.3f,
                 layer_depth = 0.9f
             };
+
+            if (is_player_hit) {
+                fn = () => new Sprite() {
+                    texture = Starburst.inst().get_content<Texture2D>("particle"),
+                    color = new Color(1.0f, 0.3f, 0.1f),
+                    blend_mode = Sprite.BM_ADD,
+                    scale = 0.9f + (float)rand.NextDouble() * 0.9f,
+                    layer_depth = 0.3f
+                };
+
+                //System.Console.WriteLine(bullet.get_component<Weapon>() + "hej");
+                bullet.destroy();
+                player.get_component<Ship_Info>().energy_value -= 10;
+            }
+
             create_entity(Particle_System.explosion(x, y, fn));
         }
     }
@@ -72,7 +106,7 @@ public class Playing_State : Game_State {
         var player = create_entity(Player_Ship.create_components());
         var player2 = create_entity(Player_Ship.create_components());
 
-        create_entity(World_Bounds.create_components());
+
 
         player1_pos = player.get_component<Position>();;
 
@@ -96,7 +130,6 @@ public class Playing_State : Game_State {
 
 
         for (int i = 0; i < 65; i++) {
-
             var asteroid = create_entity(Dummy.create_components());
             var ap = asteroid.get_component<Position>();
             var av = asteroid.get_component<Velocity>();
@@ -114,6 +147,7 @@ public class Playing_State : Game_State {
         var ball = create_entity(Soccer_Ball.create_components());
     }
 
+    int edit_tile = 1;
     public override void update(float t, float dt) {
         base.update(t, dt);
 
@@ -126,10 +160,22 @@ public class Playing_State : Game_State {
             int o = (int)my*256+(int)mx;
 
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                tile_map.tiles[o] = 1;
+                tile_map.tiles[o] = edit_tile;
 
             if (Mouse.GetState().RightButton == ButtonState.Pressed)
                 tile_map.tiles[o] = 0;
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.D1)) {
+            edit_tile = 1;
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.D2)) {
+            edit_tile = 2;
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.D3)) {
+            edit_tile = 3;
         }
 
         if (Keyboard.GetState().IsKeyDown(Keys.S)) {

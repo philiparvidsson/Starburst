@@ -288,6 +288,9 @@ public class Collision_Solver : Subsystem {
         int xs = -Math.Sign(v.x);
         int ys = -Math.Sign(v.y);
 
+        if (xs == 0) xs = 1;
+        if (ys == 0) ys = 1;
+
         if (xs < 0) {
             var tmp = right;
             right = left;

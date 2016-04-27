@@ -2,10 +2,19 @@ namespace Fab5.Engine {
 
     using Microsoft.Xna.Framework.Graphics;
 
+    using Fab5.Starburst;
+
 public class Tile_Map {
     public int[] tiles = new int[256*256];
 
+    public Texture2D[] tex;
+
     public Tile_Map() {
+        tex = new [] {
+            Starburst.inst().get_content<Texture2D>("map/tile1"),
+            Starburst.inst().get_content<Texture2D>("map/tile2"),
+            Starburst.inst().get_content<Texture2D>("map/tile3"),
+        };
         var lol = new int[] {
             1, 1, 1, 1, 1, 1, 1, 1,
             1, 0, 0, 0, 0, 0, 0, 0,

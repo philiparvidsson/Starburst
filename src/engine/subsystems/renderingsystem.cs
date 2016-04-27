@@ -98,10 +98,6 @@ namespace Fab5.Engine.Subsystems {
                 grid_tex = Fab5_Game.inst().get_content<Texture2D>("tgrid");
             }
 
-            if (tile_map.tile_tex == null) {
-                tile_map.tile_tex = Fab5_Game.inst().get_content<Texture2D>("tile");
-            }
-
             float x = 0.0f;
             for (int i = left; i <= right; i++) {
                 float y = 0.0f;
@@ -115,8 +111,10 @@ namespace Fab5.Engine.Subsystems {
 
                     //sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
 
-                    if (tile_map.tiles[o] != 0)
-                        sprite_batch.Draw(tile_map.tile_tex, new Vector2(x+xfrac, y+yfrac), Color.White);
+                    if (tile_map.tiles[o] != 0) {
+                        var tile_tex = tile_map.tex[tile_map.tiles[o]-1];
+                        sprite_batch.Draw(tile_tex, new Vector2(x+xfrac, y+yfrac), Color.White);
+                    }
 
                     y += th;
                 }
@@ -254,8 +252,8 @@ namespace Fab5.Engine.Subsystems {
 
             // rita ut
 
-            int num_components;
-            var entities = Fab5_Game.inst().get_entities(out num_components,
+            int num_entities;
+            var entities = Fab5_Game.inst().get_entities(out num_entities,
                 typeof(Position),
                 typeof(Sprite)
             );
@@ -266,11 +264,10 @@ namespace Fab5.Engine.Subsystems {
              * För varje kamera,
              * kör den vanliga draw-loopen baserat på kamerans viewport
              */
-            for (int i = 0; i < num_components; i++) {
-                update_sprite(entities[i], dt);
+            for (int i = 0; i < num_entities; i++) {
                 var s1 = entities[i].get_component<Sprite>();
 
-                for (int j = (i+1); j < num_components; j++) {
+                for (int j = (i+1); j < num_entities; j++) {
                     var s2 = entities[j].get_component<Sprite>();
 
                     if (s1.blend_mode > s2.blend_mode) {
@@ -281,9 +278,9 @@ namespace Fab5.Engine.Subsystems {
                 }
             }
 
-            for (int i = 0; i < num_components; i++) {
+            for (int i = 0; i < num_entities; i++) {
                 var s1 = entities[i].get_component<Sprite>();
-                for (int j = (i+1); j < num_components; j++) {
+                for (int j = (i+1); j < num_entities; j++) {
                     var s2 = entities[j].get_component<Sprite>();
 
                     if (s1.layer_depth < s2.layer_depth) {
@@ -292,6 +289,10 @@ namespace Fab5.Engine.Subsystems {
                         entities[j] = tmp;
                     }
                 }
+            }
+
+            for (int i = 0; i < num_entities; i++) {
+                update_sprite(entities[i], dt);
             }
 
             for (int p = 0; p < currentPlayerNumber; p++)
@@ -308,18 +309,18 @@ namespace Fab5.Engine.Subsystems {
 
                 //drawHUD(sprite_batch, entity, currentPlayerNumber);
                 draw_tile_map(sprite_batch, current);
-                drawSprites(sprite_batch, current, num_components, entities, 0.0f);
+                drawSprites(sprite_batch, current, num_entities, entities, 0.0f);
                 hudsystem_instance.drawHUD(currentPlayer);
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;
             base.draw(t, dt);
         }
 
-        private void drawSprites(SpriteBatch sprite_batch, Camera camera, int num_components, Entity[] entities, float dt)
+        private void drawSprites(SpriteBatch sprite_batch, Camera camera, int num_entities, Entity[] entities, float dt)
         {
             int blend_mode = -1;
 
-            for (int i = 0; i < num_components; i++)
+            for (int i = 0; i < num_entities; i++)
             {
                 var entity = entities[i];
 
@@ -409,7 +410,7 @@ namespace Fab5.Engine.Subsystems {
                               sprite.color,
                               angle,
                               new Vector2(source_rect.Width/2.0f, source_rect.Height/2.0f),
-                              sprite.scale,
+                              new Vector2(sprite.scale_x, sprite.scale_y),
                               SpriteEffects.None,
                               sprite.layer_depth);
 

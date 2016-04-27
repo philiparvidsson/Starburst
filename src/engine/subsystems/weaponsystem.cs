@@ -27,9 +27,9 @@ namespace Fab5.Engine.Subsystems {
                 Weapon weapon = data.Weapon;
 
                 // kolla dt, räkna ner tid till nästa skott kan skjutas (baserat på fire rate)
-                
+
                 if (weapon.timeSinceLastShot >= weapon.fire_rate) {
-                    var shot = gameState.create_entity(Bullet_Factory.create_components(position, angle, weapon));
+                    var shot = gameState.create_entity(Bullet_Factory.create_components(position, angle, weapon, data.Velocity));
                     Fab5_Game.inst().message("fire", weapon);
                     weapon.timeSinceLastShot = 0f;
                 }
@@ -43,9 +43,9 @@ namespace Fab5.Engine.Subsystems {
             for (int i = 0; i < numberOfWeapons; i++) {
                 Weapon weapon = entities[i].get_component<Primary_Weapon>();
                 Weapon weapon2 = entities[i].get_component<Secondary_Weapon>();
-                if(weapon.timeSinceLastShot <= weapon.fire_rate)
+                if(weapon != null && weapon.timeSinceLastShot <= weapon.fire_rate)
                     weapon.timeSinceLastShot += dt;
-                if (weapon2.timeSinceLastShot <= weapon2.fire_rate)
+                if (weapon2 != null && weapon2.timeSinceLastShot <= weapon2.fire_rate)
                     weapon2.timeSinceLastShot += dt;
             }
             base.update(t, dt);

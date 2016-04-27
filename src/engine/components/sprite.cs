@@ -30,7 +30,12 @@ public class Sprite : Component {
 
     public Texture2D texture;
 
-    public float scale = 1.0f;
+    public float scale_x = 1.0f;
+    public float scale_y = 1.0f;
+
+    public float scale {
+        set { scale_x = scale_y = value; }
+    }
 
     public Color color = Color.White;
 

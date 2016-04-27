@@ -22,7 +22,7 @@ namespace Fab5.Engine.Subsystems
                 if (!music.IsSongStarted)
                 {
                     var bmusic = music.Library.FirstOrDefault() as BackgroundMusic;
-                    if (bmusic != null) { 
+                    if (bmusic != null) {
                         MediaPlayer.Play(bmusic.BackSong);
                         MediaPlayer.IsRepeating = bmusic.IsRepeat;
                         music.NowPlayingIndex = 0;
@@ -48,7 +48,7 @@ namespace Fab5.Engine.Subsystems
                 var music = lib.Library.FirstOrDefault() as BackgroundMusic;
                 if (effect != null)
                 {
-                    if (msg == "fire") { 
+                    if (msg == "fire") {
                         if (effect.Desc == data.sound)
                             effect.SoundEffect.Play();
                         lib.LastChanged = DateTime.Now;
@@ -59,21 +59,21 @@ namespace Fab5.Engine.Subsystems
                         string texttureName2 = null;
                         if (data.entity1 != null) {
                             texttureName1 = data.entity1.get_component<Sprite>().texture.Name;
-                            System.Console.WriteLine(texttureName1);
+                            //System.Console.WriteLine(texttureName1);
                         }
                         var tile = data.entity2 as Tile_Map;
                         if (tile != null)
                         {
-                            System.Console.WriteLine("tile");
+                            //System.Console.WriteLine("tile");
                         }
                         if (data.entity2 != null) {
                             texttureName2 = data.entity2.get_component<Sprite>().texture.Name;
-                            System.Console.WriteLine(texttureName2);
+                            //System.Console.WriteLine(texttureName2);
                         }
 
                         if (!string.IsNullOrEmpty(texttureName1) && !string.IsNullOrEmpty(texttureName2))
                         {
-                         
+
                             if (texttureName1.Contains("ship") && texttureName2.Contains("ship"))
                             {
                                 effect = lib.Library.ElementAt(1) as Fab5SoundEffect;
@@ -120,7 +120,7 @@ namespace Fab5.Engine.Subsystems
                             MediaPlayer.IsMuted = true;
                         lib.LastChanged = DateTime.Now;
                     }
-                }   
+                }
             }
         }
     }

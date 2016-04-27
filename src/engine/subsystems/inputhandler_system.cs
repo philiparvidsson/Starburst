@@ -73,13 +73,13 @@
                 }
                 // primary weapon fire
                 if (input.keyboardState.IsKeyDown(input.primary_fire) || GamePad.GetState(input.gp_index).Buttons.A == ButtonState.Pressed) {
-                    var message = new { Position = entity.get_component<Position>(), Angle = angle, Weapon = entity.get_component<Primary_Weapon>() , Dt = dt };
+                    var message = new { Position = entity.get_component<Position>(), Angle = angle, Weapon = entity.get_component<Primary_Weapon>() , Dt = dt, Velocity = entity.get_component<Velocity>() };
                     Fab5_Game.inst().message("fire_key_pressed", message);
                     //, ev.powerups }
                 }
                 // secondary weapon fire
                 if (input.keyboardState.IsKeyDown(input.secondary_fire) || GamePad.GetState(input.gp_index).Buttons.X == ButtonState.Pressed) {
-                    var message = new { Position = entity.get_component<Position>(), Angle = angle, Weapon = entity.get_component<Secondary_Weapon>(), Dt = dt };
+                    var message = new { Position = entity.get_component<Position>(), Angle = angle, Weapon = entity.get_component<Secondary_Weapon>(), Dt = dt, Velocity = entity.get_component<Velocity>() };
                     Fab5_Game.inst().message("fire_key_pressed", message);
                     //, ev.powerups }
                 }
