@@ -39,17 +39,7 @@
                 if (input.keyboardState.IsKeyDown(input.right))
                     turn += 1.0f;
 
-                if (turn < 0.0f) {
-                    var ang_acc = 60.0f * dt;
-
-                    angle.ang_vel += ang_acc * turn;
-
-                    if (angle.ang_vel < -5.0f) {
-                        angle.ang_vel = -5.0f;
-                    }
-                }
-
-                if (turn > 0.0f) {
+                if (Math.Abs(turn) > 0.001f) {
                     var ang_acc = 60.0f * dt;
 
                     angle.ang_vel += ang_acc * turn;

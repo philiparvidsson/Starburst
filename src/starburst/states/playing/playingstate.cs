@@ -55,7 +55,6 @@ public class Playing_State : Game_State {
             },
             new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice))
         );
-        create_entity(Back_drop.create_components()).get_component<Backdrop>();
 
         create_entity(new FpsCounter());
         var player = create_entity(Player_Ship.create_components());
