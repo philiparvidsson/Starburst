@@ -46,9 +46,8 @@ namespace Fab5.Engine.Subsystems {
         }
 
         private void draw_backdrop(SpriteBatch sprite_batch, Position playerPosition) {
-            sprite_batch.Begin(SpriteSortMode.BackToFront,
-                BlendState.Additive,SamplerState.LinearWrap, null, null, null
-                               /*transformMatrix: camera.getViewMatrix(camera.viewport)*/);
+            sprite_batch.Begin(SpriteSortMode.Immediate,
+                BlendState.Additive);
 
                 var fac1 = 0.05f;
                 sprite_batch.Draw(backdrop,
