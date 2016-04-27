@@ -11,9 +11,9 @@ namespace Fab5.Engine.Subsystems
     {
         public override void update(float t, float dt)
         {
-            int num_components;
-            var entities = Fab5_Game.inst().get_entities(out num_components,
-                typeof(SoundLibrary));
+
+            var entities = Fab5_Game.inst().get_entities_fast(typeof(SoundLibrary));
+            int num_components = entities.Count;
 
             for (int i = 0; i < num_components; i++)
             {
@@ -37,9 +37,9 @@ namespace Fab5.Engine.Subsystems
         }
         public override void on_message(string msg, dynamic data)
         {
-            int num_components;
-            var entities = Fab5_Game.inst().get_entities(out num_components,
-            typeof(SoundLibrary));
+
+            var entities = Fab5_Game.inst().get_entities_fast(typeof(SoundLibrary));
+            int num_components = entities.Count;
             for (int i = 0; i < num_components; i++)
             {
                 var entity = entities[i];

@@ -7,13 +7,12 @@ using Fab5.Engine.Core;
 
 public class Lifetime_Manager : Subsystem {
     public override void update(float t, float dt) {
-        int num_components;
 
-        var entities = Fab5_Game.inst().get_entities(out num_components,
-            typeof (TTL)
-        );
 
-        for (int i = 0; i < num_components; i++) {
+        var entities = Fab5_Game.inst().get_entities_fast(typeof (TTL));
+        int num_entities = entities.Count;
+
+        for (int i = 0; i < num_entities; i++) {
             var entity = entities[i];
             var ttl    = entity.get_component<TTL>();
 
@@ -21,6 +20,8 @@ public class Lifetime_Manager : Subsystem {
 
             if (ttl.time >= ttl.max_time) {
                 entity.destroy();
+                i -= 1;
+                num_entities = entities.Count;
                 continue;
             }
 

@@ -14,11 +14,9 @@ public class Text_Renderer : Subsystem {
     }
 
     public override void draw(float t, float dt) {
-        int num_components;
-        var entities = Fab5_Game.inst().get_entities(out num_components,
-            typeof (Position),
-            typeof (Text)
-        );
+
+        var entities = Fab5_Game.inst().get_entities_fast(typeof (Text));
+        int num_components = entities.Count;
 
         sprite_batch.Begin();
 

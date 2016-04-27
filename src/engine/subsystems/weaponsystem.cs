@@ -36,10 +36,9 @@ namespace Fab5.Engine.Subsystems {
             }
         }
         public override void update(float t, float dt) {
-            int numberOfWeapons;
-            var entities = Fab5_Game.inst().get_entities(out numberOfWeapons,
-                typeof(Primary_Weapon)
-            );
+            var entities = Fab5_Game.inst().get_entities_fast( typeof(Primary_Weapon));
+            int numberOfWeapons = entities.Count;
+
             for (int i = 0; i < numberOfWeapons; i++) {
                 Weapon weapon = entities[i].get_component<Primary_Weapon>();
                 Weapon weapon2 = entities[i].get_component<Secondary_Weapon>();
@@ -48,6 +47,7 @@ namespace Fab5.Engine.Subsystems {
                 if (weapon2 != null && weapon2.timeSinceLastShot <= weapon2.fire_rate)
                     weapon2.timeSinceLastShot += dt;
             }
+
             base.update(t, dt);
         }
     }
