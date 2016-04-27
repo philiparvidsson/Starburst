@@ -20,7 +20,7 @@ namespace Fab5.Engine.Subsystems {
             base.init();
         }
         public override void on_message(string msg, dynamic data) {
-            if(msg.Equals("fire")) {
+            if(msg.Equals("fire_key_pressed")) {
                 float dt = data.Dt;
                 Position position = data.Position;
                 Angle angle = data.Angle;
@@ -30,6 +30,7 @@ namespace Fab5.Engine.Subsystems {
                 
                 if (weapon.timeSinceLastShot >= weapon.fire_rate) {
                     var shot = gameState.create_entity(Bullet_Factory.create_components(position, angle, weapon));
+                    Fab5_Game.inst().message("fire", weapon);
                     weapon.timeSinceLastShot = 0f;
                 }
             }
