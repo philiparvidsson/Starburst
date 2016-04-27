@@ -307,3 +307,117 @@
 /processorParam:TextureFormat=Color
 /build:ships/qship11.png
 
+#begin sound/effects/bang1.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/bang1.mp3
+
+#begin sound/effects/bang2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/bang2.mp3
+
+#begin sound/effects/glassbreak.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/glassbreak.mp3
+
+#begin sound/effects/rockslide_small.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/rockslide_small.mp3
+
+#begin sound/effects/Smashing.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/Smashing.mp3
+
+#begin sound/effects/UI_Misc10.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/UI_Misc10.wav
+
+#begin sound/effects/UI_Misc11.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/UI_Misc11.wav
+
+#begin sound/effects/UI_Misc12.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/UI_Misc12.wav
+
+#begin sound/effects/UI_Misc13.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/UI_Misc13.wav
+
+#begin sound/effects/UI_Misc14.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/UI_Misc14.wav
+
+#begin sound/effects/UI_Misc15.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/UI_Misc15.wav
+
+#begin sound/effects/UI_Misc16.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/UI_Misc16.wav
+
+#begin sound/effects/UI_Misc17.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/UI_Misc17.wav
+
+#begin sound/effects/UI_Misc18.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/UI_Misc18.wav
+
+#begin sound/effects/UI_Misc19.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/UI_Misc19.wav
+
+#begin sound/effects/UI_Misc20.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/UI_Misc20.wav
+
+#begin sound/effects/UI_Misc21.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/UI_Misc21.wav
+
+#begin sound/effects/UI_Misc22.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/UI_Misc22.wav
+
+#begin sound/effects/UI_Misc23.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/UI_Misc23.wav
+

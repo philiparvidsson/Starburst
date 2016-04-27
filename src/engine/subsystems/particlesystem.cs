@@ -12,7 +12,7 @@ public class Particle_System : Subsystem {
 
     public static Component[] explosion(float x, float y, Func<Sprite> sprite_fn) {
         return new Component[] {
-            new TTL() { time = 0.05f },
+            new TTL() { max_time = 0.05f },
             new Particle_Emitter() {
                 emit_fn = () => {
                     return new Component[] {

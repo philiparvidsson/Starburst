@@ -65,6 +65,8 @@ public abstract class Fab5_Game : Game {
         float t  = (float)game_time.TotalGameTime.TotalSeconds;
         float dt = (float)game_time.ElapsedGameTime.TotalSeconds;
 
+        time = t;
+
         if (states.Count > 0) {
             states.Peek().update(t, dt);
         }
@@ -78,11 +80,22 @@ public abstract class Fab5_Game : Game {
         float t  = (float)game_time.TotalGameTime.TotalSeconds;
         float dt = (float)game_time.ElapsedGameTime.TotalSeconds;
 
+        time = t;
+
         if (states.Count > 0) {
             states.Peek().draw(t, dt);
         }
 
         draw(t, dt);
+    }
+
+    public Entity create_entity(params Component[] components) {
+
+        if (states.Count > 0) {
+            return (states.Peek().create_entity(components));
+        }
+
+        return (null);
     }
 
     public Entity[] get_entities(out int num_entities, params Type[] component_types) {
@@ -93,6 +106,11 @@ public abstract class Fab5_Game : Game {
         }
 
         return (null);
+    }
+
+    float time;
+    public float get_time() {
+        return time;
     }
 
     private static Fab5_Game s_inst;

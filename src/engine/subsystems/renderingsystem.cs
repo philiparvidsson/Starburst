@@ -29,19 +29,56 @@ namespace Fab5.Engine.Subsystems {
         int currentPlayerNumber, prevPlayerNumber;
         SpriteBatch sprite_batch;
         Viewport defaultViewport;
-        BG_Renderer bgRender;
 
         public Tile_Map tile_map;
 
         Hudsystem hudsystem_instance;
 
+        private Texture2D backdrop;
+        private Texture2D stardrop;
+
         public Rendering_System(GraphicsDevice graphicsDevice) {
             sprite_batch = new SpriteBatch(graphicsDevice);
             defaultViewport = graphicsDevice.Viewport;
+
+            backdrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/backdrop4");
+            stardrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/stardrop");
         }
 
+        private void draw_backdrop(SpriteBatch sprite_batch, Position playerPosition) {
+            sprite_batch.Begin(SpriteSortMode.Immediate,
+                BlendState.Additive);
+
+                var fac1 = 0.05f;
+                sprite_batch.Draw(backdrop,
+                                  Vector2.Zero,
+                                  null,
+                                  Color.White,
+                                  0.0f,
+                                  new Vector2(backdrop.Width/2.0f  + playerPosition.x * fac1,
+                                              backdrop.Height/2.0f + playerPosition.y * fac1),
+                                  new Vector2(1.5f, 1.5f),
+                                  SpriteEffects.None,
+                                  1.0f);
+
+                var fac2 = 0.25f;
+                sprite_batch.Draw(stardrop,
+                                  Vector2.Zero,
+                                  null,
+                                  Color.White,
+                                  0.0f,
+                                  new Vector2(stardrop.Width/2.0f  + playerPosition.x * fac2,
+                                              stardrop.Height/2.0f + playerPosition.y * fac2),
+                                  new Vector2(2.0f, 2.0f),
+                                  SpriteEffects.None,
+                                  0.9f);
+            sprite_batch.End();
+
+        }
+
+        Texture2D grid_tex;
         private void draw_tile_map(SpriteBatch sprite_batch, Camera camera) {
-            sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.Opaque);
+            sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend); // <-- @To-do: OPAQUE!!
 
             int tw     = 16;
             int th     = 16;
@@ -57,6 +94,14 @@ namespace Fab5.Engine.Subsystems {
 
 //            System.Console.WriteLine(camera.position.x + ", " + camera.position.x);
 
+            if (grid_tex == null) {
+                grid_tex = Fab5_Game.inst().get_content<Texture2D>("tgrid");
+            }
+
+            if (tile_map.tile_tex == null) {
+                tile_map.tile_tex = Fab5_Game.inst().get_content<Texture2D>("tile");
+            }
+
             float x = 0.0f;
             for (int i = left; i <= right; i++) {
                 float y = 0.0f;
@@ -66,9 +111,7 @@ namespace Fab5.Engine.Subsystems {
 
                     int o = i + (j*256);
 
-                    if (tile_map.tile_tex == null) {
-                        tile_map.tile_tex = Fab5_Game.inst().get_content<Texture2D>("tile");
-                    }
+                    sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
 
                     if (tile_map.tiles[o] != 0)
                         sprite_batch.Draw(tile_map.tile_tex, new Vector2(x+xfrac, y+yfrac), Color.White);
@@ -85,7 +128,6 @@ namespace Fab5.Engine.Subsystems {
         {
             // kör uppdatering av viewports och kameror
             updatePlayers();
-            bgRender = new BG_Renderer();
             this.hudsystem_instance = new Hudsystem(sprite_batch);
 
  	        base.init();
@@ -259,7 +301,7 @@ namespace Fab5.Engine.Subsystems {
                 var currentPlayerPosition = currentPlayer.get_component<Position>();
                 cameras[p].position = currentPlayerPosition;
 
-                bgRender.drawBackground(sprite_batch, currentPlayerPosition, current);
+                draw_backdrop(sprite_batch, currentPlayerPosition);
 
 
                 //drawHUD(sprite_batch, entity, currentPlayerNumber);
