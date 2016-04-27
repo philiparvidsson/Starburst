@@ -421,3 +421,33 @@
 /processorParam:Quality=Best
 /build:sound/effects/UI_Misc23.wav
 
+#begin sound/effects/Cheering.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/Cheering.mp3
+
+#begin sound/effects/missile_impact.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/missile_impact.mp3
+
+#begin sound/effects/throw_knife.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/throw_knife.mp3
+
+#begin sound/effects/BatmanPunch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:sound/effects/BatmanPunch.mp3
+
+#begin sound/effects/SharpPunch.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/SharpPunch.wav
+
