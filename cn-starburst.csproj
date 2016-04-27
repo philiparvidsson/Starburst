@@ -83,6 +83,7 @@
     <Compile Include="src\starburst\states\playing\entities\soundmanager.cs" />
     <Compile Include="src\starburst\states\playing\entities\playership.cs" />
     <Compile Include="src\starburst\states\playing\playingstate.cs" />
+    <Compile Include="src\starburst\states\splashscreen\splashscreenstate.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
