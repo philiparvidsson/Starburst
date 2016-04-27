@@ -16,21 +16,18 @@ public class Collision_Solver : Subsystem {
         this.tile_map = tile_map;
     }
 
-    private IEnumerable<Entity> get_entities(Position p1, Bounding_Circle c1, Dictionary<uint, HashSet<Entity>> grid) {
+    private void get_entities(Position p1, Bounding_Circle c1, Dictionary<uint, HashSet<Entity>> grid, HashSet<Entity> entities) {
         uint left   = (uint)(p1.x - c1.radius + 2048.0f) / grid_size;
         uint right  = (uint)(p1.x + c1.radius + 2048.0f) / grid_size;
         uint top    = (uint)(p1.y - c1.radius + 2048.0f) / grid_size;
         uint bottom = (uint)(p1.y + c1.radius + 2048.0f) / grid_size;
 
-        HashSet<Entity> entities = new HashSet<Entity>();
         for (uint x = left; x <= right; x++) {
             for (uint y = top; y <= bottom; y++) {
                 uint key = (y<<16)+x;
                 if (grid.ContainsKey(key)) entities.UnionWith(grid[key]);
             }
         }
-
-        return entities;
     }
 
     const uint grid_size = 32;
@@ -71,6 +68,7 @@ public class Collision_Solver : Subsystem {
 
         // @To-do: Implement a quad tree or spatial grid here to reduce the
         //         number of candidates for collision testing.
+        HashSet<Entity> hash_set = new HashSet<Entity>();
         for (int i = 0; i < num_entities; i++) {
             var e1  = entities[i];
             var p1  = e1.get_component<Position>();
@@ -99,7 +97,9 @@ public class Collision_Solver : Subsystem {
 
             resolve_circle_map_collision(e1);
 
-            foreach (Entity e2 in get_entities(p1, e1.get_component<Bounding_Circle>(), grid)) {
+            hash_set.Clear();
+            get_entities(p1, e1.get_component<Bounding_Circle>(), grid, hash_set);
+            foreach (Entity e2 in hash_set) {
                 resolve_circle_circle_collision(e1, e2);
             }
 
@@ -161,7 +161,6 @@ public class Collision_Solver : Subsystem {
         bool check_right  = !has_tile(x+1, y);
         bool check_left   = !has_tile(x-1, y);
 
-
         int tw = 16;
         int th = 16;
 
@@ -206,14 +205,11 @@ public class Collision_Solver : Subsystem {
         var c = e1.get_component<Bounding_Circle>();
         var v = e1.get_component<Velocity>();
 
-
         bool check_top    = !has_tile(x, y-1);
         bool check_bottom = !has_tile(x, y+1);
 
-
         int tw = 16;
         int th = 16;
-
 
         if (check_top) {
             var c_x = p.x;

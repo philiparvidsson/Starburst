@@ -82,7 +82,7 @@
                     }
                 }
                 //fire on left controll
-                if (input.keyboardState.IsKeyDown(Keys.LeftControl)) {
+                if (input.keyboardState.IsKeyDown(Keys.LeftControl) || GamePad.GetState(input.gp_index).Buttons.X == ButtonState.Pressed) {
                     //Fab5_Game.inst().MessagesQueue.Add(new Fab5Event() { EventName = "Fire", EventType = "KeyPressed", Time = DateTime.Now });
                     // nytt message system
 
