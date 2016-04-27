@@ -106,8 +106,10 @@ namespace Fab5.Engine.Subsystems {
             for (int i = left; i <= right; i++) {
                 float y = 0.0f;
                 for (int j = top; j <= bottom; j++) {
-                    if (i < 0 || i > 255 || j < 0 || j > 255)
+                    if (i < 0 || i > 255 || j < 0 || j > 255) {
+                        y += th;
                         continue;
+                    }
 
                     int o = i + (j*256);
 
