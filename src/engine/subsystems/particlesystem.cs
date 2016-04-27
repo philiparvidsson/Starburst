@@ -51,6 +51,10 @@ public class Particle_System : Subsystem {
                 for (int j = 0; j < emitter.num_particles_per_emit; j++) {
                     Component[] components = emitter.emit_fn();
 
+                    if (components == null) {
+                        continue;
+                    }
+
                     var particle = state.create_entity(components);
 
                     if (emitter.on_emit_cb != null) {

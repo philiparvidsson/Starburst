@@ -113,7 +113,7 @@ namespace Fab5.Engine.Subsystems {
 
                     int o = i + (j*256);
 
-                    sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
+                    //sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
 
                     if (tile_map.tiles[o] != 0)
                         sprite_batch.Draw(tile_map.tile_tex, new Vector2(x+xfrac, y+yfrac), Color.White);

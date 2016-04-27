@@ -29,7 +29,7 @@
             this.ship_info = player.get_component<Ship_Info>();
             drawHP();
             drawEnergy();
-            drawScore(player.get_component<Score>());
+            //drawScore(player.get_component<Score>());
 
             sprite_batch.End();
         }

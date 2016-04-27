@@ -19,7 +19,6 @@ public class Playing_State : Game_State {
 
     static float last_collision_t;
     public override void on_message(string msg, dynamic data) {
-
         var t = Starburst.inst().get_time();
         if (t-last_collision_t < 0.1f) {
             return;
@@ -72,6 +71,8 @@ public class Playing_State : Game_State {
         create_entity(new FpsCounter());
         var player = create_entity(Player_Ship.create_components());
         var player2 = create_entity(Player_Ship.create_components());
+
+        create_entity(World_Bounds.create_components());
 
         player1_pos = player.get_component<Position>();;
 
