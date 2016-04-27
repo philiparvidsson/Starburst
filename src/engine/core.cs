@@ -110,12 +110,14 @@ public abstract class Game_State {
     // Retrieves all entities containing the specified component types. Do not
     // use the .Length-attribute of the returned array to iterate through the
     // results, but rather the num_entities out-parameter.
+    static List<Entity> results = new List<Entity>();
     public Entity[] get_entities(out int num_entities,
                                  params Type[] component_types)
 
     {
-        var results = new List<Entity>(1024);
+        //var results = new List<Entity>(1024);
 
+        results.Clear();
         foreach (var entry in entities) {
             var entity = entry.Value;
 
