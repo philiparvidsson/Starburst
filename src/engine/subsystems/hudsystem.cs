@@ -29,7 +29,7 @@
             this.ship_info = player.get_component<Ship_Info>();
             drawHP();
             drawEnergy();
-            //drawScore(player.get_component<Score>());
+            drawScore(player.get_component<Score>());
 
             sprite_batch.End();
         }
@@ -80,25 +80,18 @@
 
         private void drawScore(Score score)
         {
-            Position scoreposition;
-            scoreposition = new Position()
-            {
-                x = 10,
-                y = 10
-            };
+            Vector2 scoreposition;
+            scoreposition = new Vector2(10, 10);
 
-            int temp = score.score++;
-            string shit = "Score: " + temp.ToString();
+            SpriteFont spriteFont = Fab5_Game.inst().get_content<SpriteFont>("arial");
 
-            Fab5_Game.inst().create_entity(
-                scoreposition,
-                new Text()
-                {
-                    font = Fab5_Game.inst().get_content<SpriteFont>("arial"),
-                    format = shit
-                }
+            score.score++;
+
+            sprite_batch.DrawString(spriteFont,
+                "Score: " + score.score.ToString(), 
+                position: scoreposition, 
+                color: Color.AliceBlue
             );
-
         }
     }
 }
