@@ -43,6 +43,7 @@
     <Compile Include="src\engine\components\drawarea.cs" />
     <Compile Include="src\engine\components\angle.cs" />
     <Compile Include="src\engine\components\backgroundmusic.cs" />
+    <Compile Include="src\engine\components\score.cs" />
     <Compile Include="src\engine\components\soundlibrary.cs" />
     <Compile Include="src\engine\components\secondaryweapon.cs" />
     <Compile Include="src\engine\components\primaryweapon.cs" />
@@ -112,10 +113,15 @@
     <Content Include="src\starburst\content\sound\ContactLoop.wav" />
     <Content Include="src\starburst\content\sound\effects\bang1.mp3" />
     <Content Include="src\starburst\content\sound\effects\bang2.mp3" />
+    <Content Include="src\starburst\content\sound\effects\BatmanPunch.mp3" />
+    <Content Include="src\starburst\content\sound\effects\Cheering.mp3" />
     <Content Include="src\starburst\content\sound\effects\glassbreak.mp3" />
     <Content Include="src\starburst\content\sound\effects\Minigun.wav" />
+    <Content Include="src\starburst\content\sound\effects\missile_impact.mp3" />
     <Content Include="src\starburst\content\sound\effects\rockslide_small.mp3" />
+    <Content Include="src\starburst\content\sound\effects\SharpPunch.wav" />
     <Content Include="src\starburst\content\sound\effects\Smashing.mp3" />
+    <Content Include="src\starburst\content\sound\effects\throw_knife.mp3" />
     <Content Include="src\starburst\content\sound\effects\UI_Misc10.wav" />
     <Content Include="src\starburst\content\sound\effects\UI_Misc11.wav" />
     <Content Include="src\starburst\content\sound\effects\UI_Misc12.wav" />
@@ -132,6 +138,7 @@
     <Content Include="src\starburst\content\sound\effects\UI_Misc23.wav" />
     <Content Include="src\starburst\content\sound\SpaceCube.wav" />
     <Content Include="src\starburst\content\sound\SpaceLoungeLoop.wav" />
+    <Content Include="src\starburst\content\tgrid.png" />
     <Content Include="src\starburst\content\tile.png" />
   </ItemGroup>
   <ItemGroup>
