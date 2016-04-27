@@ -65,6 +65,8 @@ public abstract class Fab5_Game : Game {
         float t  = (float)game_time.TotalGameTime.TotalSeconds;
         float dt = (float)game_time.ElapsedGameTime.TotalSeconds;
 
+        time = t;
+
         if (states.Count > 0) {
             states.Peek().update(t, dt);
         }
@@ -77,6 +79,8 @@ public abstract class Fab5_Game : Game {
     protected  override void Draw(GameTime game_time) {
         float t  = (float)game_time.TotalGameTime.TotalSeconds;
         float dt = (float)game_time.ElapsedGameTime.TotalSeconds;
+
+        time = t;
 
         if (states.Count > 0) {
             states.Peek().draw(t, dt);
@@ -93,6 +97,11 @@ public abstract class Fab5_Game : Game {
         }
 
         return (null);
+    }
+
+    float time;
+    public float get_time() {
+        return time;
     }
 
     private static Fab5_Game s_inst;
