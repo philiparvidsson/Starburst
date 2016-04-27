@@ -52,7 +52,7 @@ namespace Fab5.Engine.Subsystems
                         var timesince = DateTime.Now - lib.LastChanged;
                         if (timesince.Seconds > 0.001)
                         {
-                            if (effect.Desc == data.Weapon.sound)
+                            if (effect.Desc == data.sound)
                                 effect.SoundEffect.Play();
                             lib.LastChanged = DateTime.Now;
                         }

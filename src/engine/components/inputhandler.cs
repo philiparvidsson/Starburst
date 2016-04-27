@@ -22,6 +22,9 @@
         public Keys up    = Keys.Up;
         public Keys down  = Keys.Down;
 
+        public Keys primary_fire = Keys.OemComma;
+        public Keys secondary_fire = Keys.OemPeriod;
+
         public PlayerIndex gp_index = PlayerIndex.One;
 
         public float throttle = 0.0f;

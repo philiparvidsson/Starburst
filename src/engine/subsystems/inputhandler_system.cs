@@ -71,20 +71,18 @@
                         velocity.y = 290.0f*(velocity.y / speed);
                     }
                 }
-                //fire on left controll
-                if (input.keyboardState.IsKeyDown(Keys.LeftControl) || GamePad.GetState(input.gp_index).Buttons.X == ButtonState.Pressed) {
-                    //Fab5_Game.inst().MessagesQueue.Add(new Fab5Event() { EventName = "Fire", EventType = "KeyPressed", Time = DateTime.Now });
-                    // nytt message system
-
-                    // kolla fire rate, sedan skicka message (kanske att detta hellre ska skötas i weaponsystem för att hålla den logiken mer separerad):
-                    // lagra när/hur länge sen vapnet avfyrades senast
-                    // kolla vapnets fire rate för att avgöra om det ska skjutas igen i denna frame
-
+                // primary weapon fire
+                if (input.keyboardState.IsKeyDown(input.primary_fire) || GamePad.GetState(input.gp_index).Buttons.A == ButtonState.Pressed) {
                     var message = new { Position = entity.get_component<Position>(), Angle = angle, Weapon = entity.get_component<Primary_Weapon>() , Dt = dt };
                     Fab5_Game.inst().message("fire_key_pressed", message);
                     //, ev.powerups }
                 }
-
+                // secondary weapon fire
+                if (input.keyboardState.IsKeyDown(input.secondary_fire) || GamePad.GetState(input.gp_index).Buttons.X == ButtonState.Pressed) {
+                    var message = new { Position = entity.get_component<Position>(), Angle = angle, Weapon = entity.get_component<Secondary_Weapon>(), Dt = dt };
+                    Fab5_Game.inst().message("fire_key_pressed", message);
+                    //, ev.powerups }
+                }
 
                 if (input.keyboardState.IsKeyDown(Keys.N))
                     Fab5_Game.inst().message("songchanged", null);
