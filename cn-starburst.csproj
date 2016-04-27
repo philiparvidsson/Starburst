@@ -138,6 +138,7 @@
     <Content Include="src\starburst\content\sound\effects\UI_Misc23.wav" />
     <Content Include="src\starburst\content\sound\SpaceCube.wav" />
     <Content Include="src\starburst\content\sound\SpaceLoungeLoop.wav" />
+    <Content Include="src\starburst\content\tgrid.png" />
     <Content Include="src\starburst\content\tile.png" />
   </ItemGroup>
   <ItemGroup>
