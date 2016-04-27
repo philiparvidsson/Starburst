@@ -45,6 +45,9 @@ public class Collision_Handler {
         reg("beams2", "asteroid2"   , bullet2_asteroid);
         reg("beams2", "ships/ship11", bullet2_player);
         reg("beams2", "ships/ship12", bullet2_player);
+
+        reg("soccerball", "ships/ship11", soccerball_player);
+        reg("soccerball", "ships/ship12", soccerball_player);
     }
 
     private void reg(string a, string b, Action<Entity, Entity, dynamic> action) {
@@ -59,11 +62,40 @@ public class Collision_Handler {
         handlers[a][b].Add(action);
     }
 
-    private void player_player(Entity a, Entity b, dynamic data) {
-        System.Console.WriteLine("ASS");
+    private void soccerball_player(Entity a, Entity b, dynamic data) {
+        System.Console.WriteLine("hej");
         state.create_entity(new Component[] {
-            new TTL() { max_time = 0.05f },
+            new TTL { max_time = 0.05f },
             new Particle_Emitter() {
+                emit_fn = () => {
+                    return new Component[] {
+                        new Position() { x = data.c_x + (float)Math.Cos(2.0f*3.1415f*(float)rand.NextDouble()) * 13.0f * (float)rand.NextDouble(),
+                                         y = data.c_y + (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 13.0f * (float)rand.NextDouble() },
+                        new Velocity() { x = (float)Math.Cos(2.0f*3.1415f*(float)rand.NextDouble()) * 200.0f * (float)(0.5f+rand.NextDouble()),
+                                         y = (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 200.0f * (float)(0.5f+rand.NextDouble()) },
+                        new Sprite() {
+                            texture = Starburst.inst().get_content<Texture2D>("particle"),
+                            color = new Color(1.0f, 0.8f, 0.3f, 1.0f),
+                            scale = 0.4f + (float)rand.NextDouble() * 0.3f,
+                            blend_mode = Sprite.BM_ADD,
+                            layer_depth = 0.3f
+                        },
+                        new TTL() { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max), max_time = 0.35f + (float)(rand.NextDouble() * 0.7f) }
+//                        new Bounding_Circle() { radius = 1.0f },
+//                        new Mass() { mass = 0.0f }
+
+                    };
+                },
+                interval = 0.01f,
+                num_particles_per_emit = 15
+            }
+        });
+    }
+
+    private void player_player(Entity a, Entity b, dynamic data) {
+        state.create_entity(new Component[] {
+            new TTL { max_time = 0.05f },
+            new Particle_Emitter {
                 emit_fn = () => {
                     return new Component[] {
                         new Position {
@@ -74,7 +106,7 @@ public class Collision_Handler {
                             x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (100.0f + 50.0f * (float)rand.NextDouble()),
                             y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (100.0f + 50.0f * (float)rand.NextDouble())
                         },
-                        new Sprite() {
+                        new Sprite {
                             blend_mode  = Sprite.BM_ADD,
                             color       = new Color(0.9f, 0.9f, 0.9f),
                             layer_depth = 0.3f,
@@ -95,8 +127,8 @@ public class Collision_Handler {
 
     private void tile_asteroid(Entity a, Entity b, dynamic data) {
         state.create_entity(new Component[] {
-            new TTL() { max_time = 0.05f },
-            new Particle_Emitter() {
+            new TTL { max_time = 0.05f },
+            new Particle_Emitter {
                 emit_fn = () => {
                     return new Component[] {
                         new Position {
@@ -107,7 +139,7 @@ public class Collision_Handler {
                             x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (100.0f + 50.0f * (float)rand.NextDouble()),
                             y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (100.0f + 50.0f * (float)rand.NextDouble())
                         },
-                        new Sprite() {
+                        new Sprite {
                             blend_mode  = Sprite.BM_ADD,
                             color       = new Color(0.9f, 0.6f, 0.5f),
                             layer_depth = 0.3f,
@@ -133,8 +165,8 @@ public class Collision_Handler {
         var asteroid = (bullet == a) ? b : a;
 
         state.create_entity(new Component[] {
-            new TTL() { max_time = 0.05f },
-            new Particle_Emitter() {
+            new TTL { max_time = 0.05f },
+            new Particle_Emitter {
                 emit_fn = () => {
                     return new Component[] {
                         new Position {
@@ -145,7 +177,7 @@ public class Collision_Handler {
                             x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (100.0f + 80.0f * (float)rand.NextDouble()),
                             y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (100.0f + 80.0f * (float)rand.NextDouble())
                         },
-                        new Sprite() {
+                        new Sprite {
                             blend_mode  = Sprite.BM_ADD,
                             color       = new Color(0.2f, 1.0f, 0.1f),
                             layer_depth = 0.3f,
@@ -169,8 +201,8 @@ public class Collision_Handler {
         var player = (bullet == a) ? b : a;
 
         state.create_entity(new Component[] {
-            new TTL() { max_time = 0.05f },
-            new Particle_Emitter() {
+            new TTL { max_time = 0.05f },
+            new Particle_Emitter {
                 emit_fn = () => {
                     return new Component[] {
                         new Position {
@@ -181,7 +213,7 @@ public class Collision_Handler {
                             x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (100.0f + 80.0f * (float)rand.NextDouble()),
                             y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (100.0f + 80.0f * (float)rand.NextDouble())
                         },
-                        new Sprite() {
+                        new Sprite {
                             blend_mode  = Sprite.BM_ADD,
                             color       = new Color(0.2f, 1.0f, 0.1f),
                             layer_depth = 0.3f,
@@ -207,8 +239,8 @@ public class Collision_Handler {
         var asteroid = (bullet == a) ? b : a;
 
         state.create_entity(new Component[] {
-            new TTL() { max_time = 0.05f },
-            new Particle_Emitter() {
+            new TTL { max_time = 0.05f },
+            new Particle_Emitter {
                 emit_fn = () => {
                     return new Component[] {
                         new Position {
@@ -219,7 +251,7 @@ public class Collision_Handler {
                             x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble()),
                             y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble())
                         },
-                        new Sprite() {
+                        new Sprite {
                             blend_mode  = Sprite.BM_ADD,
                             color       = new Color(1.0f, 0.3f, 0.1f),
                             layer_depth = 0.3f,
@@ -245,8 +277,8 @@ public class Collision_Handler {
         var player = (bullet == a) ? b : a;
 
         state.create_entity(new Component[] {
-            new TTL() { max_time = 0.05f },
-            new Particle_Emitter() {
+            new TTL { max_time = 0.05f },
+            new Particle_Emitter {
                 emit_fn = () => {
                     return new Component[] {
                         new Position {
@@ -257,7 +289,7 @@ public class Collision_Handler {
                             x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble()),
                             y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble())
                         },
-                        new Sprite() {
+                        new Sprite {
                             blend_mode  = Sprite.BM_ADD,
                             color       = new Color(1.0f, 0.3f, 0.1f),
                             layer_depth = 0.3f,
@@ -280,8 +312,8 @@ public class Collision_Handler {
 
     private void asteroid_asteroid(Entity a, Entity b, dynamic data) {
         state.create_entity(new Component[] {
-            new TTL() { max_time = 0.05f },
-            new Particle_Emitter() {
+            new TTL { max_time = 0.05f },
+            new Particle_Emitter {
                 emit_fn = () => {
                     return new Component[] {
                         new Position {
@@ -324,7 +356,7 @@ public class Collision_Handler {
         }
 
         if (dic == null) {
-//            System.Console.WriteLine("q ignored collision: " + name1 + ", " + name2);
+            System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
             return;
         }
 
@@ -334,12 +366,12 @@ public class Collision_Handler {
             name1   = name2;
             name2   = tmp;
             if (!handlers.TryGetValue(name1, out dic)) {
-//                System.Console.WriteLine("z ignored collision: " + name1 + ", " + name2);
+                System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
                 return;
             }
 
             if (!dic.TryGetValue(name2, out actions)) {
-  //              System.Console.WriteLine("w ignored collision: " + name1 + ", " + name2);
+                System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
                 return;
             }
         }

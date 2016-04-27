@@ -90,7 +90,13 @@
             sprite_batch.DrawString(spriteFont,
                 "Score: " + score.score.ToString(), 
                 position: scoreposition, 
-                color: Color.AliceBlue
+                color: Color.Black * 0.75f
+            );
+
+            sprite_batch.DrawString(spriteFont,
+                "Score: " + score.score.ToString(), 
+                                    position: scoreposition + new Vector2(4.0f, 4.0f), 
+                color: Color.White
             );
         }
     }
