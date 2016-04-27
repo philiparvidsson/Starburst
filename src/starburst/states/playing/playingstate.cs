@@ -43,16 +43,17 @@ public class Playing_State : Game_State {
             new Inputhandler_System(),
 //            new BG_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
             //new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
-            new Rendering_System(Starburst.inst().GraphicsDevice) {
-                tile_map = tile_map
-            },
-            new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
+
             new Window_Title_Writer(),
             new Collision_Solver(tile_map),
             new Sound(),
             new Particle_System(),
             new Lifetime_Manager(),
-            new Weapon_System(this)
+            new Weapon_System(this),
+            new Rendering_System(Starburst.inst().GraphicsDevice) {
+                tile_map = tile_map
+            },
+            new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice))
         );
         create_entity(Back_drop.create_components()).get_component<Backdrop>();
 
