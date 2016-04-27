@@ -46,6 +46,7 @@ public class Particle_System : Subsystem {
         foreach (var entity in Fab5_Game.inst().get_entities_fast(typeof (Particle_Emitter))) {
             var emitter = entity.get_component<Particle_Emitter>();
 
+
             if (emitter == null) {
                 // Wtf?
                 continue;
@@ -56,9 +57,18 @@ public class Particle_System : Subsystem {
                 emitter.time_since_emit -= emitter.interval;
 
                 for (int j = 0; j < emitter.num_particles_per_emit; j++) {
+                    if (emitter.emit_fn == null) {
+                        System.Console.WriteLine("some idiot set emit_fn to null");
+                        continue;
+                    }
                     Component[] components = emitter.emit_fn();
 
                     if (components == null) {
+                        continue;
+                    }
+
+                    if (state == null) {
+                        System.Console.WriteLine("cant spawn particles because some idiot created me outside a state");
                         continue;
                     }
 

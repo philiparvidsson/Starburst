@@ -159,6 +159,9 @@ public abstract class Game_State {
     public List<Entity> get_entities_fast(Type component_type) {
         List<Entity> e = null;
         entity_dic.TryGetValue(component_type, out e);
+        if (e == null) {
+            return new List<Entity>();
+        }
         return e;
     }
 
