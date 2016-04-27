@@ -144,6 +144,17 @@ public class Playing_State : Game_State {
             }
         }
 
+        if (Keyboard.GetState().IsKeyDown(Keys.L)) {
+            using (var f = new System.IO.StreamReader("map.txt")) {
+                for (int i = 0; i < 256; i++) {
+                    var s = f.ReadLine();
+                    for (int j = 0; j < 256; j++) {
+                        tile_map.tiles[i*256+j] = int.Parse(s[j].ToString());
+                    }
+                }
+            }
+        }
+
         if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape)) {
             Starburst.inst().Quit();
         }
