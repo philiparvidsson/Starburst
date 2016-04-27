@@ -89,6 +89,15 @@ public abstract class Fab5_Game : Game {
         draw(t, dt);
     }
 
+    public Entity create_entity(params Component[] components) {
+
+        if (states.Count > 0) {
+            return (states.Peek().create_entity(components));
+        }
+
+        return (null);
+    }
+
     public Entity[] get_entities(out int num_entities, params Type[] component_types) {
         num_entities = 0;
 

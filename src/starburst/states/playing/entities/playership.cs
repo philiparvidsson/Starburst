@@ -22,11 +22,13 @@
             if (lol == 2) {
                 // this ass code sucks
                 inputhandler = new Inputhandler() {
-                    left  = Keys.A,
+                    left = Keys.A,
                     right = Keys.D,
-                    up    = Keys.W,
-                    down  = Keys.S,
-                    gp_index = PlayerIndex.Two
+                    up = Keys.W,
+                    down = Keys.S,
+                    gp_index = PlayerIndex.Two,
+                    primary_fire = Keys.F,
+                    secondary_fire = Keys.G
                 };
             }
             string ship = "ships/ship1" + lol;
