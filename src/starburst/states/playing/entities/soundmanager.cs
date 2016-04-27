@@ -31,7 +31,7 @@
                 new Fab5SoundEffect("sound/effects/Smashing","Smashing"),
                 new Fab5SoundEffect("sound/effects/missile_impact","missile_impact"),
                 new Fab5SoundEffect("sound/effects/Cheering","Cheering"),
-                new Fab5SoundEffect("sound/effects/Batman Punch","punch"),
+                new Fab5SoundEffect("sound/effects/BatmanPunch","punch"),
                 new Fab5SoundEffect("sound/effects/throw_knife","throw_knife"),
                 new Fab5SoundEffect("sound/effects/glassbreak","glassbreak"),
                 new Fab5SoundEffect("sound/effects/SharpPunch","SharpPunch"),
