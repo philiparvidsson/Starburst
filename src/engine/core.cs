@@ -13,12 +13,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-/*------------------------------------------------
- * CLASSES
- *----------------------------------------------*/
+    /*------------------------------------------------
+     * CLASSES
+     *----------------------------------------------*/
 
-// Base component class for all game components.
-public abstract class Component {} // @To-do: Could be an interface?
+    // Base component class for all game components.
+    public interface Component { };// @To-do: Could be an interface?
 
 // Base entity class for all game entities.
 public class Entity {
