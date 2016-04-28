@@ -291,33 +291,7 @@ namespace Fab5.Engine.Subsystems {
             num_entities = entities.Count;
 
             //if (num_entities != num_sprites_last_call) {
-                // Only re-sort on new sprites... lol
-                for (int i = 0; i < num_entities; i++) {
-                    var s1 = entities[i].get_component<Sprite>();
 
-                    for (int j = (i+1); j < num_entities; j++) {
-                        var s2 = entities[j].get_component<Sprite>();
-
-                        if (s1.blend_mode > s2.blend_mode) {
-                            var tmp = entities[i];
-                            entities[i] = entities[j];
-                            entities[j] = tmp;
-                        }
-                    }
-                }
-
-                for (int i = 0; i < num_entities; i++) {
-                    var s1 = entities[i].get_component<Sprite>();
-                    for (int j = (i+1); j < num_entities; j++) {
-                        var s2 = entities[j].get_component<Sprite>();
-
-                        if (s1.layer_depth < s2.layer_depth) {
-                            var tmp = entities[i];
-                            entities[i] = entities[j];
-                            entities[j] = tmp;
-                        }
-                    }
-                }
             //}
 
             num_sprites_last_call = num_entities;

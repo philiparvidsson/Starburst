@@ -30,7 +30,7 @@ public class Collision_Solver : Subsystem {
         }
     }
 
-    const uint grid_size = 128;
+    const uint grid_size = 64;
     public override void update(float t, float dt) {
         // Collisions occur at an instant so who cares about dt?
 
