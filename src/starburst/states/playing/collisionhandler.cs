@@ -80,10 +80,7 @@ namespace Fab5.Starburst.States.Playing {
                             blend_mode = Sprite.BM_ADD,
                             layer_depth = 0.3f
                         },
-                        new TTL() { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max), max_time = 0.35f + (float)(rand.NextDouble() * 0.7f) }
-//                        new Bounding_Circle() { radius = 1.0f },
-//                        new Mass() { mass = 0.0f }
-
+                        new TTL { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max), max_time = 0.35f + (float)(rand.NextDouble() * 0.7f) }
                     };
                 },
                 interval = 0.01f,

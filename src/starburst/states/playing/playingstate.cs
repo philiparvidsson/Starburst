@@ -31,12 +31,37 @@ public class Playing_State : Game_State {
 
     Position player1_pos;
 
+    private void load_map() {
+        using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap("map.png")) {
+            for (int x = 0; x < 256; x++) {
+                for (int y = 0; y < 256; y++) {
+                    int i = x+y*256;
+
+                    tile_map.tiles[i] = 0;
+
+                    var c = bitmap.GetPixel(x, y);
+
+                    if (c == System.Drawing.Color.FromArgb(0, 0, 0)) {
+                        tile_map.tiles[i] = 1;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(0, 255, 0)) {
+                        tile_map.tiles[i] = 2;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(255, 0, 0)) {
+                        tile_map.tiles[i] = 3;
+                    }
+                }
+            }
+        }
+    }
+
     public override void init() {
         Starburst.inst().IsMouseVisible = true;        // @To-do: Load map here.
 
         coll_handler = new Collision_Handler(this);
 
         tile_map = new Tile_Map();
+        load_map();
 
         add_subsystems(
             new Position_Integrator(),
