@@ -15,6 +15,7 @@
     public class Score : Component
     {
         public int score;
+        public int display_score;
         public Score()
         {
             score = 0;

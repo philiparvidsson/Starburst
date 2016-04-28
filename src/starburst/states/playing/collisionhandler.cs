@@ -1,16 +1,16 @@
 namespace Fab5.Starburst.States.Playing {
 
-using Fab5.Engine.Components;
-using Fab5.Engine.Core;
-using Fab5.Engine.Subsystems;
+    using Fab5.Engine.Components;
+    using Fab5.Engine.Core;
+    using Fab5.Engine.Subsystems;
 
-using System;
-using System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
-public class Collision_Handler {
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+    using Components;
+    public class Collision_Handler {
     private static Random rand = new Random();
 
     private Game_State state;
@@ -80,10 +80,7 @@ public class Collision_Handler {
                             blend_mode = Sprite.BM_ADD,
                             layer_depth = 0.3f
                         },
-                        new TTL() { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max), max_time = 0.35f + (float)(rand.NextDouble() * 0.7f) }
-//                        new Bounding_Circle() { radius = 1.0f },
-//                        new Mass() { mass = 0.0f }
-
+                        new TTL { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max), max_time = 0.35f + (float)(rand.NextDouble() * 0.7f) }
                     };
                 },
                 interval = 0.01f,
@@ -232,7 +229,74 @@ public class Collision_Handler {
         });
 
         bullet.destroy();
+
+        inflictBulletDamage(bullet, player, data);
     }
+
+        private void inflictBulletDamage(Entity bullet, Entity player, dynamic data) {
+            Ship_Info playerShip = player.get_component<Ship_Info>();
+            Bullet_Info bulletInfo = bullet.get_component<Bullet_Info>();
+            Score shooterScore = bulletInfo.sender.get_component<Score>();
+            float bulletDamage = bulletInfo.damage;
+
+            shooterScore.score += 10;
+            // kolla sköld, om sköld nere, ta skada
+            if(playerShip.energy_value > bulletDamage) {
+                playerShip.energy_value -= bulletDamage;
+            }
+            else {
+                bulletDamage -= playerShip.energy_value;
+                playerShip.energy_value = 0;
+
+                // börja dra av hp av resterande skada från kula
+
+                playerShip.hp_value -= bulletDamage;
+                if (playerShip.hp_value <= 0) {
+                    // offret blir dödsmördat
+                    shooterScore.score += 240;
+                    state.create_entity(new Component[] {
+                new TTL { max_time = 0.05f },
+                new Particle_Emitter {
+                    emit_fn = () => {
+                        return new Component[] {
+                            new Position {
+                                x = data.c_x,
+                                y = data.c_y
+                            },
+                            new Velocity {
+                                x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble()),
+                                y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble())
+                            },
+                            new Sprite {
+                                blend_mode  = Sprite.BM_ADD,
+                                color       = new Color(1.0f, 0.3f, 0.1f),
+                                layer_depth = 0.3f,
+                                scale       = 0.9f + (float)rand.NextDouble() * 0.9f,
+                                texture     = Starburst.inst().get_content<Texture2D>("particle")
+                            },
+                            new TTL {
+                                alpha_fn = (x, max) => 1.0f - x/max,
+                                max_time = 0.2f + (float)(rand.NextDouble() * 0.1f)
+                            }
+                        };
+                    },
+                    interval = 0.01f,
+                    num_particles_per_emit = 10 + rand.Next(0, 20)
+                }
+            });
+                    // make "dead ship" state? so killed player can see explosion and that they died
+                    // no visible ship, no input, not receptable to damage
+                    // lasts for X seconds
+                    playerShip.hp_value = 100;
+                    playerShip.energy_value = playerShip.top_energy;
+                    // add random position later
+                    player.get_component<Position>().x = 0;
+                    player.get_component<Position>().y = 0;
+                    player.get_component<Velocity>().x = 0;
+                    player.get_component<Velocity>().y = 0;
+                }
+            }
+        }
 
     private void bullet2_asteroid(Entity a, Entity b, dynamic data) {
         var bullet   = (a.get_component<Sprite>().texture.Name == "beams2") ? a : b;
@@ -308,6 +372,9 @@ public class Collision_Handler {
         });
 
         bullet.destroy();
+
+        inflictBulletDamage(bullet, player, data);
+            
     }
 
     private void asteroid_asteroid(Entity a, Entity b, dynamic data) {

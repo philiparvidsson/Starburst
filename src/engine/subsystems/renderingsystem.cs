@@ -37,12 +37,16 @@ namespace Fab5.Engine.Subsystems {
         private Texture2D backdrop;
         private Texture2D stardrop;
 
+        private Texture2D player_indicator_tex;
+
         public Rendering_System(GraphicsDevice graphicsDevice) {
             sprite_batch = new SpriteBatch(graphicsDevice);
             defaultViewport = graphicsDevice.Viewport;
 
             backdrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/backdrop4");
             stardrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/stardrop");
+
+            player_indicator_tex = Fab5_Game.inst().get_content<Texture2D>("indicator");
         }
 
         private void draw_backdrop(SpriteBatch sprite_batch, Position playerPosition) {
@@ -78,7 +82,7 @@ namespace Fab5.Engine.Subsystems {
 
         Texture2D grid_tex;
         private void draw_tile_map(SpriteBatch sprite_batch, Camera camera) {
-            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend); // <-- @To-do: OPAQUE!!
+            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
 
             int tw     = 16;
             int th     = 16;
@@ -94,9 +98,9 @@ namespace Fab5.Engine.Subsystems {
 
 //            System.Console.WriteLine(camera.position.x + ", " + camera.position.x);
 
-            if (grid_tex == null) {
-                grid_tex = Fab5_Game.inst().get_content<Texture2D>("tgrid");
-            }
+            //if (grid_tex == null) {
+              //  grid_tex = Fab5_Game.inst().get_content<Texture2D>("tgrid");
+            //}
 
             float x = 0.0f;
             for (int i = left; i <= right; i++) {
@@ -111,9 +115,14 @@ namespace Fab5.Engine.Subsystems {
 
 //                    sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
 
-                    if (tile_map.tiles[o] != 0) {
-                        var tile_tex = tile_map.tex[tile_map.tiles[o]-1];
-                        sprite_batch.Draw(tile_tex, new Vector2(x+xfrac, y+yfrac), Color.White);
+                    int k = tile_map.tiles[o];
+                    if (k != 0 && k < 6) {// 6 and up are not walls
+                        var tile_tex = tile_map.tex;
+                        var v = k-1;
+                        sprite_batch.Draw(tile_tex,
+                                          new Vector2(x+xfrac, y+yfrac),
+                                          new Rectangle(16*v, 0, 16, 16),
+                                          Color.White);
                     }
 
                     y += th;
@@ -291,33 +300,7 @@ namespace Fab5.Engine.Subsystems {
             num_entities = entities.Count;
 
             //if (num_entities != num_sprites_last_call) {
-                // Only re-sort on new sprites... lol
-                for (int i = 0; i < num_entities; i++) {
-                    var s1 = entities[i].get_component<Sprite>();
 
-                    for (int j = (i+1); j < num_entities; j++) {
-                        var s2 = entities[j].get_component<Sprite>();
-
-                        if (s1.blend_mode > s2.blend_mode) {
-                            var tmp = entities[i];
-                            entities[i] = entities[j];
-                            entities[j] = tmp;
-                        }
-                    }
-                }
-
-                for (int i = 0; i < num_entities; i++) {
-                    var s1 = entities[i].get_component<Sprite>();
-                    for (int j = (i+1); j < num_entities; j++) {
-                        var s2 = entities[j].get_component<Sprite>();
-
-                        if (s1.layer_depth < s2.layer_depth) {
-                            var tmp = entities[i];
-                            entities[i] = entities[j];
-                            entities[j] = tmp;
-                        }
-                    }
-                }
             //}
 
             num_sprites_last_call = num_entities;
@@ -338,8 +321,54 @@ namespace Fab5.Engine.Subsystems {
                 draw_backdrop(sprite_batch, currentPlayerPosition);
 
 
-                draw_tile_map(sprite_batch, current);
                 drawSprites(sprite_batch, current, num_entities, entities, 0.0f);
+
+                draw_tile_map(sprite_batch, current);
+                sprite_batch.Begin(SpriteSortMode.Deferred,
+                                       BlendState.AlphaBlend, null, null, null, null,
+                                       transformMatrix: current.getViewMatrix(current.viewport));
+
+
+
+                for (int p2 = 0; p2 < currentPlayerNumber; p2++) {
+                    var player2 = players[p2];
+                    var player2_pos = player2.get_component<Position>();
+                    var d_x = player2_pos.x - currentPlayerPosition.x;
+                    var d_y = player2_pos.y - currentPlayerPosition.y;
+
+                    var d = (float)Math.Sqrt(d_x*d_x + d_y*d_y);
+
+                    if (Math.Abs(d_x) < current.viewport.Width*0.5f && Math.Abs(d_y) < current.viewport.Height*0.5f) {
+                        // other player is on same screen
+                        continue;
+                    }
+
+                    d_x /= d;
+                    d_y /= d;
+
+                    d_x *= 36.0f;
+                    d_y *= 36.0f;
+
+                    var r = (float)Math.Atan2(d_y, d_x);
+
+                    var p_x = currentPlayerPosition.x + d_x;
+                    var p_y = currentPlayerPosition.y + d_y;
+
+            sprite_batch.Draw(player_indicator_tex,
+                              new Vector2(p_x, p_y),
+                              null,
+                              Color.White,
+                              r,
+                              new Vector2(player_indicator_tex.Width/2.0f, player_indicator_tex.Height/2.0f),
+                              1.0f,
+                              SpriteEffects.None,
+                              0.5f);
+                }
+
+                sprite_batch.End();
+
+
+
                 hudsystem_instance.drawHUD(currentPlayer);
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;

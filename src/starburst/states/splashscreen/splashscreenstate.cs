@@ -21,7 +21,7 @@ namespace Fab5.Starburst.States {
         float splashTime;
         Texture2D splash;
         SpriteFont font;
-    
+
         public override void init() {
             //Starburst.inst().IsMouseVisible = true;
             add_subsystems(
@@ -33,7 +33,7 @@ namespace Fab5.Starburst.States {
 
             //create_entity(SoundManager.create_backmusic_component());
             splash = Starburst.inst().get_content<Texture2D>("splash");
-            font = Starburst.inst().get_content<SpriteFont>("arial");
+            font = Starburst.inst().get_content<SpriteFont>("sector034");
             outDelay = delay + duration + displayTime;
             splashTime = outDelay + duration;
         }
@@ -41,7 +41,7 @@ namespace Fab5.Starburst.States {
         public override void update(float t, float dt) {
             base.update(t, dt);
             elapsedTime += dt;
-        
+
             if(elapsedTime >= splashTime || Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter)) {
                 Starburst.inst().enter_state(new Playing_State());
             }
@@ -90,7 +90,7 @@ namespace Fab5.Starburst.States {
             if ((t /= d / 2) < 1) {
                 return c / 2 * (float)Math.Pow(2, 10 * (t - 1)) + b;
             }
-            
+
             return c / 2 * (-(float)Math.Pow(2, -10 * --t) + 2) + b;
         }
 

@@ -11,6 +11,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+    using System.Collections.Generic;
+
 using System;
 
 public class Playing_State : Game_State {
@@ -18,6 +20,29 @@ public class Playing_State : Game_State {
     public static System.Random rand = new System.Random();
 
     private Collision_Handler coll_handler;
+
+    public Position get_player_spawn_pos(int team) {
+        List<Position> positions = new List<Position>();
+
+        team += 6;
+
+        for (int x = 0; x < 256; x++) {
+            for (int y = 0; y < 256; y++) {
+                if (tile_map.tiles[x+y*256] == team) {
+                    positions.Add(new Position { x = -2048.0f + x * 16.0f, y = -2048.0f + y * 16.0f });
+                }
+            }
+        }
+
+        if (positions.Count == 0) {
+            System.Console.WriteLine("could not find any spawn in get_player_spawn");
+            return new Position { x = 0.0f, y = 0.0f };
+        }
+
+        int i = rand.Next(0, positions.Count);
+
+        return positions[i];
+    }
 
 
     public override void on_message(string msg, dynamic data) {
@@ -31,12 +56,63 @@ public class Playing_State : Game_State {
 
     Position player1_pos;
 
+    private void load_map() {
+        using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap("map.png")) {
+            for (int x = 0; x < 256; x++) {
+                for (int y = 0; y < 256; y++) {
+                    int i = x+y*256;
+
+                    tile_map.tiles[i] = 0;
+
+                    var c = bitmap.GetPixel(x, y);
+
+                    if (c == System.Drawing.Color.FromArgb(0, 0, 0)) {
+                        tile_map.tiles[i] = 1;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(0, 255, 0)) {
+                        tile_map.tiles[i] = 2;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(255, 0, 0)) {
+                        tile_map.tiles[i] = 3;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(255, 255, 0)) {
+                        tile_map.tiles[i] = 4;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(127, 0, 0)) {
+                        tile_map.tiles[i] = 5;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(255, 0, 255)) {
+                        // soccer spawn
+                        tile_map.tiles[i] = 6;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(0, 255, 255)) {
+                        // powerup spawn
+                        tile_map.tiles[i] = 7;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(255, 127, 0)) {
+                        // team 1 spawn
+                        tile_map.tiles[i] = 8;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(0, 127, 255)) {
+                        // team 2 spawn
+                        tile_map.tiles[i] = 9;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(127, 0, 255)) {
+                        // asteroid spawn
+                        tile_map.tiles[i] = 10;
+                    }
+                }
+            }
+        }
+    }
+
     public override void init() {
         Starburst.inst().IsMouseVisible = true;        // @To-do: Load map here.
 
         coll_handler = new Collision_Handler(this);
 
         tile_map = new Tile_Map();
+        load_map();
 
         add_subsystems(
             new Position_Integrator(),
@@ -66,7 +142,7 @@ public class Playing_State : Game_State {
             player2.get_component<Position>().x = 400;
             player2.get_component<Position>().y = 400;
             player2.get_component<Ship_Info>().hp_value = 50;
-            player2.get_component<Score>().score = 100000000;
+            //player2.get_component<Score>().score = 100000000;
 
             /*var player3 = create_entity(Player_Ship.create_components());
 
