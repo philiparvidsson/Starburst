@@ -76,7 +76,8 @@ namespace Fab5.Engine.Subsystems
                     }
                     if (msg == "fire")
                     {
-                        effect = lib.Library[data.sound].SoundEffect.Play();
+                        effect = lib.Library[data.sound] as Fab5SoundEffect;
+                        effect.SoundEffect.Play();
                     }
 
                     if (msg == "collision")
