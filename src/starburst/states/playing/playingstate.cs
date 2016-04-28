@@ -66,7 +66,7 @@ public class Playing_State : Game_State {
             player2.get_component<Position>().x = 400;
             player2.get_component<Position>().y = 400;
             player2.get_component<Ship_Info>().hp_value = 50;
-            player2.get_component<Score>().score = 100000000;
+            //player2.get_component<Score>().score = 100000000;
 
             /*var player3 = create_entity(Player_Ship.create_components());
 

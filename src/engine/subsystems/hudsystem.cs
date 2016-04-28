@@ -85,7 +85,7 @@
 
             SpriteFont spriteFont = Fab5_Game.inst().get_content<SpriteFont>("sector034");
 
-            score.score++;
+            //score.score++;
 
             sprite_batch.DrawString(spriteFont,
                 "Score: " + score.score.ToString(), 

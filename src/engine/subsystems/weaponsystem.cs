@@ -22,14 +22,13 @@ namespace Fab5.Engine.Subsystems {
         public override void on_message(string msg, dynamic data) {
             if(msg.Equals("fire_key_pressed")) {
                 float dt = data.Dt;
-                Position position = data.Position;
-                Angle angle = data.Angle;
+                Entity origin = data.Origin;
                 Weapon weapon = data.Weapon;
 
                 // kolla dt, räkna ner tid till nästa skott kan skjutas (baserat på fire rate)
 
                 if (weapon.timeSinceLastShot >= weapon.fire_rate) {
-                    var shot = gameState.create_entity(Bullet_Factory.create_components(position, angle, weapon, data.Velocity));
+                    var shot = gameState.create_entity(Bullet_Factory.create_components(origin, weapon));
                     Fab5_Game.inst().message("fire", weapon);
                     weapon.timeSinceLastShot = 0f;
                 }

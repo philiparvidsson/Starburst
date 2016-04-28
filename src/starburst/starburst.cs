@@ -15,6 +15,9 @@ public class Starburst : Fab5_Game {
         GraphicsMgr.PreferredBackBufferWidth = 1280;
         GraphicsMgr.PreferredBackBufferHeight = 720;
 
+        GraphicsMgr.SynchronizeWithVerticalRetrace = false;
+        IsFixedTimeStep = false;
+
         GraphicsMgr.ApplyChanges();
 
         enter_state(new Splash_Screen_State());

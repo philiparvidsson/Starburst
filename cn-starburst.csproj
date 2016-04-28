@@ -71,6 +71,7 @@
     <Compile Include="src\engine\subsystems\particlesystem.cs" />
     <Compile Include="src\engine\subsystems\positionintegrater.cs" />
     <Compile Include="src\engine\subsystems\renderingsystem.cs" />
+    <Compile Include="src\starburst\components\bulletinfo.cs" />
     <Compile Include="src\starburst\states\playing\collisionhandler.cs" />
     <Compile Include="src\starburst\states\playing\entities\bullet_factory.cs" />
     <Compile Include="src\engine\subsystems\sound.cs" />
