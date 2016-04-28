@@ -21,7 +21,7 @@ namespace Fab5.Engine.Subsystems
                 var music = entity.get_component<SoundLibrary>();
                 if (!music.IsSongStarted)
                 {
-                    var bmusic = music.Library.FirstOrDefault() as BackgroundMusic;
+                    var bmusic = music.Library.ElementAt(0).Value as BackgroundMusic;
                     if (bmusic != null) {
                         MediaPlayer.Play(bmusic.BackSong);
                         MediaPlayer.IsRepeating = bmusic.IsRepeat;
@@ -44,60 +44,72 @@ namespace Fab5.Engine.Subsystems
             {
                 var entity = entities[i];
                 var lib = entity.get_component<SoundLibrary>();
-                var effect = lib.Library.FirstOrDefault() as Fab5SoundEffect;
-                var music = lib.Library.FirstOrDefault() as BackgroundMusic;
+                var effect = lib.Library.FirstOrDefault().Value as Fab5SoundEffect;
+                var music = lib.Library.FirstOrDefault().Value as BackgroundMusic;
                 if (effect != null)
                 {
-                    if (msg == "fire") {
-                        var filesInlib = lib.Library.Cast<Fab5SoundEffect>().ToList();
-                        effect = filesInlib.Where(x => x.Desc == data.sound).FirstOrDefault();
-                        effect.SoundEffect.Play();
+                    var thrust = lib.Library["thrust"] as Fab5SoundEffect;
+                    if (msg == "throttle" && !thrust.IsStarted && data.Player ==3)
+                    {
+                        thrust.SoundEffectIns.IsLooped = true;
+                        thrust.IsStarted = true;
+                        thrust.SoundEffectIns.Play();
+                        lib.Library["thrust"] = thrust;
 
-                        lib.LastChanged = DateTime.Now;
                     }
+                    else if (msg == "nothrottle" && thrust.IsStarted && data.Player == 3) 
+                    {
+                        Console.WriteLine("nothrottle stop sound");
+                        thrust.IsStarted = false;
+                        thrust.SoundEffectIns.Stop();
+                        lib.Library["thrust"] = thrust;
+                    }
+
+                    if (msg == "fire")
+                    {
+                        effect = lib.Library[data.sound];
+                        effect.SoundEffect.Play();
+                    }
+
                     if (msg == "collision")
                     {
                         string texttureName1 = null;
                         string texttureName2 = null;
                         if (data.entity1 != null) {
                             texttureName1 = data.entity1.get_component<Sprite>().texture.Name;
-                            //System.Console.WriteLine(texttureName1);
+                            System.Console.WriteLine(texttureName1);
                         }
                         if (data.entity2 != null) {
                             texttureName2 = data.entity2.get_component<Sprite>().texture.Name;
-                            //System.Console.WriteLine(texttureName2);
+                            System.Console.WriteLine(texttureName2);
                         }
-                        var filesInlib = lib.Library.Cast<Fab5SoundEffect>().ToList();
-
                         if (!string.IsNullOrEmpty(texttureName1) && !string.IsNullOrEmpty(texttureName2))
                         {
 
                             if (texttureName1.Contains("ship") && texttureName2.Contains("ship"))
                             {
-                                effect = filesInlib.Where(x => x.Desc == "bang").FirstOrDefault();
+                                effect = lib.Library["bang"] as Fab5SoundEffect;
                                 effect.SoundEffect.Play();
                             }
                             if ((texttureName1.Contains("asteroid") && texttureName2.Contains("ship")) || (texttureName2.Contains("asteroid") && texttureName1.Contains("ship")))
                             {
-                                effect = filesInlib.Where(x => x.Desc == "rockslide_small").FirstOrDefault();
+                                effect = lib.Library["rockslide_small"] as Fab5SoundEffect;
                                 effect.SoundEffect.Play();
                             }
                             if((texttureName1.Contains("ship") && texttureName2 == "soccerball") || (texttureName1 == "soccerball" && texttureName2.Contains("ship")))
                             {
-                                effect = filesInlib.Where(x => x.Desc == "punch").FirstOrDefault();
-                                var inseffect = effect.SoundEffect.CreateInstance();
-                                inseffect.Volume = 1f;
-                                inseffect.Play();
+                                effect = lib.Library["punch"] as Fab5SoundEffect;
+                                effect.SoundEffect.Play();
                             }
                             if ((texttureName1.Contains("goal") && texttureName2 == "soccerball") || (texttureName1 == "soccerball" && texttureName2.Contains("goal")))
                             {
-                                effect = filesInlib.Where(x => x.Desc == "Cheering").FirstOrDefault();
+                                effect = lib.Library["Cheering"] as Fab5SoundEffect;
                                 effect.SoundEffect.Play();
                             }
                         }
                         else if (!string.IsNullOrEmpty(texttureName1))
                         {
-                            effect = filesInlib.Where(x => x.Desc == "bang2").FirstOrDefault();
+                            effect = lib.Library["bang2"] as Fab5SoundEffect;
                             effect.SoundEffect.Play();
                         }
                     }
@@ -106,12 +118,12 @@ namespace Fab5.Engine.Subsystems
                 {
                     var timesince = DateTime.Now - lib.LastChanged;
                     if (msg == "songchanged" && timesince.Seconds > 0.1)
-                        {
-                            MediaPlayer.Stop();
-                            lib.NowPlayingIndex++;
-                            if (lib.NowPlayingIndex == lib.Library.Count)
-                                lib.NowPlayingIndex = 0;
-                            music = lib.Library.ElementAt(lib.NowPlayingIndex) as BackgroundMusic;
+                    {
+                        MediaPlayer.Stop();
+                        lib.NowPlayingIndex++;
+                        if (lib.NowPlayingIndex == lib.Library.Count)
+                            lib.NowPlayingIndex = 0;
+                            music = lib.Library.ElementAt(lib.NowPlayingIndex).Value as BackgroundMusic;
                             Console.WriteLine("song changed to" + music.File);
                             MediaPlayer.Play(music.BackSong);
                             MediaPlayer.IsRepeating = music.IsRepeat;
