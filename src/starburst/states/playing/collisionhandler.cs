@@ -288,7 +288,7 @@ namespace Fab5.Starburst.States.Playing {
                     // make "dead ship" state? so killed player can see explosion and that they died
                     // no visible ship, no input, not receptable to damage
                     // lasts for X seconds
-                    playerShip.hp_value = 100;
+                    playerShip.hp_value = playerShip.top_hp;
                     playerShip.energy_value = playerShip.top_energy;
                     // add random position later
                     player.get_component<Position>().x = 0;
