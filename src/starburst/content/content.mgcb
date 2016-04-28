@@ -25,24 +25,6 @@
 /processorParam:TextureFormat=Color
 /build:ball.png
 
-#begin sound/ContactLoop.wav
-/importer:WavImporter
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:sound/ContactLoop.wav
-
-#begin sound/SpaceCube.wav
-/importer:WavImporter
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:sound/SpaceCube.wav
-
-#begin sound/SpaceLoungeLoop.wav
-/importer:WavImporter
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:sound/SpaceLoungeLoop.wav
-
 #begin particle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -54,12 +36,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:particle.png
-
-#begin sound/effects/Minigun.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/Minigun.wav
 
 #begin ships/ship11.png
 /importer:TextureImporter
@@ -181,114 +157,6 @@
 /processorParam:TextureFormat=Color
 /build:ships/qship11.png
 
-#begin sound/effects/bang1.mp3
-/importer:Mp3Importer
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/bang1.mp3
-
-#begin sound/effects/bang2.mp3
-/importer:Mp3Importer
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/bang2.mp3
-
-#begin sound/effects/glassbreak.mp3
-/importer:Mp3Importer
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/glassbreak.mp3
-
-#begin sound/effects/Smashing.mp3
-/importer:Mp3Importer
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/Smashing.mp3
-
-#begin sound/effects/UI_Misc10.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/UI_Misc10.wav
-
-#begin sound/effects/UI_Misc11.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/UI_Misc11.wav
-
-#begin sound/effects/UI_Misc12.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/UI_Misc12.wav
-
-#begin sound/effects/UI_Misc13.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/UI_Misc13.wav
-
-#begin sound/effects/UI_Misc14.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/UI_Misc14.wav
-
-#begin sound/effects/UI_Misc15.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/UI_Misc15.wav
-
-#begin sound/effects/UI_Misc16.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/UI_Misc16.wav
-
-#begin sound/effects/UI_Misc17.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/UI_Misc17.wav
-
-#begin sound/effects/UI_Misc18.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/UI_Misc18.wav
-
-#begin sound/effects/UI_Misc19.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/UI_Misc19.wav
-
-#begin sound/effects/UI_Misc20.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/UI_Misc20.wav
-
-#begin sound/effects/UI_Misc21.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/UI_Misc21.wav
-
-#begin sound/effects/UI_Misc22.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/UI_Misc22.wav
-
-#begin sound/effects/UI_Misc23.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/UI_Misc23.wav
-
 #begin tgrid.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -300,60 +168,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:tgrid.png
-
-#begin sound/effects/Cheering.mp3
-/importer:Mp3Importer
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/Cheering.mp3
-
-#begin sound/effects/missile_impact.mp3
-/importer:Mp3Importer
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/missile_impact.mp3
-
-#begin sound/effects/SharpPunch.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/SharpPunch.wav
-
-#begin sound/effects/BatmanPunch.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/BatmanPunch.wav
-
-#begin sound/effects/BatmanPunch2.mp3
-/importer:Mp3Importer
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/BatmanPunch2.mp3
-
-#begin sound/effects/rockslide_small.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/rockslide_small.wav
-
-#begin sound/effects/rockslide_small.mp3
-/importer:Mp3Importer
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/rockslide_small.mp3
-
-#begin sound/effects/rockslide_smallcombo.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/rockslide_smallcombo.wav
-
-#begin sound/effects/throw_knife.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/throw_knife.wav
 
 #begin splash.png
 /importer:TextureImporter
@@ -397,54 +211,6 @@
 /processorParam:TextureFormat=Compressed
 /build:sector034.spritefont
 
-#begin map/tile1.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:map/tile1.png
-
-#begin map/tile2.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:map/tile2.png
-
-#begin map/tile3.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:map/tile3.png
-
-#begin map/tile4.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:map/tile4.png
-
 #begin indicator.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -456,3 +222,148 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:indicator.png
+
+#begin sound/effects/bang1.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/bang1.mp3
+
+#begin sound/effects/bang2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/bang2.mp3
+
+#begin sound/effects/BatmanPunch.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/BatmanPunch.wav
+
+#begin sound/effects/BatmanPunch2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/BatmanPunch2.mp3
+
+#begin sound/effects/Cheering.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/Cheering.mp3
+
+#begin sound/effects/glassbreak.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/glassbreak.mp3
+
+#begin sound/effects/LaserBlaster.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/LaserBlaster.wav
+
+#begin sound/effects/LaserBlaster2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/LaserBlaster2.wav
+
+#begin sound/effects/Minigun.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/Minigun.wav
+
+#begin sound/effects/missile_impact.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/missile_impact.mp3
+
+#begin sound/effects/rockslide_small.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/rockslide_small.mp3
+
+#begin sound/effects/rockslide_small.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/rockslide_small.wav
+
+#begin sound/effects/rockslide_smallcombo.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/rockslide_smallcombo.wav
+
+#begin sound/effects/SharpPunch.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/SharpPunch.wav
+
+#begin sound/effects/smashing.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/smashing.mp3
+
+#begin sound/effects/throw_knife.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/throw_knife.wav
+
+#begin sound/effects/thrust.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/thrust.wav
+
+#begin sound/ContactLoop.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:sound/ContactLoop.wav
+
+#begin sound/SpaceCube.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:sound/SpaceCube.wav
+
+#begin sound/SpaceLoungeLoop.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:sound/SpaceLoungeLoop.wav
+
+#begin map/tiles.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:map/tiles.png
+
+#begin map.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:map.png
+

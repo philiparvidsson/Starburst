@@ -9,7 +9,7 @@ namespace Fab5.Engine.Components {
         public Secondary_Weapon() {
             this.damage = 20;
             this.fire_rate = 1.5f;
-            this.sound = "UI_Misc16";
+            this.sound = "LaserBlaster2";
             this.energy_cost = 10;
         }
     }

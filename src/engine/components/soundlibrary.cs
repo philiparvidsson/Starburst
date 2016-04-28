@@ -9,12 +9,12 @@ namespace Fab5.Engine.Components
     {
         public SoundLibrary()
         {
-            Library = new List<Component>();
+            Library = new Dictionary<string,Component>();
             LastChanged = DateTime.Now;
         }
         public int NowPlayingIndex { get; set; }
         public bool IsSongStarted { get; set; }
-        public List<Component> Library { get; set; }
+        public Dictionary<string, Component> Library { get; set; }
         public DateTime LastChanged { get; set; }
     }
 }

@@ -53,10 +53,19 @@
 
                 input.throttle = GamePad.GetState(input.gp_index).Triggers.Right - GamePad.GetState(input.gp_index).Triggers.Left;
                 if (input.keyboardState.IsKeyDown(input.up))
+                {
                     input.throttle = 1.0f;
+                }
+                else
+                {
+                    Fab5_Game.inst().message("nothrottle", new { Player = entity.id });
+                }
+
+
 
                 if (Math.Abs(input.throttle) > 0.01f)
                 {
+                    Fab5_Game.inst().message("throttle", new { Player = entity.id });
                     var acc = 380.0f * dt;
                     velocity.x += (float)(Math.Cos(angle.angle)) * acc * input.throttle;
                     velocity.y += (float)(Math.Sin(angle.angle)) * acc * input.throttle;
