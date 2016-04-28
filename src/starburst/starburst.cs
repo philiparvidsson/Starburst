@@ -14,13 +14,17 @@ public class Starburst : Fab5_Game {
     protected override void init() {
         GraphicsMgr.PreferredBackBufferWidth = 1280;
         GraphicsMgr.PreferredBackBufferHeight = 720;
+        GraphicsMgr.PreferMultiSampling = true;
 
-        GraphicsMgr.SynchronizeWithVerticalRetrace = false;
-        IsFixedTimeStep = false;
+        GraphicsMgr.GraphicsDevice.RasterizerState = new RasterizerState { MultiSampleAntiAlias = true };
+
+        //GraphicsMgr.SynchronizeWithVerticalRetrace = false;
+        //IsFixedTimeStep = false;
 
         GraphicsMgr.ApplyChanges();
 
         enter_state(new Splash_Screen_State());
+
     }
 
     protected override void cleanup() {
