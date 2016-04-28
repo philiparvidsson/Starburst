@@ -147,7 +147,7 @@ namespace Fab5.Engine.Subsystems {
 
         private void updatePlayers() {
             // ev hantering för om inga spelare hittas?
-
+            float zoom = 1;
             if(currentPlayerNumber == 1) {
                 // full screen
                 viewports = new Viewport[1];
@@ -168,6 +168,7 @@ namespace Fab5.Engine.Subsystems {
 
                 viewports[0] = top;
                 viewports[1] = bottom;
+                zoom = .85f;
             }
             else if(currentPlayerNumber == 3){
                 // 1/4 screen, handle sizes and positions
@@ -190,6 +191,8 @@ namespace Fab5.Engine.Subsystems {
                 viewports[0] = topLeft;
                 viewports[1] = topRight;
                 viewports[2] = bottom;
+
+                zoom = .7f;
             }
             else {
                 // 1/4 screen, handle sizes and positions
@@ -219,11 +222,13 @@ namespace Fab5.Engine.Subsystems {
                 viewports[1] = topRight;
                 viewports[2] = bottomLeft;
                 viewports[3] = bottomRight;
+
+                zoom = .7f;
             }
 
             // add cameras to each viewport
             for (int i = 0; i < currentPlayerNumber; i++) {
-                cameras[i] = new Camera(viewports[i]);
+                cameras[i] = new Camera(viewports[i]) { zoom = zoom };
             }
 
             prevPlayerNumber = currentPlayerNumber;
