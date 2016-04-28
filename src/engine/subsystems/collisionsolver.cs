@@ -169,7 +169,8 @@ public class Collision_Solver : Subsystem {
         if (y < 0) return false;
         if (y > 255) return false;
 
-        return tile_map.tiles[x+y*256] != 0;
+        var k = tile_map.tiles[x+y*256];
+        return k >  0 && k < 6; // 6 and up are specials
     }
 
     private bool check_left_right(Entity e1, int x, int y) {
@@ -267,7 +268,8 @@ public class Collision_Solver : Subsystem {
 
     private bool resolve_circle_tile_collision(Entity e1, int x, int y) {
         if (x < 0 || x > 255 || y < 0 || y > 255) return false;
-        if (tile_map.tiles[x+y*256] == 0) {
+        var k = tile_map.tiles[x+y*256];
+        if (k == 0 || k >= 6) { // 6 and up are specials
             return false;
         }
 

@@ -98,9 +98,9 @@ namespace Fab5.Engine.Subsystems {
 
 //            System.Console.WriteLine(camera.position.x + ", " + camera.position.x);
 
-            if (grid_tex == null) {
-                grid_tex = Fab5_Game.inst().get_content<Texture2D>("tgrid");
-            }
+            //if (grid_tex == null) {
+              //  grid_tex = Fab5_Game.inst().get_content<Texture2D>("tgrid");
+            //}
 
             float x = 0.0f;
             for (int i = left; i <= right; i++) {
@@ -115,9 +115,14 @@ namespace Fab5.Engine.Subsystems {
 
 //                    sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
 
-                    if (tile_map.tiles[o] != 0) {
-                        var tile_tex = tile_map.tex[tile_map.tiles[o]-1];
-                        sprite_batch.Draw(tile_tex, new Vector2(x+xfrac, y+yfrac), Color.White);
+                    int k = tile_map.tiles[o];
+                    if (k != 0 && k < 6) {// 6 and up are not walls
+                        var tile_tex = tile_map.tex;
+                        var v = k-1;
+                        sprite_batch.Draw(tile_tex,
+                                          new Vector2(x+xfrac, y+yfrac),
+                                          new Rectangle(16*v, 0, 16, 16),
+                                          Color.White);
                     }
 
                     y += th;
@@ -333,7 +338,7 @@ namespace Fab5.Engine.Subsystems {
 
                     var d = (float)Math.Sqrt(d_x*d_x + d_y*d_y);
 
-                    if (Math.Abs(d_x) < current.viewport.Width/1.5f && Math.Abs(d_y) < current.viewport.Height/1.5f) {
+                    if (Math.Abs(d_x) < current.viewport.Width*0.5f && Math.Abs(d_y) < current.viewport.Height*0.5f) {
                         // other player is on same screen
                         continue;
                     }

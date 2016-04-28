@@ -91,7 +91,7 @@
             score.display_score += System.Math.Sign(score.score - score.display_score);
 
             sprite_batch.DrawString(spriteFont,
-                "Score: " + score.score.ToString(), 
+                "Score: " + score.display_score.ToString(), 
                 position: scoreposition, 
                 color: Color.Black * 0.75f
             );
