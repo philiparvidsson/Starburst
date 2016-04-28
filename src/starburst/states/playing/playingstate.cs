@@ -141,8 +141,6 @@ public class Playing_State : Game_State {
 
             player2.get_component<Position>().x = 400;
             player2.get_component<Position>().y = 400;
-            player2.get_component<Ship_Info>().hp_value = 50;
-            //player2.get_component<Score>().score = 100000000;
 
             /*var player3 = create_entity(Player_Ship.create_components());
 
@@ -180,6 +178,18 @@ public class Playing_State : Game_State {
     int edit_tile = 1;
     public override void update(float t, float dt) {
         base.update(t, dt);
+            
+            var ships = Starburst.inst().get_entities_fast(typeof(Ship_Info));
+            for(int i=0; i < ships.Count; i++)
+            {
+                Ship_Info ship = ships[i].get_component<Ship_Info>();
+                if (ship.energy_value < ship.top_energy)
+                    ship.energy_value += ship.recharge_rate * dt;
+                else if (ship.energy_value > ship.top_energy)
+                    ship.energy_value = ship.top_energy;
+
+            }
+
 
         var tw = 16;
         var th = 16;
