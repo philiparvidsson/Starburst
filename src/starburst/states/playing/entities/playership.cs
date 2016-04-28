@@ -63,11 +63,7 @@
                 };
 
             }
-            string ship = "ships/ship1" + ((lol%2)+1);
-            //if (lol >= 3)
-            //    ship = "ships/qship11";
-
->>>>>>> .r248
+           
             lol++;
             int team = (lol % 2)+1;
 
