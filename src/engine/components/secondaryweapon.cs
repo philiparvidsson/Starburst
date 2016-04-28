@@ -10,6 +10,7 @@ namespace Fab5.Engine.Components {
             this.damage = 20;
             this.fire_rate = 1.5f;
             this.sound = "UI_Misc16";
+            this.energy_cost = 10;
         }
     }
 }
