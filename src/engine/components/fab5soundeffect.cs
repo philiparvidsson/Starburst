@@ -15,10 +15,15 @@ namespace Fab5.Engine.Components
             File = file;
             Desc = desc;
             SoundEffect = Fab5_Game.inst().Content.Load<SoundEffect>(file);
+            SoundEffectIns = SoundEffect.CreateInstance();
+            IsStarted = false;
         }
         public string Desc { get; set; }
         public string File { get; set; }
         public SoundEffect SoundEffect { get; set; }
+        public SoundEffectInstance SoundEffectIns { get; set; }
+        public bool IsStarted { get; set; }
+
     }
 }
 
