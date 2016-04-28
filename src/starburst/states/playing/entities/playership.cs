@@ -31,6 +31,10 @@
                     secondary_fire = Keys.G
                 };
             }
+            string ship = "ships/ship1" + lol;
+//            if (lol >= 3)
+//                ship = "ships/qship11";
+
             if (lol == 3) {
                 // this ass code sucks
                 inputhandler = new Inputhandler() {
@@ -63,6 +67,7 @@
             //if (lol >= 3)
             //    ship = "ships/qship11";
 
+>>>>>>> .r248
             lol++;
             int team = (lol % 2)+1;
 
