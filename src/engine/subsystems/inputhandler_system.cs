@@ -56,16 +56,11 @@
                 {
                     input.throttle = 1.0f;
                 }
-                else
-                {
-                    Fab5_Game.inst().message("nothrottle", new { Player = entity.id });
-                }
-
 
 
                 if (Math.Abs(input.throttle) > 0.01f)
                 {
-                    Fab5_Game.inst().message("throttle", new { Player = entity.id });
+                    Fab5_Game.inst().message("throttle", new { player = entity.id });
                     var acc = 380.0f * dt;
                     velocity.x += (float)(Math.Cos(angle.angle)) * acc * input.throttle;
                     velocity.y += (float)(Math.Sin(angle.angle)) * acc * input.throttle;
@@ -77,6 +72,11 @@
                         velocity.y = 350.0f*(velocity.y / speed);
                     }
                 }
+                else
+                {
+                    Fab5_Game.inst().message("nothrottle", new { player = entity.id });
+                }
+
                 // primary weapon fire
                 if (input.keyboardState.IsKeyDown(input.primary_fire) || GamePad.GetState(input.gp_index).Buttons.A == ButtonState.Pressed) {
                     var message = new { Origin = entity, Weapon = entity.get_component<Primary_Weapon>() , Dt = dt };
