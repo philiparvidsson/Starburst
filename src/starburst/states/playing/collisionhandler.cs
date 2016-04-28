@@ -1,5 +1,5 @@
 namespace Fab5.Starburst.States.Playing {
-
+    using Fab5.Engine;
     using Fab5.Engine.Components;
     using Fab5.Engine.Core;
     using Fab5.Engine.Subsystems;
@@ -17,8 +17,11 @@ namespace Fab5.Starburst.States.Playing {
 
     private Dictionary<string, Dictionary<string, List<Action<Entity, Entity, dynamic>>>> handlers = new Dictionary<string, Dictionary<string, List<Action<Entity, Entity, dynamic>>>>();
 
-    public Collision_Handler(Game_State state) {
+        private Tile_Map tile_map;
+
+   public Collision_Handler(Game_State state, Tile_Map tile_map) {
         this.state = state;
+        this.tile_map = tile_map;
 
         reg("ships/ship11", "ships/ship11", player_player);
         reg("ships/ship11", "ships/ship12", player_player);
@@ -63,7 +66,6 @@ namespace Fab5.Starburst.States.Playing {
     }
 
     private void soccerball_player(Entity a, Entity b, dynamic data) {
-        System.Console.WriteLine("hej");
         state.create_entity(new Component[] {
             new TTL { max_time = 0.05f },
             new Particle_Emitter() {
@@ -257,7 +259,7 @@ namespace Fab5.Starburst.States.Playing {
                     if (player != bulletInfo.sender)
                         shooterScore.score += 240;
                     state.create_entity(new Component[] {
-                new TTL { max_time = 0.05f },
+                new TTL { max_time = 0.4f },
                 new Particle_Emitter {
                     emit_fn = () => {
                         return new Component[] {
@@ -271,31 +273,36 @@ namespace Fab5.Starburst.States.Playing {
                             },
                             new Sprite {
                                 blend_mode  = Sprite.BM_ADD,
-                                color       = new Color(1.0f, 0.3f, 0.1f),
+                                color       = new Color(1.0f, 0.6f, 0.1f),
                                 layer_depth = 0.3f,
-                                scale       = 0.9f + (float)rand.NextDouble() * 0.9f,
+                                scale       = 0.4f + (float)rand.NextDouble() * 1.9f,
                                 texture     = Starburst.inst().get_content<Texture2D>("particle")
                             },
                             new TTL {
                                 alpha_fn = (x, max) => 1.0f - x/max,
-                                max_time = 0.2f + (float)(rand.NextDouble() * 0.1f)
+                                max_time = 0.2f + (float)(rand.NextDouble() * 0.7f)
                             }
                         };
                     },
-                    interval = 0.01f,
-                    num_particles_per_emit = 10 + rand.Next(0, 20)
+                    interval = 0.05f,
+                    num_particles_per_emit = 15 + rand.Next(0, 30)
                 }
             });
                     // make "dead ship" state? so killed player can see explosion and that they died
                     // no visible ship, no input, not receptable to damage
                     // lasts for X seconds
-                    playerShip.hp_value = 100;
+                    playerShip.hp_value = playerShip.top_hp;
                     playerShip.energy_value = playerShip.top_energy;
+
                     // add random position later
-                    player.get_component<Position>().x = 0;
-                    player.get_component<Position>().y = 0;
-                    player.get_component<Velocity>().x = 0;
-                    player.get_component<Velocity>().y = 0;
+                    //player.get_component<Position>().x = 0;
+                    //player.get_component<Position>().y = 0;
+                    //player.get_component<Velocity>().x = 0;
+                    //player.get_component<Velocity>().y = 0;
+
+                    var spawn_pos = Spawn_Util.get_player_spawn_pos(player.get_component<Ship_Info>().team, tile_map);
+                    player.get_component<Position>().x = spawn_pos.x;
+                    player.get_component<Position>().y = spawn_pos.y;
                 }
             }
         }
@@ -376,7 +383,7 @@ namespace Fab5.Starburst.States.Playing {
         bullet.destroy();
 
         inflictBulletDamage(bullet, player, data);
-            
+
     }
 
     private void asteroid_asteroid(Entity a, Entity b, dynamic data) {
@@ -412,7 +419,13 @@ namespace Fab5.Starburst.States.Playing {
         });
     }
 
+    private float last_collision;
     public void on_collision(Entity a, Entity b, object data) {
+        var t = Starburst.inst().get_time();
+        if (t-last_collision < 0.1f) {
+            return;
+        }
+
         string name1 = a?.get_component<Sprite>()?.texture?.Name ?? "";
         string name2 = b?.get_component<Sprite>()?.texture?.Name ?? "";
 
@@ -448,6 +461,8 @@ namespace Fab5.Starburst.States.Playing {
         foreach (var action in actions) {
             action(a, b, data);
         }
+
+        last_collision = t;
     }
 
 }

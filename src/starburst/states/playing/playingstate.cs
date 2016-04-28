@@ -21,29 +21,6 @@ public class Playing_State : Game_State {
 
     private Collision_Handler coll_handler;
 
-    public Position get_player_spawn_pos(int team) {
-        List<Position> positions = new List<Position>();
-
-        team += 6;
-
-        for (int x = 0; x < 256; x++) {
-            for (int y = 0; y < 256; y++) {
-                if (tile_map.tiles[x+y*256] == team) {
-                    positions.Add(new Position { x = -2048.0f + x * 16.0f, y = -2048.0f + y * 16.0f });
-                }
-            }
-        }
-
-        if (positions.Count == 0) {
-            System.Console.WriteLine("could not find any spawn in get_player_spawn");
-            return new Position { x = 0.0f, y = 0.0f };
-        }
-
-        int i = rand.Next(0, positions.Count);
-
-        return positions[i];
-    }
-
 
     public override void on_message(string msg, dynamic data) {
         if (msg == "collision") {
@@ -53,8 +30,6 @@ public class Playing_State : Game_State {
     }
 
     Tile_Map tile_map;
-
-    Position player1_pos;
 
     private void load_map() {
         using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap("map.png")) {
@@ -109,9 +84,10 @@ public class Playing_State : Game_State {
     public override void init() {
         Starburst.inst().IsMouseVisible = true;        // @To-do: Load map here.
 
-        coll_handler = new Collision_Handler(this);
-
         tile_map = new Tile_Map();
+        coll_handler = new Collision_Handler(this, tile_map);
+
+
         load_map();
 
         add_subsystems(
@@ -133,14 +109,32 @@ public class Playing_State : Game_State {
         );
 
         create_entity(new FpsCounter());
-        var player = create_entity(Player_Ship.create_components());
+
+        var player1 = create_entity(Player_Ship.create_components());
         var player2 = create_entity(Player_Ship.create_components());
+        var player3 = create_entity(Player_Ship.create_components());
+        var player4 = create_entity(Player_Ship.create_components());
+
+        var player1_spawn = Spawn_Util.get_player_spawn_pos(1, tile_map);
+        var player2_spawn = Spawn_Util.get_player_spawn_pos(2, tile_map);
+        var player3_spawn = Spawn_Util.get_player_spawn_pos(1, tile_map);
+        var player4_spawn = Spawn_Util.get_player_spawn_pos(2, tile_map);
+
+        player1.get_component<Position>().x = player1_spawn.x;
+        player1.get_component<Position>().y = player1_spawn.y;
+        player1.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
+        player2.get_component<Position>().x = player2_spawn.x;
+        player2.get_component<Position>().y = player2_spawn.y;
+        player2.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
+        player3.get_component<Position>().x = player3_spawn.x;
+        player3.get_component<Position>().y = player3_spawn.y;
+        player3.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
+        player4.get_component<Position>().x = player4_spawn.x;
+        player4.get_component<Position>().y = player4_spawn.y;
+        player4.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
 
 
-        player1_pos = player.get_component<Position>();;
 
-            player2.get_component<Position>().x = 400;
-            player2.get_component<Position>().y = 400;
             player2.get_component<Ship_Info>().hp_value = 50;
             //player2.get_component<Score>().score = 100000000;
 
@@ -159,29 +153,40 @@ public class Playing_State : Game_State {
         create_entity(SoundManager.create_soundeffects_component());
 
 
-        for (int i = 0; i < 65; i++) {
+        for (int i = 0; i < 30; i++) {
             var asteroid = create_entity(Dummy.create_components());
             var ap = asteroid.get_component<Position>();
             var av = asteroid.get_component<Velocity>();
-            ap.x = -1500 + 3000 * (float)rand.NextDouble();
-            ap.y = -1500 + 3000 * (float)rand.NextDouble();
+            var sp = Spawn_Util.get_asteroid_spawn_pos(tile_map);
+            ap.x = sp.x;
+            ap.y = sp.y;
             av.x = -15 + 30 * (float)rand.NextDouble();
             av.y = -15 + 30 * (float)rand.NextDouble();
         }
 
-        var playerpos = player.get_component<Position>();
-        var playervel = player.get_component<Velocity>();
-        var playerrot = player.get_component<Angle>();
-
-
         var ball = create_entity(Soccer_Ball.create_components());
+        var ball_pos = Spawn_Util.get_soccerball_spawn_pos(tile_map);
+        ball.get_component<Position>().x = ball_pos.x;
+        ball.get_component<Position>().y = ball_pos.y;
     }
 
     int edit_tile = 1;
     public override void update(float t, float dt) {
         base.update(t, dt);
 
-        var tw = 16;
+            var ships = Starburst.inst().get_entities_fast(typeof(Ship_Info));
+            for(int i=0; i < ships.Count; i++)
+            {
+                Ship_Info ship = ships[i].get_component<Ship_Info>();
+                if (ship.energy_value < ship.top_energy)
+                    ship.energy_value += ship.recharge_rate * dt;
+                else if (ship.energy_value > ship.top_energy)
+                    ship.energy_value = ship.top_energy;
+
+            }
+
+
+        /*        var tw = 16;
         var th = 16;
         var mx = (player1_pos.x + Mouse.GetState().X - 640 + 2048) / tw;
         var my = (player1_pos.y + Mouse.GetState().Y - 360 + 2048) / th;
@@ -230,7 +235,7 @@ public class Playing_State : Game_State {
                     }
                 }
             }
-        }
+        }*/
 
         if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape)) {
             Starburst.inst().Quit();

@@ -67,9 +67,9 @@
 
                     var speed = (float)Math.Sqrt(velocity.x*velocity.x + velocity.y*velocity.y);
 
-                    if (speed > 290.0f) {
-                        velocity.x = 290.0f*(velocity.x / speed);
-                        velocity.y = 290.0f*(velocity.y / speed);
+                    if (speed > 350.0f) {
+                        velocity.x = 350.0f*(velocity.x / speed);
+                        velocity.y = 350.0f*(velocity.y / speed);
                     }
                 }
                 else

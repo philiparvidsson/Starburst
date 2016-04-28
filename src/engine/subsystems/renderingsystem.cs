@@ -82,25 +82,32 @@ namespace Fab5.Engine.Subsystems {
 
         Texture2D grid_tex;
         private void draw_tile_map(SpriteBatch sprite_batch, Camera camera) {
-            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
 
-            int tw     = 16;
-            int th     = 16;
-            int left   = (int)((camera.position.x+2048.0f-camera.viewport.Width*0.5f) / tw);
-            int top    = (int)((camera.position.y+2048.0f-camera.viewport.Height*0.5f) / th);
-            int right  = (int)(left + camera.viewport.Width / tw);
-            int bottom = (int)(top + camera.viewport.Height / th);
+
+            float tw     = 16.0f;
+            float th     = 16.0f;
+            float w      = camera.viewport.Width  / camera.zoom;
+            float h      = camera.viewport.Height / camera.zoom;
+            int left   = (int)((camera.position.x+2048.0f-w*0.5f) / tw);
+            int top    = (int)((camera.position.y+2048.0f-h*0.5f) / th);
+            int right  = (int)(left + w/tw)+1;
+            int bottom = (int)(top  + h/th)+1;
 
 //            System.Console.WriteLine(left + ", " + right);
 
-            float xfrac = left*tw - (camera.position.x-camera.viewport.Width*0.5f)-2048.0f;
-            float yfrac = top*th - (camera.position.y-camera.viewport.Height*0.5f)-2048.0f;
+            float xfrac = left*tw - (int)(camera.position.x+2048.0f-w*0.5f);
+            float yfrac = top *th - (int)(camera.position.y+2048.0f-h*0.5f);
+
+            xfrac *= camera.zoom;
+            yfrac *= camera.zoom;
 
 //            System.Console.WriteLine(camera.position.x + ", " + camera.position.x);
 
             //if (grid_tex == null) {
               //  grid_tex = Fab5_Game.inst().get_content<Texture2D>("tgrid");
             //}
+
+            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, null, null, new RasterizerState{MultiSampleAntiAlias=true});
 
             float x = 0.0f;
             for (int i = left; i <= right; i++) {
@@ -119,16 +126,23 @@ namespace Fab5.Engine.Subsystems {
                     if (k != 0 && k < 6) {// 6 and up are not walls
                         var tile_tex = tile_map.tex;
                         var v = k-1;
+                        var sx = x+xfrac;
+                        var sy = y+yfrac;
                         sprite_batch.Draw(tile_tex,
-                                          new Vector2(x+xfrac, y+yfrac),
+                                          new Vector2(sx, sy),
                                           new Rectangle(16*v, 0, 16, 16),
-                                          Color.White);
+                                          Color.White,
+                                          0.0f,
+                                          Vector2.Zero,
+                                          camera.zoom,
+                                          SpriteEffects.None,
+                                          0.5f);
                     }
 
-                    y += th;
+                    y += th*camera.zoom;
                 }
 
-                x += tw;
+                x += tw*camera.zoom;
             }
             sprite_batch.End();
         }
@@ -147,7 +161,7 @@ namespace Fab5.Engine.Subsystems {
 
         private void updatePlayers() {
             // ev hantering för om inga spelare hittas?
-
+            float zoom = 1;
             if(currentPlayerNumber == 1) {
                 // full screen
                 viewports = new Viewport[1];
@@ -168,6 +182,7 @@ namespace Fab5.Engine.Subsystems {
 
                 viewports[0] = top;
                 viewports[1] = bottom;
+                zoom = .85f;
             }
             else if(currentPlayerNumber == 3){
                 // 1/4 screen, handle sizes and positions
@@ -190,6 +205,8 @@ namespace Fab5.Engine.Subsystems {
                 viewports[0] = topLeft;
                 viewports[1] = topRight;
                 viewports[2] = bottom;
+
+                zoom = .7f;
             }
             else {
                 // 1/4 screen, handle sizes and positions
@@ -219,11 +236,13 @@ namespace Fab5.Engine.Subsystems {
                 viewports[1] = topRight;
                 viewports[2] = bottomLeft;
                 viewports[3] = bottomRight;
+
+                zoom = .7f;
             }
 
             // add cameras to each viewport
             for (int i = 0; i < currentPlayerNumber; i++) {
-                cameras[i] = new Camera(viewports[i]);
+                cameras[i] = new Camera(viewports[i]) { zoom = zoom };
             }
 
             prevPlayerNumber = currentPlayerNumber;
@@ -316,9 +335,19 @@ namespace Fab5.Engine.Subsystems {
 
                 var currentPlayer = players[p];
                 var currentPlayerPosition = currentPlayer.get_component<Position>();
-                cameras[p].position = currentPlayerPosition;
+                cameras[p].position.x += ((currentPlayerPosition.x-cameras[p].position.x) * 10.0f) * dt;
+                cameras[p].position.y += ((currentPlayerPosition.y-cameras[p].position.y) * 10.0f) * dt;
 
-                draw_backdrop(sprite_batch, currentPlayerPosition);
+                if (cameras[p].position.x - 0.5f*cameras[p].viewport.Width/cameras[p].zoom < -2048.0f) cameras[p].position.x = -2048.0f + 0.5f*cameras[p].viewport.Width/cameras[p].zoom;
+
+             if (cameras[p].position.x + 0.5f*cameras[p].viewport.Width/cameras[p].zoom > 2048.0f) cameras[p].position.x = 2048.0f - 0.5f*cameras[p].viewport.Width/cameras[p].zoom;
+
+               if (cameras[p].position.y - 0.5f*cameras[p].viewport.Height/cameras[p].zoom < -2048.0f) cameras[p].position.y = -2048.0f + 0.5f*cameras[p].viewport.Height/cameras[p].zoom;
+
+             if (cameras[p].position.y + 0.5f*cameras[p].viewport.Height/cameras[p].zoom > 2048.0f) cameras[p].position.y = 2048.0f - 0.5f*cameras[p].viewport.Height/cameras[p].zoom;
+
+
+                 draw_backdrop(sprite_batch, cameras[p].position);
 
 
                 drawSprites(sprite_batch, current, num_entities, entities, 0.0f);
@@ -357,7 +386,7 @@ namespace Fab5.Engine.Subsystems {
             sprite_batch.Draw(player_indicator_tex,
                               new Vector2(p_x, p_y),
                               null,
-                              Color.White,
+                              Color.White * 0.65f,
                               r,
                               new Vector2(player_indicator_tex.Width/2.0f, player_indicator_tex.Height/2.0f),
                               1.0f,

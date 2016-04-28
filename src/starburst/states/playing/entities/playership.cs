@@ -32,9 +32,40 @@
                 };
             }
             string ship = "ships/ship1" + lol;
-            if (lol >= 3)
-                ship = "ships/qship11";
+//            if (lol >= 3)
+//                ship = "ships/qship11";
+
+            if (lol == 3) {
+                // this ass code sucks
+                inputhandler = new Inputhandler() {
+                    left = Keys.A,
+                    right = Keys.D,
+                    up = Keys.W,
+                    down = Keys.S,
+                    gp_index = PlayerIndex.Three,
+                    primary_fire = Keys.F,
+                    secondary_fire = Keys.G
+                };
+
+
+
+            }
+            if (lol == 4) {
+                // this ass code sucks
+                inputhandler = new Inputhandler() {
+                    left = Keys.A,
+                    right = Keys.D,
+                    up = Keys.W,
+                    down = Keys.S,
+                    gp_index = PlayerIndex.Four,
+                    primary_fire = Keys.F,
+                    secondary_fire = Keys.G
+                };
+
+            }
+           
             lol++;
+            int team = (lol % 2)+1;
 
             var playerrot = new  Angle() { angle = 0 };
             var playerpos = new Position() {x = 300, y = 200 };
@@ -95,9 +126,9 @@
                     texture = Starburst.inst().get_content<Texture2D>(ship),
                     //color = new Color(0.6f, 0.9f, 1.0f)
                 },
-                new Ship_Info(100,100,100,100,100),
+                new Ship_Info(100,130,100,100) { team = team },
                 new Bounding_Circle() { radius = 20.0f },
-                new Mass() { mass = 15.0f },
+                new Mass() { mass = 15.0f, restitution_coeff = 0.6f },
                 new Primary_Weapon(),
                 new Secondary_Weapon(),
                 new Score()
