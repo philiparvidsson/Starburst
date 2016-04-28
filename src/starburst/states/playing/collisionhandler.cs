@@ -239,7 +239,8 @@ namespace Fab5.Starburst.States.Playing {
             Score shooterScore = bulletInfo.sender.get_component<Score>();
             float bulletDamage = bulletInfo.damage;
 
-            shooterScore.score += 10;
+            if(player != bulletInfo.sender)
+                shooterScore.score += 10;
             // kolla sköld, om sköld nere, ta skada
             if(playerShip.energy_value > bulletDamage) {
                 playerShip.energy_value -= bulletDamage;
@@ -253,7 +254,8 @@ namespace Fab5.Starburst.States.Playing {
                 playerShip.hp_value -= bulletDamage;
                 if (playerShip.hp_value <= 0) {
                     // offret blir dödsmördat
-                    shooterScore.score += 240;
+                    if (player != bulletInfo.sender)
+                        shooterScore.score += 240;
                     state.create_entity(new Component[] {
                 new TTL { max_time = 0.05f },
                 new Particle_Emitter {
