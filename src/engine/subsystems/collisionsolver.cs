@@ -146,7 +146,7 @@ public class Collision_Solver : Subsystem {
 
         if (a != null) {
             var w = v.x*p_x + v.y*p_y;
-            a.ang_vel -= w * 0.003f;
+            a.ang_vel -= w * 0.001f;
 
 //            System.Console.WriteLine(p_x + ", " + p_y);
         }
@@ -352,6 +352,10 @@ public class Collision_Solver : Subsystem {
         var c1     = e1.get_component<Bounding_Circle>();
         var c2     = e2.get_component<Bounding_Circle>();
         var r2_min = (c1.radius+c2.radius) * (c1.radius+c2.radius);
+
+        if (c1.ignore_collisions == c2.ignore_collisions && c1.ignore_collisions > 0) {
+            return false;
+        }
 
         if (r2 < 0.00001f || r2 >= r2_min) {
             // No penetration or full penetration (which cannot be

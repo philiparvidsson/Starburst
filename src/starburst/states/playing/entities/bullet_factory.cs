@@ -8,6 +8,8 @@
     using Microsoft.Xna.Framework;
     using Components;
     public static class Bullet_Factory {
+        const int IG_BULLET = 179;// random id to make bullets not collide with each other
+
     static System.Random rand = new System.Random();
 
         private static Texture2D bulletTexture1 = Starburst.inst().get_content<Texture2D>("beams1");
@@ -20,14 +22,14 @@
 
         private static Component[] weapon1(Entity origin, Weapon weapon) {
             float shipRadian = 30f; // offset från skeppets mitt där skottet utgår ifrån
-            float speed = 500f; // skottets hastighet (kanske ska vara vapenberoende?)
+            float speed = 800f; // skottets hastighet (kanske ska vara vapenberoende?)
             float lifeTime = 2.5f; // skottets livstid (i sekunder? iaf baserad på dt)
 
             Position position = origin.get_component<Position>();
             Angle shipAngle = origin.get_component<Angle>();
             Velocity shipVel = origin.get_component<Velocity>();
 
-            double dAngle = (double)shipAngle.angle;
+            double dAngle = (double)shipAngle.angle + ((float)rand.NextDouble()-0.5f)*0.12f;
             float sfa = (float)Math.Sin(dAngle);
             float cfa = (float)Math.Cos(dAngle);
 
@@ -66,8 +68,8 @@
                 angle,
                 bulletSprite,
                 //bulletDrawArea,
-                new Bounding_Circle() { radius = 6 },
-                new Mass { mass = 1.0f },
+                new Bounding_Circle() { radius = 6, ignore_collisions = IG_BULLET },
+                new Mass { mass = 1.0f, restitution_coeff = 1.0f },
                 new TTL() { alpha_fn = (x, max) => 1.0f - (float)Math.Pow(x/max, 5.0f), max_time = lifeTime },
                 new Bullet_Info() { damage = weapon.damage, sender = origin }
             };
@@ -75,14 +77,14 @@
 
         private static Component[] weapon2(Entity origin, Weapon weapon) {
             float shipRadian = 33f; // offset från skeppets mitt där skottet utgår ifrån
-            float speed = 200f; // skottets hastighet (kanske ska vara vapenberoende?)
+            float speed = 500f; // skottets hastighet (kanske ska vara vapenberoende?)
             float lifeTime = 7f; // skottets livstid (i sekunder? iaf baserad på dt)
 
             Position position = origin.get_component<Position>();
             Angle shipAngle = origin.get_component<Angle>();
             Velocity shipVel = origin.get_component<Velocity>();
 
-            double dAngle = (double)shipAngle.angle;
+            double dAngle = (double)shipAngle.angle + ((float)rand.NextDouble()-0.5f)*0.12f;
             float sfa = (float)Math.Sin(dAngle);
             float cfa = (float)Math.Cos(dAngle);
 
@@ -121,8 +123,8 @@
                 angle,
                 bulletSprite,
                 //bulletDrawArea,
-                new Bounding_Circle() { radius = 14.0f },
-                new Mass { mass = 50.0f },
+                new Bounding_Circle() { radius = 14.0f, ignore_collisions = IG_BULLET },
+                new Mass { mass = 50.0f, restitution_coeff = 1.0f },
                 new TTL() { alpha_fn = (x, max) => 1.0f - (float)Math.Pow(x/max, 5.0f), max_time = lifeTime },
                 new Bullet_Info() { damage = weapon.damage, sender = origin }
             };

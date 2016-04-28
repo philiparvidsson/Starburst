@@ -9,8 +9,8 @@ namespace Fab5.Engine.Components {
         public Primary_Weapon() {
             this.damage = 20;
             this.sound = "LaserBlaster";
-            this.fire_rate = 0.3f;
-            this.energy_cost = 2.0f;
+            this.fire_rate = 0.15f;
+            this.energy_cost = 5.0f;
         }
     }
 }

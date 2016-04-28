@@ -23,6 +23,8 @@
         public float acceleration;
         public float recharge_rate;
 
+        public int team;
+
 
         public Ship_Info(float top_hp, float top_energy, float top_velocity, float acceleration)
         {
