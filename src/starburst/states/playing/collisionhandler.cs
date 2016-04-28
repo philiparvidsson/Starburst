@@ -108,9 +108,9 @@ public class Collision_Handler {
                         },
                         new Sprite {
                             blend_mode  = Sprite.BM_ADD,
-                            color       = new Color(0.9f, 0.9f, 0.9f),
+                            color       = new Color(0.9f, 0.6f, 0.3f),
                             layer_depth = 0.3f,
-                            scale       = 0.2f + (float)rand.NextDouble() * 0.3f,
+                            scale       = 0.4f + (float)rand.NextDouble() * 0.5f,
                             texture     = Starburst.inst().get_content<Texture2D>("particle")
                         },
                         new TTL {

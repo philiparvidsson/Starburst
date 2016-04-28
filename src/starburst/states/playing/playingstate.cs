@@ -52,8 +52,8 @@ public class Playing_State : Game_State {
             new Weapon_System(this),
             new Rendering_System(Starburst.inst().GraphicsDevice) {
                 tile_map = tile_map
-            },
-            new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice))
+            }
+            //new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice))
         );
 
         create_entity(new FpsCounter());

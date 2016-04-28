@@ -24,7 +24,7 @@
         public void drawHUD(Entity player)
         {
 
-            sprite_batch.Begin();
+            sprite_batch.Begin(SpriteSortMode.Deferred);
 
             this.ship_info = player.get_component<Ship_Info>();
             drawHP();

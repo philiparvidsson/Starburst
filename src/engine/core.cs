@@ -169,6 +169,7 @@ public abstract class Game_State {
                                  params Type[] component_types)
 
     {
+        System.Console.WriteLine("do not use this ass function, use get_entities_fast instead");
         //var results = new List<Entity>(1024);
 
         results.Clear();
