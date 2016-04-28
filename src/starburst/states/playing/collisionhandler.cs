@@ -63,7 +63,6 @@ namespace Fab5.Starburst.States.Playing {
     }
 
     private void soccerball_player(Entity a, Entity b, dynamic data) {
-        System.Console.WriteLine("hej");
         state.create_entity(new Component[] {
             new TTL { max_time = 0.05f },
             new Particle_Emitter() {
@@ -374,7 +373,7 @@ namespace Fab5.Starburst.States.Playing {
         bullet.destroy();
 
         inflictBulletDamage(bullet, player, data);
-            
+
     }
 
     private void asteroid_asteroid(Entity a, Entity b, dynamic data) {
@@ -410,7 +409,13 @@ namespace Fab5.Starburst.States.Playing {
         });
     }
 
+    private float last_collision;
     public void on_collision(Entity a, Entity b, object data) {
+        var t = Starburst.inst().get_time();
+        if (t-last_collision < 0.1f) {
+            return;
+        }
+
         string name1 = a?.get_component<Sprite>()?.texture?.Name ?? "";
         string name2 = b?.get_component<Sprite>()?.texture?.Name ?? "";
 
@@ -446,6 +451,8 @@ namespace Fab5.Starburst.States.Playing {
         foreach (var action in actions) {
             action(a, b, data);
         }
+
+        last_collision = t;
     }
 
 }
