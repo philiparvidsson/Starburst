@@ -87,6 +87,9 @@
 
             //score.score++;
 
+
+            score.display_score += System.Math.Sign(score.score - score.display_score);
+
             sprite_batch.DrawString(spriteFont,
                 "Score: " + score.score.ToString(), 
                 position: scoreposition, 
@@ -94,7 +97,7 @@
             );
 
             sprite_batch.DrawString(spriteFont,
-                "Score: " + score.score.ToString(), 
+                "Score: " + score.display_score.ToString(), 
                                     position: scoreposition + new Vector2(4.0f, 4.0f), 
                 color: Color.White
             );
