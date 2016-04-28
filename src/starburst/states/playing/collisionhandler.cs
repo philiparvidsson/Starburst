@@ -425,7 +425,7 @@ namespace Fab5.Starburst.States.Playing {
         }
 
         if (dic == null) {
-            System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
+            //System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
             return;
         }
 
@@ -435,12 +435,12 @@ namespace Fab5.Starburst.States.Playing {
             name1   = name2;
             name2   = tmp;
             if (!handlers.TryGetValue(name1, out dic)) {
-                System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
+                //System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
                 return;
             }
 
             if (!dic.TryGetValue(name2, out actions)) {
-                System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
+                //System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
                 return;
             }
         }

@@ -17,7 +17,9 @@ namespace Fab5.Engine.Components
             SoundEffectIns = new Dictionary<int, SoundEffectInstance>();
             SoundEffect = Fab5_Game.inst().Content.Load<SoundEffect>(file);
             IsStarted = new bool[10];
+            LastPlayed = DateTime.Now;
         }
+        public DateTime LastPlayed { get; set; }
         public string Desc { get; set; }
         public string File { get; set; }
         public SoundEffect SoundEffect { get; set; }
