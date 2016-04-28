@@ -37,12 +37,16 @@ namespace Fab5.Engine.Subsystems {
         private Texture2D backdrop;
         private Texture2D stardrop;
 
+        private Texture2D player_indicator_tex;
+
         public Rendering_System(GraphicsDevice graphicsDevice) {
             sprite_batch = new SpriteBatch(graphicsDevice);
             defaultViewport = graphicsDevice.Viewport;
 
             backdrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/backdrop4");
             stardrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/stardrop");
+
+            player_indicator_tex = Fab5_Game.inst().get_content<Texture2D>("indicator");
         }
 
         private void draw_backdrop(SpriteBatch sprite_batch, Position playerPosition) {
@@ -314,6 +318,50 @@ namespace Fab5.Engine.Subsystems {
 
                 draw_tile_map(sprite_batch, current);
                 drawSprites(sprite_batch, current, num_entities, entities, 0.0f);
+
+                sprite_batch.Begin(SpriteSortMode.Deferred,
+                                       BlendState.AlphaBlend, null, null, null, null,
+                                       transformMatrix: current.getViewMatrix(current.viewport));
+
+                for (int p2 = 0; p2 < currentPlayerNumber; p2++) {
+                    var player2 = players[p2];
+                    var player2_pos = player2.get_component<Position>();
+                    var d_x = player2_pos.x - currentPlayerPosition.x;
+                    var d_y = player2_pos.y - currentPlayerPosition.y;
+
+                    var d = (float)Math.Sqrt(d_x*d_x + d_y*d_y);
+
+                    if (Math.Abs(d_x) < current.viewport.Width/1.5f && Math.Abs(d_y) < current.viewport.Height/1.5f) {
+                        // other player is on same screen
+                        continue;
+                    }
+
+                    d_x /= d;
+                    d_y /= d;
+
+                    d_x *= 36.0f;
+                    d_y *= 36.0f;
+
+                    var r = (float)Math.Atan2(d_y, d_x);
+
+                    var p_x = currentPlayerPosition.x + d_x;
+                    var p_y = currentPlayerPosition.y + d_y;
+
+            sprite_batch.Draw(player_indicator_tex,
+                              new Vector2(p_x, p_y),
+                              null,
+                              Color.White,
+                              r,
+                              new Vector2(player_indicator_tex.Width/2.0f, player_indicator_tex.Height/2.0f),
+                              1.0f,
+                              SpriteEffects.None,
+                              0.5f);
+                }
+
+                sprite_batch.End();
+
+
+
                 hudsystem_instance.drawHUD(currentPlayer);
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;

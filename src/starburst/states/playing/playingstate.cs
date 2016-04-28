@@ -50,6 +50,9 @@ public class Playing_State : Game_State {
                     else if (c == System.Drawing.Color.FromArgb(255, 0, 0)) {
                         tile_map.tiles[i] = 3;
                     }
+                    else if (c == System.Drawing.Color.FromArgb(255, 255, 0)) {
+                        tile_map.tiles[i] = 4;
+                    }
                 }
             }
         }

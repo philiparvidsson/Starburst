@@ -14,6 +14,7 @@ public class Tile_Map {
             Starburst.inst().get_content<Texture2D>("map/tile1"),
             Starburst.inst().get_content<Texture2D>("map/tile2"),
             Starburst.inst().get_content<Texture2D>("map/tile3"),
+            Starburst.inst().get_content<Texture2D>("map/tile4"),
         };
         var lol = new int[] {
             1, 1, 1, 1, 1, 1, 1, 1,
