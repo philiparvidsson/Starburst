@@ -357,7 +357,7 @@ namespace Fab5.Engine.Subsystems {
             sprite_batch.Draw(player_indicator_tex,
                               new Vector2(p_x, p_y),
                               null,
-                              Color.White,
+                              Color.White * 0.5f,
                               r,
                               new Vector2(player_indicator_tex.Width/2.0f, player_indicator_tex.Height/2.0f),
                               1.0f,
