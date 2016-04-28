@@ -82,7 +82,7 @@ namespace Fab5.Engine.Subsystems {
 
         Texture2D grid_tex;
         private void draw_tile_map(SpriteBatch sprite_batch, Camera camera) {
-            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend); // <-- @To-do: OPAQUE!!
+            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
 
             int tw     = 16;
             int th     = 16;
@@ -316,12 +316,14 @@ namespace Fab5.Engine.Subsystems {
                 draw_backdrop(sprite_batch, currentPlayerPosition);
 
 
-                draw_tile_map(sprite_batch, current);
                 drawSprites(sprite_batch, current, num_entities, entities, 0.0f);
 
+                draw_tile_map(sprite_batch, current);
                 sprite_batch.Begin(SpriteSortMode.Deferred,
                                        BlendState.AlphaBlend, null, null, null, null,
                                        transformMatrix: current.getViewMatrix(current.viewport));
+
+
 
                 for (int p2 = 0; p2 < currentPlayerNumber; p2++) {
                     var player2 = players[p2];
