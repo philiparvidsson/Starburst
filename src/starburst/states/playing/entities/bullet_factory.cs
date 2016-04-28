@@ -1,11 +1,12 @@
 ﻿namespace Fab5.Starburst.States.Playing.Entities {
 
     using System;
-using Fab5.Engine.Components;
-using Fab5.Engine.Core;
-using Fab5.Engine;
+    using Fab5.Engine.Components;
+    using Fab5.Engine.Core;
+    using Fab5.Engine;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework;
+    using Components;
     public static class Bullet_Factory {
     static System.Random rand = new System.Random();
 
@@ -17,10 +18,14 @@ using Fab5.Engine;
         private static float rotationOffset = MathHelper.ToRadians(-90f); // rotationsoffset för skott-texturen
 
 
-        private static Component[] weapon1(Position position, Angle shipAngle, Weapon weapon, Velocity shipVel) {
+        private static Component[] weapon1(Entity origin, Weapon weapon) {
             float shipRadian = 30f; // offset från skeppets mitt där skottet utgår ifrån
             float speed = 500f; // skottets hastighet (kanske ska vara vapenberoende?)
             float lifeTime = 2.5f; // skottets livstid (i sekunder? iaf baserad på dt)
+
+            Position position = origin.get_component<Position>();
+            Angle shipAngle = origin.get_component<Angle>();
+            Velocity shipVel = origin.get_component<Velocity>();
 
             double dAngle = (double)shipAngle.angle;
             float sfa = (float)Math.Sin(dAngle);
@@ -63,14 +68,19 @@ using Fab5.Engine;
                 //bulletDrawArea,
                 new Bounding_Circle() { radius = 6 },
                 new Mass { mass = 1.0f },
-                new TTL() { alpha_fn = (x, max) => 1.0f - (float)Math.Pow(x/max, 5.0f), max_time = lifeTime }
+                new TTL() { alpha_fn = (x, max) => 1.0f - (float)Math.Pow(x/max, 5.0f), max_time = lifeTime },
+                new Bullet_Info() { damage = weapon.damage, sender = origin }
             };
         }
 
-        private static Component[] weapon2(Position position, Angle shipAngle, Weapon weapon, Velocity shipVel) {
+        private static Component[] weapon2(Entity origin, Weapon weapon) {
             float shipRadian = 33f; // offset från skeppets mitt där skottet utgår ifrån
             float speed = 200f; // skottets hastighet (kanske ska vara vapenberoende?)
             float lifeTime = 7f; // skottets livstid (i sekunder? iaf baserad på dt)
+
+            Position position = origin.get_component<Position>();
+            Angle shipAngle = origin.get_component<Angle>();
+            Velocity shipVel = origin.get_component<Velocity>();
 
             double dAngle = (double)shipAngle.angle;
             float sfa = (float)Math.Sin(dAngle);
@@ -113,16 +123,17 @@ using Fab5.Engine;
                 //bulletDrawArea,
                 new Bounding_Circle() { radius = 14.0f },
                 new Mass { mass = 50.0f },
-                new TTL() { alpha_fn = (x, max) => 1.0f - (float)Math.Pow(x/max, 5.0f), max_time = lifeTime }
+                new TTL() { alpha_fn = (x, max) => 1.0f - (float)Math.Pow(x/max, 5.0f), max_time = lifeTime },
+                new Bullet_Info() { damage = weapon.damage, sender = origin }
             };
         }
 
-        public static Component[] create_components(Position position, Angle shipAngle, Weapon weapon, Velocity velocity) {
+        public static Component[] create_components(Entity origin, Weapon weapon) {
             if (weapon.GetType() == typeof (Secondary_Weapon)) {
-                return weapon2(position, shipAngle, weapon, velocity);
+                return weapon2(origin, weapon);
             }
 
-            return weapon1(position, shipAngle, weapon, velocity);
+            return weapon1(origin, weapon);
         }
 
     }
