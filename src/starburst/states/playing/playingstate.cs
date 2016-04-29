@@ -94,7 +94,7 @@ public class Playing_State : Game_State {
     }
 
     public override void init() {
-        Starburst.inst().IsMouseVisible = true;        // @To-do: Load map here.
+//        Starburst.inst().IsMouseVisible = true;        // @To-do: Load map here.
 
         tile_map = new Tile_Map();
         coll_handler = new Collision_Handler(this, tile_map);

@@ -39,7 +39,7 @@ namespace Fab5.Engine.Subsystems {
 
         private Texture2D player_indicator_tex;
 
-        private Texture2D white_pixel_tex;
+
 
         public Rendering_System(GraphicsDevice graphicsDevice) {
             sprite_batch = new SpriteBatch(graphicsDevice);
@@ -49,9 +49,6 @@ namespace Fab5.Engine.Subsystems {
             stardrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/stardrop");
 
             player_indicator_tex = Fab5_Game.inst().get_content<Texture2D>("indicator");
-
-            white_pixel_tex = new Texture2D(graphicsDevice, 1, 1);
-            white_pixel_tex.SetData(new [] { Color.White });
         }
 
         private void draw_backdrop(SpriteBatch sprite_batch, Position playerPosition) {
@@ -85,17 +82,6 @@ namespace Fab5.Engine.Subsystems {
 
         }
 
-        private void draw_minimap(SpriteBatch sprite_batch, Camera camera) {
-                sprite_batch.Draw(player_indicator_tex,
-                                  new Vector2(50.0f, 50.0f), // position
-                                  null,
-                                  Color.White,
-                                  0.0f,
-                                  Vector2.Zero, // origin
-                                  new Vector2(10.0f, 10.0f), // scale,
-                                  SpriteEffects.None,
-                                  1.0f);
-        }
 
         Texture2D grid_tex;
         private void draw_tile_map(SpriteBatch sprite_batch, Camera camera) {
@@ -140,7 +126,7 @@ namespace Fab5.Engine.Subsystems {
 //                    sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
 
                     int k = tile_map.tiles[o];
-                    if (k != 0 && k < 8) {// 8 and up are not visible walls
+                    if (k != 0 && k < 9) {// 9 and up are not visible walls
                         var tile_tex = tile_map.tex;
                         var v = k-1;
                         var sx = x+xfrac;
@@ -168,7 +154,7 @@ namespace Fab5.Engine.Subsystems {
         {
             // kör uppdatering av viewports och kameror
             updatePlayers();
-            this.hudsystem_instance = new Hudsystem(sprite_batch);
+            this.hudsystem_instance = new Hudsystem(sprite_batch, tile_map);
 
  	        base.init();
         }
@@ -416,12 +402,9 @@ namespace Fab5.Engine.Subsystems {
                 }
 
 
-                draw_minimap(sprite_batch, current);
+
 
                 sprite_batch.End();
-
-
-
 
                 hudsystem_instance.drawHUD(currentPlayer);
             }

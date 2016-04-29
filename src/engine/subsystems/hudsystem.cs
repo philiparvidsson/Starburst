@@ -14,11 +14,74 @@
         Texture2D energybar_texture;
         Ship_Info ship_info;
 
-        public Hudsystem(SpriteBatch sprite_batch)
+        private Texture2D minimap_tex;
+        private Texture2D white_pixel_tex;
+
+        public Hudsystem(SpriteBatch sprite_batch, Tile_Map tile_map)
         {
             this.sprite_batch = sprite_batch;
             this.hpbar_texture = Fab5_Game.inst().get_content<Texture2D>("HPBar");
             this.energybar_texture = Fab5_Game.inst().get_content<Texture2D>("EnergyBar");
+
+            minimap_tex = new Texture2D(Fab5_Game.inst().GraphicsDevice, 256, 256);
+
+            for (int i = 0; i < 256; i++) {
+                for (int j = 0; j < 256; j++) {
+                    var x = i>>1;
+                    var y = j>>1;
+                    minimap_tex.SetData(0, new Rectangle(x, y, 2, 1), new [] { new Color(0.0f, 0.0f, 0.0f, 0.0f) }, 0, 2);
+
+                    var k = i+256*j;
+                    if (tile_map.tiles[k] != 0 && tile_map.tiles[k] < 7) {
+                        minimap_tex.SetData(0, new Rectangle(x, y, 1, 1), new [] { new Color(1.0f, 1.0f, 1.0f, 1.0f) }, 0, 1);
+                    }
+                }
+            }
+
+            white_pixel_tex = new Texture2D(Fab5_Game.inst().GraphicsDevice, 1, 1);
+            white_pixel_tex.SetData(new [] { Color.White });
+
+        }
+
+        private void draw_minimap(Position position) {
+            var minimap_top  = Fab5_Game.inst().GraphicsDevice.Viewport.Height - 142.0f;
+            var minimap_left = Fab5_Game.inst().GraphicsDevice.Viewport.Width  - 142.0f;
+
+            var border = 8.0f;
+            sprite_batch.Draw(white_pixel_tex,
+                              new Vector2(minimap_left-border, minimap_top-border),
+                              null,
+                              new Color(0.0f, 0.0f, 0.0f, 0.7f),
+                              0.0f,
+                              Vector2.Zero,
+                              new Vector2(256.0f*0.5f+border*2.0f, 256.0f*0.5f+border*2.0f),
+                              SpriteEffects.None,
+                              1.0f);
+
+            sprite_batch.Draw(minimap_tex,
+                              new Vector2(minimap_left, minimap_top),
+                              null,
+                              Color.White * 0.7f,
+                              0.0f,
+                              Vector2.Zero,
+                              Vector2.One,
+                              SpriteEffects.None,
+                              1.0f);
+
+            var tw = 16.0f;
+            var th = 16.0f;
+            var map_pos_x = minimap_left + 0.5f*(position.x+2048.0f) / tw;
+            var map_pos_y = minimap_top + 0.5f*(position.y+2048.0f)  / th;
+
+            sprite_batch.Draw(white_pixel_tex,
+                              new Vector2(map_pos_x, map_pos_y),
+                              null,
+                              Color.White,
+                              0.0f,
+                              new Vector2(0.5f, 0.5f),
+                              new Vector2(4.0f, 4.0f),
+                              SpriteEffects.None,
+                              1.0f);
         }
 
         public void drawHUD(Entity player)
@@ -30,6 +93,7 @@
             drawHP();
             drawEnergy();
             drawScore(player.get_component<Score>());
+            draw_minimap(player.get_component<Position>());
 
             sprite_batch.End();
         }
@@ -77,6 +141,8 @@
                 sourceRectangle: new Rectangle(10, 6, 226, 8),
                 color: Color.AliceBlue);
         }
+
+
 
         private void drawScore(Score score)
         {
