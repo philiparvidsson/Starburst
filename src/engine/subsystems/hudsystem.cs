@@ -90,14 +90,15 @@
 
             score.display_score += System.Math.Sign(score.score - score.display_score);
 
+            var score_str = "P" + ship_info.pindex + " Score: " + score.display_score.ToString();
             sprite_batch.DrawString(spriteFont,
-                "Score: " + score.display_score.ToString(), 
+                                    score_str, 
                 position: scoreposition, 
                 color: Color.Black * 0.75f
             );
 
             sprite_batch.DrawString(spriteFont,
-                "Score: " + score.display_score.ToString(), 
+                score_str, 
                                     position: scoreposition + new Vector2(4.0f, 4.0f), 
                 color: Color.White
             );

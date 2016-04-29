@@ -29,7 +29,7 @@
             Angle shipAngle = origin.get_component<Angle>();
             Velocity shipVel = origin.get_component<Velocity>();
 
-            double dAngle = (double)shipAngle.angle + ((float)rand.NextDouble()-0.5f)*0.12f;
+            double dAngle = (double)shipAngle.angle + ((float)rand.NextDouble()-0.5f)*0.08f;
             float sfa = (float)Math.Sin(dAngle);
             float cfa = (float)Math.Cos(dAngle);
 
@@ -84,7 +84,7 @@
             Angle shipAngle = origin.get_component<Angle>();
             Velocity shipVel = origin.get_component<Velocity>();
 
-            double dAngle = (double)shipAngle.angle + ((float)rand.NextDouble()-0.5f)*0.12f;
+            double dAngle = (double)shipAngle.angle + ((float)rand.NextDouble()-0.5f)*0.08f;
             float sfa = (float)Math.Sin(dAngle);
             float cfa = (float)Math.Cos(dAngle);
 

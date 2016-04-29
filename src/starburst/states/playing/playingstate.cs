@@ -135,7 +135,6 @@ public class Playing_State : Game_State {
 
 
 
-            player2.get_component<Ship_Info>().hp_value = 50;
             //player2.get_component<Score>().score = 100000000;
 
             /*var player3 = create_entity(Player_Ship.create_components());
@@ -245,6 +244,7 @@ public class Playing_State : Game_State {
             Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter))
         {
             Starburst.inst().GraphicsMgr.ToggleFullScreen();
+            System.Threading.Thread.Sleep(150);
         }
     }
 
