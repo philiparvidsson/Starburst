@@ -56,25 +56,37 @@ public class Playing_State : Game_State {
                     else if (c == System.Drawing.Color.FromArgb(127, 0, 0)) {
                         tile_map.tiles[i] = 5;
                     }
+                    else if (c == System.Drawing.Color.FromArgb(127, 63, 127)) {
+                        // pepita
+                        tile_map.tiles[i] = 6;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(127, 127, 0)) {
+                        // soccer net team 1 (team 2 scores here)
+                        tile_map.tiles[i] = 7;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(127, 63, 0)) {
+                        // soccer net team 2 (team 1 scores here)
+                        tile_map.tiles[i] = 8;
+                    }
                     else if (c == System.Drawing.Color.FromArgb(255, 0, 255)) {
                         // soccer spawn
-                        tile_map.tiles[i] = 6;
+                        tile_map.tiles[i] = 9;
                     }
                     else if (c == System.Drawing.Color.FromArgb(0, 255, 255)) {
                         // powerup spawn
-                        tile_map.tiles[i] = 7;
+                        tile_map.tiles[i] = 10;
                     }
                     else if (c == System.Drawing.Color.FromArgb(255, 127, 0)) {
                         // team 1 spawn
-                        tile_map.tiles[i] = 8;
+                        tile_map.tiles[i] = 11;
                     }
                     else if (c == System.Drawing.Color.FromArgb(0, 127, 255)) {
                         // team 2 spawn
-                        tile_map.tiles[i] = 9;
+                        tile_map.tiles[i] = 12;
                     }
                     else if (c == System.Drawing.Color.FromArgb(127, 0, 255)) {
                         // asteroid spawn
-                        tile_map.tiles[i] = 10;
+                        tile_map.tiles[i] = 13;
                     }
                 }
             }
@@ -82,7 +94,7 @@ public class Playing_State : Game_State {
     }
 
     public override void init() {
-        Starburst.inst().IsMouseVisible = true;        // @To-do: Load map here.
+//        Starburst.inst().IsMouseVisible = true;        // @To-do: Load map here.
 
         tile_map = new Tile_Map();
         coll_handler = new Collision_Handler(this, tile_map);
@@ -112,13 +124,14 @@ public class Playing_State : Game_State {
 
         var player1 = create_entity(Player_Ship.create_components());
         var player2 = create_entity(Player_Ship.create_components());
-        var player3 = create_entity(Player_Ship.create_components());
-        var player4 = create_entity(Player_Ship.create_components());
+
+//        var player3 = create_entity(Player_Ship.create_components());
+  //      var player4 = create_entity(Player_Ship.create_components());
 
         var player1_spawn = Spawn_Util.get_player_spawn_pos(1, tile_map);
         var player2_spawn = Spawn_Util.get_player_spawn_pos(2, tile_map);
-        var player3_spawn = Spawn_Util.get_player_spawn_pos(1, tile_map);
-        var player4_spawn = Spawn_Util.get_player_spawn_pos(2, tile_map);
+     //   var player3_spawn = Spawn_Util.get_player_spawn_pos(1, tile_map);
+    //    var player4_spawn = Spawn_Util.get_player_spawn_pos(2, tile_map);
 
         player1.get_component<Position>().x = player1_spawn.x;
         player1.get_component<Position>().y = player1_spawn.y;
@@ -126,16 +139,15 @@ public class Playing_State : Game_State {
         player2.get_component<Position>().x = player2_spawn.x;
         player2.get_component<Position>().y = player2_spawn.y;
         player2.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
-        player3.get_component<Position>().x = player3_spawn.x;
-        player3.get_component<Position>().y = player3_spawn.y;
-        player3.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
-        player4.get_component<Position>().x = player4_spawn.x;
-        player4.get_component<Position>().y = player4_spawn.y;
-        player4.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
+
+        // player3.get_component<Position>().x = player3_spawn.x;
+        // player3.get_component<Position>().y = player3_spawn.y;
+        // player3.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
+        // player4.get_component<Position>().x = player4_spawn.x;
+        // player4.get_component<Position>().y = player4_spawn.y;
+        // player4.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
 
 
-
-            player2.get_component<Ship_Info>().hp_value = 50;
             //player2.get_component<Score>().score = 100000000;
 
             /*var player3 = create_entity(Player_Ship.create_components());
@@ -165,9 +177,14 @@ public class Playing_State : Game_State {
         }
 
         var ball = create_entity(Soccer_Ball.create_components());
-        var ball_pos = Spawn_Util.get_soccerball_spawn_pos(tile_map);
+        var ball_pos = new Position() { x = -1800, y = 1800 };//Spawn_Util.get_soccerball_spawn_pos(tile_map);
         ball.get_component<Position>().x = ball_pos.x;
         ball.get_component<Position>().y = ball_pos.y;
+        ball.get_component<Angle>().ang_vel = 3.141592f * 2.0f * -9.0f;
+        ball.get_component<Velocity>().x = -15.0f;
+
+        player1.get_component<Position>().x = -1800;
+        player1.get_component<Position>().y = 1700;
     }
 
     int edit_tile = 1;
@@ -245,6 +262,7 @@ public class Playing_State : Game_State {
             Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter))
         {
             Starburst.inst().GraphicsMgr.ToggleFullScreen();
+            System.Threading.Thread.Sleep(150);
         }
     }
 

@@ -17,6 +17,7 @@
         static int lol = 1;
         public static Component[] create_components()
         {
+            int pindex = lol;
             var inputhandler = new Inputhandler() {
             };
             if (lol == 2) {
@@ -63,7 +64,7 @@
                 };
 
             }
-           
+
             lol++;
             int team = (lol % 2)+1;
 
@@ -126,7 +127,7 @@
                     texture = Starburst.inst().get_content<Texture2D>(ship),
                     //color = new Color(0.6f, 0.9f, 1.0f)
                 },
-                new Ship_Info(100,130,100,100) { team = team },
+            new Ship_Info(100,130,100,100) { team = team, pindex = pindex },
                 new Bounding_Circle() { radius = 20.0f },
                 new Mass() { mass = 15.0f, restitution_coeff = 0.6f },
                 new Primary_Weapon(),

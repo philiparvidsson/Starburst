@@ -102,15 +102,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="map.png" />
     <Content Include="src\starburst\content\asteroid.png" />
     <Content Include="src\starburst\content\asteroid2.png" />
-    <Content Include="src\starburst\content\backdrops\backdrop1.png" />
-    <Content Include="src\starburst\content\backdrops\backdrop2.png" />
-    <Content Include="src\starburst\content\backdrops\backdrop3.png" />
     <Content Include="src\starburst\content\backdrops\backdrop4.png" />
-    <Content Include="src\starburst\content\backdrops\backdrop5.png" />
-    <Content Include="src\starburst\content\backdrops\backdrop6.png" />
-    <Content Include="src\starburst\content\backdrops\backdrop7.png" />
     <Content Include="src\starburst\content\backdrops\stardrop.png" />
     <Content Include="src\starburst\content\ball.png" />
     <Content Include="src\starburst\content\beams1.png" />
@@ -118,14 +113,13 @@
     <Content Include="src\starburst\content\EnergyBar.png" />
     <Content Include="src\starburst\content\HPBar.png" />
     <Content Include="src\starburst\content\indicator.png" />
-    <Content Include="src\starburst\content\map\tile1.png" />
-    <Content Include="src\starburst\content\map\tile2.png" />
-    <Content Include="src\starburst\content\map\tile3.png" />
-    <Content Include="src\starburst\content\map\tile4.png" />
+    <Content Include="src\starburst\content\map.png" />
+    <Content Include="src\starburst\content\map\tiles.png" />
     <Content Include="src\starburst\content\particle.png" />
-    <Content Include="src\starburst\content\ships\qship11.png" />
     <Content Include="src\starburst\content\ships\ship11.png" />
     <Content Include="src\starburst\content\ships\ship12.png" />
+    <Content Include="src\starburst\content\ships\ship13.png" />
+    <Content Include="src\starburst\content\ships\ship14.png" />
     <Content Include="src\starburst\content\soccerball.png" />
     <Content Include="src\starburst\content\sound\ContactLoop.wav" />
     <Content Include="src\starburst\content\sound\effects\bang1.mp3" />

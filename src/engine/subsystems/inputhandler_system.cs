@@ -46,12 +46,14 @@
                     }
                 }
 
-                if (input.keyboardState.IsKeyDown(input.down)) {
-                    velocity.x -= 0.5f * velocity.x * dt;
-                    velocity.y -= 0.5f * velocity.y * dt;
-                }
 
                 input.throttle = GamePad.GetState(input.gp_index).Triggers.Right - GamePad.GetState(input.gp_index).Triggers.Left;
+
+                if (input.keyboardState.IsKeyDown(input.down))
+                {
+                    input.throttle -= 1.0f;
+                }
+
                 if (input.keyboardState.IsKeyDown(input.up))
                 {
                     input.throttle = 1.0f;
@@ -60,7 +62,7 @@
 
                 if (Math.Abs(input.throttle) > 0.01f)
                 {
-                    Fab5_Game.inst().message("throttle", new { player = entity.id });
+                    Fab5_Game.inst().message("throttle", new { gp_index = input.gp_index });
                     var acc = 380.0f * dt;
                     velocity.x += (float)(Math.Cos(angle.angle)) * acc * input.throttle;
                     velocity.y += (float)(Math.Sin(angle.angle)) * acc * input.throttle;
@@ -72,10 +74,8 @@
                         velocity.y = 350.0f*(velocity.y / speed);
                     }
                 }
-                else
-                {
-                    Fab5_Game.inst().message("nothrottle", new { player = entity.id });
-                }
+                else                
+                    Fab5_Game.inst().message("nothrottle", new { gp_index = input.gp_index });
 
                 // primary weapon fire
                 if (input.keyboardState.IsKeyDown(input.primary_fire) || GamePad.GetState(input.gp_index).Buttons.A == ButtonState.Pressed) {

@@ -135,6 +135,7 @@ public class Collision_Solver : Subsystem {
         var v = e1.get_component<Velocity>();
         var a = e1.get_component<Angle>();
         var m = e1.get_component<Mass>();
+        var c = e1.get_component<Bounding_Circle>();
 
         var r = (float)Math.Sqrt(n_x*n_x+n_y*n_y);
 
@@ -144,21 +145,44 @@ public class Collision_Solver : Subsystem {
         var p_x = -(c_y - p.y);
         var p_y = c_x - p.x;
 
-        if (a != null) {
-            var w = v.x*p_x + v.y*p_y;
-            a.ang_vel -= w * 0.001f;
-
-//            System.Console.WriteLine(p_x + ", " + p_y);
-        }
-
         var d = 2.0f * (n_x*v.x+n_y*v.y);
         v.x -= d*n_x;
         v.y -= d*n_y;
 
-        if (m != null) {
-            v.x *= m.restitution_coeff;
-            v.y *= m.restitution_coeff;
+        if (a != null) {
+            var speed = (float)Math.Sqrt(v.x*v.x + v.y*v.y);
+            var w = speed / c.radius;
+            var q = 2.0f * 3.141592f * a.ang_vel * c.radius;
+
+            var v_x = v.x / speed;
+            var v_y = v.y / speed;
+            var dot = (-n_y*v_x+n_x*v_y); // dot prod of perp normal and normalized velocity
+
+            var inv_moi = m.mass;
+            a.ang_vel += (w - a.ang_vel) * dot * m.friction / inv_moi;
+            var f_x = -n_y * m.friction * q / m.mass;
+            var f_y = n_x  * m.friction * q / m.mass;
+
+            v.x += f_x;
+            v.y += f_y;
+
+            /*
+            System.Console.WriteLine("w={0}", w);
+            System.Console.WriteLine("q={0}", q);
+            System.Console.WriteLine("n_x={0}", n_x);
+            System.Console.WriteLine("n_y={0}", n_y);
+            System.Console.WriteLine("f_x={0}", f_x);
+            System.Console.WriteLine("f_y={0}", f_y);
+            System.Console.WriteLine("dot={0}", dot);
+*/
+            //var m = e1.get_component<Angle>();
+            //var inertia = 1.0f;
+            //var q = 2.0f * 3.1415f * a.ang_vel * c.radius;
+            //v.y += inertia*q/10.0f;
         }
+
+        v.x *= m.restitution_coeff;
+        v.y *= m.restitution_coeff;
 
 
     }
@@ -194,9 +218,8 @@ public class Collision_Solver : Subsystem {
              && (v.x > 0.0f))
             {
                 p.x = c_x - c.radius;
-
-                Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
                 collide(e1, c_x, c_y, -1.0f, 0.0f);
+
                 return true;
             }
         }
@@ -401,16 +424,18 @@ public class Collision_Solver : Subsystem {
 
         var n_x = -p_y;
         var n_y = p_x;
-        var w = v_x*n_x + v_y*n_y;
+
 
         var a1 = e1.get_component<Angle>();
         if (a1 != null && m1 >= 0.0f) {
-            a1.ang_vel += 0.05f * (a1.ang_vel-w) * (1.0f- m1/(m1+m2));
+            var w1 = v1.x*n_x + v1.y*n_y;
+            a1.ang_vel -= 0.05f * (w1-a1.ang_vel) * (1.0f- m1/(m1+m2));
         }
 
         var a2 = e2.get_component<Angle>();
         if (a2 != null && m2 > 0.0f) {
-            a2.ang_vel += 0.05f * (a2.ang_vel-w) * (1.0f - m2/(m1+m2));
+            var w2 = v2.x*-n_x + v2.y*-n_y;
+            a2.ang_vel -= 0.05f * (w2-a2.ang_vel) * (1.0f - m2/(m1+m2));
         }
 
         // Newton's third law.

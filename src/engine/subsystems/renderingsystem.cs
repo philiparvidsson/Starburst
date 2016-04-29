@@ -39,6 +39,8 @@ namespace Fab5.Engine.Subsystems {
 
         private Texture2D player_indicator_tex;
 
+
+
         public Rendering_System(GraphicsDevice graphicsDevice) {
             sprite_batch = new SpriteBatch(graphicsDevice);
             defaultViewport = graphicsDevice.Viewport;
@@ -79,6 +81,7 @@ namespace Fab5.Engine.Subsystems {
             sprite_batch.End();
 
         }
+
 
         Texture2D grid_tex;
         private void draw_tile_map(SpriteBatch sprite_batch, Camera camera) {
@@ -123,7 +126,7 @@ namespace Fab5.Engine.Subsystems {
 //                    sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
 
                     int k = tile_map.tiles[o];
-                    if (k != 0 && k < 6) {// 6 and up are not walls
+                    if (k != 0 && k < 9) {// 9 and up are not visible walls
                         var tile_tex = tile_map.tex;
                         var v = k-1;
                         var sx = x+xfrac;
@@ -151,13 +154,10 @@ namespace Fab5.Engine.Subsystems {
         {
             // kör uppdatering av viewports och kameror
             updatePlayers();
-            this.hudsystem_instance = new Hudsystem(sprite_batch);
+            this.hudsystem_instance = new Hudsystem(sprite_batch, tile_map);
 
  	        base.init();
         }
-
-
-
 
         private void updatePlayers() {
             // ev hantering för om inga spelare hittas?
@@ -182,7 +182,7 @@ namespace Fab5.Engine.Subsystems {
 
                 viewports[0] = top;
                 viewports[1] = bottom;
-                zoom = .85f;
+                zoom = 1.0f;
             }
             else if(currentPlayerNumber == 3){
                 // 1/4 screen, handle sizes and positions
@@ -237,7 +237,7 @@ namespace Fab5.Engine.Subsystems {
                 viewports[2] = bottomLeft;
                 viewports[3] = bottomRight;
 
-                zoom = .7f;
+                zoom = .9f;
             }
 
             // add cameras to each viewport
@@ -262,10 +262,13 @@ namespace Fab5.Engine.Subsystems {
             }*/
         }
 
-        int num_sprites_last_call;
+
+
         public override void draw(float t, float dt)
         {
             sprite_batch.GraphicsDevice.Clear(Color.Black);
+
+
 
             // måla ut en eventuell bakgrund/border
 
@@ -322,7 +325,6 @@ namespace Fab5.Engine.Subsystems {
 
             //}
 
-            num_sprites_last_call = num_entities;
 
             for (int i = 0; i < num_entities; i++) {
                 update_sprite(entities[i], dt);
@@ -331,6 +333,7 @@ namespace Fab5.Engine.Subsystems {
             for (int p = 0; p < currentPlayerNumber; p++)
             {
                 Camera current = cameras[p];
+
                 sprite_batch.GraphicsDevice.Viewport = current.viewport;
 
                 var currentPlayer = players[p];
@@ -350,9 +353,10 @@ namespace Fab5.Engine.Subsystems {
                  draw_backdrop(sprite_batch, cameras[p].position);
 
 
+                draw_tile_map(sprite_batch, current);
                 drawSprites(sprite_batch, current, num_entities, entities, 0.0f);
 
-                draw_tile_map(sprite_batch, current);
+
                 sprite_batch.Begin(SpriteSortMode.Deferred,
                                        BlendState.AlphaBlend, null, null, null, null,
                                        transformMatrix: current.getViewMatrix(current.viewport));
@@ -362,12 +366,12 @@ namespace Fab5.Engine.Subsystems {
                 for (int p2 = 0; p2 < currentPlayerNumber; p2++) {
                     var player2 = players[p2];
                     var player2_pos = player2.get_component<Position>();
-                    var d_x = player2_pos.x - currentPlayerPosition.x;
-                    var d_y = player2_pos.y - currentPlayerPosition.y;
+                    var d_x = player2_pos.x - current.position.x;
+                    var d_y = player2_pos.y - current.position.y;
 
                     var d = (float)Math.Sqrt(d_x*d_x + d_y*d_y);
 
-                    if (Math.Abs(d_x) < current.viewport.Width*0.5f && Math.Abs(d_y) < current.viewport.Height*0.5f) {
+                    if (Math.Abs(d_x) < current.viewport.Width*0.5f/current.zoom && Math.Abs(d_y) < current.viewport.Height*0.5f/current.zoom) {
                         // other player is on same screen
                         continue;
                     }
@@ -394,11 +398,12 @@ namespace Fab5.Engine.Subsystems {
                               0.5f);
                 }
 
+
+
+
                 sprite_batch.End();
 
-
-
-                hudsystem_instance.drawHUD(currentPlayer);
+                hudsystem_instance.drawHUD(currentPlayer, dt);
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;
             base.draw(t, dt);

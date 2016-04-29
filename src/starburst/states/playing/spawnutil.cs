@@ -14,7 +14,7 @@ public static class Spawn_Util {
 
         for (int x = 0; x < 256; x++) {
             for (int y = 0; y < 256; y++) {
-                if (tile_map.tiles[x+y*256] == 6) {
+                if (tile_map.tiles[x+y*256] == 9) {
                     positions.Add(new Position { x = -2048.0f + x * 16.0f, y = -2048.0f + y * 16.0f });
                 }
             }
@@ -35,7 +35,7 @@ public static class Spawn_Util {
 
         for (int x = 0; x < 256; x++) {
             for (int y = 0; y < 256; y++) {
-                if (tile_map.tiles[x+y*256] == 10) {
+                if (tile_map.tiles[x+y*256] == 13) {
                     positions.Add(new Position { x = -2048.0f + x * 16.0f, y = -2048.0f + y * 16.0f });
                 }
             }
@@ -54,7 +54,7 @@ public static class Spawn_Util {
     public static Position get_player_spawn_pos(int team, Tile_Map tile_map) {
         List<Position> positions = new List<Position>();
 
-        team += 7;
+        team += 10;
 
         for (int x = 0; x < 256; x++) {
             for (int y = 0; y < 256; y++) {

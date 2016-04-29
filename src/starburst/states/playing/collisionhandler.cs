@@ -25,16 +25,15 @@ namespace Fab5.Starburst.States.Playing {
 
         reg("ships/ship11", "ships/ship11", player_player);
         reg("ships/ship11", "ships/ship12", player_player);
+        reg("ships/ship11", "ships/ship13", player_player);
+        reg("ships/ship11", "ships/ship14", player_player);
         reg("ships/ship12", "ships/ship12", player_player);
+        reg("ships/ship12", "ships/ship13", player_player);
+        reg("ships/ship12", "ships/ship14", player_player);
+        reg("ships/ship13", "ships/ship13", player_player);
+        reg("ships/ship13", "ships/ship14", player_player);
+        reg("ships/ship14", "ships/ship14", player_player);
 
-        reg("map/tile0", "ships/ship11" , tile_player);
-        reg("map/tile0", "ships/ship12" , tile_player);
-        reg("map/tile1", "ships/ship11" , tile_player);
-        reg("map/tile1", "ships/ship12" , tile_player);
-        reg("map/tile0", "asteroid" , tile_asteroid);
-        reg("map/tile0", "asteroid2", tile_asteroid);
-        reg("map/tile1", "asteroid" , tile_asteroid);
-        reg("map/tile1", "asteroid2", tile_asteroid);
 
         reg("asteroid" , "asteroid" , asteroid_asteroid);
         reg("asteroid" , "asteroid2", asteroid_asteroid);
@@ -44,13 +43,19 @@ namespace Fab5.Starburst.States.Playing {
         reg("beams1", "asteroid2"   , bullet1_asteroid);
         reg("beams1", "ships/ship11", bullet1_player);
         reg("beams1", "ships/ship12", bullet1_player);
+        reg("beams1", "ships/ship13", bullet1_player);
+        reg("beams1", "ships/ship14", bullet1_player);
         reg("beams2", "asteroid"    , bullet2_asteroid);
         reg("beams2", "asteroid2"   , bullet2_asteroid);
         reg("beams2", "ships/ship11", bullet2_player);
         reg("beams2", "ships/ship12", bullet2_player);
+        reg("beams2", "ships/ship13", bullet2_player);
+        reg("beams2", "ships/ship14", bullet2_player);
 
         reg("soccerball", "ships/ship11", soccerball_player);
         reg("soccerball", "ships/ship12", soccerball_player);
+        reg("soccerball", "ships/ship13", soccerball_player);
+        reg("soccerball", "ships/ship14", soccerball_player);
     }
 
     private void reg(string a, string b, Action<Entity, Entity, dynamic> action) {
@@ -241,6 +246,14 @@ namespace Fab5.Starburst.States.Playing {
             Score shooterScore = bulletInfo.sender.get_component<Score>();
             float bulletDamage = bulletInfo.damage;
 
+            /*if (playerShip.team == bulletInfo.sender.get_component<Ship_Info>().team) {
+                return;
+            }*/
+
+            if (player == bulletInfo.sender) {
+                return;
+            }
+
             if(player != bulletInfo.sender)
                 shooterScore.score += 10;
             // kolla sköld, om sköld nere, ta skada
@@ -303,6 +316,9 @@ namespace Fab5.Starburst.States.Playing {
                     var spawn_pos = Spawn_Util.get_player_spawn_pos(player.get_component<Ship_Info>().team, tile_map);
                     player.get_component<Position>().x = spawn_pos.x;
                     player.get_component<Position>().y = spawn_pos.y;
+
+                    player.get_component<Velocity>().x = 0;
+                    player.get_component<Velocity>().y = 0;
                 }
             }
         }
