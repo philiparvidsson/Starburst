@@ -50,28 +50,28 @@ namespace Fab5.Engine.Subsystems
                 {
                     if (msg == "throttle" || msg == "nothrottle")
                     {
-                        var playerid = (int)data.player;
+                        var gp_index = (int)data.gp_index;
                         var thrust = lib.Library["thrust"] as Fab5SoundEffect;
-                        if (thrust.SoundEffectIns.ContainsKey(playerid))
+                        if (thrust.SoundEffectIns.ContainsKey(gp_index))
                         {
-                            if (msg == "throttle" && !thrust.IsStarted[playerid])
+                            if (msg == "throttle" && !thrust.IsStarted[gp_index])
                             {
-                                thrust.SoundEffectIns[playerid].IsLooped = true;
-                                thrust.IsStarted[playerid] = true;
-                                thrust.SoundEffectIns[playerid].Play();
+                                thrust.SoundEffectIns[gp_index].IsLooped = true;
+                                thrust.IsStarted[gp_index] = true;
+                                thrust.SoundEffectIns[gp_index].Play();
                             }
-                            else if (msg == "nothrottle" && thrust.IsStarted[playerid])
+                            else if (msg == "nothrottle" && thrust.IsStarted[gp_index])
                             {
-                                thrust.IsStarted[playerid] = false;
-                                thrust.SoundEffectIns[playerid].Stop();
+                                thrust.IsStarted[gp_index] = false;
+                                thrust.SoundEffectIns[gp_index].Stop();
                             }
                         }
                         else
                         {
                             var ins = thrust.SoundEffect.CreateInstance();
                             ins.Play();
-                            thrust.IsStarted[playerid] = true;
-                            thrust.SoundEffectIns.Add(playerid, ins);
+                            thrust.IsStarted[gp_index] = true;
+                            thrust.SoundEffectIns.Add(gp_index, ins);
                         }
                     }
                     if (msg == "fire")
@@ -143,7 +143,7 @@ namespace Fab5.Engine.Subsystems
                         {
                             Velocity velo = data.entity1.get_component<Velocity>();
                             var speed = Math.Sqrt(Math.Pow(velo.x, 2) + Math.Pow(velo.y, 2));
-                            Console.WriteLine(speed);
+                            //Console.WriteLine(speed);
                             if(speed> 50) { 
                                 effect = lib.Library["bang2"] as Fab5SoundEffect;
                                 if ((DateTime.Now - effect.LastPlayed).Seconds > 0.2)

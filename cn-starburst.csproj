@@ -123,6 +123,8 @@
     <Content Include="src\starburst\content\ships\qship11.png" />
     <Content Include="src\starburst\content\ships\ship11.png" />
     <Content Include="src\starburst\content\ships\ship12.png" />
+    <Content Include="src\starburst\content\ships\ship13.png" />
+    <Content Include="src\starburst\content\ships\ship14.png" />
     <Content Include="src\starburst\content\soccerball.png" />
     <Content Include="src\starburst\content\sound\ContactLoop.wav" />
     <Content Include="src\starburst\content\sound\effects\bang1.mp3" />
