@@ -16,6 +16,7 @@
     public class Inputhandler : Component
     {
         public KeyboardState keyboardState;
+        public GamePadState gamepadState;
 
         public Keys left  = Keys.Left;
         public Keys right = Keys.Right;
@@ -28,5 +29,12 @@
         public PlayerIndex gp_index = PlayerIndex.One;
 
         public float throttle = 0.0f;
+
+        public enum InputType {
+            Keyboard,
+            Controller
+        };
+
+        public InputType device = InputType.Keyboard;
     }
 }
