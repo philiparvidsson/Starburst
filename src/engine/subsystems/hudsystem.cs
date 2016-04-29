@@ -84,7 +84,7 @@
                               1.0f);
         }
 
-        public void drawHUD(Entity player)
+        public void drawHUD(Entity player, float dt)
         {
 
             sprite_batch.Begin(SpriteSortMode.Deferred);
@@ -92,7 +92,7 @@
             this.ship_info = player.get_component<Ship_Info>();
             drawHP();
             drawEnergy();
-            drawScore(player.get_component<Score>());
+            drawScore(player.get_component<Score>(), dt);
             draw_minimap(player.get_component<Position>());
 
             sprite_batch.End();
@@ -144,19 +144,28 @@
 
 
 
-        private void drawScore(Score score)
+        private void drawScore(Score score, float dt)
         {
             Vector2 scoreposition;
             scoreposition = new Vector2(10, 10);
 
             SpriteFont spriteFont = Fab5_Game.inst().get_content<SpriteFont>("sector034");
 
-            //score.score++;
+            if(score.score != score.display_score)
+                score.current_time_span += dt;
 
+            if (score.current_time_span > 2.0f || score.display_score >= score.score) // When two second has passed or we increased to far we are done.
+            {
+                score.display_score = score.score;
+                score.linear_start_score = (int)score.score;
+                score.current_time_span = 0.0f;
+            }
+            else
+            {   
+                score.display_score += (2.0f - score.current_time_span) * (score.score - score.linear_start_score) * dt;
+            }
 
-            score.display_score += System.Math.Sign(score.score - score.display_score);
-
-            var score_str = "P" + ship_info.pindex + " Score: " + score.display_score.ToString();
+            var score_str = "P" + ship_info.pindex + " Score: " + ((int)score.display_score).ToString();
             sprite_batch.DrawString(spriteFont,
                                     score_str, 
                 position: scoreposition, 
