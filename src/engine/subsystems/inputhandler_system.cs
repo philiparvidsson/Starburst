@@ -46,12 +46,14 @@
                     }
                 }
 
-                if (input.keyboardState.IsKeyDown(input.down)) {
-                    velocity.x -= 0.5f * velocity.x * dt;
-                    velocity.y -= 0.5f * velocity.y * dt;
-                }
 
                 input.throttle = GamePad.GetState(input.gp_index).Triggers.Right - GamePad.GetState(input.gp_index).Triggers.Left;
+
+                if (input.keyboardState.IsKeyDown(input.down))
+                {
+                    input.throttle -= 1.0f;
+                }
+
                 if (input.keyboardState.IsKeyDown(input.up))
                 {
                     input.throttle = 1.0f;

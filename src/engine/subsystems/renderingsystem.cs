@@ -406,7 +406,7 @@ namespace Fab5.Engine.Subsystems {
 
                 sprite_batch.End();
 
-                hudsystem_instance.drawHUD(currentPlayer);
+                hudsystem_instance.drawHUD(currentPlayer, dt);
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;
             base.draw(t, dt);
