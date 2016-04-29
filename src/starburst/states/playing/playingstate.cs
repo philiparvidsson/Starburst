@@ -56,25 +56,37 @@ public class Playing_State : Game_State {
                     else if (c == System.Drawing.Color.FromArgb(127, 0, 0)) {
                         tile_map.tiles[i] = 5;
                     }
+                    else if (c == System.Drawing.Color.FromArgb(127, 63, 127)) {
+                        // pepita
+                        tile_map.tiles[i] = 6;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(127, 127, 0)) {
+                        // soccer net team 1 (team 2 scores here)
+                        tile_map.tiles[i] = 7;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(127, 63, 0)) {
+                        // soccer net team 2 (team 1 scores here)
+                        tile_map.tiles[i] = 8;
+                    }
                     else if (c == System.Drawing.Color.FromArgb(255, 0, 255)) {
                         // soccer spawn
-                        tile_map.tiles[i] = 6;
+                        tile_map.tiles[i] = 9;
                     }
                     else if (c == System.Drawing.Color.FromArgb(0, 255, 255)) {
                         // powerup spawn
-                        tile_map.tiles[i] = 7;
+                        tile_map.tiles[i] = 10;
                     }
                     else if (c == System.Drawing.Color.FromArgb(255, 127, 0)) {
                         // team 1 spawn
-                        tile_map.tiles[i] = 8;
+                        tile_map.tiles[i] = 11;
                     }
                     else if (c == System.Drawing.Color.FromArgb(0, 127, 255)) {
                         // team 2 spawn
-                        tile_map.tiles[i] = 9;
+                        tile_map.tiles[i] = 12;
                     }
                     else if (c == System.Drawing.Color.FromArgb(127, 0, 255)) {
                         // asteroid spawn
-                        tile_map.tiles[i] = 10;
+                        tile_map.tiles[i] = 13;
                     }
                 }
             }
