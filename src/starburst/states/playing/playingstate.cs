@@ -124,13 +124,13 @@ public class Playing_State : Game_State {
 
         var player1 = create_entity(Player_Ship.create_components());
         var player2 = create_entity(Player_Ship.create_components());
-        var player3 = create_entity(Player_Ship.create_components());
-        var player4 = create_entity(Player_Ship.create_components());
+//        var player3 = create_entity(Player_Ship.create_components());
+  //      var player4 = create_entity(Player_Ship.create_components());
 
         var player1_spawn = Spawn_Util.get_player_spawn_pos(1, tile_map);
         var player2_spawn = Spawn_Util.get_player_spawn_pos(2, tile_map);
-        var player3_spawn = Spawn_Util.get_player_spawn_pos(1, tile_map);
-        var player4_spawn = Spawn_Util.get_player_spawn_pos(2, tile_map);
+     //   var player3_spawn = Spawn_Util.get_player_spawn_pos(1, tile_map);
+    //    var player4_spawn = Spawn_Util.get_player_spawn_pos(2, tile_map);
 
         player1.get_component<Position>().x = player1_spawn.x;
         player1.get_component<Position>().y = player1_spawn.y;
@@ -138,12 +138,12 @@ public class Playing_State : Game_State {
         player2.get_component<Position>().x = player2_spawn.x;
         player2.get_component<Position>().y = player2_spawn.y;
         player2.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
-        player3.get_component<Position>().x = player3_spawn.x;
-        player3.get_component<Position>().y = player3_spawn.y;
-        player3.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
-        player4.get_component<Position>().x = player4_spawn.x;
-        player4.get_component<Position>().y = player4_spawn.y;
-        player4.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
+        // player3.get_component<Position>().x = player3_spawn.x;
+        // player3.get_component<Position>().y = player3_spawn.y;
+        // player3.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
+        // player4.get_component<Position>().x = player4_spawn.x;
+        // player4.get_component<Position>().y = player4_spawn.y;
+        // player4.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
 
 
 
@@ -176,9 +176,14 @@ public class Playing_State : Game_State {
         }
 
         var ball = create_entity(Soccer_Ball.create_components());
-        var ball_pos = Spawn_Util.get_soccerball_spawn_pos(tile_map);
+        var ball_pos = new Position() { x = -1800, y = 1800 };//Spawn_Util.get_soccerball_spawn_pos(tile_map);
         ball.get_component<Position>().x = ball_pos.x;
         ball.get_component<Position>().y = ball_pos.y;
+        ball.get_component<Angle>().ang_vel = 3.141592f * 2.0f * -9.0f;
+        ball.get_component<Velocity>().x = -15.0f;
+
+        player1.get_component<Position>().x = -1800;
+        player1.get_component<Position>().y = 1700;
     }
 
     int edit_tile = 1;

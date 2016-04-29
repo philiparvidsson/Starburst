@@ -159,9 +159,6 @@ namespace Fab5.Engine.Subsystems {
  	        base.init();
         }
 
-
-
-
         private void updatePlayers() {
             // ev hantering för om inga spelare hittas?
             float zoom = 1;
@@ -185,7 +182,7 @@ namespace Fab5.Engine.Subsystems {
 
                 viewports[0] = top;
                 viewports[1] = bottom;
-                zoom = .85f;
+                zoom = 1.0f;
             }
             else if(currentPlayerNumber == 3){
                 // 1/4 screen, handle sizes and positions

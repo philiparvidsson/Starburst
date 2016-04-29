@@ -49,7 +49,7 @@ public static class Soccer_Ball {
                 //color = new Color(0.6f, 0.9f, 1.0f)
             },
             new Bounding_Circle() { radius = 17.0f },
-            new Mass() { mass = 5.0f }
+            new Mass() { mass = 5.0f, restitution_coeff = 0.92f }
         };
     }
 
