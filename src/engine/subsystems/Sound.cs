@@ -84,30 +84,54 @@ namespace Fab5.Engine.Subsystems
                     {
                         string texttureName1 = null;
                         string texttureName2 = null;
-                        if (data.entity1 != null) {
+                        if (data.entity1 != null)
+                        {
                             texttureName1 = data.entity1.get_component<Sprite>().texture.Name;
                             //System.Console.WriteLine(texttureName1);
                         }
-                        if (data.entity2 != null) {
+                        if (data.entity2 != null)
+                        {
                             texttureName2 = data.entity2.get_component<Sprite>().texture.Name;
                             //System.Console.WriteLine(texttureName2);
                         }
                         if (!string.IsNullOrEmpty(texttureName1) && !string.IsNullOrEmpty(texttureName2))
                         {
-                            if (texttureName1.Contains("ship") && texttureName2.Contains("ship"))
+                            Velocity velo = data.entity1.get_component<Velocity>();
+                            Velocity velo2 = data.entity2.get_component<Velocity>();
+                            var speed = Math.Sqrt(Math.Pow(velo.x, 2) + Math.Pow(velo.y, 2));
+                            var speed2 = Math.Sqrt(Math.Pow(velo2.x, 2) + Math.Pow(velo2.y, 2));
+                            var coolspeed = speed - speed2 * ((velo.x + velo.y + velo2.x + velo2.y) / (speed * speed2));
+                            Console.WriteLine("Coolspeed " + coolspeed);
+                            if (coolspeed > 15)
                             {
-                                effect = lib.Library["bang"] as Fab5SoundEffect;
-                                effect.SoundEffect.Play();
+                                if (texttureName1.Contains("ship") && texttureName2.Contains("ship"))
+
+                                    effect = lib.Library["bang"] as Fab5SoundEffect;
+                                if ((DateTime.Now - effect.LastPlayed).Seconds > 0.2)
+                                {
+                                    effect.SoundEffect.Play();
+                                    effect.LastPlayed = DateTime.Now;
+                                }
+
                             }
                             if ((texttureName1.Contains("asteroid") && texttureName2.Contains("ship")) || (texttureName2.Contains("asteroid") && texttureName1.Contains("ship")))
                             {
                                 effect = lib.Library["rockslide_small"] as Fab5SoundEffect;
-                                effect.SoundEffect.Play();
+                                if ((DateTime.Now - effect.LastPlayed).Seconds > 0.2)
+                                {
+                                    effect.SoundEffect.Play();
+                                    effect.LastPlayed = DateTime.Now;
+                                }
                             }
-                            if((texttureName1.Contains("ship") && texttureName2 == "soccerball") || (texttureName1 == "soccerball" && texttureName2.Contains("ship")))
+                            if ((texttureName1.Contains("ship") && texttureName2 == "soccerball") || (texttureName1 == "soccerball" && texttureName2.Contains("ship")))
                             {
+
                                 effect = lib.Library["punch"] as Fab5SoundEffect;
-                                effect.SoundEffect.Play();
+                                if ((DateTime.Now - effect.LastPlayed).Seconds > 0.2)
+                                {
+                                    effect.SoundEffect.Play();
+                                    effect.LastPlayed = DateTime.Now;
+                                }
                             }
                             if ((texttureName1.Contains("goal") && texttureName2 == "soccerball") || (texttureName1 == "soccerball" && texttureName2.Contains("goal")))
                             {
@@ -117,8 +141,17 @@ namespace Fab5.Engine.Subsystems
                         }
                         else if (!string.IsNullOrEmpty(texttureName1))
                         {
-                            effect = lib.Library["bang2"] as Fab5SoundEffect;
-                            effect.SoundEffect.Play();
+                            Velocity velo = data.entity1.get_component<Velocity>();
+                            var speed = Math.Sqrt(Math.Pow(velo.x, 2) + Math.Pow(velo.y, 2));
+                            Console.WriteLine(speed);
+                            if(speed> 50) { 
+                                effect = lib.Library["bang2"] as Fab5SoundEffect;
+                                if ((DateTime.Now - effect.LastPlayed).Seconds > 0.2)
+                                {
+                                    effect.SoundEffect.Play();
+                                    effect.LastPlayed = DateTime.Now;
+                                }
+                            }
                         }
                     }
                 }
