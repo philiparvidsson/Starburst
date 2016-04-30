@@ -23,7 +23,7 @@ public class Starburst : Fab5_Game {
 
         GraphicsMgr.ApplyChanges();
 
-        enter_state(new Splash_Screen_State());
+        enter_state(new Main_Menu_State());
 
     }
 

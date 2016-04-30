@@ -72,6 +72,9 @@
     <Compile Include="src\engine\subsystems\positionintegrater.cs" />
     <Compile Include="src\engine\subsystems\renderingsystem.cs" />
     <Compile Include="src\starburst\components\bulletinfo.cs" />
+    <Compile Include="src\starburst\states\mainmenu\entities\player.cs" />
+    <Compile Include="src\starburst\states\mainmenu\mainmenustate.cs" />
+    <Compile Include="src\starburst\states\mainmenu\subsystems\menuinputhandler.cs" />
     <Compile Include="src\starburst\states\playing\collisionhandler.cs" />
     <Compile Include="src\starburst\states\playing\entities\bullet_factory.cs" />
     <Compile Include="src\engine\subsystems\sound.cs" />
@@ -153,6 +156,7 @@
     <Folder Include="doc\" />
     <Folder Include="Properties\" />
     <Folder Include="src\starburst\content\shaders\" />
+    <Folder Include="src\starburst\states\mainmenu\components\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
