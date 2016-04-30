@@ -22,7 +22,7 @@ namespace Fab5.Starburst.States {
         List<bool> gamepads;
         List<SlotStatus> playerSlots;
         int playerCount = 0;
-        int minPlayers = 2;
+        int minPlayers = 1;
         private enum SlotStatus {
             Empty,
             Hovering,

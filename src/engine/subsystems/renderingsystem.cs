@@ -172,6 +172,7 @@ namespace Fab5.Engine.Subsystems {
                 cameras = new Camera[1];
                 viewports[0] = defaultViewport;
                 currentPlayerNumber = 1;
+                zoom = 1.5f;
             }
             else if(currentPlayerNumber <= 2) {
                 // 1/2 screen, handle heights and y position

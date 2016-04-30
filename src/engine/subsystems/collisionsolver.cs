@@ -144,14 +144,11 @@ public class Collision_Solver : Subsystem {
 
         var w_x = 0.0f;
         var w_y = 0.0f;
-        var r = 0.0f;
 
         if (a1 != null) {
-            r = (float)Math.Sqrt(r_x*r_x + r_y*r_y);
-
             var w = a1.ang_vel;
-            w_x = -w*r_y;///r;
-            w_y =  w*r_x;///r;
+            w_x = -w*r_y;
+            w_y =  w*r_x;;
         }
 
         var v_x = -(v1.x + w_x);
@@ -170,8 +167,6 @@ public class Collision_Solver : Subsystem {
         v1.y -= j*n_y;
 
         if (a1 != null) {
-            //a1.ang_vel += (-r_y*n_x+r_x*n_y)/r;
-            //Console.WriteLine(             (-r_y*n_x+r_x*n_y)/r);
             var w = a1.ang_vel;
             w_x = -w*r_y;///r;
             w_y =  w*r_x;///r;
@@ -180,9 +175,9 @@ public class Collision_Solver : Subsystem {
         v_x = -(v1.x + w_x);
         v_y = -(v1.y + w_y);
 
-        var d = v_x*n_x+v_y*n_y;
-        var t_x = v_x - d*n_x;
-        var t_y = v_y - d*n_y;
+        var dot = v_x*n_x+v_y*n_y;
+        var t_x = v_x - dot*n_x;
+        var t_y = v_y - dot*n_y;
         var t = (float)Math.Sqrt(t_x*t_x+t_y*t_y);
         if (t > 0.0f) {
             t_x /= t;
@@ -195,17 +190,21 @@ public class Collision_Solver : Subsystem {
 
         if (Math.Abs(jt) < j*mu) {
             f = jt;
+                    Console.WriteLine("ass1: " + f); // <--- printar 0 wtf?
         }
         else {
-            f = -j*mu; // actually dynamic friction but whatever
+            var dyn_fric = (float)Math.Sqrt(m1.friction*m1.friction*0.8f*0.8f+m1.friction*m1.friction*0.8f*0.8f);
+            f = -j*mu*dyn_fric; // actually dynamic friction but whatever
+        Console.WriteLine("ass2: " + f); // <--- printar 0 wtf?
         }
+
 
         v1.x -= f*t_x;
         v1.y -= f*t_y;
 
         if (a1 != null) {
             //m1.inertia = m1.mass;//;0.5f*3.141592f * (float)Math.Pow(c1.radius, 4.0f);
-            a1.ang_vel -= (f/r)*(-r_y*t_x+r_x*t_y)/m1.mass; // should be moment of inertia but whateverrrrr
+            a1.ang_vel -= 100.0f*f*(-r_y*t_x+r_x*t_y)/m1.mass; // should be moment of inertia but whateverrrrr
         }
 
         //System.Threading.Thread.Sleep(100);
@@ -465,8 +464,8 @@ public class Collision_Solver : Subsystem {
             return false;
         }
 
-        v_x = (v2.x+w2_x) - (v1.x+w1_y);
-        v_y = (v2.y+w2_x) - (v1.y+w1_y);
+        v_x = (v2.x+w2_x) - (v1.x+w1_x);
+        v_y = (v2.y+w2_y) - (v1.y+w1_y);
 
         var e  = Math.Min(m1.restitution_coeff, m2.restitution_coeff);
         var j  = -(1+e) * (v_x*n_x+v_y*n_y) / (im1+im2);
@@ -482,8 +481,8 @@ public class Collision_Solver : Subsystem {
         v2.x += j*n_x*im2;
         v2.y += j*n_y*im2;
 
-        v_x = (v2.x+w2_x) - (v1.x+w1_y);
-        v_y = (v2.y+w2_x) - (v1.y+w1_y);
+        v_x = (v2.x+w2_x) - (v1.x+w1_x);
+        v_y = (v2.y+w2_y) - (v1.y+w1_y);
 
         var dot = v_x*n_x+v_y*n_y;
         var t_x = v_x - dot*n_x;
@@ -502,22 +501,23 @@ public class Collision_Solver : Subsystem {
             f = jt;
         }
         else {
-            f = -j*mu; // actually dynamic friction but whatever
+            var dyn_fric = (float)Math.Sqrt(m1.friction*m1.friction*0.8f*0.8f+m2.friction*m2.friction*0.8f*0.8f);
+            f = -j*t*dyn_fric; // actually dynamic friction but whatever
         }
 
-        v1.x -= f*t_x*im1;
-        v1.y -= f*t_y*im1;
-        v2.x += f*t_x*im2;
-        v2.y += f*t_y*im2;
+        //v1.x -= f*t_x*im1;
+        //v1.y -= f*t_y*im1;
+        //v2.x += f*t_x*im2;
+        //v2.y += f*t_y*im2;
 
-//        System.Console.WriteLine(n_x*t_x+n_y*t_y)
+        System.Console.WriteLine(n_x*t_x+n_y*t_y);
 
         if (a1 != null) {
-            a1.ang_vel -= (f/c1.radius)*(-p1_y*t_x+p1_x*t_y)*im1;
+          //  a1.ang_vel -= (f/c1.radius)*(-p1_y*t_x+p1_x*t_y)*im1;
         }
 
         if (a2 != null) {
-            a2.ang_vel += (f/c2.radius)*(-p2_y*t_x+p2_x*t_y)*im2;
+            //a2.ang_vel += (f/c2.radius)*(-p2_y*t_x+p2_x*t_y)*im2;
 
         }
 

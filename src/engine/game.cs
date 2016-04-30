@@ -79,6 +79,10 @@ public abstract class Fab5_Game : Game {
         float t  = (float)game_time.TotalGameTime.TotalSeconds;
         float dt = (float)game_time.ElapsedGameTime.TotalSeconds;
 
+        if (dt < 1.0f/60.0f) {
+            Console.WriteLine(dt);
+        }
+
         time = t;
 
         if (top_state != null) {
