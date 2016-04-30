@@ -77,7 +77,6 @@ public class Collision_Solver : Subsystem {
         System.Threading.ManualResetEvent mre = new System.Threading.ManualResetEvent(false);
         int counter = entities.Count;
 
-//        for (int i = 0; i < num_entities; i++) {
         foreach (var entity in entities) {
             System.Threading.ThreadPool.QueueUserWorkItem(o => {
                 var e1  = (Entity)o;//entities[(int)o];
@@ -109,16 +108,17 @@ public class Collision_Solver : Subsystem {
                     v1.y = -v1.y * rc1;
                 }
 
-                resolve_circle_map_collision(e1);
+                if (!resolve_circle_map_collision(e1)) {
+                    HashSet<Entity> hash_set = new HashSet<Entity>();
 
-                HashSet<Entity> hash_set = new HashSet<Entity>();
-
-                get_entities(p1, e1.get_component<Bounding_Circle>(), grid, hash_set);
-                foreach (Entity e2 in hash_set) {
-                    if (e2 == e1) continue;
-                    if (resolve_circle_circle_collision(e1, e2)) {
-                        break;
+                    get_entities(p1, e1.get_component<Bounding_Circle>(), grid, hash_set);
+                    foreach (Entity e2 in hash_set) {
+                        if (e2 == e1) continue;
+                        if (resolve_circle_circle_collision(e1, e2)) {
+                            break;
+                        }
                     }
+
                 }
 
                 if (System.Threading.Interlocked.Decrement(ref counter) == 0) {
@@ -131,59 +131,84 @@ public class Collision_Solver : Subsystem {
     }
 
     private void collide(Entity e1, float c_x, float c_y, float n_x, float n_y) {
-        var p = e1.get_component<Position>();
-        var v = e1.get_component<Velocity>();
-        var a = e1.get_component<Angle>();
-        var m = e1.get_component<Mass>();
-        var c = e1.get_component<Bounding_Circle>();
+        n_x = -n_x;
+        n_y = -n_y;
 
-        var r = (float)Math.Sqrt(n_x*n_x+n_y*n_y);
+        var p1  = e1.get_component<Position>();
+        var c1  = e1.get_component<Bounding_Circle>();
+        var v1  = e1.get_component<Velocity>();
+        var m1  = e1.get_component<Mass>();
+        var a1  = e1.get_component<Angle>();
+        var r_x = c_x - p1.x;
+        var r_y = c_y - p1.y;
 
-        n_x /= r;
-        n_y /= r;
+        var w_x = 0.0f;
+        var w_y = 0.0f;
+        var r = 0.0f;
 
-        var p_x = -(c_y - p.y);
-        var p_y = c_x - p.x;
+        if (a1 != null) {
+            r = (float)Math.Sqrt(r_x*r_x + r_y*r_y);
 
-        var d = 2.0f * (n_x*v.x+n_y*v.y);
-        v.x -= d*n_x;
-        v.y -= d*n_y;
-
-        if (a != null) {
-            var speed = (float)Math.Sqrt(v.x*v.x + v.y*v.y);
-            var w = speed / c.radius;
-            var q = 2.0f * 3.141592f * a.ang_vel * c.radius;
-
-            var v_x = v.x / speed;
-            var v_y = v.y / speed;
-            var dot = (-n_y*v_x+n_x*v_y); // dot prod of perp normal and normalized velocity
-
-            var inv_moi = m.mass;
-            a.ang_vel += (w - a.ang_vel) * dot * m.friction / inv_moi;
-            var f_x = -n_y * m.friction * q / m.mass;
-            var f_y = n_x  * m.friction * q / m.mass;
-
-            v.x += f_x;
-            v.y += f_y;
-
-            /*
-            System.Console.WriteLine("w={0}", w);
-            System.Console.WriteLine("q={0}", q);
-            System.Console.WriteLine("n_x={0}", n_x);
-            System.Console.WriteLine("n_y={0}", n_y);
-            System.Console.WriteLine("f_x={0}", f_x);
-            System.Console.WriteLine("f_y={0}", f_y);
-            System.Console.WriteLine("dot={0}", dot);
-*/
-            //var m = e1.get_component<Angle>();
-            //var inertia = 1.0f;
-            //var q = 2.0f * 3.1415f * a.ang_vel * c.radius;
-            //v.y += inertia*q/10.0f;
+            var w = a1.ang_vel;
+            w_x = -w*r_y;///r;
+            w_y =  w*r_x;///r;
         }
 
-        v.x *= m.restitution_coeff;
-        v.y *= m.restitution_coeff;
+        var v_x = -(v1.x + w_x);
+        var v_y = -(v1.y + w_y);
 
+        var v = v_x*n_x+v_y*n_y;
+
+        if (v > 0.0f) {
+            return;
+        }
+
+        var e = m1.restitution_coeff;
+        var j = -(1.0f+e) * v;
+
+        v1.x -= j*n_x;
+        v1.y -= j*n_y;
+
+        if (a1 != null) {
+            //a1.ang_vel += (-r_y*n_x+r_x*n_y)/r;
+            //Console.WriteLine(             (-r_y*n_x+r_x*n_y)/r);
+            var w = a1.ang_vel;
+            w_x = -w*r_y;///r;
+            w_y =  w*r_x;///r;
+        }
+
+        v_x = -(v1.x + w_x);
+        v_y = -(v1.y + w_y);
+
+        var d = v_x*n_x+v_y*n_y;
+        var t_x = v_x - d*n_x;
+        var t_y = v_y - d*n_y;
+        var t = (float)Math.Sqrt(t_x*t_x+t_y*t_y);
+        if (t > 0.0f) {
+            t_x /= t;
+            t_y /= t;
+        }
+        var jt = -(v_x*t_x+v_y*t_y);
+
+        var mu = (float)Math.Sqrt(m1.friction*m1.friction*2.0f);
+        var f = 0.0f;
+
+        if (Math.Abs(jt) < j*mu) {
+            f = jt;
+        }
+        else {
+            f = -j*mu; // actually dynamic friction but whatever
+        }
+
+        v1.x -= f*t_x;
+        v1.y -= f*t_y;
+
+        if (a1 != null) {
+            //m1.inertia = m1.mass;//;0.5f*3.141592f * (float)Math.Pow(c1.radius, 4.0f);
+            a1.ang_vel -= (f/r)*(-r_y*t_x+r_x*t_y)/m1.mass; // should be moment of inertia but whateverrrrr
+        }
+
+        //System.Threading.Thread.Sleep(100);
 
     }
 
@@ -316,7 +341,7 @@ public class Collision_Solver : Subsystem {
         }
     }
 
-    private void resolve_circle_map_collision(Entity e1) {
+    private bool resolve_circle_map_collision(Entity e1) {
         var p = e1.get_component<Position>();
         var c = e1.get_component<Bounding_Circle>();
 
@@ -351,7 +376,7 @@ public class Collision_Solver : Subsystem {
             for (int x = left; (xs > 0) ? x <= right : x >= right; x += xs) {
                 for (int y = top; (ys > 0) ? y <= bottom : y >= bottom; y += ys) {
                     if (resolve_circle_tile_collision(e1, x, y))
-                        return;
+                        return true;
                 }
             }
         }
@@ -360,25 +385,32 @@ public class Collision_Solver : Subsystem {
             for (int y = top; (ys > 0) ? y <= bottom : y >= bottom; y += ys) {
                 for (int x = left; (xs > 0) ? x <= right : x >= right; x += xs) {
                     if (resolve_circle_tile_collision(e1, x, y))
-                        return;
+                        return true;
                 }
             }
         }
+
+        return false;
     }
 
     private bool resolve_circle_circle_collision(Entity e1, Entity e2) {
-        var p1     = e1.get_component<Position>();
-        var p2     = e2.get_component<Position>();
-        var p_x    = p2.x - p1.x;
-        var p_y    = p2.y - p1.y;
-        var r2     = p_x*p_x + p_y*p_y;
         var c1     = e1.get_component<Bounding_Circle>();
         var c2     = e2.get_component<Bounding_Circle>();
-        var r2_min = (c1.radius+c2.radius) * (c1.radius+c2.radius);
 
         if (c1.ignore_collisions == c2.ignore_collisions && c1.ignore_collisions > 0) {
             return false;
         }
+
+        if (c1.ignore_collisions2 == c2.ignore_collisions2 && c1.ignore_collisions2 > 0) {
+            return false;
+        }
+
+        var p1     = e1.get_component<Position>();
+        var p2     = e2.get_component<Position>();
+        var d_x    = p2.x - p1.x;
+        var d_y    = p2.y - p1.y;
+        var r2     = d_x*d_x + d_y*d_y;
+        var r2_min = (c1.radius+c2.radius) * (c1.radius+c2.radius);
 
         if (r2 < 0.00001f || r2 >= r2_min) {
             // No penetration or full penetration (which cannot be
@@ -386,72 +418,109 @@ public class Collision_Solver : Subsystem {
             return false;
         }
 
-        var r   = (float)Math.Sqrt(r2);
-        var p   = c1.radius+c2.radius - r + 0.001f; // <-- @To-Do: floating point sucks satans ass.
-        var v1  = e1.get_component<Velocity>();
-        var v2  = e2.get_component<Velocity>();
-        var v_x = v1.x - v2.x;
-        var v_y = v1.y - v2.y;
-        var m1  = e1.get_component<Mass>()?.mass ?? 1.0f;
-        var m2  = e2.get_component<Mass>()?.mass ?? 1.0f;
-        var rc1 = e1.get_component<Mass>()?.restitution_coeff ?? 1.0f;
-        var rc2 = e2.get_component<Mass>()?.restitution_coeff ?? 1.0f;
-        var f1  = 1.0f - m1/(m1+m2);
-        var f2  = 1.0f - m2/(m1+m2);
+        var r    = (float)Math.Sqrt(r2);
+        var n_x  = d_x/r;
+        var n_y  = d_y/r;
+        var c_x  = p1.x + n_x * c1.radius;
+        var c_y  = p1.y + n_y * c1.radius;
+        var m1   = e1.get_component<Mass>();
+        var m2   = e2.get_component<Mass>();
 
-        // Normalize difference in position.
-        p_x /= r;
-        p_y /= r;
+        Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = e2, c_x = c_x, c_y = c_y });
 
-        // Move apart to solve penetration.
-        p1.x -= p_x*p*f1;
-        p1.y -= p_y*p*f1;
-        p2.x += p_x*p*f2;
-        p2.y += p_y*p*f2;
-
-        // Dot product to get cosine of angle between the two vectors
-        // times the magnitude of v.
-        var d = p_x*v_x + p_y*v_y;
-
-        if (d < 0.0f) {
-            // Moving away from each other.
+        if (m1 == null || m2 == null) {
             return false;
         }
 
-        var c_x = p1.x + p_x*c1.radius;
-        var c_y = p1.y + p_y*c1.radius;
-        Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = e2, c_x = c_x, c_y = c_y });
+        var a1   = e1.get_component<Angle>();
+        var a2   = e2.get_component<Angle>();
+        var im1  = 1.0f / m1.mass;
+        var im2  = 1.0f / m2.mass;
+        var p    = c1.radius+c2.radius - r + 0.001f; // <-- @To-Do: floating point sucks satans ass.
+        var p1_x = c_x - p1.x;
+        var p1_y = c_y - p1.y;
+        var p2_x = c_x - p2.x;
+        var p2_y = c_y - p2.y;
+        var v1   = e1.get_component<Velocity>();
+        var v2   = e2.get_component<Velocity>();
+        var v_x  = v2.x - v1.x;
+        var v_y  = v2.y - v1.y;
+        var w1_x = 0.0f;
+        var w1_y = 0.0f;
+        var w2_x = 0.0f;
+        var w2_y = 0.0f;
 
-        var n_x = -p_y;
-        var n_y = p_x;
-
-
-        var a1 = e1.get_component<Angle>();
-        if (a1 != null && m1 >= 0.0f) {
-            var w1 = v1.x*n_x + v1.y*n_y;
-            a1.ang_vel -= 0.05f * (w1-a1.ang_vel) * (1.0f- m1/(m1+m2));
+        if (a1 != null) {
+            w1_x = -p1_y*a1.ang_vel;
+            w1_y =  p1_x*a1.ang_vel;
         }
 
-        var a2 = e2.get_component<Angle>();
-        if (a2 != null && m2 > 0.0f) {
-            var w2 = v2.x*-n_x + v2.y*-n_y;
-            a2.ang_vel -= 0.05f * (w2-a2.ang_vel) * (1.0f - m2/(m1+m2));
+        if (a2 != null) {
+            w2_x = -p2_y*a2.ang_vel;
+            w2_y =  p2_x*a2.ang_vel;
         }
 
-        // Newton's third law.
-        p_x *= d*2.0f;
-        p_y *= d*2.0f;
+        if (v_x*n_x+v_y*n_y > 0.0f) {
+            // moving apart
+            return false;
+        }
 
-        // Apply restitution coefficients.
-        f1 *= rc1*rc2;
-        f2 *= rc1*rc2;
+        v_x = (v2.x+w2_x) - (v1.x+w1_y);
+        v_y = (v2.y+w2_x) - (v1.y+w1_y);
 
-        v1.x -= p_x*f1;
-        v1.y -= p_y*f1;
-        v2.x += p_x*f2;
-        v2.y += p_y*f2;
+        var e  = Math.Min(m1.restitution_coeff, m2.restitution_coeff);
+        var j  = -(1+e) * (v_x*n_x+v_y*n_y) / (im1+im2);
+        var m_t = (m1.mass+m2.mass);
+
+        p1.x -= p*n_x * (1.0f-m1.mass/m_t);
+        p1.y -= p*n_y * (1.0f-m1.mass/m_t);
+        p2.x += p*n_x * (1.0f-m2.mass/m_t);
+        p2.y += p*n_y * (1.0f-m2.mass/m_t);
+
+        v1.x -= j*n_x*im1;
+        v1.y -= j*n_y*im1;
+        v2.x += j*n_x*im2;
+        v2.y += j*n_y*im2;
+
+        v_x = (v2.x+w2_x) - (v1.x+w1_y);
+        v_y = (v2.y+w2_x) - (v1.y+w1_y);
+
+        var dot = v_x*n_x+v_y*n_y;
+        var t_x = v_x - dot*n_x;
+        var t_y = v_y - dot*n_y;
+        var t = (float)Math.Sqrt(t_x*t_x+t_y*t_y);
+        if (t > 0.0f) {
+            t_x /= t;
+            t_y /= t;
+        }
+        var jt = -(v_x*t_x+v_y*t_y)/(im1+im2);
+
+        var mu = (float)Math.Sqrt(m1.friction*m1.friction+m2.friction*m2.friction);
+        var f = 0.0f;
+
+        if (Math.Abs(jt) < j*mu) {
+            f = jt;
+        }
+        else {
+            f = -j*mu; // actually dynamic friction but whatever
+        }
+
+        v1.x -= f*t_x*im1;
+        v1.y -= f*t_y*im1;
+        v2.x += f*t_x*im2;
+        v2.y += f*t_y*im2;
+
+        if (a1 != null) {
+            a1.ang_vel -= (f/c1.radius)*(-p1_y*t_x+p1_x*t_y)*im1;
+        }
+
+        if (a2 != null) {
+            a2.ang_vel += (f/c2.radius)*(-p2_y*t_x+p2_x*t_y)*im2;
+
+        }
 
         return true;
+
     }
 }
 

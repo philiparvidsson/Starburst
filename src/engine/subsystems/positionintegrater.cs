@@ -14,9 +14,17 @@ public class Position_Integrator : Subsystem {
             var position = entity.get_component<Position>();
             var velocity = entity.get_component<Velocity>();
             var angle    = entity.get_component<Angle>();
+            var mass     = entity.get_component<Mass>();
+
+            if (mass != null) {
+                velocity.x -= velocity.x * dt * mass.drag_coeff;
+                velocity.y -= velocity.y * dt * mass.drag_coeff;
+            }
 
             position.x += velocity.x * dt;
             position.y += velocity.y * dt;
+
+
 
             if (angle != null) {
                 angle.angle += angle.ang_vel * dt;

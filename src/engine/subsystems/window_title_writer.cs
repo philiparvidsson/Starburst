@@ -9,9 +9,9 @@ namespace Fab5.Engine.Subsystems {
     {
         float elapsedTime = 0;
 
-        public override void update(float t, float dt)
-        {
 
+        public override void draw(float t, float dt)
+        {
             var entities = Fab5_Game.inst().get_entities_fast(typeof(FpsCounter));
             int num_entities = entities.Count;
             for (int i = 0; i < num_entities; i++)
@@ -27,12 +27,10 @@ namespace Fab5.Engine.Subsystems {
                     fps.frameCounter = 0;
                 }
             }
-        }
-        public override void draw(float t, float dt)
-        {
+
             String windowtitle = " * Starburst * ";
-            var entities = Fab5_Game.inst().get_entities_fast(typeof(FpsCounter));
-            int num_entities = entities.Count;
+            //var entities = Fab5_Game.inst().get_entities_fast(typeof(FpsCounter));
+            //int num_entities = entities.Count;
 
             for (int i = 0; i < num_entities; i++)
             {

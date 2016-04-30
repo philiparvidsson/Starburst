@@ -44,6 +44,7 @@ public class Particle_System : Subsystem {
 
   //          var entity  = entities[i];
         foreach (var entity in Fab5_Game.inst().get_entities_fast(typeof (Particle_Emitter))) {
+
             var emitter = entity.get_component<Particle_Emitter>();
 
 

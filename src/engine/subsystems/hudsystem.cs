@@ -87,7 +87,7 @@
         public void drawHUD(Entity player, float dt)
         {
 
-            sprite_batch.Begin(SpriteSortMode.Deferred);
+            //sprite_batch.Begin(SpriteSortMode.Deferred);
 
             this.ship_info = player.get_component<Ship_Info>();
             drawHP();
@@ -95,7 +95,7 @@
             drawScore(player.get_component<Score>(), dt);
             draw_minimap(player.get_component<Position>());
 
-            sprite_batch.End();
+            //sprite_batch.End();
         }
 
         private void drawHP()

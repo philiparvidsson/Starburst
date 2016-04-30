@@ -13,10 +13,10 @@ using Microsoft.Xna.Framework.Graphics;
 public class Starburst : Fab5_Game {
     protected override void init() {
         GraphicsMgr.PreferredBackBufferWidth = 1280;
-        GraphicsMgr.PreferredBackBufferHeight = 768;
-        GraphicsMgr.PreferMultiSampling = true;
+        GraphicsMgr.PreferredBackBufferHeight = 720;
+       // GraphicsMgr.PreferMultiSampling = true;
 
-        GraphicsMgr.GraphicsDevice.RasterizerState = new RasterizerState { MultiSampleAntiAlias = true };
+//        GraphicsMgr.GraphicsDevice.RasterizerState = new RasterizerState { MultiSampleAntiAlias = true };
 
         GraphicsMgr.SynchronizeWithVerticalRetrace = false;
         IsFixedTimeStep = false;

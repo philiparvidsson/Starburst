@@ -26,8 +26,9 @@ namespace Fab5.Engine.Subsystems
                         MediaPlayer.Play(bmusic.BackSong);
                         MediaPlayer.IsRepeating = bmusic.IsRepeat;
                         music.NowPlayingIndex = 0;
-                        music.IsSongStarted = true;
                     }
+
+                        music.IsSongStarted = true;
                 }
             }
         }
@@ -37,6 +38,7 @@ namespace Fab5.Engine.Subsystems
         }
         public override void on_message(string msg, dynamic data)
         {
+            // @To-do: TOBIAS, KOLLA OM MEDDELANDET ÄR TILL DIG INNAN DU LOOPAR!! :-)
 
             var entities = Fab5_Game.inst().get_entities_fast(typeof(SoundLibrary));
             int num_components = entities.Count;
@@ -100,14 +102,14 @@ namespace Fab5.Engine.Subsystems
                             Velocity velo2 = data.entity2.get_component<Velocity>();
                             var speed = Math.Sqrt(Math.Pow(velo.x, 2) + Math.Pow(velo.y, 2));
                             var speed2 = Math.Sqrt(Math.Pow(velo2.x, 2) + Math.Pow(velo2.y, 2));
-                            var coolspeed = speed - speed2 * ((velo.x + velo.y + velo2.x + velo2.y) / (speed * speed2));
-                            Console.WriteLine("Coolspeed " + coolspeed);
-                            if (coolspeed > 15)
+                            var coolspeed = speed - speed2 * ((velo.x * velo.x + velo.y * velo2.y) / (speed * speed2));
+                            //Console.WriteLine("Coolspeed " + coolspeed);
+                            if (coolspeed > 15.0f)
                             {
                                 if (texttureName1.Contains("ship") && texttureName2.Contains("ship"))
 
                                     effect = lib.Library["bang"] as Fab5SoundEffect;
-                                if ((DateTime.Now - effect.LastPlayed).Seconds > 0.2)
+                                if ((DateTime.Now - effect.LastPlayed).Seconds > 0.1)
                                 {
                                     effect.SoundEffect.Play();
                                     effect.LastPlayed = DateTime.Now;
@@ -144,7 +146,7 @@ namespace Fab5.Engine.Subsystems
                             Velocity velo = data.entity1.get_component<Velocity>();
                             var speed = Math.Sqrt(Math.Pow(velo.x, 2) + Math.Pow(velo.y, 2));
                             //Console.WriteLine(speed);
-                            if(speed> 50) { 
+                            if(speed> 50) {
                                 effect = lib.Library["bang2"] as Fab5SoundEffect;
                                 if ((DateTime.Now - effect.LastPlayed).Seconds > 0.2)
                                 {

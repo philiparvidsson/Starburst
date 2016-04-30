@@ -46,15 +46,17 @@ namespace Fab5.Engine.Subsystems {
             defaultViewport = graphicsDevice.Viewport;
 
             backdrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/backdrop4");
-            stardrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/stardrop");
+            stardrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/stardrop");
+
 
             player_indicator_tex = Fab5_Game.inst().get_content<Texture2D>("indicator");
         }
 
         private void draw_backdrop(SpriteBatch sprite_batch, Position playerPosition) {
-            sprite_batch.Begin(SpriteSortMode.Deferred,
-                BlendState.Additive);
-
+            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
+
+
+
                 var fac1 = 0.05f;
                 sprite_batch.Draw(backdrop,
                                   Vector2.Zero,
@@ -78,7 +80,9 @@ namespace Fab5.Engine.Subsystems {
                                   new Vector2(2.0f, 2.0f),
                                   SpriteEffects.None,
                                   0.9f);
-            sprite_batch.End();
+
+            sprite_batch.End();
+
 
         }
 
@@ -96,40 +100,40 @@ namespace Fab5.Engine.Subsystems {
             int right  = (int)(left + w/tw)+1;
             int bottom = (int)(top  + h/th)+1;
 
-//            System.Console.WriteLine(left + ", " + right);
-
             float xfrac = left*tw - (int)(camera.position.x+2048.0f-w*0.5f);
             float yfrac = top *th - (int)(camera.position.y+2048.0f-h*0.5f);
 
             xfrac *= camera.zoom;
             yfrac *= camera.zoom;
 
-//            System.Console.WriteLine(camera.position.x + ", " + camera.position.x);
-
             //if (grid_tex == null) {
               //  grid_tex = Fab5_Game.inst().get_content<Texture2D>("tgrid");
             //}
 
-            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, null, null, new RasterizerState{MultiSampleAntiAlias=true});
+            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
 
-            float x = 0.0f;
+            var tile_tex = tile_map.tex;
+            var x = 0.0f;
+            th *= camera.zoom;
+            tw *= camera.zoom;
             for (int i = left; i <= right; i++) {
-                float y = 0.0f;
+                var y = 0.0f;
+                var sx = x+xfrac;
+
                 for (int j = top; j <= bottom; j++) {
                     if (i < 0 || i > 255 || j < 0 || j > 255) {
                         y += th;
                         continue;
                     }
 
-                    int o = i + (j*256);
+                    int o = i + (j<<8);
 
 //                    sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
 
                     int k = tile_map.tiles[o];
                     if (k != 0 && k < 9) {// 9 and up are not visible walls
-                        var tile_tex = tile_map.tex;
                         var v = k-1;
-                        var sx = x+xfrac;
+
                         var sy = y+yfrac;
                         sprite_batch.Draw(tile_tex,
                                           new Vector2(sx, sy),
@@ -142,10 +146,10 @@ namespace Fab5.Engine.Subsystems {
                                           0.5f);
                     }
 
-                    y += th*camera.zoom;
+                    y += th;
                 }
 
-                x += tw*camera.zoom;
+                x += tw;
             }
             sprite_batch.End();
         }
@@ -263,50 +267,78 @@ namespace Fab5.Engine.Subsystems {
         }
 
 
+        private void draw_indicators(Camera current, int currentPlayerNumber, Position currentPlayerPosition) {
+            for (int p2 = 0; p2 < currentPlayerNumber; p2++) {
+                var player2 = players[p2];
+                var player2_pos = player2.get_component<Position>();
+                var d_x = player2_pos.x - current.position.x;
+                var d_y = player2_pos.y - current.position.y;
+
+                var d = (float)Math.Sqrt(d_x*d_x + d_y*d_y);
+
+                if (Math.Abs(d_x) < current.viewport.Width*0.5f/current.zoom && Math.Abs(d_y) < current.viewport.Height*0.5f/current.zoom) {
+                    // other player is on same screen
+                    continue;
+                }
+
+                d_x /= d;
+                d_y /= d;
+
+                d_x *= 36.0f;
+                d_y *= 36.0f;
+
+                var r = (float)Math.Atan2(d_y, d_x);
+
+                var p_x = (currentPlayerPosition.x - current.position.x) + current.viewport.Width  * 0.5f + d_x;
+                var p_y = (currentPlayerPosition.y - current.position.y) + current.viewport.Height * 0.5f + d_y;
+
+                sprite_batch.Draw(player_indicator_tex,
+                                  new Vector2(p_x, p_y),
+                                  null,
+                                  Color.White * 0.65f,
+                                  r,
+                                  new Vector2(player_indicator_tex.Width/2.0f, player_indicator_tex.Height/2.0f),
+                                  1.0f,
+                                  SpriteEffects.None,
+                                  0.5f);
+            }
+
+        }
+
 
         public override void draw(float t, float dt)
         {
             sprite_batch.GraphicsDevice.Clear(Color.Black);
 
 
-
-            // måla ut en eventuell bakgrund/border
-
-            // hämta spelare och dess positioner
-            players = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler));
-
+            players              = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler));
             currentPlayerNumber = players.Count;
 
             // är det inte samma antal spelare som förut, räkna om antalet och gör om viewports o kameror (viewports, cameras)
-            if (currentPlayerNumber != prevPlayerNumber)
-            {
+            if (currentPlayerNumber != prevPlayerNumber) {
                 updatePlayers();
             }
 
-            // rita ut
-
-            int num_entities;
             var entities = Fab5_Game.inst().get_entities_fast(typeof(Sprite));
-            num_entities = entities.Count;
+            var num_entities = entities.Count;
 
-             /*
-             * Loopa igenom kameror
-             *
-             * För varje kamera,
-             * kör den vanliga draw-loopen baserat på kamerans viewport
-             */
-
-            List<Entity> temp = new List<Entity>(256);
+            var temp = new List<Entity>(256);
 
             bool in_any_view = false;
             foreach (Entity e in entities) {
-                var p = e.get_component<Position>();
-                var tex = e.get_component<Sprite>().texture;
+                var pos = e.get_component<Position>();
+                var tex = e.get_component<Sprite  >().texture;
+
                 foreach (Camera cam in cameras) {
-                    if ((p.x+tex.Width > cam.position.x - cam.viewport.Width/2.0f)
-                     || (p.x-tex.Width > cam.position.x - cam.viewport.Width/2.0f)
-                     || (p.y+tex.Height > cam.position.y - cam.viewport.Height/2.0f)
-                     || (p.y-tex.Height > cam.position.y - cam.viewport.Height/2.0f))
+                    var cx = cam.position.x;
+                    var cy = cam.position.y;
+                    var hw = cam.viewport.Width /2.0f;
+                    var hh = cam.viewport.Height/2.0f;
+
+                    if ((pos.x+tex.Width  > cx - hw)
+                     || (pos.x-tex.Width  > cx - hh)
+                     || (pos.y+tex.Height > cy + hw)
+                     || (pos.y-tex.Height > cy + hh))
                     {
                         in_any_view = true;
                         break;
@@ -318,92 +350,40 @@ namespace Fab5.Engine.Subsystems {
                 }
             }
 
-            entities = temp;
+            entities     = temp;
             num_entities = entities.Count;
-
-            //if (num_entities != num_sprites_last_call) {
-
-            //}
-
 
             for (int i = 0; i < num_entities; i++) {
                 update_sprite(entities[i], dt);
             }
 
-            for (int p = 0; p < currentPlayerNumber; p++)
-            {
+            for (int p = 0; p < currentPlayerNumber; p++) {
                 Camera current = cameras[p];
 
                 sprite_batch.GraphicsDevice.Viewport = current.viewport;
 
-                var currentPlayer = players[p];
+                var currentPlayer         = players[p];
                 var currentPlayerPosition = currentPlayer.get_component<Position>();
-                cameras[p].position.x += ((currentPlayerPosition.x-cameras[p].position.x) * 10.0f) * dt;
-                cameras[p].position.y += ((currentPlayerPosition.y-cameras[p].position.y) * 10.0f) * dt;
 
-                if (cameras[p].position.x - 0.5f*cameras[p].viewport.Width/cameras[p].zoom < -2048.0f) cameras[p].position.x = -2048.0f + 0.5f*cameras[p].viewport.Width/cameras[p].zoom;
+                current.position.x += ((currentPlayerPosition.x-current.position.x) * 10.0f) * dt;
+                current.position.y += ((currentPlayerPosition.y-current.position.y) * 10.0f) * dt;
 
-             if (cameras[p].position.x + 0.5f*cameras[p].viewport.Width/cameras[p].zoom > 2048.0f) cameras[p].position.x = 2048.0f - 0.5f*cameras[p].viewport.Width/cameras[p].zoom;
+                if (current.position.x - 0.5f*current.viewport.Width/current.zoom < -2048.0f) current.position.x = -2048.0f + 0.5f*current.viewport.Width/current.zoom;
+                if (current.position.x + 0.5f*current.viewport.Width/current.zoom > 2048.0f) current.position.x = 2048.0f - 0.5f*current.viewport.Width/current.zoom;
+                if (current.position.y - 0.5f*current.viewport.Height/current.zoom < -2048.0f) current.position.y = -2048.0f + 0.5f*current.viewport.Height/current.zoom;
+                if (current.position.y + 0.5f*current.viewport.Height/current.zoom > 2048.0f) current.position.y = 2048.0f - 0.5f*current.viewport.Height/current.zoom;
 
-               if (cameras[p].position.y - 0.5f*cameras[p].viewport.Height/cameras[p].zoom < -2048.0f) cameras[p].position.y = -2048.0f + 0.5f*cameras[p].viewport.Height/cameras[p].zoom;
-
-             if (cameras[p].position.y + 0.5f*cameras[p].viewport.Height/cameras[p].zoom > 2048.0f) cameras[p].position.y = 2048.0f - 0.5f*cameras[p].viewport.Height/cameras[p].zoom;
-
-
-                 draw_backdrop(sprite_batch, cameras[p].position);
-
-
+                draw_backdrop(sprite_batch, current.position);
                 draw_tile_map(sprite_batch, current);
+
                 drawSprites(sprite_batch, current, num_entities, entities, 0.0f);
 
+                sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
-                sprite_batch.Begin(SpriteSortMode.Deferred,
-                                       BlendState.AlphaBlend, null, null, null, null,
-                                       transformMatrix: current.getViewMatrix(current.viewport));
-
-
-
-                for (int p2 = 0; p2 < currentPlayerNumber; p2++) {
-                    var player2 = players[p2];
-                    var player2_pos = player2.get_component<Position>();
-                    var d_x = player2_pos.x - current.position.x;
-                    var d_y = player2_pos.y - current.position.y;
-
-                    var d = (float)Math.Sqrt(d_x*d_x + d_y*d_y);
-
-                    if (Math.Abs(d_x) < current.viewport.Width*0.5f/current.zoom && Math.Abs(d_y) < current.viewport.Height*0.5f/current.zoom) {
-                        // other player is on same screen
-                        continue;
-                    }
-
-                    d_x /= d;
-                    d_y /= d;
-
-                    d_x *= 36.0f;
-                    d_y *= 36.0f;
-
-                    var r = (float)Math.Atan2(d_y, d_x);
-
-                    var p_x = currentPlayerPosition.x + d_x;
-                    var p_y = currentPlayerPosition.y + d_y;
-
-            sprite_batch.Draw(player_indicator_tex,
-                              new Vector2(p_x, p_y),
-                              null,
-                              Color.White * 0.65f,
-                              r,
-                              new Vector2(player_indicator_tex.Width/2.0f, player_indicator_tex.Height/2.0f),
-                              1.0f,
-                              SpriteEffects.None,
-                              0.5f);
-                }
-
-
-
+                draw_indicators(cameras[p], currentPlayerNumber, currentPlayerPosition);
+                hudsystem_instance.drawHUD(currentPlayer, dt);
 
                 sprite_batch.End();
-
-                hudsystem_instance.drawHUD(currentPlayer, dt);
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;
             base.draw(t, dt);
@@ -486,9 +466,10 @@ namespace Fab5.Engine.Subsystems {
             int frame_y = sprite.frame_y;
 
             if (frame_width == 0.0f) {
-                frame_width = sprite.texture.Width;
+                frame_width  = sprite.texture.Width;
                 frame_height = sprite.texture.Height;
             }
+
             var source_rect = entity.get_component<DrawArea>()?.rectangle ?? new Rectangle(0, 0, frame_width, frame_height);
 
             if (sprite.num_frames > 1) {

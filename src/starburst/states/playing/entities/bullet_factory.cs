@@ -68,9 +68,9 @@
                 angle,
                 bulletSprite,
                 //bulletDrawArea,
-                new Bounding_Circle() { radius = 6, ignore_collisions = IG_BULLET },
-                new Mass { mass = 1.0f, restitution_coeff = 1.0f },
-                new TTL() { alpha_fn = (x, max) => 1.0f - (float)Math.Pow(x/max, 5.0f), max_time = lifeTime },
+                new Bounding_Circle() { radius = 6, ignore_collisions = IG_BULLET, ignore_collisions2 = origin.get_component<Ship_Info>().team },
+                new Mass { mass = 1.0f, restitution_coeff = 1.0f, friction = 0.0f },
+                new TTL() { alpha_fn = (x, max) => 10.0f-10.0f*x/max, max_time = lifeTime },
                 new Bullet_Info() { damage = weapon.damage, sender = origin }
             };
         }
@@ -123,9 +123,9 @@
                 angle,
                 bulletSprite,
                 //bulletDrawArea,
-                new Bounding_Circle() { radius = 14.0f, ignore_collisions = IG_BULLET },
-                new Mass { mass = 50.0f, restitution_coeff = 1.0f },
-                new TTL() { alpha_fn = (x, max) => 1.0f - (float)Math.Pow(x/max, 5.0f), max_time = lifeTime },
+                new Bounding_Circle() { radius = 14.0f, ignore_collisions = IG_BULLET, ignore_collisions2 = origin.get_component<Ship_Info>().team },
+                new Mass { mass = 50.0f, restitution_coeff = 1.0f, friction = 0.0f },
+                new TTL() { alpha_fn = (x, max) => 20.0f-20.0f*x/max, max_time = lifeTime },
                 new Bullet_Info() { damage = weapon.damage, sender = origin }
             };
         }

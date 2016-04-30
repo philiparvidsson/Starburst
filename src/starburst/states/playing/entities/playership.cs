@@ -59,7 +59,7 @@
                             color = new Color(1.0f, 0.7f, 0.3f) * 0.75f,
                             scale = 0.9f + (float)rand.NextDouble() * 1.3f,
                             blend_mode = Sprite.BM_ADD,
-                            layer_depth = 0.3f
+                            layer_depth = 0.1f
                         },
                         new TTL() { alpha_fn = (x, max) => 1.0f - (x/max), max_time = 0.05f + (float)(rand.NextDouble() * 0.05f) }
 //                        new Bounding_Circle() { radius = 1.0f },
@@ -78,7 +78,7 @@
                             color = new Color(1.0f, 0.7f, 0.2f) * 0.95f,
                             scale = 0.4f + (float)rand.NextDouble() * 0.3f,
                             blend_mode = Sprite.BM_ADD,
-                            layer_depth = 0.3f
+                            layer_depth = 0.1f
                         },
                         new TTL() { alpha_fn = (x, max) => 1.0f - (x/max), max_time = 0.35f + (float)(rand.NextDouble() * 0.35f) }
 //                        new Bounding_Circle() { radius = 1.0f },
@@ -98,10 +98,11 @@
                 new Sprite()
                 {
                     texture = Starburst.inst().get_content<Texture2D>(ship),
+                    layer_depth = 0.6f
                     //color = new Color(0.6f, 0.9f, 1.0f)
                 },
             new Ship_Info(100,130,100,100) { team = team, pindex = pindex },
-                new Bounding_Circle() { radius = 20.0f },
+                new Bounding_Circle() { radius = 20.0f, ignore_collisions2 = team },
                 new Mass() { mass = 15.0f, restitution_coeff = 0.6f },
                 new Primary_Weapon(),
                 new Secondary_Weapon(),
