@@ -7,6 +7,9 @@ using System;
 
 using Microsoft.Xna.Framework.Graphics;
 
+
+using Fab5.Starburst.Components;
+
 public static class Dummy_Enemy {
     public static Component[] create_components() {
         return new Component[] {

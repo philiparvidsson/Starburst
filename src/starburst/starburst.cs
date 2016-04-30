@@ -19,7 +19,7 @@ public class Starburst : Fab5_Game {
 //        GraphicsMgr.GraphicsDevice.RasterizerState = new RasterizerState { MultiSampleAntiAlias = true };
 
         GraphicsMgr.SynchronizeWithVerticalRetrace = false;
-        IsFixedTimeStep = false;
+//        IsFixedTimeStep = false;
 
         GraphicsMgr.ApplyChanges();
 

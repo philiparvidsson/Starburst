@@ -3,6 +3,8 @@ namespace Fab5.Engine.Subsystems {
 using Fab5.Engine.Components;
 using Fab5.Engine.Core;
 
+using Fab5.Starburst.Components;
+
 public class AI : Subsystem {
     public override void update(float t, float dt) {
         var entities = Fab5_Game.inst().get_entities_fast(typeof (Brain));

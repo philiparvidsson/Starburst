@@ -4,6 +4,8 @@ using Fab5.Engine.Components;
 using Fab5.Engine.Core;
 using Fab5.Engine;
 
+using Fab5.Starburst.Components;
+
 using System;
 
 using Microsoft.Xna.Framework.Graphics;
@@ -49,7 +51,45 @@ public static class Soccer_Ball {
                 //color = new Color(0.6f, 0.9f, 1.0f)
             },
             new Bounding_Circle() { radius = 17.0f },
-            new Mass() { mass = 5.0f, restitution_coeff = 0.92f, drag_coeff = 0.1f }
+            new Mass() { mass = 5.0f, restitution_coeff = 0.92f, drag_coeff = 0.1f },
+
+            new Brain {
+                think_fn = (self, dt) => {
+                    var position = self.get_component<Position>();
+                    var radius   = self.get_component<Bounding_Circle>().radius;
+                    var tw       = 16.0f;
+                    var th       = 16.0f;
+                    var w        = 2.0f*radius;
+                    var h        = 2.0f*radius;
+                    var left     = (int)((position.x+2048.0f-w*0.5f) / tw);
+                    var top      = (int)((position.y+2048.0f-h*0.5f) / th);
+                    var right    = (int)(left + w/tw)+1;
+                    var bottom   = (int)(top  + h/th)+1;
+
+                    var tiles = ((Playing_State)self.state).tile_map.tiles;
+                    for (int i = left; i <= right; i++) {
+                        for (int j = top; j <= bottom; j++) {
+                            if (i < 0 || i > 255 || j < 0 || j > 255) continue;
+
+                            var t = tiles[i+(j<<8)];
+                            if (t == 7) {
+                                // team 2 scored
+                                Console.WriteLine("team 2 scored");
+                                //self.add_components(new TTL { max_time = 0.0f });
+                                return;
+                                //self.destroy();
+                            }
+                            else if (t == 8) {
+                                // team 1 scored
+                                Console.WriteLine("team 1 scored");
+                                //self.add_components(new TTL { max_time = 0.0f });
+                                return;
+                                //self.destroy();
+                            }
+                        }
+                    }
+                }
+            }
         };
     }
 

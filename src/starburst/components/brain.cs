@@ -1,4 +1,4 @@
-namespace Fab5.Engine.Subsystems {
+namespace Fab5.Starburst.Components {
 
 using Fab5.Engine.Components;
 using Fab5.Engine.Core;

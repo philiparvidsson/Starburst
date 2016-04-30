@@ -35,7 +35,7 @@
         public override void draw(float t, float dt) {
             var entities = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler));
             int num_components = entities.Count;
-            
+
             for (int i = 0; i < num_components; i++)
             {
                 var entity = entities[i];
@@ -55,15 +55,16 @@
                 // Keyboard device
                 if (input.device == Inputhandler.InputType.Keyboard) {
                     input.keyboardState = Keyboard.GetState();
-                    
+
                     if (input.keyboardState.IsKeyDown(input.left))
                         turn -= 1.0f;
 
                     if (input.keyboardState.IsKeyDown(input.right))
                         turn += 1.0f;
-                    
+
+                    input.throttle = 0.0f;
                     if (input.keyboardState.IsKeyDown(input.down)) {
-                        input.throttle -= 1.0f;
+                        input.throttle = -1.0f;
                     }
                     if (input.keyboardState.IsKeyDown(input.up)) {
                         input.throttle = 1.0f;
@@ -80,7 +81,7 @@
                     GamePadState state = GamePad.GetState(input.gp_index);
                     turn = state.ThumbSticks.Left.X;
                     input.throttle = state.Triggers.Right - state.Triggers.Left;
-                    
+
                     if (state.Buttons.A == ButtonState.Pressed) {
                         fire(entity, ship, primaryWeapon);
                     }

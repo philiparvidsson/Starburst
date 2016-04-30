@@ -510,6 +510,8 @@ public class Collision_Solver : Subsystem {
         v2.x += f*t_x*im2;
         v2.y += f*t_y*im2;
 
+//        System.Console.WriteLine(n_x*t_x+n_y*t_y)
+
         if (a1 != null) {
             a1.ang_vel -= (f/c1.radius)*(-p1_y*t_x+p1_x*t_y)*im1;
         }

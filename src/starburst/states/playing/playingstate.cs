@@ -32,7 +32,7 @@ public class Playing_State : Game_State {
         }
     }
 
-    Tile_Map tile_map;
+    public Tile_Map tile_map;
 
     private void load_map() {
         using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap("map.png")) {
