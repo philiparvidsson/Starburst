@@ -154,7 +154,7 @@ public class Playing_State : Game_State {
 
         create_entity(Turbo_Powerup.create_components());
 
-        create_entity(Dummy_Enemy.create_components());
+        //create_entity(Dummy_Enemy.create_components());
     }
 
     int edit_tile = 1;

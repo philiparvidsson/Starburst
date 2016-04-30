@@ -85,15 +85,28 @@ namespace Fab5.Starburst.States.Playing {
     }
 
     private void soccerball_player(Entity a, Entity b, dynamic data) {
+        var soccerball = (a.get_component<Sprite>().texture.Name == "soccerball") ? a : b;
+        var player     = (soccerball == a) ? b : a;
+
+        var v_x = soccerball.get_component<Velocity>().x - player.get_component<Velocity>().x;
+        var v_y = soccerball.get_component<Velocity>().y - player.get_component<Velocity>().y;
+
+        var power = (float)Math.Sqrt(v_x*v_x+v_y*v_y);
+
         state.create_entity(new Component[] {
             new TTL { max_time = 0.05f },
             new Particle_Emitter() {
                 emit_fn = () => {
+                    var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
+                    var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
+                    var radius = 13.0f * (float)rand.NextDouble();
+                    var speed  = 200.0f * (float)(0.05f+rand.NextDouble());
+
                     return new Component[] {
-                        new Position() { x = data.c_x + (float)Math.Cos(2.0f*3.1415f*(float)rand.NextDouble()) * 13.0f * (float)rand.NextDouble(),
-                                         y = data.c_y + (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 13.0f * (float)rand.NextDouble() },
-                        new Velocity() { x = (float)Math.Cos(2.0f*3.1415f*(float)rand.NextDouble()) * 200.0f * (float)(0.5f+rand.NextDouble()),
-                                         y = (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 200.0f * (float)(0.5f+rand.NextDouble()) },
+                        new Position() { x = data.c_x + (float)Math.Cos(theta1) * radius,
+                                         y = data.c_y + (float)Math.Sin(theta1) * radius },
+                        new Velocity() { x = (float)Math.Cos(theta2) * speed,
+                                         y = (float)Math.Sin(theta2) * speed },
                         new Sprite() {
                             texture = Starburst.inst().get_content<Texture2D>("particle"),
                             color = new Color(1.0f, 0.8f, 0.3f, 1.0f),
@@ -101,11 +114,11 @@ namespace Fab5.Starburst.States.Playing {
                             blend_mode = Sprite.BM_ADD,
                             layer_depth = 0.3f
                         },
-                        new TTL { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max), max_time = 0.35f + (float)(rand.NextDouble() * 0.7f) }
+                        new TTL { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max), max_time = 0.35f + (float)Math.Pow((float)(rand.NextDouble() * 0.7f), 3.0f) }
                     };
                 },
                 interval = 0.01f,
-                num_particles_per_emit = 15
+                num_particles_per_emit = (int)(0.03f*power)
             }
         });
     }
