@@ -84,19 +84,8 @@ namespace Fab5.Starburst.States {
             else if (msg.Equals("down")) {
                 Entity entity = data.Player;
                 var myPosition = entity.get_component<Position>();
-                // om man ska flytta ner från inaktivt läge
                 if (myPosition.y == 0) {
-                    // loopa igenom spelare för att hitta om någon ledig x-koordinat finns
-                    var players = Starburst.inst().get_entities_fast(typeof(Inputhandler));
-                    // prova de olika spelarpositionerna
-                    for (int x = 0; x < 4; x++) {
-                        if (playerSlots[x] == SlotStatus.Empty) {
-                            myPosition.y++;
-                            myPosition.x = x;
-                            playerSlots[x] = SlotStatus.Hovering;
-                            break;
-                        }
-                    }
+                    tryMoveDown(entity);
                 }
             }
             else if (msg.Equals("right")) {
@@ -117,7 +106,9 @@ namespace Fab5.Starburst.States {
             else if (msg.Equals("select")) {
                 Entity entity = data.Player;
                 var position = entity.get_component<Position>();
-                if (position.y == 1) {
+                if (position.y == 0)
+                    tryMoveDown(entity);
+                else if (position.y == 1) {
                     position.y += 1;
                     playerSlots[(int)position.x] = SlotStatus.Selected;
                     playerCount++;
@@ -135,19 +126,22 @@ namespace Fab5.Starburst.States {
                 }
             }
         }
-        private bool isSlotFree(int x, List<Entity>players, Entity me) {
-            for (int i = 0; i < players.Count; i++) {
-                Position pos = players[i].get_component<Position>();
-                // om man jämför med sig själv, eller andra spelaren ligger som inaktiv, strunta i att jämföra
-                if (players[i] == me || pos.y == 0)
-                    continue;
-                // om samma x-värde, säg till att rutan är upptagen, gå ur inre loop
-                if (pos.x == x) {
-                    return false;
+
+        private void tryMoveDown(Entity entity) {
+            var position = entity.get_component<Position>();
+            // loopa igenom spelare för att hitta om någon ledig x-koordinat finns
+            var players = Starburst.inst().get_entities_fast(typeof(Inputhandler));
+            // prova de olika spelarpositionerna
+            for (int x = 0; x < 4; x++) {
+                if (playerSlots[x] == SlotStatus.Empty) {
+                    position.y++;
+                    position.x = x;
+                    playerSlots[x] = SlotStatus.Hovering;
+                    break;
                 }
             }
-            return true;
         }
+
         public override void init() {
             //Starburst.inst().IsMouseVisible = true;
             add_subsystems(
@@ -162,8 +156,8 @@ namespace Fab5.Starburst.States {
             rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>("sector034");
 
-            var player1 = create_entity(Player.create_components());
-            var player2 = create_entity(Player.create_components());
+            var keyboardPlayer1 = create_entity(Player.create_components());
+            var keyboardPlayer2 = create_entity(Player.create_components());
             gamepads = new List<bool>(GamePad.MaximumGamePadCount);
             for (int i = 0; i < GamePad.MaximumGamePadCount; i++) {
                 gamepads.Add(GamePad.GetState(i).IsConnected);
@@ -197,6 +191,9 @@ namespace Fab5.Starburst.States {
                     for(int p=0;p<players.Count;p++) {
                         Inputhandler input = players[p].get_component<Inputhandler>();
                         if (input.device == Inputhandler.InputType.Controller && input.gp_index == (PlayerIndex)i) {
+                            Position position = players[p].get_component<Position>();
+                            if (position.y < 1)
+                                playerSlots[(int)position.x] = SlotStatus.Empty;
                             players[p].destroy();
                             break;
                         }
@@ -220,7 +217,7 @@ namespace Fab5.Starburst.States {
             var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
 
             sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
-            sprite_batch.Draw(background, destinationRectangle: new Rectangle(0, 0, vp.Width, vp.Height), color: Color.White, layerDepth: 0);
+            sprite_batch.Draw(background, destinationRectangle: new Rectangle(0, 0, vp.Width, vp.Height), color: Color.White);
 
             String text = "Choose players";
             Vector2 textSize = font.MeasureString(text);
@@ -243,7 +240,17 @@ namespace Fab5.Starburst.States {
              * Rita ut kontroller
              **/
             Vector2 controllerIconSize = new Vector2(50, 50);
+            /*
+           // räkna hur många kontroller som är inaktiva just nu
+           int inactive = 0;
+           for (int i = 0; i < entities.Count; i++) {
+               if (entities[i].get_component<Position>().y == 0)
+                   inactive++;
+           }
+           int totalControllerWidth = (int)(inactive * controllerIconSize.X);
+           */
             int totalControllerWidth = (int)(entities.Count * controllerIconSize.X);
+
             for (int i = 0; i < entities.Count; i++) {
                 Entity entity = entities[i];
                 Inputhandler input = entity.get_component<Inputhandler>();
@@ -272,7 +279,8 @@ namespace Fab5.Starburst.States {
                     }
                 }
                 sprite_batch.Draw(texture, destinationRectangle: iconRect, color: Color.White, layerDepth: .5f);
-                sprite_batch.DrawString(font, subtitle, new Vector2((int)(iconRect.Center.X - subtitleSize.X * .5f), iconRect.Y + iconRect.Height), Color.White);
+                //sprite_batch.DrawString(font, subtitle, new Vector2((int)(iconRect.Center.X - subtitleSize.X * .5f), iconRect.Y + iconRect.Height - 13), Color.White);
+                sprite_batch.DrawString(font, subtitle, new Vector2((int)(iconRect.Center.X - subtitleSize.X * .5f), iconRect.Y - subtitleSize.Y + 10), Color.White);
                 /*
                 // debug för handkontroll-thumbsticks
                 float x = input.gamepadState.ThumbSticks.Left.X;
@@ -295,7 +303,7 @@ namespace Fab5.Starburst.States {
                 else if (playerSlots[i] == SlotStatus.Selected) {
                     int currentRectStartPos = startPos + rectSize * i + spacing * i;
                     int positionX = (int)(currentRectStartPos + rectSize * .5f - (int)(selectTextSize.X * .5f));
-                    sprite_batch.DrawString(font, "confirmed", new Vector2(positionX, rectangleY + rectSize - selectTextSize.Y - 20), Color.White);
+                    sprite_batch.DrawString(font, "confirmed", new Vector2(positionX, rectangleY + rectSize - selectTextSize.Y - 20), Color.Gold);
                 }
                 sprite_batch.DrawString(font, "Player slot " + (i+1) + ": " + playerSlots[i], new Vector2(0, i * selectTextSize.Y), Color.White);
             }
