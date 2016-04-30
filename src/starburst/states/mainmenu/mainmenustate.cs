@@ -156,7 +156,16 @@ namespace Fab5.Starburst.States {
             rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>("sector034");
 
-            var keyboardPlayer1 = create_entity(Player.create_components());
+            Inputhandler wasd = new Inputhandler() {
+                left = Keys.A,
+                right = Keys.D,
+                up = Keys.W,
+                down = Keys.S,
+                gp_index = PlayerIndex.Two,
+                primary_fire = Keys.F,
+                secondary_fire = Keys.G
+            };
+            var keyboardPlayer1 = create_entity(Player.create_components(wasd));
             var keyboardPlayer2 = create_entity(Player.create_components());
             gamepads = new List<bool>(GamePad.MaximumGamePadCount);
             for (int i = 0; i < GamePad.MaximumGamePadCount; i++) {
@@ -305,13 +314,13 @@ namespace Fab5.Starburst.States {
                     int positionX = (int)(currentRectStartPos + rectSize * .5f - (int)(selectTextSize.X * .5f));
                     sprite_batch.DrawString(font, "confirmed", new Vector2(positionX, rectangleY + rectSize - selectTextSize.Y - 20), Color.Gold);
                 }
-                sprite_batch.DrawString(font, "Player slot " + (i+1) + ": " + playerSlots[i], new Vector2(0, i * selectTextSize.Y), Color.White);
+                //sprite_batch.DrawString(font, "Player slot " + (i+1) + ": " + playerSlots[i], new Vector2(0, i * selectTextSize.Y), Color.White);
             }
 
             text = "Start game";
             textSize = font.MeasureString(text);
             sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), vp.Height - textSize.Y - 20), playerCount >= minPlayers ? Color.Gold : Color.Gray);
-            sprite_batch.DrawString(font, "Number of players: " + playerCount, new Vector2(0, 4 * selectTextSize.Y), Color.White);
+            //sprite_batch.DrawString(font, "Number of players: " + playerCount, new Vector2(0, 4 * selectTextSize.Y), Color.White);
 
             sprite_batch.End();
 

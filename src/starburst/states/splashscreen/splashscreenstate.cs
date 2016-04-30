@@ -23,15 +23,6 @@ namespace Fab5.Starburst.States {
         SpriteFont font;
 
         public override void init() {
-            //Starburst.inst().IsMouseVisible = true;
-            add_subsystems(
-                new Inputhandler_System(),
-                new Sound(),
-                new Particle_System(),
-                new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice))
-            );
-
-            //create_entity(SoundManager.create_backmusic_component());
             splash = Starburst.inst().get_content<Texture2D>("splash");
             font = Starburst.inst().get_content<SpriteFont>("sector034");
             outDelay = delay + duration + displayTime;
@@ -60,6 +51,7 @@ namespace Fab5.Starburst.States {
             base.draw(t, dt);
             Starburst.inst().GraphicsDevice.Clear(Color.Black);
             SpriteBatch sprite_batch = new SpriteBatch(Starburst.inst().GraphicsDevice);
+            Viewport vp = sprite_batch.GraphicsDevice.Viewport;
             sprite_batch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied);
             Rectangle destRect = new Rectangle((int)(sprite_batch.GraphicsDevice.Viewport.Width * .5 - splash.Width * .5), (int)(sprite_batch.GraphicsDevice.Viewport.Height * .5 - splash.Height * .5), splash.Width, splash.Height);
             if (elapsedTime > delay && elapsedTime < outDelay) {
@@ -70,6 +62,10 @@ namespace Fab5.Starburst.States {
                 sprite_batch.Draw(splash, destRect, new Color(255, 255, 255, 1-quadInOut(outDelay, 0, 1)));
                 //sprite_batch.DrawString(font, "Out: " + (1-quadInOut(outDelay, 0, 1)), new Vector2(20, 20), Color.White);
             }
+            String text = "press enter to skip";
+            Vector2 textSize = font.MeasureString(text);
+            sprite_batch.DrawString(font, text, new Vector2(vp.Width * .5f - textSize.X * .5f, vp.Height - textSize.Y - 20), Color.White);
+
             sprite_batch.End();
         }
 
