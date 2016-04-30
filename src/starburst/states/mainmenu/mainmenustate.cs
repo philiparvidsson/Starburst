@@ -161,7 +161,7 @@ namespace Fab5.Starburst.States {
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
             rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>("sector034");
-            
+
             var player1 = create_entity(Player.create_components());
             var player2 = create_entity(Player.create_components());
             gamepads = new List<bool>(GamePad.MaximumGamePadCount);
@@ -219,7 +219,7 @@ namespace Fab5.Starburst.States {
 
             var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
 
-            sprite_batch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied);
+            sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             sprite_batch.Draw(background, destinationRectangle: new Rectangle(0, 0, vp.Width, vp.Height), color: Color.White, layerDepth: 0);
 
             String text = "Choose players";
@@ -240,7 +240,7 @@ namespace Fab5.Starburst.States {
             }
 
             /**
-             * Rita ut kontroller 
+             * Rita ut kontroller
              **/
             Vector2 controllerIconSize = new Vector2(50, 50);
             int totalControllerWidth = (int)(entities.Count * controllerIconSize.X);
@@ -282,7 +282,7 @@ namespace Fab5.Starburst.States {
                 sprite_batch.DrawString(font, sticks, new Vector2(vp.Width-stickSize.X, i * stickSize.Y), Color.White);
                 */
             }
-            
+
             String selectText = "press fire";
             Vector2 selectTextSize = font.MeasureString(selectText);
             for (int i=0; i< playerSlots.Count; i++) {
@@ -299,13 +299,15 @@ namespace Fab5.Starburst.States {
                 }
                 sprite_batch.DrawString(font, "Player slot " + (i+1) + ": " + playerSlots[i], new Vector2(0, i * selectTextSize.Y), Color.White);
             }
-            
+
             text = "Start game";
             textSize = font.MeasureString(text);
             sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), vp.Height - textSize.Y - 20), playerCount >= minPlayers ? Color.Gold : Color.Gray);
             sprite_batch.DrawString(font, "Number of players: " + playerCount, new Vector2(0, 4 * selectTextSize.Y), Color.White);
 
             sprite_batch.End();
+
+            System.Threading.Thread.Sleep(10); // no need to spam menu
         }
     }
 
