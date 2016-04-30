@@ -25,7 +25,7 @@ public static class Dummy_Enemy {
                         return;
                     }
 
-                    var target = players[0]; // target player
+                    var target = players[players.Count-1]; // target player
 
                     var self_pos    = self.get_component<Position>();
                     var target_pos = target.get_component<Position>();
@@ -35,7 +35,14 @@ public static class Dummy_Enemy {
 
                     var theta = (float)Math.Atan2(d_y, d_x);
 
-                    self.get_component<Angle>().ang_vel += (theta - self.get_component<Angle>().angle) * dt;
+                    self.get_component<Angle>().ang_vel += 200.0f * (theta - self.get_component<Angle>().angle) * dt;
+                    self.get_component<Angle>().ang_vel -= 50.0f * self.get_component<Angle>().ang_vel * dt;
+
+                    if (Math.Abs(theta - self.get_component<Angle>().angle) < 0.1f) {
+
+                        self.get_component<Velocity>().x += (float)Math.Cos(self.get_component<Angle>().angle) * 1550.0f * dt;
+                        self.get_component<Velocity>().y += (float)Math.Sin(self.get_component<Angle>().angle) * 1550.0f * dt;
+                    }
                 }
             }
         };
