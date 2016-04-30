@@ -12,6 +12,7 @@ namespace Fab5.Engine.Components
             Library = new Dictionary<string,Component>();
             LastChanged = DateTime.Now;
         }
+        public int song_index;
         public int NowPlayingIndex { get; set; }
         public bool IsSongStarted { get; set; }
         public Dictionary<string, Component> Library { get; set; }

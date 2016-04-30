@@ -20,10 +20,12 @@ public static class Dummy {
         int i = rand.Next(0, 2);
 
         string asset;
-        if (i == 0)
+        if (i == 0) {
             asset = "asteroid";
-        else
+        }
+        else {
             asset = "asteroid2";
+        }
 
         return new Component[] {
             //new Angle() { angle = 0.1f * (float)rand.NextDouble() },
@@ -38,10 +40,10 @@ public static class Dummy {
                 frame_timer = (float)rand.NextDouble(),
                 frame_counter = frame,
                 scale = ascale,
-                //color = new Color(0.6f, 0.9f, 1.0f)
+                color = new Color(0.70f, 0.70f, 0.70f)
             },
             new Bounding_Circle() { radius = 50.0f * ascale },
-            new Mass() { mass = 30.0f * (ascale+1.0f)*(ascale+1.0f) }
+            new Mass() { mass = (30.0f * (ascale+1.0f)*(ascale+1.0f))*10.0f }
         };
     }
 

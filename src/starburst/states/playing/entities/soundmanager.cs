@@ -14,15 +14,17 @@
         public static Component create_backmusic_component() {
             var backlib = new SoundLibrary();
             backlib.Library = new Dictionary<string, Component>();
-            backlib.Library.Add("SpaceLoungeLoop", new BackgroundMusic("sound/SpaceLoungeLoop", true));
-            backlib.Library.Add("SpaceCube", new BackgroundMusic("sound/SpaceCube", true));
+            backlib.Library.Add("Battle", new BackgroundMusic("sound/BoxCat_Games_-_03_-_Battle_Special", true));
+            backlib.Library.Add("Menu", new BackgroundMusic("sound/BoxCat_Games_-_10_-_Epic_Song", true));
+            //backlib.Library.Add("SpaceLoungeLoop", new BackgroundMusic("sound/SpaceLoungeLoop", true));
+            //backlib.Library.Add("SpaceCube", new BackgroundMusic("sound/SpaceCube", true));
             return (Component)backlib;
 
         }
          public static Component create_soundeffects_component() {
             var effectlib = new SoundLibrary();
             effectlib.Library = new Dictionary<string, Component>();
-            
+
             effectlib.Library.Add("rockslide_small", new Fab5SoundEffect("sound/effects/rockslide_smallcombo", "rockslide_small"));
             effectlib.Library.Add("thrust", new Fab5SoundEffect("sound/effects/thrust", "thrust"));
             effectlib.Library.Add("bang", new Fab5SoundEffect("sound/effects/bang1", "bang"));

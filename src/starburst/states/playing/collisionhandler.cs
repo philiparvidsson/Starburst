@@ -210,7 +210,7 @@ namespace Fab5.Starburst.States.Playing {
                         },
                         new Sprite {
                             blend_mode  = Sprite.BM_ADD,
-                            color       = new Color(0.2f, 1.0f, 0.1f),
+                            color       = new Color(0.2f, 0.6f, 1.0f),
                             layer_depth = 0.3f,
                             scale       = 0.2f + (float)rand.NextDouble() * 0.3f,
                             texture     = Starburst.inst().get_content<Texture2D>("particle")
@@ -246,7 +246,7 @@ namespace Fab5.Starburst.States.Playing {
                         },
                         new Sprite {
                             blend_mode  = Sprite.BM_ADD,
-                            color       = new Color(0.2f, 1.0f, 0.1f),
+                            color       = new Color(0.2f, 0.6f, 1.0f),
                             layer_depth = 0.3f,
                             scale       = 0.2f + (float)rand.NextDouble() * 0.3f,
                             texture     = Starburst.inst().get_content<Texture2D>("particle")

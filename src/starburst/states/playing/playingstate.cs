@@ -129,12 +129,12 @@ public class Playing_State : Game_State {
             player.get_component<Position>().y = player_spawn.y;
             player.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
 
-            if (i == 0) {
+            /*if (i == 0) {
                 player.get_component<Position>().x = -1800;
                 player.get_component<Position>().y = 1500;
                 player.get_component<Velocity>().x = 55.0f;
                 player.get_component<Velocity>().y = 0.0f;
-            }
+            }*/
         }
 
         create_entity(SoundManager.create_backmusic_component());
@@ -153,11 +153,10 @@ public class Playing_State : Game_State {
         }
 
         var ball = create_entity(Soccer_Ball.create_components());
-        var ball_pos = new Position() { x = -1500, y = 1500 };//Spawn_Util.get_soccerball_spawn_pos(tile_map);
+        var ball_pos = Spawn_Util.get_soccerball_spawn_pos(tile_map);
         ball.get_component<Position>().x = ball_pos.x;
         ball.get_component<Position>().y = ball_pos.y;
-        ball.get_component<Angle>().ang_vel = 3.141592f * 2.0f * -9.0f;
-        ball.get_component<Velocity>().x = -55.0f;
+        ball.get_component<Angle>().ang_vel = 3.141592f * 2.0f * -2.0f;
 
         create_entity(Turbo_Powerup.create_components());
 

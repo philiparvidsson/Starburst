@@ -21,14 +21,15 @@ namespace Fab5.Engine.Subsystems
                 var music = entity.get_component<SoundLibrary>();
                 if (!music.IsSongStarted)
                 {
-                    var bmusic = music.Library.ElementAt(0).Value as BackgroundMusic;
+                    var bmusic = music.Library.ElementAt(music.song_index).Value as BackgroundMusic;
                     if (bmusic != null) {
                         MediaPlayer.Play(bmusic.BackSong);
                         MediaPlayer.IsRepeating = bmusic.IsRepeat;
                         music.NowPlayingIndex = 0;
+                        music.IsSongStarted = true;
                     }
 
-                        music.IsSongStarted = true;
+
                 }
             }
         }

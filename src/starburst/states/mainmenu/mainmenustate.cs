@@ -143,6 +143,7 @@ namespace Fab5.Starburst.States {
         }
 
         public override void init() {
+
             //Starburst.inst().IsMouseVisible = true;
             add_subsystems(
                 new Menu_Inputhandler_System(),
@@ -150,6 +151,8 @@ namespace Fab5.Starburst.States {
                 new Particle_System(),
                 new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice))
             );
+
+            create_entity(SoundManager.create_backmusic_component()).get_component<SoundLibrary>().song_index = 1;
 
             //create_entity(SoundManager.create_backmusic_component());
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");

@@ -34,7 +34,7 @@
             float cfa = (float)Math.Cos(dAngle);
 
             var pos   = new Position() { x = position.x + shipRadian * cfa, y =  position.y + shipRadian * sfa };
-            var angle = new Angle() { angle = shipAngle.angle + rotationOffset };
+            var angle = new Angle() { angle = shipAngle.angle + rotationOffset, ang_vel = 20.0f };
             var velocity = new Velocity() { x = cfa*speed+shipVel.x, y = sfa*speed+shipVel.y };
 
             Sprite bulletSprite = new Sprite() { texture = bulletTexture1, layer_depth = 1, blend_mode = Sprite.BM_ADD, scale = 0.35f };
@@ -49,7 +49,7 @@
                                              y = velocity.y * 0.05f + (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 20.0f * (float)(0.5f+rand.NextDouble()) },
                             new Sprite() {
                                 texture = Starburst.inst().get_content<Texture2D>("particle"),
-                                color = new Color(0.2f, 1.0f, 0.2f, 1.0f),
+                                color = new Color(0.2f, 0.6f, 1.0f, 1.0f),
                                 scale = 0.2f + (float)rand.NextDouble() * 0.6f,
                                 blend_mode = Sprite.BM_ADD,
                                 layer_depth = 0.3f
@@ -89,7 +89,7 @@
             float cfa = (float)Math.Cos(dAngle);
 
             var pos   = new Position() { x = position.x + shipRadian * cfa, y =  position.y + shipRadian * sfa };
-            var angle = new Angle() { angle = shipAngle.angle + rotationOffset };
+            var angle = new Angle() { angle = shipAngle.angle + rotationOffset, ang_vel = 20.0f };
             var velocity = new Velocity() { x = cfa*speed+shipVel.x, y = sfa*speed+shipVel.y };
 
             Sprite bulletSprite = new Sprite() { texture = bulletTexture2, layer_depth = 1, blend_mode = Sprite.BM_ADD};
