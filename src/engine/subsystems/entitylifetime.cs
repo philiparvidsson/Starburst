@@ -6,11 +6,14 @@ using Fab5.Engine.Core;
     using Microsoft.Xna.Framework;
 
 public class Lifetime_Manager : Subsystem {
-    public override void update(float t, float dt) {
+    bool even_frame;
+    public override void draw(float t, float dt) {
 
 
         var entities = Fab5_Game.inst().get_entities_fast(typeof (TTL));
         int num_entities = entities.Count;
+
+        even_frame = !even_frame;
 
         for (int i = 0; i < num_entities; i++) {
             var entity = entities[i];
@@ -25,7 +28,7 @@ public class Lifetime_Manager : Subsystem {
                 continue;
             }
 
-            if (ttl.alpha_fn != null) {
+            if (ttl.alpha_fn != null && even_frame) {
                 var s = entity.get_component<Sprite>();
                 if (s != null) {
                     var a = ttl.alpha_fn(ttl.time, ttl.max_time) * 255.0f;

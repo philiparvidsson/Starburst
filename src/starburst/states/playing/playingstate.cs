@@ -111,6 +111,7 @@ public class Playing_State : Game_State {
             new Particle_System(),
             new Lifetime_Manager(),
             new Weapon_System(this),
+            new AI(),
             new Rendering_System(Starburst.inst().GraphicsDevice) {
                 tile_map = tile_map
             }
@@ -183,6 +184,8 @@ public class Playing_State : Game_State {
         player1.get_component<Position>().y = 1700;
 
         create_entity(Turbo_Powerup.create_components());
+
+        create_entity(Dummy_Enemy.create_components());
     }
 
     int edit_tile = 1;

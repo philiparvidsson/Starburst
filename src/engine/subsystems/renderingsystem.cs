@@ -110,7 +110,7 @@ namespace Fab5.Engine.Subsystems {
               //  grid_tex = Fab5_Game.inst().get_content<Texture2D>("tgrid");
             //}
 
-            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
+            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
             var tile_tex = tile_map.tex;
             var x = 0.0f;

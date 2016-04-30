@@ -241,7 +241,7 @@ public abstract class Game_State {
             int num_sprites = sprites.Count;
 // Only re-sort on new sprites... lol
             sprites.Sort(sort_on_blend_mode);
-            sprites.Sort(sort_on_layer_depth);
+            //sprites.Sort(sort_on_layer_depth);
             /*for (int i = 0; i < num_sprites; i++) {
                 var s1 = sprites[i].get_component<Sprite>();
 
