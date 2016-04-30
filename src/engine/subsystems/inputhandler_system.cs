@@ -6,15 +6,36 @@
     using Fab5.Engine.Core;
     using Microsoft.Xna.Framework.Input;
     using Engine;
-    public class Inputhandler_System : Subsystem
-        {
-            public override void draw(float t, float dt)
-            {
+    public class Inputhandler_System : Subsystem {
+        private void fire(Entity entity, Ship_Info ship, Weapon weapon) {
+            if (weapon.timeSinceLastShot >= weapon.fire_rate && ship.energy_value >= weapon.energy_cost) {
+                var message = new { Origin = entity, Weapon = weapon, Ship = ship };
+                Fab5_Game.inst().message("fireInput", message);
+            }
+        }
+        private bool is_key_clicked(Keys key, KeyboardState current, KeyboardState previous) {
+            return previous.IsKeyUp(key) && current.IsKeyDown(key);
+        }
+        private bool is_gamepad_clicked(Buttons key, GamePadState current, GamePadState previous) {
+            return previous.IsButtonUp(key) && current.IsButtonDown(key);
+        }
+        private bool is_gamepad_thumbstick_up(float threshold, GamePadState current, GamePadState previous) {
+            return previous.ThumbSticks.Left.Y <= threshold && current.ThumbSticks.Left.Y > threshold;
+        }
+        private bool is_gamepad_thumbstick_down(float threshold, GamePadState current, GamePadState previous) {
+            return previous.ThumbSticks.Left.Y >= threshold - 1 && current.ThumbSticks.Left.Y < threshold - 1;
+        }
+        private bool is_gamepad_thumbstick_left(float threshold, GamePadState current, GamePadState previous) {
+            return previous.ThumbSticks.Left.X >= threshold - 1 && current.ThumbSticks.Left.X < threshold - 1;
+        }
+        private bool is_gamepad_thumbstick_right(float threshold, GamePadState current, GamePadState previous) {
+            return previous.ThumbSticks.Left.X <= threshold && current.ThumbSticks.Left.X > threshold;
+        }
 
-                var entities = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler));
-                int num_components = entities.Count;
-
-
+        public override void draw(float t, float dt) {
+            var entities = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler));
+            int num_components = entities.Count;
+            
             for (int i = 0; i < num_components; i++)
             {
                 var entity = entities[i];
@@ -22,23 +43,51 @@
                 var angle = entity.get_component<Angle>();
                 var input = entity.get_component<Inputhandler>();
                 var ship = entity.get_component<Ship_Info>();
+                Primary_Weapon primaryWeapon = entity.get_component<Primary_Weapon>();
+                Secondary_Weapon secondaryWeapon = entity.get_component<Secondary_Weapon>();
 
                 var max_speed = ship.top_velocity;
                 var acc       = ship.acceleration;
 
-                input.keyboardState = Keyboard.GetState();
-
                 angle.ang_vel -= angle.ang_vel * 10.0f * dt;
-
                 float turn = 0.0f;
 
-                turn = GamePad.GetState(input.gp_index).ThumbSticks.Left.X;
+                // Keyboard device
+                if (input.device == Inputhandler.InputType.Keyboard) {
+                    input.keyboardState = Keyboard.GetState();
+                    
+                    if (input.keyboardState.IsKeyDown(input.left))
+                        turn -= 1.0f;
 
-                if (input.keyboardState.IsKeyDown(input.left))
-                    turn -= 1.0f;
-
-                if (input.keyboardState.IsKeyDown(input.right))
-                    turn += 1.0f;
+                    if (input.keyboardState.IsKeyDown(input.right))
+                        turn += 1.0f;
+                    
+                    if (input.keyboardState.IsKeyDown(input.down)) {
+                        input.throttle -= 1.0f;
+                    }
+                    if (input.keyboardState.IsKeyDown(input.up)) {
+                        input.throttle = 1.0f;
+                    }
+                    if (input.keyboardState.IsKeyDown(input.primary_fire)) {
+                        fire(entity, ship, primaryWeapon);
+                    }
+                    if (input.keyboardState.IsKeyDown(input.secondary_fire)) {
+                        fire(entity, ship, secondaryWeapon);
+                    }
+                }
+                // Gamepad device
+                else {
+                    GamePadState state = GamePad.GetState(input.gp_index);
+                    turn = state.ThumbSticks.Left.X;
+                    input.throttle = state.Triggers.Right - state.Triggers.Left;
+                    
+                    if (state.Buttons.A == ButtonState.Pressed) {
+                        fire(entity, ship, primaryWeapon);
+                    }
+                    if (state.Buttons.X == ButtonState.Pressed) {
+                        fire(entity, ship, secondaryWeapon);
+                    }
+                }
 
                 if (Math.Abs(turn) > 0.001f) {
                     var ang_acc = 60.0f * dt;
@@ -49,52 +98,25 @@
                         angle.ang_vel = 5.0f;
                     }
                 }
-
-
-                input.throttle = GamePad.GetState(input.gp_index).Triggers.Right - GamePad.GetState(input.gp_index).Triggers.Left;
-
-                if (input.keyboardState.IsKeyDown(input.down))
-                {
-                    input.throttle -= 1.0f;
-                }
-
-                if (input.keyboardState.IsKeyDown(input.up))
-                {
-                    input.throttle = 1.0f;
-                }
-
-
-                if (Math.Abs(input.throttle) > 0.01f)
-                {
+                if (Math.Abs(input.throttle) > 0.01f) {
                     //Fab5_Game.inst().message("throttle", new { gp_index = input.gp_index });
 
-                    velocity.x += dt*(float)(Math.Cos(angle.angle)) * acc * input.throttle;
-                    velocity.y += dt*(float)(Math.Sin(angle.angle)) * acc * input.throttle;
+                    velocity.x += dt * (float)(Math.Cos(angle.angle)) * acc * input.throttle;
+                    velocity.y += dt * (float)(Math.Sin(angle.angle)) * acc * input.throttle;
 
-                    var speed = (float)Math.Sqrt(velocity.x*velocity.x + velocity.y*velocity.y);
+                    var speed = (float)Math.Sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
 
                     if (speed > max_speed) {
-                        velocity.x = max_speed*(velocity.x / speed);
-                        velocity.y = max_speed*(velocity.y / speed);
+                        velocity.x = max_speed * (velocity.x / speed);
+                        velocity.y = max_speed * (velocity.y / speed);
                     }
                 }
                 else {
                     //Fab5_Game.inst().message("nothrottle", new { gp_index = input.gp_index });
                 }
 
-                // primary weapon fire
-                if (input.keyboardState.IsKeyDown(input.primary_fire) || GamePad.GetState(input.gp_index).Buttons.A == ButtonState.Pressed) {
-                    var message = new { Origin = entity, Weapon = entity.get_component<Primary_Weapon>() , Dt = dt };
-                    Fab5_Game.inst().message("fire_key_pressed", message);
-                    //, ev.powerups }
-                }
-                // secondary weapon fire
-                if (input.keyboardState.IsKeyDown(input.secondary_fire) || GamePad.GetState(input.gp_index).Buttons.X == ButtonState.Pressed) {
-                    var message = new { Origin = entity, Weapon = entity.get_component<Secondary_Weapon>(), Dt = dt };
-                    Fab5_Game.inst().message("fire_key_pressed", message);
-                    //, ev.powerups }
-                }
 
+                // Misc keys
                 if (input.keyboardState.IsKeyDown(Keys.N)) {
                     Fab5_Game.inst().message("songchanged", null);
                 }

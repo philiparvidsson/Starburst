@@ -20,19 +20,15 @@ namespace Fab5.Engine.Subsystems {
             base.init();
         }
         public override void on_message(string msg, dynamic data) {
-            if(msg.Equals("fire_key_pressed")) {
-                float dt = data.Dt;
+            if(msg.Equals("fireInput")) {
                 Entity origin = data.Origin;
                 Weapon weapon = data.Weapon;
-
-                // kolla dt, räkna ner tid till nästa skott kan skjutas (baserat på fire rate)
-                var ship = origin.get_component<Ship_Info>();
-                if (weapon.timeSinceLastShot >= weapon.fire_rate && ship.energy_value >= weapon.energy_cost) {
-                    var shot = gameState.create_entity(Bullet_Factory.create_components(origin, weapon));
-                    ship.energy_value -= weapon.energy_cost;
-                    Fab5_Game.inst().message("fire", weapon);
-                    weapon.timeSinceLastShot = 0f;
-                }
+                Ship_Info ship = data.Ship;
+                
+                var shot = gameState.create_entity(Bullet_Factory.create_components(origin, weapon));
+                ship.energy_value -= weapon.energy_cost;
+                Fab5_Game.inst().message("fire", weapon);
+                weapon.timeSinceLastShot = 0f;
             }
         }
         public override void update(float t, float dt) {
