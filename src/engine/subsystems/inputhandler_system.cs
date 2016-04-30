@@ -58,22 +58,20 @@
                     
                     if (input.keyboardState.IsKeyDown(input.left))
                         turn -= 1.0f;
-
                     if (input.keyboardState.IsKeyDown(input.right))
                         turn += 1.0f;
-                    
-                    if (input.keyboardState.IsKeyDown(input.down)) {
-                        input.throttle -= 1.0f;
-                    }
-                    if (input.keyboardState.IsKeyDown(input.up)) {
+
+                    if (input.keyboardState.IsKeyDown(input.up)) 
                         input.throttle = 1.0f;
-                    }
-                    if (input.keyboardState.IsKeyDown(input.primary_fire)) {
+                    else if (input.keyboardState.IsKeyDown(input.down)) 
+                        input.throttle = -1.0f;
+                    else 
+                        input.throttle = 0;
+
+                    if (input.keyboardState.IsKeyDown(input.primary_fire))
                         fire(entity, ship, primaryWeapon);
-                    }
-                    if (input.keyboardState.IsKeyDown(input.secondary_fire)) {
+                    if (input.keyboardState.IsKeyDown(input.secondary_fire))
                         fire(entity, ship, secondaryWeapon);
-                    }
                 }
                 // Gamepad device
                 else {
