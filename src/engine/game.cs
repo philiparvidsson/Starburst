@@ -60,14 +60,16 @@ public abstract class Fab5_Game : Game {
         this.Exit();
     }
 
+    private Game_State top_state;
+
     protected override void Update(GameTime game_time) {
         float t  = (float)game_time.TotalGameTime.TotalSeconds;
         float dt = (float)game_time.ElapsedGameTime.TotalSeconds;
 
         time = t;
 
-        if (states.Count > 0) {
-            states.Peek().update(t, dt);
+        if (top_state != null) {
+            top_state.update(t, dt);
         }
 
         update(t, dt);
@@ -79,37 +81,36 @@ public abstract class Fab5_Game : Game {
 
         time = t;
 
-        if (states.Count > 0) {
-            states.Peek().draw(t, dt);
+        if (top_state != null) {
+            top_state.draw(t, dt);
         }
 
         draw(t, dt);
 
-        if (states.Count > 0) {
-            states.Peek().dispatch_messages();
+        if (top_state != null) {
+            top_state.dispatch_messages();
         }
 
-        GC.Collect();
+        GC.Collect(2, System.GCCollectionMode.Optimized, false);
     }
 
     public Entity create_entity(params Component[] components) {
-
-        if (states.Count > 0) {
-            return (states.Peek().create_entity(components));
+        if (top_state != null) {
+            return (top_state.create_entity(components));
         }
 
         return (null);
     }
 
      public List<Entity> get_entities_fast(Type component_type) {
-        if (states.Count > 0) {
-            return (states.Peek().get_entities_fast(component_type));
+        if (top_state != null) {
+            return (top_state.get_entities_fast(component_type));
         }
 
         return (null);
     }
 
-    public Entity[] get_entities(out int num_entities, params Type[] component_types) {
+    /*    public Entity[] get_entities(out int num_entities, params Type[] component_types) {
         num_entities = 0;
 
         if (states.Count > 0) {
@@ -117,7 +118,7 @@ public abstract class Fab5_Game : Game {
         }
 
         return (null);
-    }
+    }*/
 
     float time;
     public float get_time() {
@@ -131,10 +132,16 @@ public abstract class Fab5_Game : Game {
     public void enter_state(Game_State state) {
         state.init();
         states.Push(state);
+        top_state = state;
     }
 
     public void leave_state() {
         states.Pop().cleanup();
+
+        top_state = null;
+        if (states.Count > 0) {
+            top_state = states.Peek();
+        }
     }
 
     public void run() {

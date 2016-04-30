@@ -28,7 +28,7 @@ namespace Fab5.Engine.Subsystems {
                 // kolla dt, räkna ner tid till nästa skott kan skjutas (baserat på fire rate)
                 var ship = origin.get_component<Ship_Info>();
                 if (weapon.timeSinceLastShot >= weapon.fire_rate && ship.energy_value >= weapon.energy_cost) {
-                    var shot = gameState.create_entity(Bullet_Factory.create_components(origin, weapon));                    
+                    var shot = gameState.create_entity(Bullet_Factory.create_components(origin, weapon));
                     ship.energy_value -= weapon.energy_cost;
                     Fab5_Game.inst().message("fire", weapon);
                     weapon.timeSinceLastShot = 0f;

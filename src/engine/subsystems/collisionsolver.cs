@@ -396,12 +396,6 @@ public class Collision_Solver : Subsystem {
     private bool resolve_circle_circle_collision(Entity e1, Entity e2) {
         var c1     = e1.get_component<Bounding_Circle>();
         var c2     = e2.get_component<Bounding_Circle>();
-        var p1     = e1.get_component<Position>();
-        var p2     = e2.get_component<Position>();
-        var d_x    = p2.x - p1.x;
-        var d_y    = p2.y - p1.y;
-        var r2     = d_x*d_x + d_y*d_y;
-        var r2_min = (c1.radius+c2.radius) * (c1.radius+c2.radius);
 
         if (c1.ignore_collisions == c2.ignore_collisions && c1.ignore_collisions > 0) {
             return false;
@@ -411,14 +405,19 @@ public class Collision_Solver : Subsystem {
             return false;
         }
 
+        var p1     = e1.get_component<Position>();
+        var p2     = e2.get_component<Position>();
+        var d_x    = p2.x - p1.x;
+        var d_y    = p2.y - p1.y;
+        var r2     = d_x*d_x + d_y*d_y;
+        var r2_min = (c1.radius+c2.radius) * (c1.radius+c2.radius);
+
         if (r2 < 0.00001f || r2 >= r2_min) {
             // No penetration or full penetration (which cannot be
             // solved in a sane way).
             return false;
         }
 
-        var a1   = e1.get_component<Angle>();
-        var a2   = e2.get_component<Angle>();
         var r    = (float)Math.Sqrt(r2);
         var n_x  = d_x/r;
         var n_y  = d_y/r;
@@ -426,8 +425,17 @@ public class Collision_Solver : Subsystem {
         var c_y  = p1.y + n_y * c1.radius;
         var m1   = e1.get_component<Mass>();
         var m2   = e2.get_component<Mass>();
-        var im1 = 1.0f / m1.mass;
-        var im2 = 1.0f / m2.mass;
+
+        Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = e2, c_x = c_x, c_y = c_y });
+
+        if (m1 == null || m2 == null) {
+            return false;
+        }
+
+        var a1   = e1.get_component<Angle>();
+        var a2   = e2.get_component<Angle>();
+        var im1  = 1.0f / m1.mass;
+        var im2  = 1.0f / m2.mass;
         var p    = c1.radius+c2.radius - r + 0.001f; // <-- @To-Do: floating point sucks satans ass.
         var p1_x = c_x - p1.x;
         var p1_y = c_y - p1.y;
@@ -446,6 +454,7 @@ public class Collision_Solver : Subsystem {
             w1_x = -p1_y*a1.ang_vel;
             w1_y =  p1_x*a1.ang_vel;
         }
+
         if (a2 != null) {
             w2_x = -p2_y*a2.ang_vel;
             w2_y =  p2_x*a2.ang_vel;
@@ -510,9 +519,6 @@ public class Collision_Solver : Subsystem {
 
         }
 
-
-
-        Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = e2, c_x = c_x, c_y = c_y });
         return true;
 
     }

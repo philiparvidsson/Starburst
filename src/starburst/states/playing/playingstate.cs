@@ -105,9 +105,6 @@ public class Playing_State : Game_State {
         add_subsystems(
             new Position_Integrator(),
             new Inputhandler_System(),
-//            new BG_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
-            //new Sprite_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice)),
-
             new Window_Title_Writer(),
             new Collision_Solver(tile_map),
             new Sound(),
@@ -117,7 +114,6 @@ public class Playing_State : Game_State {
             new Rendering_System(Starburst.inst().GraphicsDevice) {
                 tile_map = tile_map
             }
-            //new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice))
         );
 
         create_entity(new FpsCounter());
@@ -125,8 +121,8 @@ public class Playing_State : Game_State {
         var player1 = create_entity(Player_Ship.create_components());
         var player2 = create_entity(Player_Ship.create_components());
 
-       var player3 = create_entity(Player_Ship.create_components());
-       var player4 = create_entity(Player_Ship.create_components());
+       //var player3 = create_entity(Player_Ship.create_components());
+       //var player4 = create_entity(Player_Ship.create_components());
 
         var player1_spawn = Spawn_Util.get_player_spawn_pos(1, tile_map);
         var player2_spawn = Spawn_Util.get_player_spawn_pos(2, tile_map);
@@ -140,12 +136,12 @@ public class Playing_State : Game_State {
         player2.get_component<Position>().y = player2_spawn.y;
         player2.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
 
-        player3.get_component<Position>().x = player3_spawn.x;
+        /*player3.get_component<Position>().x = player3_spawn.x;
         player3.get_component<Position>().y = player3_spawn.y;
         player3.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
         player4.get_component<Position>().x = player4_spawn.x;
         player4.get_component<Position>().y = player4_spawn.y;
-        player4.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
+        player4.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;*/
 
 
             //player2.get_component<Score>().score = 100000000;
@@ -185,11 +181,13 @@ public class Playing_State : Game_State {
 
         player1.get_component<Position>().x = -1800;
         player1.get_component<Position>().y = 1700;
+
+        create_entity(Turbo_Powerup.create_components());
     }
 
     int edit_tile = 1;
-    public override void update(float t, float dt) {
-        base.update(t, dt);
+    public override void draw(float t, float dt) {
+        base.draw(t, dt);
 
             var ships = Starburst.inst().get_entities_fast(typeof(Ship_Info));
             for(int i=0; i < ships.Count; i++)
@@ -203,56 +201,6 @@ public class Playing_State : Game_State {
             }
 
 
-        /*        var tw = 16;
-        var th = 16;
-        var mx = (player1_pos.x + Mouse.GetState().X - 640 + 2048) / tw;
-        var my = (player1_pos.y + Mouse.GetState().Y - 360 + 2048) / th;
-
-        if (mx >= 0 && mx <= 255 && my >= 0 && my <= 255) {
-            int o = (int)my*256+(int)mx;
-
-            if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                tile_map.tiles[o] = edit_tile;
-
-            if (Mouse.GetState().RightButton == ButtonState.Pressed)
-                tile_map.tiles[o] = 0;
-        }
-
-        if (Keyboard.GetState().IsKeyDown(Keys.D1)) {
-            edit_tile = 1;
-        }
-
-        if (Keyboard.GetState().IsKeyDown(Keys.D2)) {
-            edit_tile = 2;
-        }
-
-        if (Keyboard.GetState().IsKeyDown(Keys.D3)) {
-            edit_tile = 3;
-        }
-
-        if (Keyboard.GetState().IsKeyDown(Keys.S)) {
-            using (var f = new System.IO.StreamWriter("map.txt")) {
-                for (int i = 0; i < 256; i++) {
-                    for (int j = 0; j < 256; j++) {
-                        var o = j + i *256;
-                        f.Write(tile_map.tiles[o].ToString());
-                    }
-
-                    f.WriteLine();
-                }
-            }
-        }
-
-        if (Keyboard.GetState().IsKeyDown(Keys.L)) {
-            using (var f = new System.IO.StreamReader("map.txt")) {
-                for (int i = 0; i < 256; i++) {
-                    var s = f.ReadLine();
-                    for (int j = 0; j < 256; j++) {
-                        tile_map.tiles[i*256+j] = int.Parse(s[j].ToString());
-                    }
-                }
-            }
-        }*/
 
         if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape)) {
             Starburst.inst().Quit();

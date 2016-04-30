@@ -34,6 +34,11 @@ namespace Fab5.Starburst.States.Playing {
         reg("ships/ship13", "ships/ship14", player_player);
         reg("ships/ship14", "ships/ship14", player_player);
 
+        reg("ships/ship11", "turbo_powerup", player_turbo_powerup);
+        reg("ships/ship12", "turbo_powerup", player_turbo_powerup);
+        reg("ships/ship13", "turbo_powerup", player_turbo_powerup);
+        reg("ships/ship14", "turbo_powerup", player_turbo_powerup);
+
 
         reg("asteroid" , "asteroid" , asteroid_asteroid);
         reg("asteroid" , "asteroid2", asteroid_asteroid);
@@ -58,6 +63,7 @@ namespace Fab5.Starburst.States.Playing {
         reg("soccerball", "ships/ship14", soccerball_player);
     }
 
+
     private void reg(string a, string b, Action<Entity, Entity, dynamic> action) {
         if (!handlers.ContainsKey(a)) {
             handlers[a] = new Dictionary<string, List<Action<Entity, Entity, dynamic>>>();
@@ -68,6 +74,14 @@ namespace Fab5.Starburst.States.Playing {
         }
 
         handlers[a][b].Add(action);
+    }
+
+    private void player_turbo_powerup(Entity a, Entity b, dynamic data) {
+        var powerup = (a.get_component<Sprite>().texture.Name == "turbo_powerup") ? a : b;
+        var player = (powerup == a) ? b : a;
+
+        powerup.get_component<Powerup>().begin(player, powerup);
+        powerup.destroy();
     }
 
     private void soccerball_player(Entity a, Entity b, dynamic data) {
@@ -454,7 +468,7 @@ namespace Fab5.Starburst.States.Playing {
         }
 
         if (dic == null) {
-            //System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
+            System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
             return;
         }
 
@@ -464,12 +478,12 @@ namespace Fab5.Starburst.States.Playing {
             name1   = name2;
             name2   = tmp;
             if (!handlers.TryGetValue(name1, out dic)) {
-                //System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
+                System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
                 return;
             }
 
             if (!dic.TryGetValue(name2, out actions)) {
-                //System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
+                System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
                 return;
             }
         }

@@ -14,7 +14,6 @@ public class Text_Renderer : Subsystem {
     }
 
     public override void draw(float t, float dt) {
-
         var entities = Fab5_Game.inst().get_entities_fast(typeof (Text));
         int num_components = entities.Count;
 

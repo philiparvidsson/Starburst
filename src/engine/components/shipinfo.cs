@@ -26,6 +26,8 @@
         public int team;
         public int pindex;
 
+        public System.Collections.Generic.List<Powerup> powerups = new System.Collections.Generic.List<Powerup>();
+
 
         public Ship_Info(float top_hp, float top_energy, float top_velocity, float acceleration)
         {
@@ -33,8 +35,8 @@
             this.hp_value = top_hp;
             this.top_energy = top_energy;
             this.energy_value = top_energy;
-            this.top_velocity = top_velocity;
-            this.acceleration = acceleration;
+            this.top_velocity = top_velocity*3.50f;
+            this.acceleration = acceleration*3.80f;
             this.recharge_rate = 20;
         }
     }

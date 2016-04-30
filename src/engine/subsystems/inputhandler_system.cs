@@ -8,7 +8,7 @@
     using Engine;
     public class Inputhandler_System : Subsystem
         {
-            public override void update(float t, float dt)
+            public override void draw(float t, float dt)
             {
 
                 var entities = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler));
@@ -21,6 +21,10 @@
                 var velocity = entity.get_component<Velocity>();
                 var angle = entity.get_component<Angle>();
                 var input = entity.get_component<Inputhandler>();
+                var ship = entity.get_component<Ship_Info>();
+
+                var max_speed = ship.top_velocity;
+                var acc       = ship.acceleration;
 
                 input.keyboardState = Keyboard.GetState();
 
@@ -62,20 +66,21 @@
 
                 if (Math.Abs(input.throttle) > 0.01f)
                 {
-                    Fab5_Game.inst().message("throttle", new { gp_index = input.gp_index });
-                    var acc = 380.0f * dt;
-                    velocity.x += (float)(Math.Cos(angle.angle)) * acc * input.throttle;
-                    velocity.y += (float)(Math.Sin(angle.angle)) * acc * input.throttle;
+                    //Fab5_Game.inst().message("throttle", new { gp_index = input.gp_index });
+
+                    velocity.x += dt*(float)(Math.Cos(angle.angle)) * acc * input.throttle;
+                    velocity.y += dt*(float)(Math.Sin(angle.angle)) * acc * input.throttle;
 
                     var speed = (float)Math.Sqrt(velocity.x*velocity.x + velocity.y*velocity.y);
 
-                    if (speed > 350.0f) {
-                        velocity.x = 350.0f*(velocity.x / speed);
-                        velocity.y = 350.0f*(velocity.y / speed);
+                    if (speed > max_speed) {
+                        velocity.x = max_speed*(velocity.x / speed);
+                        velocity.y = max_speed*(velocity.y / speed);
                     }
                 }
-                else                
-                    Fab5_Game.inst().message("nothrottle", new { gp_index = input.gp_index });
+                else {
+                    //Fab5_Game.inst().message("nothrottle", new { gp_index = input.gp_index });
+                }
 
                 // primary weapon fire
                 if (input.keyboardState.IsKeyDown(input.primary_fire) || GamePad.GetState(input.gp_index).Buttons.A == ButtonState.Pressed) {
@@ -90,11 +95,13 @@
                     //, ev.powerups }
                 }
 
-                if (input.keyboardState.IsKeyDown(Keys.N))
+                if (input.keyboardState.IsKeyDown(Keys.N)) {
                     Fab5_Game.inst().message("songchanged", null);
+                }
 
-                if (input.keyboardState.IsKeyDown(Keys.M))
+                if (input.keyboardState.IsKeyDown(Keys.M)) {
                     Fab5_Game.inst().message("mute", null);
+                }
             }
         }
     }

@@ -172,7 +172,7 @@ public abstract class Game_State {
         return e;
     }
 
-    public Entity[] get_entities(out int num_entities,
+    /*public Entity[] get_entities(out int num_entities,
                                  params Type[] component_types)
 
     {
@@ -201,7 +201,7 @@ public abstract class Game_State {
         num_entities = results.Count;
 
         return (results.ToArray());
-    }
+    }*/
 
     // Adds the specified subsystems to the state.
     public void add_subsystems(params Subsystem[] subsystems) {
@@ -218,8 +218,7 @@ public abstract class Game_State {
     }
 
     public virtual void cleanup() {
-        foreach (var subsystem in subsystems)
-        {
+        foreach (var subsystem in subsystems) {
             subsystem.cleanup();
         }
     }
@@ -230,7 +229,8 @@ public abstract class Game_State {
         }
     }
 
-    private Comparer<Entity> sort_func = Comparer<Entity>.Create((e1, e2) => e1.get_component<Sprite>().blend_mode.CompareTo(e2.get_component<Sprite>().blend_mode));
+    private Comparer<Entity> sort_on_blend_mode = Comparer<Entity>.Create((e1, e2) => e1.get_component<Sprite>().blend_mode.CompareTo(e2.get_component<Sprite>().blend_mode));
+    private Comparer<Entity> sort_on_layer_depth = Comparer<Entity>.Create((e1, e2) => e1.get_component<Sprite>().layer_depth.CompareTo(e2.get_component<Sprite>().layer_depth));
 
     public virtual void draw(float t, float dt) {
         if (resort_sprites) {
@@ -240,7 +240,8 @@ public abstract class Game_State {
             var sprites = get_entities_fast(typeof(Sprite));
             int num_sprites = sprites.Count;
 // Only re-sort on new sprites... lol
-            sprites.Sort(sort_func);
+            sprites.Sort(sort_on_blend_mode);
+            sprites.Sort(sort_on_layer_depth);
             /*for (int i = 0; i < num_sprites; i++) {
                 var s1 = sprites[i].get_component<Sprite>();
 
