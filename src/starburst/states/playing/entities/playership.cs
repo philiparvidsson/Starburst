@@ -128,7 +128,7 @@
                     //color = new Color(0.6f, 0.9f, 1.0f)
                 },
             new Ship_Info(100,130,100,100) { team = team, pindex = pindex },
-                new Bounding_Circle() { radius = 20.0f },
+                new Bounding_Circle() { radius = 20.0f, ignore_collisions2 = team },
                 new Mass() { mass = 15.0f, restitution_coeff = 0.6f },
                 new Primary_Weapon(),
                 new Secondary_Weapon(),
