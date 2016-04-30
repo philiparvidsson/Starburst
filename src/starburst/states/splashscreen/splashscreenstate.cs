@@ -43,7 +43,7 @@ namespace Fab5.Starburst.States {
             elapsedTime += dt;
 
             if(elapsedTime >= splashTime || Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter)) {
-                Starburst.inst().enter_state(new Playing_State());
+                Starburst.inst().enter_state(new Main_Menu_State());
             }
 
             if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape)) {
