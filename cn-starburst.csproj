@@ -43,6 +43,7 @@
     <Compile Include="src\engine\components\drawarea.cs" />
     <Compile Include="src\engine\components\angle.cs" />
     <Compile Include="src\engine\components\backgroundmusic.cs" />
+    <Compile Include="src\engine\components\input.cs" />
     <Compile Include="src\engine\components\particle.cs" />
     <Compile Include="src\engine\components\score.cs" />
     <Compile Include="src\engine\components\soundlibrary.cs" />
@@ -52,7 +53,6 @@
     <Compile Include="src\engine\components\camera.cs" />
     <Compile Include="src\engine\components\fab5soundeffect.cs" />
     <Compile Include="src\engine\components\fpscounter.cs" />
-    <Compile Include="src\engine\components\inputhandler.cs" />
     <Compile Include="src\engine\components\mass.cs" />
     <Compile Include="src\engine\components\particleemitter.cs" />
     <Compile Include="src\engine\components\position.cs" />
@@ -64,6 +64,7 @@
     <Compile Include="src\engine\components\weapon.cs" />
     <Compile Include="src\engine\core.cs" />
     <Compile Include="src\engine\game.cs" />
+    <Compile Include="src\engine\powerups.cs" />
     <Compile Include="src\engine\subsystems\collisionsolver.cs" />
     <Compile Include="src\engine\subsystems\entitylifetime.cs" />
     <Compile Include="src\engine\subsystems\hudsystem.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="src\engine\subsystems\particlesystem.cs" />
     <Compile Include="src\engine\subsystems\positionintegrater.cs" />
     <Compile Include="src\engine\subsystems\renderingsystem.cs" />
+    <Compile Include="src\starburst\components\brain.cs" />
     <Compile Include="src\starburst\components\bulletinfo.cs" />
     <Compile Include="src\starburst\states\mainmenu\entities\player.cs" />
     <Compile Include="src\starburst\states\mainmenu\mainmenustate.cs" />
@@ -78,19 +80,21 @@
     <Compile Include="src\starburst\states\playing\collisionhandler.cs" />
     <Compile Include="src\starburst\states\playing\entities\bullet_factory.cs" />
     <Compile Include="src\engine\subsystems\sound.cs" />
-    <Compile Include="src\engine\subsystems\spriterenderer.cs" />
     <Compile Include="src\engine\subsystems\textrenderer.cs" />
     <Compile Include="src\engine\subsystems\weaponsystem.cs" />
     <Compile Include="src\engine\subsystems\window_title_writer.cs" />
     <Compile Include="src\engine\tilemap.cs" />
     <Compile Include="src\starburst\starburst.cs" />
     <Compile Include="src\starburst\states\playing\entities\dummy.cs" />
+    <Compile Include="src\starburst\states\playing\entities\enemies\dummy_enemy.cs" />
+    <Compile Include="src\starburst\states\playing\entities\powerups\turbopowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\soccerball.cs" />
     <Compile Include="src\starburst\states\playing\entities\soundmanager.cs" />
     <Compile Include="src\starburst\states\playing\entities\playership.cs" />
     <Compile Include="src\starburst\states\playing\playingstate.cs" />
     <Compile Include="src\starburst\states\playing\spawnutil.cs" />
     <Compile Include="src\starburst\states\splashscreen\splashscreenstate.cs" />
+    <Compile Include="src\starburst\subsystems\ai.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
