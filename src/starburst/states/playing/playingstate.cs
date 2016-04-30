@@ -18,9 +18,12 @@ using System;
 public class Playing_State : Game_State {
 
     public static System.Random rand = new System.Random();
-
     private Collision_Handler coll_handler;
+    private List<Inputhandler> inputs;
 
+    public Playing_State(List<Inputhandler> inputs) {
+        this.inputs = inputs;
+    }
 
     public override void on_message(string msg, dynamic data) {
         if (msg == "collision") {
@@ -119,46 +122,15 @@ public class Playing_State : Game_State {
 
         create_entity(new FpsCounter());
 
-        var player1 = create_entity(Player_Ship.create_components());
-        var player2 = create_entity(Player_Ship.create_components());
+        for(int i = 0; i < inputs.Count; i++) {
+            var player = create_entity(Player_Ship.create_components(inputs[i]));
+            var player_spawn = Spawn_Util.get_player_spawn_pos(i % 2 == 1 ? 1 : 2, tile_map);
+            player.get_component<Position>().x = player_spawn.x;
+            player.get_component<Position>().y = player_spawn.y;
+            player.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
+        }
 
-       //var player3 = create_entity(Player_Ship.create_components());
-       //var player4 = create_entity(Player_Ship.create_components());
-
-        var player1_spawn = Spawn_Util.get_player_spawn_pos(1, tile_map);
-        var player2_spawn = Spawn_Util.get_player_spawn_pos(2, tile_map);
-       var player3_spawn = Spawn_Util.get_player_spawn_pos(1, tile_map);
-       var player4_spawn = Spawn_Util.get_player_spawn_pos(2, tile_map);
-
-        player1.get_component<Position>().x = player1_spawn.x;
-        player1.get_component<Position>().y = player1_spawn.y;
-        player1.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
-        player2.get_component<Position>().x = player2_spawn.x;
-        player2.get_component<Position>().y = player2_spawn.y;
-        player2.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
-
-        /*player3.get_component<Position>().x = player3_spawn.x;
-        player3.get_component<Position>().y = player3_spawn.y;
-        player3.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
-        player4.get_component<Position>().x = player4_spawn.x;
-        player4.get_component<Position>().y = player4_spawn.y;
-        player4.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;*/
-
-
-            //player2.get_component<Score>().score = 100000000;
-
-            /*var player3 = create_entity(Player_Ship.create_components());
-
-                player3.get_component<Position>().x = 500;
-                player3.get_component<Position>().y = 500;
-                player3.get_component<Ship_Info>().hp_value = 50;
-
-                var player4 = create_entity(Player_Ship.create_components());
-
-                player4.get_component<Position>().x = 400;
-                player4.get_component<Position>().y = 500;*/
-
-            create_entity(SoundManager.create_backmusic_component());
+        create_entity(SoundManager.create_backmusic_component());
         create_entity(SoundManager.create_soundeffects_component());
 
 
@@ -179,9 +151,6 @@ public class Playing_State : Game_State {
         ball.get_component<Position>().y = ball_pos.y;
         ball.get_component<Angle>().ang_vel = 3.141592f * 2.0f * -9.0f;
         ball.get_component<Velocity>().x = -15.0f;
-
-        player1.get_component<Position>().x = -1800;
-        player1.get_component<Position>().y = 1700;
 
         create_entity(Turbo_Powerup.create_components());
 

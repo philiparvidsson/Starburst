@@ -15,9 +15,10 @@
         public static System.Random rand = new System.Random();
 
         static int lol = 1;
-        public static Component[] create_components()
+        public static Component[] create_components(Inputhandler input)
         {
             int pindex = lol;
+            /*
             var inputhandler = new Inputhandler() {
             };
             if (lol == 2) {
@@ -32,38 +33,10 @@
                     secondary_fire = Keys.G
                 };
             }
+            */
             string ship = "ships/ship1" + lol;
 //            if (lol >= 3)
 //                ship = "ships/qship11";
-
-            if (lol == 3) {
-                // this ass code sucks
-                inputhandler = new Inputhandler() {
-                    left = Keys.A,
-                    right = Keys.D,
-                    up = Keys.W,
-                    down = Keys.S,
-                    gp_index = PlayerIndex.Three,
-                    primary_fire = Keys.F,
-                    secondary_fire = Keys.G
-                };
-
-
-
-            }
-            if (lol == 4) {
-                // this ass code sucks
-                inputhandler = new Inputhandler() {
-                    left = Keys.A,
-                    right = Keys.D,
-                    up = Keys.W,
-                    down = Keys.S,
-                    gp_index = PlayerIndex.Four,
-                    primary_fire = Keys.F,
-                    secondary_fire = Keys.G
-                };
-
-            }
 
             lol++;
             int team = (lol % 2)+1;
@@ -79,8 +52,8 @@
                     return new Component[] {
                         new Position() { x = playerpos.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f ,
                                          y = playerpos.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f },
-                        new Velocity() { x = playervel.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 250.0f * (float)(rand.NextDouble()+0.5) * (inputhandler.throttle+0.3f),
-                        y = playervel.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 250.0f * (float)(rand.NextDouble()+0.5) * (inputhandler.throttle + 0.3f) },
+                        new Velocity() { x = playervel.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 250.0f * (float)(rand.NextDouble()+0.5) * (input.throttle+0.3f),
+                        y = playervel.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 250.0f * (float)(rand.NextDouble()+0.5) * (input.throttle + 0.3f) },
                         new Sprite() {
                             texture = Starburst.inst().get_content<Texture2D>("particle"),
                             color = new Color(1.0f, 0.7f, 0.3f) * 0.75f,
@@ -98,8 +71,8 @@
                     return new Component[] {
                         new Position() { x = playerpos.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f ,
                                          y = playerpos.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f },
-                        new Velocity() { x = playervel.x*0.5f - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 1.5) * 90.0f * (float)(rand.NextDouble()+0.5) * (inputhandler.throttle+0.3f),
-                        y = playervel.y*0.5f - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 1.5) * 90.0f * (float)(rand.NextDouble()+0.5) * (inputhandler.throttle + 0.3f) },
+                        new Velocity() { x = playervel.x*0.5f - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 1.5) * 90.0f * (float)(rand.NextDouble()+0.5) * (input.throttle+0.3f),
+                        y = playervel.y*0.5f - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 1.5) * 90.0f * (float)(rand.NextDouble()+0.5) * (input.throttle + 0.3f) },
                         new Sprite() {
                             texture = Starburst.inst().get_content<Texture2D>("particle"),
                             color = new Color(1.0f, 0.7f, 0.2f) * 0.95f,
@@ -117,7 +90,7 @@
                 interval = 0.02f,
                 num_particles_per_emit = 10
             },
-                inputhandler,
+            input,
             playerrot,
             playerpos,
             playervel,
