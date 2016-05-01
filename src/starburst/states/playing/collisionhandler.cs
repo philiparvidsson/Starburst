@@ -296,38 +296,38 @@ namespace Fab5.Starburst.States.Playing {
                 playerShip.hp_value -= bulletDamage;
                 if (playerShip.hp_value <= 0) {
                     // offret blir dödsmördat
-                    if (player != bulletInfo.sender)
+                if (player != bulletInfo.sender)
                         shooterScore.score += 240;
                     state.create_entity(new Component[] {
-                new TTL { max_time = 0.4f },
-                new Particle_Emitter {
-                    emit_fn = () => {
-                        return new Component[] {
-                            new Position {
-                                x = data.c_x,
-                                y = data.c_y
+                        new TTL { max_time = 0.4f },
+                        new Particle_Emitter {
+                            emit_fn = () => {
+                                return new Component[] {
+                                    new Position {
+                                        x = data.c_x,
+                                        y = data.c_y
+                                    },
+                                    new Velocity {
+                                        x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble()),
+                                        y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble())
+                                    },
+                                    new Sprite {
+                                        blend_mode  = Sprite.BM_ADD,
+                                        color       = new Color(1.0f, 0.6f, 0.1f),
+                                        layer_depth = 0.3f,
+                                        scale       = 0.4f + (float)rand.NextDouble() * 1.9f,
+                                        texture     = Starburst.inst().get_content<Texture2D>("particle")
+                                    },
+                                    new TTL {
+                                        alpha_fn = (x, max) => 1.0f - x/max,
+                                        max_time = 0.2f + (float)(rand.NextDouble() * 0.7f)
+                                    }
+                                };
                             },
-                            new Velocity {
-                                x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble()),
-                                y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble())
-                            },
-                            new Sprite {
-                                blend_mode  = Sprite.BM_ADD,
-                                color       = new Color(1.0f, 0.6f, 0.1f),
-                                layer_depth = 0.3f,
-                                scale       = 0.4f + (float)rand.NextDouble() * 1.9f,
-                                texture     = Starburst.inst().get_content<Texture2D>("particle")
-                            },
-                            new TTL {
-                                alpha_fn = (x, max) => 1.0f - x/max,
-                                max_time = 0.2f + (float)(rand.NextDouble() * 0.7f)
-                            }
-                        };
-                    },
-                    interval = 0.05f,
-                    num_particles_per_emit = 15 + rand.Next(0, 30)
-                }
-            });
+                            interval = 0.05f,
+                            num_particles_per_emit = 15 + rand.Next(0, 30)
+                        }
+                    });
                     // make "dead ship" state? so killed player can see explosion and that they died
                     // no visible ship, no input, not receptable to damage
                     // lasts for X seconds
@@ -358,14 +358,20 @@ namespace Fab5.Starburst.States.Playing {
             new TTL { max_time = 0.05f },
             new Particle_Emitter {
                 emit_fn = () => {
+                    var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
+                    var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
+                    var radius = 13.0f * (float)rand.NextDouble();
+                    var speed  = (300.0f + 150.0f * (float)rand.NextDouble());
+
                     return new Component[] {
+                        new Mass { drag_coeff = -4.0f },
                         new Position {
-                            x = data.c_x,
-                            y = data.c_y
+                            x = data.c_x + (float)Math.Cos(theta1) * radius,
+                            y = data.c_y + (float)Math.Cos(theta1) * radius
                         },
                         new Velocity {
-                            x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble()),
-                            y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble())
+                            x = (float)Math.Cos(theta2) * speed,
+                            y = (float)Math.Sin(theta2) * speed
                         },
                         new Sprite {
                             blend_mode  = Sprite.BM_ADD,
@@ -396,14 +402,20 @@ namespace Fab5.Starburst.States.Playing {
             new TTL { max_time = 0.05f },
             new Particle_Emitter {
                 emit_fn = () => {
+                    var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
+                    var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
+                    var radius = 13.0f * (float)rand.NextDouble();
+                    var speed  = (300.0f + 150.0f * (float)rand.NextDouble());
+
                     return new Component[] {
+                        new Mass { drag_coeff = -3.0f },
                         new Position {
-                            x = data.c_x,
-                            y = data.c_y
+                            x = data.c_x + (float)Math.Cos(theta1) * radius,
+                            y = data.c_y + (float)Math.Cos(theta1) * radius
                         },
                         new Velocity {
-                            x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble()),
-                            y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble())
+                            x = (float)Math.Cos(theta2) * speed,
+                            y = (float)Math.Sin(theta2) * speed
                         },
                         new Sprite {
                             blend_mode  = Sprite.BM_ADD,
@@ -462,13 +474,7 @@ namespace Fab5.Starburst.States.Playing {
         });
     }
 
-    private float last_collision;
     public void on_collision(Entity a, Entity b, object data) {
-        var t = Starburst.inst().get_time();
-        if (t-last_collision < 0.1f) {
-            return;
-        }
-
         string name1 = a?.get_component<Sprite>()?.texture?.Name ?? "";
         string name2 = b?.get_component<Sprite>()?.texture?.Name ?? "";
 
@@ -504,8 +510,6 @@ namespace Fab5.Starburst.States.Playing {
         foreach (var action in actions) {
             action(a, b, data);
         }
-
-        last_collision = t;
     }
 
 }

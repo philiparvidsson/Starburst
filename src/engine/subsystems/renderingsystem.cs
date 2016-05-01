@@ -52,16 +52,16 @@ namespace Fab5.Engine.Subsystems {
             player_indicator_tex = Fab5_Game.inst().get_content<Texture2D>("indicator");
         }
 
-        private void draw_backdrop(SpriteBatch sprite_batch, Position playerPosition) {
+        private void draw_backdrop(SpriteBatch sprite_batch, Position playerPosition, Camera camera) {
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
 
 
 
                 var fac1 = 0.05f;
                 sprite_batch.Draw(backdrop,
-                                  Vector2.Zero,
+                                  new Vector2(camera.viewport.Width * 0.5f, camera.viewport.Height * 0.5f),
                                   null,
-                                  Color.White,
+                                  new Color(0.8f, 0.8f, 0.8f, 0.8f),
                                   0.0f,
                                   new Vector2(backdrop.Width/2.0f  + playerPosition.x * fac1,
                                               backdrop.Height/2.0f + playerPosition.y * fac1),
@@ -71,7 +71,7 @@ namespace Fab5.Engine.Subsystems {
 
                 var fac2 = 0.25f;
                 sprite_batch.Draw(stardrop,
-                                  Vector2.Zero,
+                                  new Vector2(camera.viewport.Width * 0.5f, camera.viewport.Height * 0.5f),
                                   null,
                                   Color.White,
                                   0.0f,
@@ -374,7 +374,7 @@ namespace Fab5.Engine.Subsystems {
                 if (current.position.y - 0.5f*current.viewport.Height/current.zoom < -2048.0f) current.position.y = -2048.0f + 0.5f*current.viewport.Height/current.zoom;
                 if (current.position.y + 0.5f*current.viewport.Height/current.zoom > 2048.0f) current.position.y = 2048.0f - 0.5f*current.viewport.Height/current.zoom;
 
-                draw_backdrop(sprite_batch, current.position);
+                draw_backdrop(sprite_batch, current.position, current);
                 draw_tile_map(sprite_batch, current);
 
                 drawSprites(sprite_batch, current, num_entities, entities, 0.0f);
