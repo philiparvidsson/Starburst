@@ -44,10 +44,10 @@
 
             int ig_value = 0;
 
-            if (conf.mode == "deathmatch") {
+            if (conf.mode == Game_Config.GM_DEATHMATCH) {
                 ig_value = pindex;
             }
-            else if (conf.mode == "team-deathmatch") {
+            else if (conf.mode == Game_Config.GM_TEAM_DEATHMATCH) {
                 ig_value = team;
             }
             else {

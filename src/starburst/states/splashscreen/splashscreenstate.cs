@@ -33,8 +33,18 @@ namespace Fab5.Starburst.States {
             base.update(t, dt);
             elapsedTime += dt;
 
-            if(elapsedTime >= splashTime || Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter)) {
+            var skip_button_pressed = Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter);
+
+            for (int i = 0; i <= 3; i++) {
+                if (GamePad.GetState((PlayerIndex)i).IsConnected && GamePad.GetState((PlayerIndex)i).Buttons.Start == ButtonState.Pressed) {
+                    skip_button_pressed = true;
+                    break;
+                }
+            }
+
+            if(elapsedTime >= splashTime || skip_button_pressed) {
                 Starburst.inst().enter_state(new Main_Menu_State());
+                return;
             }
 
             if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape)) {

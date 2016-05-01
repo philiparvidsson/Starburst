@@ -53,12 +53,14 @@ namespace Fab5.Starburst.States.Playing {
         reg("beams1", "ships/ship12", bullet1_player);
         reg("beams1", "ships/ship13", bullet1_player);
         reg("beams1", "ships/ship14", bullet1_player);
+        reg("beams1", "soccerball"  , bullet1_soccerball);
         reg("beams2", "asteroid"    , bullet2_asteroid);
         reg("beams2", "asteroid2"   , bullet2_asteroid);
         reg("beams2", "ships/ship11", bullet2_player);
         reg("beams2", "ships/ship12", bullet2_player);
         reg("beams2", "ships/ship13", bullet2_player);
         reg("beams2", "ships/ship14", bullet2_player);
+        reg("beams2", "soccerball"  , bullet2_soccerball);
 
         reg("soccerball", "ships/ship11", soccerball_player);
         reg("soccerball", "ships/ship12", soccerball_player);
@@ -270,6 +272,88 @@ namespace Fab5.Starburst.States.Playing {
         inflictBulletDamage(bullet, player, data);
     }
 
+    private void bullet1_soccerball(Entity a, Entity b, dynamic data) {
+        var bullet     = (a.get_component<Sprite>().texture.Name == "beams1") ? a : b;
+        var soccerball = (bullet == a) ? b : a;
+
+        state.create_entity(new Component[] {
+            new TTL { max_time = 0.05f },
+            new Particle_Emitter {
+                emit_fn = () => {
+                    return new Component[] {
+                        new Position {
+                            x = data.c_x,
+                            y = data.c_y
+                        },
+                        new Velocity {
+                            x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (100.0f + 80.0f * (float)rand.NextDouble()),
+                            y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (100.0f + 80.0f * (float)rand.NextDouble())
+                        },
+                        new Sprite {
+                            blend_mode  = Sprite.BM_ADD,
+                            color       = new Color(0.2f, 0.6f, 1.0f),
+                            layer_depth = 0.3f,
+                            scale       = 0.2f + (float)rand.NextDouble() * 0.3f,
+                            texture     = Starburst.inst().get_content<Texture2D>("particle")
+                        },
+                        new TTL {
+                            alpha_fn = (x, max) => 1.0f - x/max,
+                            max_time = 0.1f + (float)(rand.NextDouble() * 0.1f)
+                        }
+                    };
+                },
+                interval = 0.01f,
+                num_particles_per_emit = 10 + rand.Next(0, 20)
+            }
+        });
+
+        bullet.destroy();
+    }
+
+    private void bullet2_soccerball(Entity a, Entity b, dynamic data) {
+        var bullet     = (a.get_component<Sprite>().texture.Name == "beams2") ? a : b;
+        var soccerball = (bullet == a) ? b : a;
+
+        state.create_entity(new Component[] {
+            new TTL { max_time = 0.05f },
+            new Particle_Emitter {
+                emit_fn = () => {
+                    var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
+                    var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
+                    var radius = 13.0f * (float)rand.NextDouble();
+                    var speed  = (300.0f + 150.0f * (float)rand.NextDouble());
+
+                    return new Component[] {
+                        new Mass { drag_coeff = -4.0f },
+                        new Position {
+                            x = data.c_x + (float)Math.Cos(theta1) * radius,
+                            y = data.c_y + (float)Math.Cos(theta1) * radius
+                        },
+                        new Velocity {
+                            x = (float)Math.Cos(theta2) * speed,
+                            y = (float)Math.Sin(theta2) * speed
+                        },
+                        new Sprite {
+                            blend_mode  = Sprite.BM_ADD,
+                            color       = new Color(1.0f, 0.3f, 0.1f),
+                            layer_depth = 0.3f,
+                            scale       = 0.9f + (float)rand.NextDouble() * 0.9f,
+                            texture     = Starburst.inst().get_content<Texture2D>("particle")
+                        },
+                        new TTL {
+                            alpha_fn = (x, max) => 1.0f - x/max,
+                            max_time = 0.2f + (float)(rand.NextDouble() * 0.1f)
+                        }
+                    };
+                },
+                interval = 0.01f,
+                num_particles_per_emit = 10 + rand.Next(0, 20)
+            }
+        });
+
+        bullet.destroy();
+    }
+
     private void inflictBulletDamage(Entity bullet, Entity player, dynamic data) {
         Ship_Info playerShip = player.get_component<Ship_Info>();
         Bullet_Info bulletInfo = bullet.get_component<Bullet_Info>();
@@ -303,7 +387,7 @@ namespace Fab5.Starburst.States.Playing {
                     shooterScore.score += 240;
 
                 state.create_entity(new Component[] {
-                    new TTL { max_time = 0.4f },
+                    new TTL { max_time = 0.3f },
                     new Particle_Emitter {
                         emit_fn = () => {
                             var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
@@ -324,7 +408,7 @@ namespace Fab5.Starburst.States.Playing {
                                     blend_mode  = Sprite.BM_ADD,
                                     color       = new Color(0.8f, 0.4f, 0.1f),
                                     layer_depth = 0.3f,
-                                    scale       = 0.3f + (float)rand.NextDouble() * 1.9f,
+                                    scale       = 0.4f + (float)rand.NextDouble() * 0.9f,
                                     texture     = Starburst.inst().get_content<Texture2D>("particle")
                                 },
                                 new TTL {
@@ -347,6 +431,8 @@ namespace Fab5.Starburst.States.Playing {
                 var old_bounding_circle  = player.remove_component<Bounding_Circle>();
                 var old_sprite           = player.remove_component<Sprite>();
 
+                Starburst.inst().message("play_sound", new { name = "sound/effects/explosion" });
+
                 var time_of_death = Fab5_Game.inst().get_time();
                 Fab5_Game.inst().create_entity(new Component[] {
                     new Post_Render_Hook  {
@@ -355,14 +441,19 @@ namespace Fab5.Starburst.States.Playing {
                                 return;
                             }
 
-                            var t    = 5.0f - (Fab5_Game.inst().get_time() - time_of_death);
-                            var mtext = string.Format("Respawning in 0.00...", t);
-                            var text = string.Format("Respawning in {0:0.00}...", t);
-                            var ts   = GFX_Util.measure_string(mtext);
+                            var t     = 5.0f - (Fab5_Game.inst().get_time() - time_of_death);
+                            var text1 = string.Format("Respawning in {0:0.00}", t);
+
+                            // @To-do: not gonna fly with NPCs
+                            var s     = new [] { "one", "two", "three", "four" };
+                            var text2 = string.Format("Owned by player {0}!", s[bulletInfo.sender.get_component<Ship_Info>().pindex-1]);
+                            var ts1   = GFX_Util.measure_string("Respawning in 0.00");
+                            var ts2   = GFX_Util.measure_string(text2);
 
                             var a = 0.5f*(float)Math.Min(Math.Max(0.0f, (10.0f-t*2.0f)), 1.0f);
                             GFX_Util.fill_rect(sprite_batch, new Rectangle(0, 0, camera.viewport.Width, camera.viewport.Height), Color.Black * a);
-                            GFX_Util.draw_def_text(sprite_batch, text, (camera.viewport.Width-ts.X)*0.5f, (camera.viewport.Height-ts.Y)*0.5f);
+                            GFX_Util.draw_def_text(sprite_batch, text2, (camera.viewport.Width-ts2.X)*0.5f, (camera.viewport.Height-ts2.Y)*0.5f-95.0f);
+                            GFX_Util.draw_def_text(sprite_batch, text1, (camera.viewport.Width-ts1.X)*0.5f, (camera.viewport.Height-ts1.Y)*0.5f);
                         }
                     },
 

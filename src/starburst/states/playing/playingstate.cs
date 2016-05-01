@@ -17,6 +17,7 @@ using System;
 
 public class Playing_State : Game_State {
 
+    bool can_pause = false;
     public static System.Random rand = new System.Random();
     private Collision_Handler coll_handler;
     private List<Inputhandler> inputs;
@@ -189,6 +190,40 @@ public class Playing_State : Game_State {
 
         if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape)) {
             Starburst.inst().Quit();
+        }
+
+        if (!can_pause) {
+            bool no_buttons_pressed = true;
+
+            for (int i = 0; i <= 3; i++) {
+                if (GamePad.GetState((PlayerIndex)i).IsConnected && GamePad.GetState((PlayerIndex)i).Buttons.Start == ButtonState.Pressed) {
+                    no_buttons_pressed = false;
+                    break;
+                }
+            }
+
+            if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.P)) {
+                no_buttons_pressed = false;
+            }
+
+            if (no_buttons_pressed) {
+                can_pause = true;
+            }
+        }
+        else {
+            for (int i = 0; i <= 3; i++) {
+                if (GamePad.GetState((PlayerIndex)i).IsConnected && GamePad.GetState((PlayerIndex)i).Buttons.Start == ButtonState.Pressed) {
+                    can_pause = false;
+                    Starburst.inst().enter_state(new Pause_State());
+                    return;
+                }
+            }
+
+            if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.P)) {
+                can_pause = false;
+                Starburst.inst().enter_state(new Pause_State());
+                return;
+            }
         }
 
         if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftAlt) &&

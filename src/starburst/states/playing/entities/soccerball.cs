@@ -54,6 +54,7 @@ public static class Soccer_Ball {
             new Mass() { mass = 5.0f, restitution_coeff = 0.92f, drag_coeff = 0.1f },
 
             new Brain {
+                think_interval = 1.0f/2.0f, // @To-do: Is this enough?
                 think_fn = (self, dt) => {
                     var position = self.get_component<Position>();
                     var radius   = self.get_component<Bounding_Circle>().radius;
@@ -67,26 +68,58 @@ public static class Soccer_Ball {
                     var bottom   = (int)(top  + h/th)+1;
 
                     var tiles = ((Playing_State)self.state).tile_map.tiles;
+                    var scoring_team = 0;
+
                     for (int i = left; i <= right; i++) {
                         for (int j = top; j <= bottom; j++) {
                             if (i < 0 || i > 255 || j < 0 || j > 255) continue;
 
                             var t = tiles[i+(j<<8)];
                             if (t == 7) {
-                                // team 2 scored
-                                Console.WriteLine("team 2 scored");
-                                //self.add_components(new TTL { max_time = 0.0f });
-                                return;
-                                //self.destroy();
+                                scoring_team = 2;
+                                right = left-1; // to break outer loop
+                                break;
+
                             }
                             else if (t == 8) {
-                                // team 1 scored
-                                Console.WriteLine("team 1 scored");
-                                //self.add_components(new TTL { max_time = 0.0f });
-                                return;
-                                //self.destroy();
+                                scoring_team = 1;
+                                right = left-1; // to break outer loop
+                                break;
+
                             }
                         }
+                    }
+
+                    if (scoring_team > 0) {
+                        Console.WriteLine("team {0} scored", scoring_team);
+
+                        var ball_pos = ((Playing_State)self.state).spawner.get_soccerball_spawn_pos(((Playing_State)self.state).tile_map);
+                        self.get_component<Position>().x = ball_pos.x;
+                        self.get_component<Position>().y = ball_pos.y;
+                        self.get_component<Angle>().ang_vel = 3.141592f * 2.0f * -2.0f;
+
+                        Starburst.inst().message("play_sound", new { name = "sound/effects/goal" });
+
+                        Fab5_Game.inst().create_entity(new Component[] {
+                            new Post_Render_Hook  {
+                                render_fn = (camera, sprite_batch) => {
+                                    if ((camera.index % 2)+1 != scoring_team) {
+                                        return;
+                                    }
+
+                                    var text = string.Format("GOAL!!!");
+                                    var ts   = GFX_Util.measure_string(text);
+
+                                    // @To-do: larger text plz
+                                    GFX_Util.draw_def_text(sprite_batch, text, (camera.viewport.Width-ts.X)*0.5f, (camera.viewport.Height-ts.Y)*0.5f);
+                                }
+                            },
+
+                            new TTL {
+                                max_time = 5.0f,
+                            }
+                            });
+                        //self.add_components(new TTL { max_time = 0.0f });
                     }
                 }
             }

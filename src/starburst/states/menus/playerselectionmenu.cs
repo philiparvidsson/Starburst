@@ -25,11 +25,11 @@ namespace Fab5.Starburst.States {
         int minPlayers = 1;
 
         float elapsedTime;
-        float delay = .0f; // tid innan fˆrsta animation startar
-        float inDuration = 1f; // tid fˆr animationer
-        float outDuration = 1.5f; // tid fˆr animationer
+        float delay = .1f; // tid innan f√∂rsta animation startar
+        float inDuration = 0.4f; // tid f√∂r animationer
+        float outDuration = 0.4f; // tid f√∂r animationer
         float outDelay; // tid innan andra animationen
-        float displayTime = .8f;
+        float displayTime = .1f;
         float animationTime; // total animationstid
         float textOpacity;
         private enum SlotStatus {
@@ -43,9 +43,9 @@ namespace Fab5.Starburst.States {
         }
 
         private void tryStartGame() {
-            // om minsta antal spelare ‰r klara, starta spel
+            // om minsta antal spelare √§r klara, starta spel
             if (playerCount >= minPlayers) {
-                // h‰mta inputhandlers, l‰gg dem i en lista fˆr att vidarebefordra till spel-statet
+                // h√§mta inputhandlers, l√§gg dem i en lista f√∂r att vidarebefordra till spel-statet
                 // (sorterade efter position)
                 List<Inputhandler> inputs = new List<Inputhandler>(playerCount);
                 for (int i = 0; i < 4; i++) {
@@ -152,15 +152,27 @@ namespace Fab5.Starburst.States {
 
         private void tryMoveDown(Entity entity) {
             var position = entity.get_component<Position>();
-            // loopa igenom spelare fˆr att hitta om nÂgon ledig x-koordinat finns
+            // loopa igenom spelare f√∂r att hitta om n√•gon ledig x-koordinat finns
             var players = Starburst.inst().get_entities_fast(typeof(Inputhandler));
             // prova de olika spelarpositionerna
+
+            bool all_up = true;
+            for (int x = 0; x < 4; x++) {
+                if (playerSlots[x] != SlotStatus.Empty) {
+                    all_up = false;
+                    break;
+                }
+            }
+
             for (int x = 0; x < 4; x++) {
                 if (playerSlots[x] == SlotStatus.Empty) {
                     position.y++;
                     position.x = x;
                     playerSlots[x] = SlotStatus.Hovering;
                     Starburst.inst().message("play_sound", new { name = "menu_click" });
+                    if (all_up) {
+                        elapsedTime = 0.5f;
+                    }
                     break;
                 }
             }
@@ -182,7 +194,7 @@ namespace Fab5.Starburst.States {
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
             rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>("sector034");
-            
+
             Inputhandler wasd = new Inputhandler() {
                 left = Keys.A,
                 right = Keys.D,
@@ -215,11 +227,11 @@ namespace Fab5.Starburst.States {
 
             // Hantera animeringstider
 
-            // r‰kna upp tid (dt)
+            // r√§kna upp tid (dt)
             elapsedTime += dt;
 
             if (elapsedTime >= animationTime) {
-                elapsedTime = 0;
+                elapsedTime -= animationTime;
                 /*
                 outDelay = delay + duration + displayTime;
                 animationTime = outDelay + duration;
@@ -236,10 +248,10 @@ namespace Fab5.Starburst.States {
             }
 
 
-            // Kolla om kontroller ‰ndrats
+            // Kolla om kontroller √§ndrats
             for (int i = 0; i < gamepads.Count; i++) {
                 bool current = GamePad.GetState(i).IsConnected;
-                // om kontroll kopplats in, l‰gg till spelare
+                // om kontroll kopplats in, l√§gg till spelare
                 if(current && !gamepads[i]) {
                     Inputhandler input = new Inputhandler() { device = Inputhandler.InputType.Controller, gp_index = (PlayerIndex)i };
                     var gamepadPlayer = create_entity(Player.create_components(input));
@@ -281,6 +293,7 @@ namespace Fab5.Starburst.States {
             String text = "Choose players";
             Vector2 textSize = font.MeasureString(text);
             sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), 100), Color.White);
+            //GFX_Util.draw_def_text(sprite_batch, text, (int)((vp.Width * .5f) - (textSize.X * .5f)), 100);
 
             // rita ut kontrollrutor (4 st)
             int maxPlayers = 4;
@@ -300,7 +313,7 @@ namespace Fab5.Starburst.States {
              **/
             Vector2 controllerIconSize = new Vector2(50, 50);
             /*
-           // r‰kna hur mÂnga kontroller som ‰r inaktiva just nu
+           // r√§kna hur m√•nga kontroller som √§r inaktiva just nu
            int inactive = 0;
            for (int i = 0; i < entities.Count; i++) {
                if (entities[i].get_component<Position>().y == 0)
@@ -323,7 +336,7 @@ namespace Fab5.Starburst.States {
                 Vector2 subtitleSize = font.MeasureString(subtitle);
 
                 Rectangle iconRect = new Rectangle();
-                // om l‰ngst upp, sprid ut j‰mnt
+                // om l√§ngst upp, sprid ut j√§mnt
                 if (position.y == 0) {
                     iconRect = new Rectangle((int)(vp.Width * .5f - totalControllerWidth * .5f) + (int)(controllerIconSize.X * i + 1), rectangleY - 150, (int)controllerIconSize.X, (int)controllerIconSize.Y);
                 }
@@ -342,7 +355,7 @@ namespace Fab5.Starburst.States {
                 sprite_batch.Draw(texture, destinationRectangle: iconRect, color: Color.White, layerDepth: .5f);
                 sprite_batch.DrawString(font, subtitle, new Vector2((int)(iconRect.Center.X - subtitleSize.X * .5f), iconRect.Y - subtitleSize.Y + 10), Color.White);
                 /*
-                // debug fˆr handkontroll-thumbsticks
+                // debug f√∂r handkontroll-thumbsticks
                 float x = input.gamepadState.ThumbSticks.Left.X;
                 float y = input.gamepadState.ThumbSticks.Left.Y;
                 string sticks = "X: " + x + ", Y: " + y;
@@ -352,7 +365,7 @@ namespace Fab5.Starburst.States {
             }
 
             for (int i=0; i< playerSlots.Count; i++) {
-                // rita i kontroll-rektanglarna baserat pÂ deras status
+                // rita i kontroll-rektanglarna baserat p√• deras status
                 if(playerSlots[i] == SlotStatus.Hovering) {
                     int currentRectStartPos = startPos + rectSize * i + spacing * i;
                     int positionX = (int)(currentRectStartPos + rectSize * .5f - (int)(selectTextSize.X * .5f));
