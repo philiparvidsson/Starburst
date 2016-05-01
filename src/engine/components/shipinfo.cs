@@ -37,7 +37,7 @@
             this.energy_value = top_energy;
             this.top_velocity = top_velocity*3.50f;
             this.acceleration = acceleration*3.80f;
-            this.recharge_rate = 20;
+            this.recharge_rate = 40;
         }
     }
 
