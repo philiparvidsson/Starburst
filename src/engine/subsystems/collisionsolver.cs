@@ -82,7 +82,7 @@ public class Collision_Solver : Subsystem {
                 var e1  = (Entity)o;//entities[(int)o];
                 var p1  = e1.get_component<Position>();
                 var v1  = e1.get_component<Velocity>();
-                var rc1 = e1.get_component<Mass>()?.restitution_coeff ?? 1.0f;
+                var rc1 = Math.Abs(e1.get_component<Mass>()?.restitution_coeff ?? 1.0f);
 
                 if (p1 == null || v1 == null) {
                     return;
@@ -160,7 +160,7 @@ public class Collision_Solver : Subsystem {
             return;
         }
 
-        var e = m1.restitution_coeff;
+        var e = Math.Abs(m1.restitution_coeff);
         var friction = m1.friction;
 
         var v_dot_n = (v_x*n_x+v_y*n_y);
@@ -443,7 +443,7 @@ public class Collision_Solver : Subsystem {
         v_x = (v1.x+w1_x) - (v2.x+w2_x);
         v_y = (v1.y+w1_y) - (v2.y+w2_y);
 
-        var e = Math.Min(m1.restitution_coeff, m2.restitution_coeff);
+        var e = Math.Abs(Math.Min(m1.restitution_coeff, m2.restitution_coeff));
 
         var v_dot_n = v_x*n_x+v_y*n_y;
         var v_n_x = v_dot_n * n_x;

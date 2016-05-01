@@ -49,7 +49,7 @@
                                              y = velocity.y * 0.05f + (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 20.0f * (float)(0.5f+rand.NextDouble()) },
                             new Sprite() {
                                 texture = Starburst.inst().get_content<Texture2D>("particle"),
-                                color = new Color(0.2f, 0.6f, 1.0f, 1.0f),
+                                color = new Color(1.0f, 0.6f, 0.2f, 1.0f),
                                 scale = 0.2f + (float)rand.NextDouble() * 0.6f,
                                 blend_mode = Sprite.BM_ADD,
                                 layer_depth = 0.3f
@@ -69,7 +69,7 @@
                 bulletSprite,
                 //bulletDrawArea,
                 new Bounding_Circle() { radius = 6, ignore_collisions = IG_BULLET, ignore_collisions2 = origin.get_component<Ship_Info>().team },
-                new Mass { mass = 1.0f, restitution_coeff = 1.0f, friction = 0.0f },
+                new Mass { mass = 1.0f, restitution_coeff = -1.0f, friction = 0.0f },
                 new TTL() { alpha_fn = (x, max) => 10.0f-10.0f*x/max, max_time = lifeTime },
                 new Bullet_Info() { damage = weapon.damage, sender = origin }
             };
@@ -124,7 +124,7 @@
                 bulletSprite,
                 //bulletDrawArea,
                 new Bounding_Circle() { radius = 14.0f, ignore_collisions = IG_BULLET, ignore_collisions2 = origin.get_component<Ship_Info>().team },
-                new Mass { mass = 50.0f, restitution_coeff = 1.0f, friction = 0.0f },
+                new Mass { mass = 50.0f, restitution_coeff = -1.0f, friction = 0.0f },
                 new TTL() { alpha_fn = (x, max) => 20.0f-20.0f*x/max, max_time = lifeTime },
                 new Bullet_Info() { damage = weapon.damage, sender = origin }
             };

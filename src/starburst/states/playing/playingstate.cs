@@ -20,10 +20,16 @@ public class Playing_State : Game_State {
     public static System.Random rand = new System.Random();
     private Collision_Handler coll_handler;
     private List<Inputhandler> inputs;
+    public Spawn_Util spawner;
 
-    public Playing_State(List<Inputhandler> inputs) {
+    public Playing_State(List<Inputhandler> inputs, Game_Config conf = null) {
         this.inputs = inputs;
+
+        this.game_conf = conf ?? new Game_Config();
+        this.spawner = new Spawn_Util(game_conf);
     }
+
+    public readonly Game_Config game_conf = new Game_Config();
 
     public override void on_message(string msg, dynamic data) {
         if (msg == "collision") {
@@ -100,7 +106,7 @@ public class Playing_State : Game_State {
 //        Starburst.inst().IsMouseVisible = true;        // @To-do: Load map here.
 
         tile_map = new Tile_Map();
-        coll_handler = new Collision_Handler(this, tile_map);
+        coll_handler = new Collision_Handler(this, tile_map, spawner);
 
 
         load_map();
@@ -123,8 +129,8 @@ public class Playing_State : Game_State {
         create_entity(new FpsCounter());
 
         for(int i = 0; i < inputs.Count; i++) {
-            var player = create_entity(Player_Ship.create_components(inputs[i]));
-            var player_spawn = Spawn_Util.get_player_spawn_pos(i % 2 == 1 ? 1 : 2, tile_map);
+            var player = create_entity(Player_Ship.create_components(inputs[i], game_conf));
+            var player_spawn = spawner.get_player_spawn_pos(player, tile_map);
             player.get_component<Position>().x = player_spawn.x;
             player.get_component<Position>().y = player_spawn.y;
             player.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
@@ -145,7 +151,7 @@ public class Playing_State : Game_State {
             var asteroid = create_entity(Dummy.create_components());
             var ap = asteroid.get_component<Position>();
             var av = asteroid.get_component<Velocity>();
-            var sp = Spawn_Util.get_asteroid_spawn_pos(tile_map);
+            var sp = spawner.get_asteroid_spawn_pos(tile_map);
             ap.x = sp.x;
             ap.y = sp.y;
             av.x = -15 + 30 * (float)rand.NextDouble();
@@ -153,7 +159,7 @@ public class Playing_State : Game_State {
         }
 
         var ball = create_entity(Soccer_Ball.create_components());
-        var ball_pos = Spawn_Util.get_soccerball_spawn_pos(tile_map);
+        var ball_pos = spawner.get_soccerball_spawn_pos(tile_map);
         ball.get_component<Position>().x = ball_pos.x;
         ball.get_component<Position>().y = ball_pos.y;
         ball.get_component<Angle>().ang_vel = 3.141592f * 2.0f * -2.0f;
@@ -161,6 +167,8 @@ public class Playing_State : Game_State {
         create_entity(Turbo_Powerup.create_components());
 
         //create_entity(Dummy_Enemy.create_components());
+
+        Starburst.inst().message("play_sound", new { name = "begin_game" });
     }
 
     int edit_tile = 1;

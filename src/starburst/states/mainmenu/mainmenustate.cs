@@ -77,6 +77,8 @@ namespace Fab5.Starburst.States {
                     position.y -= 1;
                     playerSlots[(int)position.x] = SlotStatus.Empty;
                     position.x = 0;
+
+                    Starburst.inst().message("play_sound", new { name = "menu_click" });
                 }
             }
             else if (msg.Equals("left")) {
@@ -89,6 +91,7 @@ namespace Fab5.Starburst.States {
                             playerSlots[(int)position.x] = SlotStatus.Empty;
                             position.x = x;
                             playerSlots[x] = SlotStatus.Hovering;
+                            Starburst.inst().message("play_sound", new { name = "menu_click" });
                             break;
                         }
                     }
@@ -111,6 +114,7 @@ namespace Fab5.Starburst.States {
                             playerSlots[(int)position.x] = SlotStatus.Empty;
                             position.x = x;
                             playerSlots[x] = SlotStatus.Hovering;
+                            Starburst.inst().message("play_sound", new { name = "menu_click" });
                             break;
                         }
                     }
@@ -119,12 +123,14 @@ namespace Fab5.Starburst.States {
             else if (msg.Equals("select")) {
                 Entity entity = data.Player;
                 var position = entity.get_component<Position>();
-                if (position.y == 0)
+                if (position.y == 0) {
                     tryMoveDown(entity);
+                }
                 else if (position.y == 1) {
                     position.y += 1;
                     playerSlots[(int)position.x] = SlotStatus.Selected;
                     playerCount++;
+                    Starburst.inst().message("play_sound", new { name = "menu_click" });
                 }
             }
             else if (msg.Equals("back")) {
@@ -136,6 +142,7 @@ namespace Fab5.Starburst.States {
                 if (position.y > 0) {
                     position.y -= 1;
                     playerSlots[(int)position.x] -= 1;
+                    Starburst.inst().message("play_sound", new { name = "menu_click" });
                 }
             }
         }
@@ -150,6 +157,7 @@ namespace Fab5.Starburst.States {
                     position.y++;
                     position.x = x;
                     playerSlots[x] = SlotStatus.Hovering;
+                    Starburst.inst().message("play_sound", new { name = "menu_click" });
                     break;
                 }
             }
