@@ -14,7 +14,7 @@ namespace Fab5.Starburst.States {
 
     using System;
     using System.Collections.Generic;
-    public class Main_Menu_State : Game_State {
+    public class Player_Selection_Menu : Game_State {
         Texture2D background;
         Texture2D rectBg;
         SpriteFont font;
@@ -38,13 +38,17 @@ namespace Fab5.Starburst.States {
             Selected
         }
 
+        public Player_Selection_Menu(Entity soundmgr) {
+            soundmgr.state = this;
+        }
+
         private void tryStartGame() {
             // om minsta antal spelare är klara, starta spel
             if (playerCount >= minPlayers) {
                 // hämta inputhandlers, lägg dem i en lista för att vidarebefordra till spel-statet
                 // (sorterade efter position)
                 List<Inputhandler> inputs = new List<Inputhandler>(playerCount);
-                for (int i = 0; i < playerCount; i++) {
+                for (int i = 0; i < 4; i++) {
                     inputs.Add(null);
                 }
                 var entites = Starburst.inst().get_entities_fast(typeof(Inputhandler));
@@ -184,8 +188,8 @@ namespace Fab5.Starburst.States {
             outDelay = delay + inDuration + displayTime;
             animationTime = outDelay + outDuration;
 
-            create_entity(SoundManager.create_backmusic_component()).get_component<SoundLibrary>().song_index = 1;
-
+            //create_entity(SoundManager.create_backmusic_component()).get_component<SoundLibrary>().song_index = 1;
+            
             // load textures
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
             rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
@@ -319,6 +323,8 @@ namespace Fab5.Starburst.States {
            */
             int totalControllerWidth = (int)(entities.Count * controllerIconSize.X);
 
+            String selectText = "press fire";
+            Vector2 selectTextSize = font.MeasureString(selectText);
             for (int i = 0; i < entities.Count; i++) {
                 Entity entity = entities[i];
                 Inputhandler input = entity.get_component<Inputhandler>();
@@ -334,7 +340,7 @@ namespace Fab5.Starburst.States {
                 if (position.y == 0) {
                     iconRect = new Rectangle((int)(vp.Width * .5f - totalControllerWidth * .5f) + (int)(controllerIconSize.X * i + 1), rectangleY - 150, (int)controllerIconSize.X, (int)controllerIconSize.Y);
                 }
-                // annars en plats per kontroll, förhindra kollisioner någon annanstans
+                // annars en plats per kontroll
                 else {
                     int currentRectStartPos = startPos + rectSize * (int)position.x + spacing * (int)position.x;
                     int positionX = (int)(currentRectStartPos + rectSize*.5f -(int)(controllerIconSize.X*.5f));
@@ -343,11 +349,10 @@ namespace Fab5.Starburst.States {
                         iconRect = new Rectangle(positionX, rectangleY - (int)(controllerIconSize.Y * .5f), (int)controllerIconSize.X, (int)controllerIconSize.Y);
                     }
                     else {
-                        iconRect = new Rectangle(positionX, rectangleY + (int)(rectSize*.5f) - (int)(controllerIconSize.Y * .5f), (int)controllerIconSize.X, (int)controllerIconSize.Y);
+                        iconRect = new Rectangle(positionX, rectangleY + (int)(rectSize*.5f) - (int)(controllerIconSize.Y * .5f) - (int)(selectTextSize.Y*.5f), (int)controllerIconSize.X, (int)controllerIconSize.Y);
                     }
                 }
                 sprite_batch.Draw(texture, destinationRectangle: iconRect, color: Color.White, layerDepth: .5f);
-                //sprite_batch.DrawString(font, subtitle, new Vector2((int)(iconRect.Center.X - subtitleSize.X * .5f), iconRect.Y + iconRect.Height - 13), Color.White);
                 sprite_batch.DrawString(font, subtitle, new Vector2((int)(iconRect.Center.X - subtitleSize.X * .5f), iconRect.Y - subtitleSize.Y + 10), Color.White);
                 /*
                 // debug för handkontroll-thumbsticks
@@ -359,8 +364,6 @@ namespace Fab5.Starburst.States {
                 */
             }
 
-            String selectText = "press fire";
-            Vector2 selectTextSize = font.MeasureString(selectText);
             for (int i=0; i< playerSlots.Count; i++) {
                 // rita i kontroll-rektanglarna baserat på deras status
                 if(playerSlots[i] == SlotStatus.Hovering) {
@@ -371,7 +374,7 @@ namespace Fab5.Starburst.States {
                 else if (playerSlots[i] == SlotStatus.Selected) {
                     int currentRectStartPos = startPos + rectSize * i + spacing * i;
                     int positionX = (int)(currentRectStartPos + rectSize * .5f - (int)(selectTextSize.X * .5f));
-                    sprite_batch.DrawString(font, "confirmed", new Vector2(positionX, rectangleY + rectSize - selectTextSize.Y - 20), Color.Gold);
+                    sprite_batch.DrawString(font, "confirmed", new Vector2(positionX, rectangleY + rectSize * .5f - controllerIconSize.Y * .5f - selectTextSize.Y * .5f + controllerIconSize.Y), Color.Gold);
                 }
                 //sprite_batch.DrawString(font, "Player slot " + (i+1) + ": " + playerSlots[i], new Vector2(0, i * selectTextSize.Y), Color.White);
             }
