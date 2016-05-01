@@ -54,7 +54,7 @@ public static class Soccer_Ball {
             new Mass() { mass = 5.0f, restitution_coeff = 0.92f, drag_coeff = 0.1f },
 
             new Brain {
-                think_interval = 1.0f/2.0f,
+                think_interval = 1.0f/2.0f, // @To-do: Is this enough?
                 think_fn = (self, dt) => {
                     var position = self.get_component<Position>();
                     var radius   = self.get_component<Bounding_Circle>().radius;
