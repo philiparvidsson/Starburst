@@ -19,8 +19,8 @@ using System.Threading;
      * CLASSES
      *----------------------------------------------*/
 
-    // Base component class for all game components.
-    public interface Component { };// @To-do: Could be an interface?
+// Base component class for all game components.
+public interface class Component { };
 
 // Base entity class for all game entities.
 public class Entity {
