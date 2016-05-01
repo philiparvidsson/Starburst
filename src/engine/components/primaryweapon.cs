@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace Fab5.Engine.Components {
     public class Primary_Weapon : Weapon {
         public Primary_Weapon() {
-            this.damage = 27;
+            this.damage = 40;
             this.sound = "LaserBlaster";
             this.fire_rate = 0.11f;
-            this.energy_cost = 8.0f;
+            this.energy_cost = 9.0f;
         }
     }
 }

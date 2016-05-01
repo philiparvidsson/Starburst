@@ -360,7 +360,8 @@ namespace Fab5.Starburst.States.Playing {
                             var text = string.Format("Respawning in {0:0.00}...", t);
                             var ts   = GFX_Util.measure_string(mtext);
 
-                            GFX_Util.fill_rect(sprite_batch, new Rectangle(0, 0, camera.viewport.Width, camera.viewport.Height), Color.Black * 0.5f);
+                            var a = 0.5f*(float)Math.Min(Math.Max(0.0f, (10.0f-t*2.0f)), 1.0f);
+                            GFX_Util.fill_rect(sprite_batch, new Rectangle(0, 0, camera.viewport.Width, camera.viewport.Height), Color.Black * a);
                             GFX_Util.draw_def_text(sprite_batch, text, (camera.viewport.Width-ts.X)*0.5f, (camera.viewport.Height-ts.Y)*0.5f);
                         }
                     },
