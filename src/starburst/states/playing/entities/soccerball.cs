@@ -91,15 +91,10 @@ public static class Soccer_Ball {
                     }
 
                     if (scoring_team > 0) {
+                        var ball_x = position.x;
+                        var ball_y = position.y;
+
                         Console.WriteLine("team {0} scored", scoring_team);
-
-                        var ball_pos = ((Playing_State)self.state).spawner.get_soccerball_spawn_pos(((Playing_State)self.state).tile_map);
-                        self.get_component<Position>().x = ball_pos.x;
-                        self.get_component<Position>().y = ball_pos.y;
-                        self.get_component<Angle>().ang_vel = 3.141592f * 2.0f * -2.0f;
-
-                        Starburst.inst().message("play_sound", new { name = "sound/effects/goal" });
-
                         Fab5_Game.inst().create_entity(new Component[] {
                             new Post_Render_Hook  {
                                 render_fn = (camera, sprite_batch) => {
@@ -118,7 +113,42 @@ public static class Soccer_Ball {
                             new TTL {
                                 max_time = 5.0f,
                             }
-                            });
+                        });
+
+                        Fab5_Game.inst().create_entity(new Component[] {
+                            new TTL { max_time = 0.1f },
+                            new Particle_Emitter() {
+                                emit_fn = () => {
+                                    var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
+                                    var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
+                                    var speed  = 200.0f * (float)(0.05f+rand.NextDouble());
+
+                                    return new Component[] {
+                                        new Position() { x = ball_x + (float)Math.Cos(theta1) * radius,
+                                                         y = ball_y + (float)Math.Sin(theta1) * radius },
+                                        new Velocity() { x = (float)Math.Cos(theta2) * speed,
+                                                         y = (float)Math.Sin(theta2) * speed },
+                                        new Sprite() {
+                                            texture = Starburst.inst().get_content<Texture2D>("particle"),
+                                            color = new Color(1.0f, 0.8f, 0.3f, 1.0f),
+                                            scale = 0.4f + (float)rand.NextDouble() * 0.3f,
+                                            blend_mode = Sprite.BM_ADD,
+                                            layer_depth = 0.3f
+                                        },
+                                        new TTL { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max), max_time = 0.35f + (float)Math.Pow((float)(rand.NextDouble() * 0.7f), 3.0f) }
+                                    };
+                                },
+                                interval = 0.05f,
+                                num_particles_per_emit = 40
+                            }
+                        });
+
+                        var ball_pos = ((Playing_State)self.state).spawner.get_soccerball_spawn_pos(((Playing_State)self.state).tile_map);
+                        self.get_component<Position>().x = ball_pos.x;
+                        self.get_component<Position>().y = ball_pos.y;
+                        self.get_component<Angle>().ang_vel = 3.141592f * 2.0f * -2.0f;
+
+                        Starburst.inst().message("play_sound", new { name = "sound/effects/goal" });
                         //self.add_components(new TTL { max_time = 0.0f });
                     }
                 }
