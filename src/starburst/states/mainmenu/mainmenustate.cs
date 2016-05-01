@@ -23,6 +23,15 @@ namespace Fab5.Starburst.States {
         List<SlotStatus> playerSlots;
         int playerCount = 0;
         int minPlayers = 1;
+
+        float elapsedTime;
+        float delay = .0f; // tid innan första animation startar
+        float inDuration = 1f; // tid för animationer
+        float outDuration = 1.5f; // tid för animationer
+        float outDelay; // tid innan andra animationen
+        float displayTime = .8f;
+        float animationTime; // total animationstid
+        float textOpacity;
         private enum SlotStatus {
             Empty,
             Hovering,
@@ -45,6 +54,10 @@ namespace Fab5.Starburst.States {
                     if (position.y == 2)
                         inputs[(int)position.x] = input;
                 }
+                /*
+                // ta bort tomma platser i början om första spelare inte är nr 1
+                while (inputs.Count > 0 && inputs[0] == null)
+                    inputs.RemoveAt(0);*/
                 Starburst.inst().enter_state(new Playing_State(inputs));
             }
         }
@@ -151,22 +164,22 @@ namespace Fab5.Starburst.States {
         }
 
         public override void init() {
-
-            //Starburst.inst().IsMouseVisible = true;
             add_subsystems(
                 new Menu_Inputhandler_System(),
                 new Sound(),
-                new Particle_System(),
-                new Text_Renderer(new SpriteBatch(Starburst.inst().GraphicsDevice))
+                new Particle_System()
             );
 
-            create_entity(SoundManager.create_backmusic_component()).get_component<SoundLibrary>().song_index = 1;
+            outDelay = delay + inDuration + displayTime;
+            animationTime = outDelay + outDuration;
 
-            //create_entity(SoundManager.create_backmusic_component());
+            create_entity(SoundManager.create_backmusic_component()).get_component<SoundLibrary>().song_index = 1;
+            
+            // load textures
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
             rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>("sector034");
-
+            
             Inputhandler wasd = new Inputhandler() {
                 left = Keys.A,
                 right = Keys.D,
@@ -196,6 +209,29 @@ namespace Fab5.Starburst.States {
 
         public override void update(float t, float dt) {
             base.update(t, dt);
+
+            // Hantera animeringstider
+
+            // räkna upp tid (dt)
+            elapsedTime += dt;
+
+            if (elapsedTime >= animationTime) {
+                elapsedTime = 0;
+                /*
+                outDelay = delay + duration + displayTime;
+                animationTime = outDelay + duration;
+                */
+            }
+
+            // fade in
+            if (elapsedTime > delay && elapsedTime < outDelay) {
+                textOpacity = quadInOut(delay, inDuration, 0, 1);
+            }
+            // fade out
+            else if (elapsedTime >= outDelay) {
+                textOpacity = 1 - quadInOut(outDelay, outDuration, 0, 1);
+            }
+
 
             // Kolla om kontroller ändrats
             for (int i = 0; i < gamepads.Count; i++) {
@@ -318,7 +354,7 @@ namespace Fab5.Starburst.States {
                 if(playerSlots[i] == SlotStatus.Hovering) {
                     int currentRectStartPos = startPos + rectSize * i + spacing * i;
                     int positionX = (int)(currentRectStartPos + rectSize * .5f - (int)(selectTextSize.X * .5f));
-                    sprite_batch.DrawString(font, "press fire\nto confirm", new Vector2(positionX, rectangleY + (int)(rectSize*.5f) - selectTextSize.Y), Color.White);
+                    sprite_batch.DrawString(font, "press fire\nto confirm", new Vector2(positionX, rectangleY + (int)(rectSize*.5f) - selectTextSize.Y), new Color(Color.White, textOpacity));
                 }
                 else if (playerSlots[i] == SlotStatus.Selected) {
                     int currentRectStartPos = startPos + rectSize * i + spacing * i;
@@ -330,12 +366,32 @@ namespace Fab5.Starburst.States {
 
             text = "Start game";
             textSize = font.MeasureString(text);
-            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), vp.Height - textSize.Y - 20), playerCount >= minPlayers ? Color.Gold : Color.Gray);
+            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), vp.Height - textSize.Y - 20), playerCount >= minPlayers ? new Color(Color.Gold, (textOpacity*.8f)+.2f) : Color.Gray);
             //sprite_batch.DrawString(font, "Number of players: " + playerCount, new Vector2(0, 4 * selectTextSize.Y), Color.White);
 
             sprite_batch.End();
 
             System.Threading.Thread.Sleep(10); // no need to spam menu
+        }
+        private float quadInOut(float delayVal, float duration, float b, float c) {
+            // b - start value
+            // c - final value
+            float t = elapsedTime - delayVal; // current time in seconds
+            float d = duration; // duration of animation
+
+            if (t == 0) {
+                return b;
+            }
+
+            if (t == d) {
+                return b + c;
+            }
+
+            if ((t /= d / 2) < 1) {
+                return c / 2 * (float)Math.Pow(2, 10 * (t - 1)) + b;
+            }
+
+            return c / 2 * (-(float)Math.Pow(2, -10 * --t) + 2) + b;
         }
     }
 

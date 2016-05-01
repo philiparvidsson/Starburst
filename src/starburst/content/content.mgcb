@@ -313,24 +313,6 @@
 /processorParam:Quality=Best
 /build:sound/effects/thrust.wav
 
-#begin sound/ContactLoop.wav
-/importer:WavImporter
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:sound/ContactLoop.wav
-
-#begin sound/SpaceCube.wav
-/importer:WavImporter
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:sound/SpaceCube.wav
-
-#begin sound/SpaceLoungeLoop.wav
-/importer:WavImporter
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:sound/SpaceLoungeLoop.wav
-
 #begin map/tiles.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -432,4 +414,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:turbo_powerup.png
+
+#begin sound/BoxCat_Games_-_03_-_Battle_Special.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:sound/BoxCat_Games_-_03_-_Battle_Special.mp3
+
+#begin sound/BoxCat_Games_-_10_-_Epic_Song.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:sound/BoxCat_Games_-_10_-_Epic_Song.mp3
 
