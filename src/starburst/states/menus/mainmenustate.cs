@@ -91,21 +91,11 @@ namespace Fab5.Starburst.States {
                 }*/
             }
             else if (msg.Equals("select")) {
-                /*Entity entity = data.Player;
-                var position = entity.get_component<Position>();
-                if (position.y == 0) {
-                    tryMoveDown(entity);
-                }
-                else if (position.y == 1) {
-                    position.y += 1;
-                    playerSlots[(int)position.x] = SlotStatus.Selected;
-                    playerCount++;*/
-                    Starburst.inst().message("play_sound", new { name = "menu_click" });
-                    // skicka med musiken så att den inte börjar om i nästa meny
-                    var entities = Starburst.inst().get_entities_fast(typeof(SoundLibrary));
-                    Entity soundlibrary = entities[0];
-                    Starburst.inst().enter_state(new Player_Selection_Menu(soundlibrary));
-                //}
+                Starburst.inst().message("play_sound", new { name = "menu_click" });
+                // skicka med musiken så att den inte börjar om i nästa meny
+                var entities = Starburst.inst().get_entities_fast(typeof(SoundLibrary));
+                Entity soundlibrary = entities[0];
+                Starburst.inst().enter_state(new Player_Selection_Menu(soundlibrary));
             }
             else if (msg.Equals("start")) {
                 Starburst.inst().message("play_sound", new { name = "menu_click" });
@@ -212,9 +202,9 @@ namespace Fab5.Starburst.States {
             Vector2 textSize = font.MeasureString(text);
             sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), 100), Color.White);
             
-            text = "ugly shit, press enter to continue";
+            text = "unfinished crap\npress fire to continue";
             textSize = font.MeasureString(text);
-            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), vp.Height*.5f - textSize.Y*.5f), Color.White);
+            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), vp.Height*.5f - textSize.Y*.5f), new Color(Color.White, textOpacity));
 
             text = "Continue to player selection";
             textSize = font.MeasureString(text);
