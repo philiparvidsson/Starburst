@@ -72,7 +72,7 @@ namespace Fab5.Starburst.States {
                 sprite_batch.Draw(splash, destRect, new Color(255, 255, 255, 1-quadInOut(outDelay, 0, 1)));
                 //sprite_batch.DrawString(font, "Out: " + (1-quadInOut(outDelay, 0, 1)), new Vector2(20, 20), Color.White);
             }
-            String text = "press enter to skip";
+            String text = "Press start to skip";
             Vector2 textSize = font.MeasureString(text);
             sprite_batch.DrawString(font, text, new Vector2(vp.Width * .5f - textSize.X * .5f, vp.Height - textSize.Y - 20), Color.White);
 
