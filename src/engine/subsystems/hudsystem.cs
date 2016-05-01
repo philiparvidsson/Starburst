@@ -49,7 +49,7 @@
 
         private void draw_minimap(Position position) {
             var vp_size = Fab5_Game.inst().GraphicsDevice.Viewport.Width;
-            var scale = 1.3f*(float)System.Math.Sqrt(1.0f+vp_size/1920.0f);
+            var scale = 1.0f*(float)System.Math.Sqrt(1.0f+vp_size/1920.0f);
 
             var minimap_top  = Fab5_Game.inst().GraphicsDevice.Viewport.Height - 128.0f * scale - 15.0f;
             var minimap_left = Fab5_Game.inst().GraphicsDevice.Viewport.Width  - 128.0f * scale - 15.0f;
@@ -58,7 +58,7 @@
             sprite_batch.Draw(white_pixel_tex,
                               new Vector2(minimap_left-border, minimap_top-border),
                               null,
-                              new Color(0.0f, 0.0f, 0.0f, 0.7f),
+                              new Color(0.0f, 0.0f, 0.0f, 0.4f),
                               0.0f,
                               Vector2.Zero,
                               new Vector2(scale*256.0f*0.5f+border*2.0f, scale*256.0f*0.5f+border*2.0f),

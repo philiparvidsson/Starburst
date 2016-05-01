@@ -377,10 +377,10 @@ namespace Fab5.Engine.Subsystems {
 
                 var inv_zoom = 1.0f/current.zoom;
 
-                if (current.position.x - 0.5f*current.viewport.Width*inv_zoom < -2048.0f) current.position.x = -2048.0f + 0.5f*current.viewport.Width*inv_zoom;
+                /*if (current.position.x - 0.5f*current.viewport.Width*inv_zoom < -2048.0f) current.position.x = -2048.0f + 0.5f*current.viewport.Width*inv_zoom;
                 if (current.position.x + 0.5f*current.viewport.Width*inv_zoom > 2048.0f) current.position.x = 2048.0f - 0.5f*current.viewport.Width*inv_zoom;
                 if (current.position.y - 0.5f*current.viewport.Height*inv_zoom < -2048.0f) current.position.y = -2048.0f + 0.5f*current.viewport.Height*inv_zoom;
-                if (current.position.y + 0.5f*current.viewport.Height*inv_zoom > 2048.0f) current.position.y = 2048.0f - 0.5f*current.viewport.Height/current.zoom;
+                if (current.position.y + 0.5f*current.viewport.Height*inv_zoom > 2048.0f) current.position.y = 2048.0f - 0.5f*current.viewport.Height/current.zoom;*/
 
                 draw_backdrop(sprite_batch, current);
                 draw_tile_map(sprite_batch, current);
