@@ -167,6 +167,8 @@ public class Playing_State : Game_State {
         create_entity(Turbo_Powerup.create_components());
 
         //create_entity(Dummy_Enemy.create_components());
+
+        Starburst.inst().message("play_sound", new { name = "begin_game" });
     }
 
     int edit_tile = 1;

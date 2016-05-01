@@ -130,9 +130,9 @@ public abstract class Fab5_Game : Game {
     private readonly Stack<Game_State> states = new Stack<Game_State>();
 
     public void enter_state(Game_State state) {
-        state.init();
         states.Push(state);
         top_state = state;
+        state.init();
     }
 
     public void leave_state() {

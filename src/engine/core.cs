@@ -96,7 +96,6 @@ public abstract class Game_State {
 
         MsgInfo msg;
         while (messages.TryDequeue(out msg)) {
-
             foreach (var subsystem in subsystems) {
                 subsystem.on_message(msg.msg, msg.data);
             }

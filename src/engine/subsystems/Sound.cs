@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Fab5.Engine.Subsystems
 {
@@ -37,9 +38,27 @@ namespace Fab5.Engine.Subsystems
         {
             MediaPlayer.Stop();
         }
+
+        private Dictionary<string, string> soundlib = new Dictionary<string, string>() {
+            { "begin_game", "sound/effects/air_horn" },
+            { "menu_click", "sound/effects/click" }
+        };
+
         public override void on_message(string msg, dynamic data)
         {
             // @To-do: TOBIAS, KOLLA OM MEDDELANDET ÄR TILL DIG INNAN DU LOOPAR!! :-)
+
+            if (msg == "play_sound") {
+                var asset = data.name;
+                if (soundlib.ContainsKey(asset)) {
+                    // map name to asset file
+                    asset = soundlib[asset];
+                }
+
+                var sound_effect = Fab5_Game.inst().get_content<SoundEffect>(asset);
+                sound_effect.Play();
+                return;
+            }
 
             var entities = Fab5_Game.inst().get_entities_fast(typeof(SoundLibrary));
             int num_components = entities.Count;

@@ -52,34 +52,37 @@ namespace Fab5.Engine.Subsystems {
             player_indicator_tex = Fab5_Game.inst().get_content<Texture2D>("indicator");
         }
 
-        private void draw_backdrop(SpriteBatch sprite_batch, Position playerPosition, Camera camera) {
+        private void draw_backdrop(SpriteBatch sprite_batch, Camera camera) {
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
 
+            var hw = camera.viewport.Width  * 0.5f;
+            var hh = camera.viewport.Height * 0.5f;
+
+            var x = camera.position.x;
+            var y = camera.position.y;
+
+            var fac1 = 0.05f;
+            sprite_batch.Draw(backdrop,
+                              new Vector2(hw - (backdrop.Width*0.5f  + x * fac1) * 1.5f, hh - (backdrop.Height*0.5f + y * fac1) * 1.5f),
+                              null,
+                              new Color(0.8f, 0.8f, 0.8f, 0.8f),
+                              0.0f,
+                              Vector2.Zero,
+                              new Vector2(1.5f, 1.5f),
+                              SpriteEffects.None,
+                              1.0f);
 
 
-                var fac1 = 0.05f;
-                sprite_batch.Draw(backdrop,
-                                  new Vector2(camera.viewport.Width * 0.5f, camera.viewport.Height * 0.5f),
-                                  null,
-                                  new Color(0.8f, 0.8f, 0.8f, 0.8f),
-                                  0.0f,
-                                  new Vector2(backdrop.Width/2.0f  + playerPosition.x * fac1,
-                                              backdrop.Height/2.0f + playerPosition.y * fac1),
-                                  new Vector2(1.5f, 1.5f),
-                                  SpriteEffects.None,
-                                  1.0f);
-
-                var fac2 = 0.25f;
-                sprite_batch.Draw(stardrop,
-                                  new Vector2(camera.viewport.Width * 0.5f, camera.viewport.Height * 0.5f),
-                                  null,
-                                  Color.White,
-                                  0.0f,
-                                  new Vector2(stardrop.Width/2.0f  + playerPosition.x * fac2,
-                                              stardrop.Height/2.0f + playerPosition.y * fac2),
-                                  new Vector2(2.0f, 2.0f),
-                                  SpriteEffects.None,
-                                  0.9f);
+            var fac2 = 0.25f;
+            sprite_batch.Draw(stardrop,
+                              new Vector2(hw - (stardrop.Width*0.5f  + x * fac2) * 2.0f, hh - (stardrop.Height*0.5f + y * fac2) * 2.0f),
+                              null,
+                              Color.White,
+                              0.0f,
+                              Vector2.Zero,
+                              new Vector2(2.0f, 2.0f),
+                              SpriteEffects.None,
+                              0.9f);
 
             sprite_batch.End();
 
@@ -369,12 +372,14 @@ namespace Fab5.Engine.Subsystems {
                 current.position.x += ((currentPlayerPosition.x-current.position.x) * 10.0f) * dt;
                 current.position.y += ((currentPlayerPosition.y-current.position.y) * 10.0f) * dt;
 
-                if (current.position.x - 0.5f*current.viewport.Width/current.zoom < -2048.0f) current.position.x = -2048.0f + 0.5f*current.viewport.Width/current.zoom;
-                if (current.position.x + 0.5f*current.viewport.Width/current.zoom > 2048.0f) current.position.x = 2048.0f - 0.5f*current.viewport.Width/current.zoom;
-                if (current.position.y - 0.5f*current.viewport.Height/current.zoom < -2048.0f) current.position.y = -2048.0f + 0.5f*current.viewport.Height/current.zoom;
-                if (current.position.y + 0.5f*current.viewport.Height/current.zoom > 2048.0f) current.position.y = 2048.0f - 0.5f*current.viewport.Height/current.zoom;
+                var inv_zoom = 1.0f/current.zoom;
 
-                draw_backdrop(sprite_batch, current.position, current);
+                if (current.position.x - 0.5f*current.viewport.Width*inv_zoom < -2048.0f) current.position.x = -2048.0f + 0.5f*current.viewport.Width*inv_zoom;
+                if (current.position.x + 0.5f*current.viewport.Width*inv_zoom > 2048.0f) current.position.x = 2048.0f - 0.5f*current.viewport.Width*inv_zoom;
+                if (current.position.y - 0.5f*current.viewport.Height*inv_zoom < -2048.0f) current.position.y = -2048.0f + 0.5f*current.viewport.Height*inv_zoom;
+                if (current.position.y + 0.5f*current.viewport.Height*inv_zoom > 2048.0f) current.position.y = 2048.0f - 0.5f*current.viewport.Height/current.zoom;
+
+                draw_backdrop(sprite_batch, current);
                 draw_tile_map(sprite_batch, current);
 
                 drawSprites(sprite_batch, current, num_entities, entities, 0.0f);
