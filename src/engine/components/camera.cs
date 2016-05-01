@@ -14,7 +14,8 @@ namespace Fab5.Engine.Components {
         public Matrix transformMatrix;
         public Vector2 origin;
         public Viewport viewport;
-        
+        public int index;
+
         public Camera(Viewport vp) {
             this.viewport = vp;
             this.origin = new Vector2(vp.Width*.5f, vp.Height*.5f);

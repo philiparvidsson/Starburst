@@ -171,7 +171,6 @@ public class Playing_State : Game_State {
         Starburst.inst().message("play_sound", new { name = "begin_game" });
     }
 
-    int edit_tile = 1;
     public override void draw(float t, float dt) {
         base.draw(t, dt);
 

@@ -36,7 +36,8 @@ set Mgcb="C:\Program Files (x86)\MSBuild\MonoGame\v3.0\Tools\MGCB.exe"
 set CscFlags=   ^
     /nologo     ^
     /optimize   ^
-    /target:exe
+    /target:exe ^
+    /warn:4
 
 set MgcbFlags=                        ^
     /compress                         ^

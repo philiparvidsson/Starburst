@@ -90,7 +90,7 @@ namespace Fab5.Engine.Subsystems {
         }
 
 
-        Texture2D grid_tex;
+        //Texture2D grid_tex;
         private void draw_tile_map(SpriteBatch sprite_batch, Camera camera) {
 
 
@@ -251,6 +251,7 @@ namespace Fab5.Engine.Subsystems {
             // add cameras to each viewport
             for (int i = 0; i < currentPlayerNumber; i++) {
                 cameras[i] = new Camera(viewports[i]) { zoom = zoom };
+                cameras[i].index = i+1;
             }
 
             prevPlayerNumber = currentPlayerNumber;
@@ -361,6 +362,8 @@ namespace Fab5.Engine.Subsystems {
                 update_sprite(entities[i], dt);
             }
 
+            var hooks = Fab5_Game.inst().get_entities_fast(typeof (Post_Render_Hook));
+
             for (int p = 0; p < currentPlayerNumber; p++) {
                 Camera current = cameras[p];
 
@@ -389,9 +392,14 @@ namespace Fab5.Engine.Subsystems {
                 draw_indicators(cameras[p], currentPlayerNumber, currentPlayerPosition);
                 hudsystem_instance.drawHUD(currentPlayer, dt);
 
+                foreach (var hook in hooks) {
+                    hook.get_component<Post_Render_Hook>().render_fn(current, sprite_batch);
+                }
+
                 sprite_batch.End();
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;
+
             base.draw(t, dt);
         }
 

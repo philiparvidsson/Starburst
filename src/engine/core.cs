@@ -20,10 +20,10 @@ using System.Threading;
      *----------------------------------------------*/
 
 // Base component class for all game components.
-public interface class Component { };
+public interface Component { };
 
 // Base entity class for all game entities.
-public class Entity {
+public sealed class Entity {
     // Components attached to this entity.
     internal readonly Dictionary<Type, Component> components = new Dictionary<Type, Component>();
 
@@ -41,8 +41,23 @@ public class Entity {
         int n = components.Length;
         for (int i = 0; i < n; i++) {
             var component = components[i];
-            this.components.Add(component.GetType(), component);
+            if (component != null) {
+                this.components.Add(component.GetType(), component);
+                state.add_component(this, component.GetType());
+            }
         }
+    }
+
+    public Component remove_component(Type type) {
+        Component c;
+        components.TryGetValue(type, out c);
+        components.Remove(type);
+        return c;
+    }
+
+    public Component remove_component<T>() where T : Component {
+        state.remove_component(this, typeof(T));
+        return remove_component(typeof (T));
     }
 
     // Retrieves the component of the specified type, attached to the entity.
@@ -77,6 +92,7 @@ public abstract class Game_State {
 
     // Entities in the game state.
     private readonly Dictionary<Int64, Entity> entities = new Dictionary<Int64, Entity>();
+    private readonly Dictionary<Type, List<Entity>> entity_dic = new Dictionary<Type, List<Entity>>();
 
     private class MsgInfo {
         public string msg;
@@ -93,7 +109,6 @@ public abstract class Game_State {
     }
 
     internal void dispatch_messages() {
-
         MsgInfo msg;
         while (messages.TryDequeue(out msg)) {
             foreach (var subsystem in subsystems) {
@@ -106,6 +121,27 @@ public abstract class Game_State {
     }
 
     public virtual void on_message(string msg, dynamic data) {
+    }
+
+    internal void remove_component(Entity entity, Type type) {
+        List<Entity> a;
+        if (!entity_dic.TryGetValue(type, out a)) {
+            return;
+        }
+
+        a.Remove(entity);
+    }
+
+    internal void add_component(Entity entity, Type type) {
+        if (!entity_dic.ContainsKey(type)) {
+            entity_dic[type] = new List<Entity>();
+        }
+
+        entity_dic[type].Add(entity);
+
+        if (type == typeof (Sprite)) {
+            resort_sprites = true;
+        }
     }
 
     // Creates an entity from the specified components and assigns an id to it.
@@ -121,18 +157,11 @@ public abstract class Game_State {
 
         entities[entity.id] = entity;
 
-        foreach (Component comp in components) {
+        /*foreach (Component comp in components) {
             var type = comp.GetType();
-            if (!entity_dic.ContainsKey(type)) {
-                entity_dic[type] = new List<Entity>();
-            }
 
-            entity_dic[type].Add(entity);
-
-            if (type == typeof (Sprite)) {
-                resort_sprites = true;
-            }
-        }
+            add_component(entity, type);
+        }*/
 
 
         return (entity);
@@ -160,7 +189,7 @@ public abstract class Game_State {
     // results, but rather the num_entities out-parameter.
     static List<Entity> results = new List<Entity>();
 
-    private readonly Dictionary<Type, List<Entity>> entity_dic = new Dictionary<Type, List<Entity>>();
+
 
     public List<Entity> get_entities_fast(Type component_type) {
         List<Entity> e = null;

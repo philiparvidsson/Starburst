@@ -102,6 +102,7 @@ public abstract class Fab5_Game : Game {
         return (null);
     }
 
+
      public List<Entity> get_entities_fast(Type component_type) {
         if (top_state != null) {
             return (top_state.get_entities_fast(component_type));

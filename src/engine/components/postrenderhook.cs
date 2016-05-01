@@ -1,22 +1,23 @@
-namespace Fab5.Engine.Components {
+﻿namespace Fab5.Engine.Components
+{
 
 /*------------------------------------------------
  * USINGS
  *----------------------------------------------*/
 
+using Fab5.Engine.Components;
 using Fab5.Engine.Core;
+
+using System;
+
+using Microsoft.Xna.Framework.Graphics;
 
 /*------------------------------------------------
  * CLASSES
  *----------------------------------------------*/
 
-public class TTL : Component {
-    public float time;
-    public float max_time;
-
-    public System.Func<float, float, float> alpha_fn;
-
-    public System.Action destroy_cb;
+public class Post_Render_Hook : Component {
+    public Action<Camera, SpriteBatch> render_fn;
 }
 
 }

@@ -270,88 +270,130 @@ namespace Fab5.Starburst.States.Playing {
         inflictBulletDamage(bullet, player, data);
     }
 
-        private void inflictBulletDamage(Entity bullet, Entity player, dynamic data) {
-            Ship_Info playerShip = player.get_component<Ship_Info>();
-            Bullet_Info bulletInfo = bullet.get_component<Bullet_Info>();
-            Score shooterScore = bulletInfo.sender.get_component<Score>();
-            float bulletDamage = bulletInfo.damage;
+    private void inflictBulletDamage(Entity bullet, Entity player, dynamic data) {
+        Ship_Info playerShip = player.get_component<Ship_Info>();
+        Bullet_Info bulletInfo = bullet.get_component<Bullet_Info>();
+        Score shooterScore = bulletInfo.sender.get_component<Score>();
+        float bulletDamage = bulletInfo.damage;
 
-            /*if (playerShip.team == bulletInfo.sender.get_component<Ship_Info>().team) {
-                return;
-            }*/
+        /*if (playerShip.team == bulletInfo.sender.get_component<Ship_Info>().team) {
+            return;
+        }*/
 
-            if (player == bulletInfo.sender) {
-                return;
-            }
+        if (player == bulletInfo.sender) {
+            return;
+        }
 
-            if(player != bulletInfo.sender)
-                shooterScore.score += 10;
-            // kolla sköld, om sköld nere, ta skada
-            if(playerShip.energy_value > bulletDamage) {
-                playerShip.energy_value -= bulletDamage;
-            }
-            else {
-                bulletDamage -= playerShip.energy_value;
-                playerShip.energy_value = 0;
+        if(player != bulletInfo.sender)
+            shooterScore.score += 10;
+        // kolla sköld, om sköld nere, ta skada
+        if(playerShip.energy_value > bulletDamage) {
+            playerShip.energy_value -= bulletDamage;
+        }
+        else {
+            bulletDamage -= playerShip.energy_value;
+            playerShip.energy_value = 0;
 
-                // börja dra av hp av resterande skada från kula
+            // börja dra av hp av resterande skada från kula
 
-                playerShip.hp_value -= bulletDamage;
-                if (playerShip.hp_value <= 0) {
-                    // offret blir dödsmördat
+            playerShip.hp_value -= bulletDamage;
+            if (playerShip.hp_value <= 0) {
+                // offret blir dödsmördat
                 if (player != bulletInfo.sender)
-                        shooterScore.score += 240;
-                    state.create_entity(new Component[] {
-                        new TTL { max_time = 0.4f },
-                        new Particle_Emitter {
-                            emit_fn = () => {
-                                return new Component[] {
-                                    new Position {
-                                        x = data.c_x,
-                                        y = data.c_y
-                                    },
-                                    new Velocity {
-                                        x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble()),
-                                        y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (300.0f + 150.0f * (float)rand.NextDouble())
-                                    },
-                                    new Sprite {
-                                        blend_mode  = Sprite.BM_ADD,
-                                        color       = new Color(1.0f, 0.6f, 0.1f),
-                                        layer_depth = 0.3f,
-                                        scale       = 0.4f + (float)rand.NextDouble() * 1.9f,
-                                        texture     = Starburst.inst().get_content<Texture2D>("particle")
-                                    },
-                                    new TTL {
-                                        alpha_fn = (x, max) => 1.0f - x/max,
-                                        max_time = 0.2f + (float)(rand.NextDouble() * 0.7f)
-                                    }
-                                };
-                            },
-                            interval = 0.05f,
-                            num_particles_per_emit = 15 + rand.Next(0, 30)
-                        }
+                    shooterScore.score += 240;
+
+                state.create_entity(new Component[] {
+                    new TTL { max_time = 0.4f },
+                    new Particle_Emitter {
+                        emit_fn = () => {
+                            var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
+                            var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
+                            var radius = 13.0f * (float)rand.NextDouble();
+                            var speed  = (300.0f + 150.0f * (float)rand.NextDouble());
+
+                            return new Component[] {
+                                new Position {
+                                    x = data.c_x + (float)Math.Cos(theta1) * radius,
+                                    y = data.c_y + (float)Math.Cos(theta1) * radius
+                                },
+                                new Velocity {
+                                    x = (float)Math.Cos(theta2) * speed,
+                                    y = (float)Math.Sin(theta2) * speed
+                                },
+                                new Sprite {
+                                    blend_mode  = Sprite.BM_ADD,
+                                    color       = new Color(0.8f, 0.4f, 0.1f),
+                                    layer_depth = 0.3f,
+                                    scale       = 0.3f + (float)rand.NextDouble() * 1.9f,
+                                    texture     = Starburst.inst().get_content<Texture2D>("particle")
+                                },
+                                new TTL {
+                                    alpha_fn = (x, max) => 1.0f - x/max,
+                                    max_time = 0.2f + (float)(rand.NextDouble() * 0.7f)
+                                }
+                            };
+                        },
+                        interval = 0.05f,
+                        num_particles_per_emit = 15 + rand.Next(0, 30)
+                    }
                     });
-                    // make "dead ship" state? so killed player can see explosion and that they died
-                    // no visible ship, no input, not receptable to damage
-                    // lasts for X seconds
-                    playerShip.hp_value = playerShip.top_hp;
-                    playerShip.energy_value = playerShip.top_energy;
 
-                    // add random position later
-                    //player.get_component<Position>().x = 0;
-                    //player.get_component<Position>().y = 0;
-                    //player.get_component<Velocity>().x = 0;
-                    //player.get_component<Velocity>().y = 0;
+                playerShip.hp_value = playerShip.top_hp;
+                playerShip.energy_value = playerShip.top_energy;
 
-                    var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
-                    player.get_component<Position>().x = spawn_pos.x;
-                    player.get_component<Position>().y = spawn_pos.y;
+                player.get_component<Inputhandler>().enabled = false;
 
-                    player.get_component<Velocity>().x = 0;
-                    player.get_component<Velocity>().y = 0;
-                }
+                var old_particle_emitter = player.remove_component<Particle_Emitter>();
+                var old_bounding_circle  = player.remove_component<Bounding_Circle>();
+                var old_sprite           = player.remove_component<Sprite>();
+
+                var time_of_death = Fab5_Game.inst().get_time();
+                Fab5_Game.inst().create_entity(new Component[] {
+                    new Post_Render_Hook  {
+                        render_fn = (camera, sprite_batch) => {
+                            if (camera.index != playerShip.pindex) {
+                                return;
+                            }
+
+                            var t    = 5.0f - (Fab5_Game.inst().get_time() - time_of_death);
+                            var mtext = string.Format("Respawning in 0.00...", t);
+                            var text = string.Format("Respawning in {0:0.00}...", t);
+                            var ts   = GFX_Util.measure_string(mtext);
+
+                            GFX_Util.fill_rect(sprite_batch, new Rectangle(0, 0, camera.viewport.Width, camera.viewport.Height), Color.Black * 0.5f);
+                            GFX_Util.draw_def_text(sprite_batch, text, (camera.viewport.Width-ts.X)*0.5f, (camera.viewport.Height-ts.Y)*0.5f);
+                        }
+                    },
+
+                    new TTL {
+                        max_time = 5.0f,
+                    }
+                });
+
+                Fab5_Game.inst().create_entity(new Component[] {
+                    new TTL {
+                        destroy_cb = () => {
+                            player.add_components(old_particle_emitter, old_bounding_circle, old_sprite);
+                            player.get_component<Inputhandler>().enabled = true;
+
+                            var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
+                            player.get_component<Position>().x = spawn_pos.x;
+                            player.get_component<Position>().y = spawn_pos.y;
+                        },
+
+                        max_time = 5.0f,
+                    }
+                });
+
+                /*var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
+                player.get_component<Position>().x = spawn_pos.x;
+                player.get_component<Position>().y = spawn_pos.y;*/
+
+                player.get_component<Velocity>().x = 0.0f;
+                player.get_component<Velocity>().y = 0.0f;
             }
         }
+    }
 
     private void bullet2_asteroid(Entity a, Entity b, dynamic data) {
         var bullet   = (a.get_component<Sprite>().texture.Name == "beams2") ? a : b;
@@ -490,7 +532,7 @@ namespace Fab5.Starburst.States.Playing {
         }
 
         if (dic == null) {
-            System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
+//            System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
             return;
         }
 
@@ -500,12 +542,12 @@ namespace Fab5.Starburst.States.Playing {
             name1   = name2;
             name2   = tmp;
             if (!handlers.TryGetValue(name1, out dic)) {
-                System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
+//                System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
                 return;
             }
 
             if (!dic.TryGetValue(name2, out actions)) {
-                System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
+//                System.Console.WriteLine("ignored collision: " + name1 + ", " + name2);
                 return;
             }
         }

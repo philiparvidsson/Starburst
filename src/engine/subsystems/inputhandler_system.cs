@@ -39,9 +39,18 @@
             for (int i = 0; i < num_components; i++)
             {
                 var entity = entities[i];
-                var velocity = entity.get_component<Velocity>();
-                var angle = entity.get_component<Angle>();
                 var input = entity.get_component<Inputhandler>();
+                var angle = entity.get_component<Angle>();
+
+                // all player controlled objects get an angular drag force to prevent the players from going insane lol
+                angle.ang_vel -= angle.ang_vel * 10.0f * dt;
+
+                if (!input.enabled) {
+                    continue;
+                }
+
+                var velocity = entity.get_component<Velocity>();
+
                 var ship = entity.get_component<Ship_Info>();
                 Primary_Weapon primaryWeapon = entity.get_component<Primary_Weapon>();
                 Secondary_Weapon secondaryWeapon = entity.get_component<Secondary_Weapon>();
@@ -49,7 +58,7 @@
                 var max_speed = ship.top_velocity;
                 var acc       = ship.acceleration;
 
-                angle.ang_vel -= angle.ang_vel * 10.0f * dt;
+
                 float turn = 0.0f;
 
                 // Keyboard device

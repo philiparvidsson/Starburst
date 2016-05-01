@@ -2,16 +2,19 @@ namespace Fab5.Engine.Subsystems {
 
 using Fab5.Engine.Components;
 using Fab5.Engine.Core;
-    using System;
-    using Microsoft.Xna.Framework;
+
+using System;
+using System.Collections.Generic;
+
+using Microsoft.Xna.Framework;
 
 public class Lifetime_Manager : Subsystem {
     bool even_frame;
     public override void draw(float t, float dt) {
-
-
         var entities = Fab5_Game.inst().get_entities_fast(typeof (TTL));
         int num_entities = entities.Count;
+
+        List<Entity> entities_to_destroy = null;
 
         even_frame = !even_frame;
 
@@ -22,9 +25,11 @@ public class Lifetime_Manager : Subsystem {
             ttl.time += dt;
 
             if (ttl.time >= ttl.max_time) {
-                entity.destroy();
-                i -= 1;
-                num_entities = entities.Count;
+                if (entities_to_destroy == null) {
+                    entities_to_destroy = new List<Entity>();
+                }
+
+                entities_to_destroy.Add(entity);
                 continue;
             }
 
@@ -35,6 +40,17 @@ public class Lifetime_Manager : Subsystem {
                     if (a < 0.0f) a = 0.0f;
                     if (a > 255.0f) a = 255.0f;
                     s.color = new Color(s.color.R, s.color.G, s.color.B, (byte)a);
+                }
+            }
+        }
+
+        if (entities_to_destroy != null) {
+            foreach (var e in entities_to_destroy) {
+                e.destroy();
+                var ttl = e.get_component<TTL>();
+
+                if (ttl.destroy_cb != null) {
+                    ttl.destroy_cb();
                 }
             }
         }

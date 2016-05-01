@@ -15,6 +15,8 @@
 
     public class Inputhandler : Component
     {
+        public bool enabled = true;
+
         public KeyboardState keyboardState;
         public GamePadState gamepadState;
 
