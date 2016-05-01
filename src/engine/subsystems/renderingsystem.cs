@@ -214,7 +214,7 @@ namespace Fab5.Engine.Subsystems {
                 viewports[1] = topRight;
                 viewports[2] = bottom;
 
-                zoom = .7f;
+                zoom = .9f;
             }
             else {
                 // 1/4 screen, handle sizes and positions
