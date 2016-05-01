@@ -303,7 +303,7 @@ namespace Fab5.Starburst.States.Playing {
                     shooterScore.score += 240;
 
                 state.create_entity(new Component[] {
-                    new TTL { max_time = 0.4f },
+                    new TTL { max_time = 0.3f },
                     new Particle_Emitter {
                         emit_fn = () => {
                             var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
@@ -324,7 +324,7 @@ namespace Fab5.Starburst.States.Playing {
                                     blend_mode  = Sprite.BM_ADD,
                                     color       = new Color(0.8f, 0.4f, 0.1f),
                                     layer_depth = 0.3f,
-                                    scale       = 0.3f + (float)rand.NextDouble() * 1.9f,
+                                    scale       = 0.4f + (float)rand.NextDouble() * 0.9f,
                                     texture     = Starburst.inst().get_content<Texture2D>("particle")
                                 },
                                 new TTL {
@@ -347,6 +347,8 @@ namespace Fab5.Starburst.States.Playing {
                 var old_bounding_circle  = player.remove_component<Bounding_Circle>();
                 var old_sprite           = player.remove_component<Sprite>();
 
+                Starburst.inst().message("play_sound", new { name = "sound/effects/explosion" });
+
                 var time_of_death = Fab5_Game.inst().get_time();
                 Fab5_Game.inst().create_entity(new Component[] {
                     new Post_Render_Hook  {
@@ -355,14 +357,19 @@ namespace Fab5.Starburst.States.Playing {
                                 return;
                             }
 
-                            var t    = 5.0f - (Fab5_Game.inst().get_time() - time_of_death);
-                            var mtext = string.Format("Respawning in 0.00...", t);
-                            var text = string.Format("Respawning in {0:0.00}...", t);
-                            var ts   = GFX_Util.measure_string(mtext);
+                            var t     = 5.0f - (Fab5_Game.inst().get_time() - time_of_death);
+                            var text1 = string.Format("Respawning in {0:0.00}", t);
+
+                            // @To-do: not gonna fly with NPCs
+                            var s     = new [] { "one", "two", "three", "four" };
+                            var text2 = string.Format("Owned by player {0}!", s[bulletInfo.sender.get_component<Ship_Info>().pindex-1]);
+                            var ts1   = GFX_Util.measure_string("Respawning in 0.00");
+                            var ts2   = GFX_Util.measure_string(text2);
 
                             var a = 0.5f*(float)Math.Min(Math.Max(0.0f, (10.0f-t*2.0f)), 1.0f);
                             GFX_Util.fill_rect(sprite_batch, new Rectangle(0, 0, camera.viewport.Width, camera.viewport.Height), Color.Black * a);
-                            GFX_Util.draw_def_text(sprite_batch, text, (camera.viewport.Width-ts.X)*0.5f, (camera.viewport.Height-ts.Y)*0.5f);
+                            GFX_Util.draw_def_text(sprite_batch, text2, (camera.viewport.Width-ts2.X)*0.5f, (camera.viewport.Height-ts2.Y)*0.5f-95.0f);
+                            GFX_Util.draw_def_text(sprite_batch, text1, (camera.viewport.Width-ts1.X)*0.5f, (camera.viewport.Height-ts1.Y)*0.5f);
                         }
                     },
 

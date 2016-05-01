@@ -25,11 +25,11 @@ namespace Fab5.Starburst.States {
         int minPlayers = 1;
 
         float elapsedTime;
-        float delay = .0f; // tid innan första animation startar
-        float inDuration = 1f; // tid för animationer
-        float outDuration = 1.5f; // tid för animationer
+        float delay = .1f; // tid innan första animation startar
+        float inDuration = 0.4f; // tid för animationer
+        float outDuration = 0.4f; // tid för animationer
         float outDelay; // tid innan andra animationen
-        float displayTime = .8f;
+        float displayTime = .1f;
         float animationTime; // total animationstid
         float textOpacity;
         private enum SlotStatus {
@@ -152,12 +152,24 @@ namespace Fab5.Starburst.States {
             // loopa igenom spelare för att hitta om någon ledig x-koordinat finns
             var players = Starburst.inst().get_entities_fast(typeof(Inputhandler));
             // prova de olika spelarpositionerna
+
+            bool all_up = true;
+            for (int x = 0; x < 4; x++) {
+                if (playerSlots[x] != SlotStatus.Empty) {
+                    all_up = false;
+                    break;
+                }
+            }
+
             for (int x = 0; x < 4; x++) {
                 if (playerSlots[x] == SlotStatus.Empty) {
                     position.y++;
                     position.x = x;
                     playerSlots[x] = SlotStatus.Hovering;
                     Starburst.inst().message("play_sound", new { name = "menu_click" });
+                    if (all_up) {
+                        elapsedTime = 0.5f;
+                    }
                     break;
                 }
             }
@@ -174,12 +186,12 @@ namespace Fab5.Starburst.States {
             animationTime = outDelay + outDuration;
 
             create_entity(SoundManager.create_backmusic_component()).get_component<SoundLibrary>().song_index = 1;
-            
+
             // load textures
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
             rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>("sector034");
-            
+
             Inputhandler wasd = new Inputhandler() {
                 left = Keys.A,
                 right = Keys.D,
@@ -216,7 +228,7 @@ namespace Fab5.Starburst.States {
             elapsedTime += dt;
 
             if (elapsedTime >= animationTime) {
-                elapsedTime = 0;
+                elapsedTime -= animationTime;
                 /*
                 outDelay = delay + duration + displayTime;
                 animationTime = outDelay + duration;
