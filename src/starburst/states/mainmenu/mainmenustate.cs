@@ -289,6 +289,7 @@ namespace Fab5.Starburst.States {
             String text = "Choose players";
             Vector2 textSize = font.MeasureString(text);
             sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), 100), Color.White);
+            //GFX_Util.draw_def_text(sprite_batch, text, (int)((vp.Width * .5f) - (textSize.X * .5f)), 100);
 
             // rita ut kontrollrutor (4 st)
             int maxPlayers = 4;
