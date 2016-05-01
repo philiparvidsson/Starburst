@@ -10,16 +10,19 @@ namespace Fab5.Starburst.States.Playing {
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Components;
-    public class Collision_Handler {
+
+ public class Collision_Handler {
     private static Random rand = new Random();
 
     private Game_State state;
 
     private Dictionary<string, Dictionary<string, List<Action<Entity, Entity, dynamic>>>> handlers = new Dictionary<string, Dictionary<string, List<Action<Entity, Entity, dynamic>>>>();
 
-        private Tile_Map tile_map;
+    private Tile_Map tile_map;
+    private Spawn_Util spawner;
 
-   public Collision_Handler(Game_State state, Tile_Map tile_map) {
+    public Collision_Handler(Game_State state, Tile_Map tile_map, Spawn_Util spawner) {
+        this.spawner = spawner;
         this.state = state;
         this.tile_map = tile_map;
 
@@ -340,7 +343,7 @@ namespace Fab5.Starburst.States.Playing {
                     //player.get_component<Velocity>().x = 0;
                     //player.get_component<Velocity>().y = 0;
 
-                    var spawn_pos = Spawn_Util.get_player_spawn_pos(player.get_component<Ship_Info>().team, tile_map);
+                    var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
                     player.get_component<Position>().x = spawn_pos.x;
                     player.get_component<Position>().y = spawn_pos.y;
 

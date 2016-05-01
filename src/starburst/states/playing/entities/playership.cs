@@ -3,6 +3,7 @@
     using Fab5.Engine.Components;
     using Fab5.Engine.Core;
     using Fab5.Engine;
+    using Fab5.Starburst.States.Playing;
 
     using Microsoft.Xna.Framework.Input;
     using Microsoft.Xna.Framework.Graphics;
@@ -15,7 +16,7 @@
         public static System.Random rand = new System.Random();
 
         static int lol = 1;
-        public static Component[] create_components(Inputhandler input)
+        public static Component[] create_components(Inputhandler input ,Game_Config conf)
         {
             int pindex = lol;
             /*
@@ -40,6 +41,18 @@
 
             lol++;
             int team = (lol % 2)+1;
+
+            int ig_value = 0;
+
+            if (conf.mode == "deathmatch") {
+                ig_value = pindex;
+            }
+            else if (conf.mode == "team-deathmatch") {
+                ig_value = team;
+            }
+            else {
+                System.Console.WriteLine("unknown game mode!");
+            }
 
             var playerrot = new  Angle() { angle = 0 };
             var playerpos = new Position() {x = 300, y = 200 };
@@ -99,7 +112,7 @@
                     //color = new Color(0.6f, 0.9f, 1.0f)
                 },
                 new Ship_Info(100,130,100,100) { team = team, pindex = pindex },
-                new Bounding_Circle() { radius = 20.0f, ignore_collisions2 = team },
+                new Bounding_Circle() { radius = 20.0f, ignore_collisions2 = ig_value },
                 new Mass() { mass = 15.0f, restitution_coeff = 0.6f },
                 new Primary_Weapon(),
                 new Secondary_Weapon(),
