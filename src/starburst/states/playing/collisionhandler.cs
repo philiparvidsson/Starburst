@@ -53,12 +53,14 @@ namespace Fab5.Starburst.States.Playing {
         reg("beams1", "ships/ship12", bullet1_player);
         reg("beams1", "ships/ship13", bullet1_player);
         reg("beams1", "ships/ship14", bullet1_player);
+        reg("beams1", "soccerball"  , bullet1_soccerball);
         reg("beams2", "asteroid"    , bullet2_asteroid);
         reg("beams2", "asteroid2"   , bullet2_asteroid);
         reg("beams2", "ships/ship11", bullet2_player);
         reg("beams2", "ships/ship12", bullet2_player);
         reg("beams2", "ships/ship13", bullet2_player);
         reg("beams2", "ships/ship14", bullet2_player);
+        reg("beams2", "soccerball"  , bullet2_soccerball);
 
         reg("soccerball", "ships/ship11", soccerball_player);
         reg("soccerball", "ships/ship12", soccerball_player);
@@ -268,6 +270,88 @@ namespace Fab5.Starburst.States.Playing {
         bullet.destroy();
 
         inflictBulletDamage(bullet, player, data);
+    }
+
+    private void bullet1_soccerball(Entity a, Entity b, dynamic data) {
+        var bullet     = (a.get_component<Sprite>().texture.Name == "beams1") ? a : b;
+        var soccerball = (bullet == a) ? b : a;
+
+        state.create_entity(new Component[] {
+            new TTL { max_time = 0.05f },
+            new Particle_Emitter {
+                emit_fn = () => {
+                    return new Component[] {
+                        new Position {
+                            x = data.c_x,
+                            y = data.c_y
+                        },
+                        new Velocity {
+                            x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (100.0f + 80.0f * (float)rand.NextDouble()),
+                            y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (100.0f + 80.0f * (float)rand.NextDouble())
+                        },
+                        new Sprite {
+                            blend_mode  = Sprite.BM_ADD,
+                            color       = new Color(0.2f, 0.6f, 1.0f),
+                            layer_depth = 0.3f,
+                            scale       = 0.2f + (float)rand.NextDouble() * 0.3f,
+                            texture     = Starburst.inst().get_content<Texture2D>("particle")
+                        },
+                        new TTL {
+                            alpha_fn = (x, max) => 1.0f - x/max,
+                            max_time = 0.1f + (float)(rand.NextDouble() * 0.1f)
+                        }
+                    };
+                },
+                interval = 0.01f,
+                num_particles_per_emit = 10 + rand.Next(0, 20)
+            }
+        });
+
+        bullet.destroy();
+    }
+
+    private void bullet2_soccerball(Entity a, Entity b, dynamic data) {
+        var bullet     = (a.get_component<Sprite>().texture.Name == "beams2") ? a : b;
+        var soccerball = (bullet == a) ? b : a;
+
+        state.create_entity(new Component[] {
+            new TTL { max_time = 0.05f },
+            new Particle_Emitter {
+                emit_fn = () => {
+                    var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
+                    var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
+                    var radius = 13.0f * (float)rand.NextDouble();
+                    var speed  = (300.0f + 150.0f * (float)rand.NextDouble());
+
+                    return new Component[] {
+                        new Mass { drag_coeff = -4.0f },
+                        new Position {
+                            x = data.c_x + (float)Math.Cos(theta1) * radius,
+                            y = data.c_y + (float)Math.Cos(theta1) * radius
+                        },
+                        new Velocity {
+                            x = (float)Math.Cos(theta2) * speed,
+                            y = (float)Math.Sin(theta2) * speed
+                        },
+                        new Sprite {
+                            blend_mode  = Sprite.BM_ADD,
+                            color       = new Color(1.0f, 0.3f, 0.1f),
+                            layer_depth = 0.3f,
+                            scale       = 0.9f + (float)rand.NextDouble() * 0.9f,
+                            texture     = Starburst.inst().get_content<Texture2D>("particle")
+                        },
+                        new TTL {
+                            alpha_fn = (x, max) => 1.0f - x/max,
+                            max_time = 0.2f + (float)(rand.NextDouble() * 0.1f)
+                        }
+                    };
+                },
+                interval = 0.01f,
+                num_particles_per_emit = 10 + rand.Next(0, 20)
+            }
+        });
+
+        bullet.destroy();
     }
 
     private void inflictBulletDamage(Entity bullet, Entity player, dynamic data) {
