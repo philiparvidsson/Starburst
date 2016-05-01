@@ -28,6 +28,15 @@
 
         public System.Collections.Generic.List<Powerup> powerups = new System.Collections.Generic.List<Powerup>();
 
+        public bool has_powerup(string name) {
+            foreach (var powerup in powerups) {
+                if (powerup.impl.name == name) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         public Ship_Info(float top_hp, float top_energy, float top_velocity, float acceleration)
         {

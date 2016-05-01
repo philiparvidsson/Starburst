@@ -20,13 +20,12 @@
         private static float rotationOffset = MathHelper.ToRadians(-90f); // rotationsoffset för skott-texturen
 
 
-        private static Component[] weapon1(Entity origin, Weapon weapon) {
+        private static Component[] weapon1(Entity origin, Weapon weapon, Angle shipAngle) {
             float shipRadian = 30f; // offset från skeppets mitt där skottet utgår ifrån
             float speed = 600f; // skottets hastighet (kanske ska vara vapenberoende?)
             float lifeTime = 1.5f; // skottets livstid (i sekunder? iaf baserad på dt)
 
             Position position = origin.get_component<Position>();
-            Angle shipAngle = origin.get_component<Angle>();
             Velocity shipVel = origin.get_component<Velocity>();
 
             double dAngle = (double)shipAngle.angle + ((float)rand.NextDouble()-0.5f)*0.08f;
@@ -130,12 +129,32 @@
             };
         }
 
-        public static Component[] create_components(Entity origin, Weapon weapon) {
+        public static void fire_weapon(Entity origin, Weapon weapon) {
+            if (weapon.GetType() == typeof (Secondary_Weapon)) {
+                Fab5_Game.inst().create_entity(weapon2(origin, weapon));
+                return;
+            }
+
+            if (origin.get_component<Ship_Info>().has_powerup("multifire")) {
+                var a = origin.get_component<Angle>();
+                var angle1 = new Angle { angle = a.angle - 15.0f * 3.141592f/180.0f, ang_vel = a.ang_vel };
+                var angle2 = new Angle { angle = a.angle, ang_vel = a.ang_vel };
+                var angle3 = new Angle { angle = a.angle + 15.0f * 3.141592f/180.0f, ang_vel = a.ang_vel };
+                Fab5_Game.inst().create_entity(weapon1(origin, weapon, angle1));
+                Fab5_Game.inst().create_entity(weapon1(origin, weapon, angle2));
+                Fab5_Game.inst().create_entity(weapon1(origin, weapon, angle3));
+            }
+            else {
+                Fab5_Game.inst().create_entity(weapon1(origin, weapon, origin.get_component<Angle>()));
+            }
+        }
+
+        private static Component[] create_components(Entity origin, Weapon weapon) {
             if (weapon.GetType() == typeof (Secondary_Weapon)) {
                 return weapon2(origin, weapon);
             }
 
-            return weapon1(origin, weapon);
+            return weapon1(origin, weapon, origin.get_component<Angle>());
         }
 
     }

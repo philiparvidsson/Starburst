@@ -9,16 +9,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 using System;
 
-public class Turbo_Powerup : Powerup_Impl {
-    private float old_acc;
-    private float old_vel;
-
+public class Multifire_Powerup : Powerup_Impl {
     private Entity effect;
 
     private static System.Random rand = new System.Random();
 
     public string name {
-        get { return "turbo"; }
+        get { return "multifire"; }
     }
 
     public static Component[] create_components() {
@@ -27,9 +24,9 @@ public class Turbo_Powerup : Powerup_Impl {
 
         var powerup = new Component[] {
             new Bounding_Circle { radius = 14.0f },
-      pos = new Position        { x = -1800.0f, y = 1600.0f },
+      pos = new Position        { x = -1500.0f, y = 1600.0f },
             new Sprite          { texture = Fab5_Game.inst().get_content<Texture2D>("turbo_powerup") },
-            new Powerup         { impl = new Turbo_Powerup() },
+            new Powerup         { impl = new Multifire_Powerup() },
       vel = new Velocity        { x = 0.0f, y = 0.0f },
 
             new Particle_Emitter {
@@ -48,7 +45,7 @@ public class Turbo_Powerup : Powerup_Impl {
                                        y = vel.y * 0.5f + (float)Math.Sin(theta2) * speed },
 
                         new Sprite { blend_mode  = Sprite.BM_ADD,
-                                     color       = new Color(0.0f, 0.5f, 1.0f, 1.0f),
+                                     color       = new Color(1.0f, 0.5f, 0.1f, 1.0f),
                                      layer_depth = 0.3f,
                                      scale       = 0.8f + (float)rand.NextDouble() * 0.7f,
                                      texture     = Fab5_Game.inst().get_content<Texture2D>("particle") },
@@ -87,7 +84,7 @@ public class Turbo_Powerup : Powerup_Impl {
                                        y = vel.y * 0.5f + (float)Math.Sin(theta2) * speed },
 
                         new Sprite { blend_mode  = Sprite.BM_ADD,
-                                     color       = new Color(0.0f, 0.5f, 1.0f, 1.0f),
+                                     color       = new Color(1.0f, 0.5f, 0.1f, 1.0f),
                                      layer_depth = 0.9f,
                                      scale       = 0.8f + (float)rand.NextDouble() * 0.7f,
                                      texture     = Fab5_Game.inst().get_content<Texture2D>("particle") },
@@ -127,7 +124,7 @@ public class Turbo_Powerup : Powerup_Impl {
                                        y = vel.y * 0.5f + (float)Math.Sin(theta2) * speed },
 
                         new Sprite { blend_mode  = Sprite.BM_ADD,
-                                     color       = new Color(0.0f, 0.5f, 1.0f, 1.0f),
+                                     color       = new Color(1.0f, 0.5f, 0.1f, 1.0f),
                                      layer_depth = 0.3f,
                                      scale       = 0.8f + (float)rand.NextDouble() * 0.7f,
                                      texture     = Fab5_Game.inst().get_content<Texture2D>("particle") },
@@ -144,25 +141,11 @@ public class Turbo_Powerup : Powerup_Impl {
     }
 
     public void on_begin(Entity player, Entity powerup) {
-        var ship_info = player.get_component<Ship_Info>();
-
-        old_acc = ship_info.acceleration;
-        old_vel = ship_info.top_velocity;
-
-        ship_info.acceleration *= 15.0f;
-        ship_info.top_velocity *= 2.0f;
-
         do_pickup_effect(powerup);
         do_persistent_effect(player);
     }
 
     public void on_end(Entity player, Entity powerup) {
-        var ship_info = player.get_component<Ship_Info>();
-
-        ship_info.acceleration = old_acc;
-        ship_info.top_velocity = old_vel;
-
-        effect.destroy();
     }
 }
 

@@ -24,8 +24,8 @@ namespace Fab5.Engine.Subsystems {
                 Entity origin = data.Origin;
                 Weapon weapon = data.Weapon;
                 Ship_Info ship = data.Ship;
-                
-                var shot = gameState.create_entity(Bullet_Factory.create_components(origin, weapon));
+
+                Bullet_Factory.fire_weapon(origin, weapon);
                 ship.energy_value -= weapon.energy_cost;
                 Fab5_Game.inst().message("fire", weapon);
                 weapon.timeSinceLastShot = 0f;

@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 
 public interface Powerup_Impl {
+    string name { get; }
+
     void on_begin(Entity player, Entity powerup);
     void on_end(Entity player, Entity powerup);
 }
