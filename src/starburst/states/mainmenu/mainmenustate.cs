@@ -25,9 +25,9 @@ namespace Fab5.Starburst.States {
         int minPlayers = 1;
 
         float elapsedTime;
-        float delay = .1f; // tid innan fˆrsta animation startar
-        float inDuration = 0.4f; // tid fˆr animationer
-        float outDuration = 0.4f; // tid fˆr animationer
+        float delay = .1f; // tid innan f√∂rsta animation startar
+        float inDuration = 0.4f; // tid f√∂r animationer
+        float outDuration = 0.4f; // tid f√∂r animationer
         float outDelay; // tid innan andra animationen
         float displayTime = .1f;
         float animationTime; // total animationstid
@@ -39,9 +39,9 @@ namespace Fab5.Starburst.States {
         }
 
         private void tryStartGame() {
-            // om minsta antal spelare ‰r klara, starta spel
+            // om minsta antal spelare √§r klara, starta spel
             if (playerCount >= minPlayers) {
-                // h‰mta inputhandlers, l‰gg dem i en lista fˆr att vidarebefordra till spel-statet
+                // h√§mta inputhandlers, l√§gg dem i en lista f√∂r att vidarebefordra till spel-statet
                 // (sorterade efter position)
                 List<Inputhandler> inputs = new List<Inputhandler>(playerCount);
                 for (int i = 0; i < playerCount; i++) {
@@ -54,10 +54,9 @@ namespace Fab5.Starburst.States {
                     if (position.y == 2)
                         inputs[(int)position.x] = input;
                 }
-                /*
-                // ta bort tomma platser i bˆrjan om fˆrsta spelare inte ‰r nr 1
-                while (inputs.Count > 0 && inputs[0] == null)
-                    inputs.RemoveAt(0);*/
+                // ta bort tomma inputs
+                while (inputs.Contains(null))
+                    inputs.Remove(null);
                 Starburst.inst().enter_state(new Playing_State(inputs));
             }
         }
@@ -149,7 +148,7 @@ namespace Fab5.Starburst.States {
 
         private void tryMoveDown(Entity entity) {
             var position = entity.get_component<Position>();
-            // loopa igenom spelare fˆr att hitta om nÂgon ledig x-koordinat finns
+            // loopa igenom spelare f√∂r att hitta om n√•gon ledig x-koordinat finns
             var players = Starburst.inst().get_entities_fast(typeof(Inputhandler));
             // prova de olika spelarpositionerna
 
@@ -224,7 +223,7 @@ namespace Fab5.Starburst.States {
 
             // Hantera animeringstider
 
-            // r‰kna upp tid (dt)
+            // r√§kna upp tid (dt)
             elapsedTime += dt;
 
             if (elapsedTime >= animationTime) {
@@ -245,10 +244,10 @@ namespace Fab5.Starburst.States {
             }
 
 
-            // Kolla om kontroller ‰ndrats
+            // Kolla om kontroller √§ndrats
             for (int i = 0; i < gamepads.Count; i++) {
                 bool current = GamePad.GetState(i).IsConnected;
-                // om kontroll kopplats in, l‰gg till spelare
+                // om kontroll kopplats in, l√§gg till spelare
                 if(current && !gamepads[i]) {
                     Inputhandler input = new Inputhandler() { device = Inputhandler.InputType.Controller, gp_index = (PlayerIndex)i };
                     var gamepadPlayer = create_entity(Player.create_components(input));
@@ -309,7 +308,7 @@ namespace Fab5.Starburst.States {
              **/
             Vector2 controllerIconSize = new Vector2(50, 50);
             /*
-           // r‰kna hur mÂnga kontroller som ‰r inaktiva just nu
+           // r√§kna hur m√•nga kontroller som √§r inaktiva just nu
            int inactive = 0;
            for (int i = 0; i < entities.Count; i++) {
                if (entities[i].get_component<Position>().y == 0)
@@ -330,11 +329,11 @@ namespace Fab5.Starburst.States {
                 Vector2 subtitleSize = font.MeasureString(subtitle);
 
                 Rectangle iconRect = new Rectangle();
-                // om l‰ngst upp, sprid ut j‰mnt
+                // om l√§ngst upp, sprid ut j√§mnt
                 if (position.y == 0) {
                     iconRect = new Rectangle((int)(vp.Width * .5f - totalControllerWidth * .5f) + (int)(controllerIconSize.X * i + 1), rectangleY - 150, (int)controllerIconSize.X, (int)controllerIconSize.Y);
                 }
-                // annars en plats per kontroll, fˆrhindra kollisioner nÂgon annanstans
+                // annars en plats per kontroll, f√∂rhindra kollisioner n√•gon annanstans
                 else {
                     int currentRectStartPos = startPos + rectSize * (int)position.x + spacing * (int)position.x;
                     int positionX = (int)(currentRectStartPos + rectSize*.5f -(int)(controllerIconSize.X*.5f));
@@ -350,7 +349,7 @@ namespace Fab5.Starburst.States {
                 //sprite_batch.DrawString(font, subtitle, new Vector2((int)(iconRect.Center.X - subtitleSize.X * .5f), iconRect.Y + iconRect.Height - 13), Color.White);
                 sprite_batch.DrawString(font, subtitle, new Vector2((int)(iconRect.Center.X - subtitleSize.X * .5f), iconRect.Y - subtitleSize.Y + 10), Color.White);
                 /*
-                // debug fˆr handkontroll-thumbsticks
+                // debug f√∂r handkontroll-thumbsticks
                 float x = input.gamepadState.ThumbSticks.Left.X;
                 float y = input.gamepadState.ThumbSticks.Left.Y;
                 string sticks = "X: " + x + ", Y: " + y;
@@ -362,7 +361,7 @@ namespace Fab5.Starburst.States {
             String selectText = "press fire";
             Vector2 selectTextSize = font.MeasureString(selectText);
             for (int i=0; i< playerSlots.Count; i++) {
-                // rita i kontroll-rektanglarna baserat pÂ deras status
+                // rita i kontroll-rektanglarna baserat p√• deras status
                 if(playerSlots[i] == SlotStatus.Hovering) {
                     int currentRectStartPos = startPos + rectSize * i + spacing * i;
                     int positionX = (int)(currentRectStartPos + rectSize * .5f - (int)(selectTextSize.X * .5f));
