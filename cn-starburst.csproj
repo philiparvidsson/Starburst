@@ -92,6 +92,7 @@
     <Compile Include="src\starburst\starburst.cs" />
     <Compile Include="src\starburst\states\playing\entities\dummy.cs" />
     <Compile Include="src\starburst\states\playing\entities\enemies\dummy_enemy.cs" />
+    <Compile Include="src\starburst\states\playing\entities\powerups\multifirepowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\turbopowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\soccerball.cs" />
     <Compile Include="src\starburst\states\playing\entities\soundmanager.cs" />
