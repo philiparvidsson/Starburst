@@ -489,7 +489,7 @@ namespace Fab5.Starburst.States.Playing {
                             }
 
                             var t     = 5.0f - (Fab5_Game.inst().get_time() - time_of_death);
-                            var a = (float)Math.Min(Math.Max(0.0f, (t*2.0f/10.0f)), 1.0f);
+                            var a = (float)Math.Min(Math.Max(0.0f, (3.0f*t*(1.0f/5.0f)-1.0f)), 1.0f);
                             var s    = new [] { "one", "two", "three", "four" };
                             var text = string.Format("Killed player {0}", s[playerShip.pindex-1]);
                             var ts    = GFX_Util.measure_string(text);
