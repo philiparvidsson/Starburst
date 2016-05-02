@@ -306,12 +306,17 @@ public class Collision_Solver : Subsystem {
 
 
 
+        bool r = false;
         if (rect.Width < rect.Height) {
-            return check_left_right(e1, x, y) || check_top_bottom(e1, x, y);
+            r |= check_left_right(e1, x, y);
+            r |= check_top_bottom(e1, x, y);
         }
         else {
-            return check_top_bottom(e1, x, y) || check_left_right(e1, x, y);
+            r |= check_top_bottom(e1, x, y);
+            r |= check_left_right(e1, x, y);
         }
+
+        return r;
     }
 
     private bool resolve_circle_map_collision(Entity e1) {

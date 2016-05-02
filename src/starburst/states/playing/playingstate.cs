@@ -150,7 +150,17 @@ public class Playing_State : Game_State {
 
         for (int i = 0; i < 30; i++) {
             var asteroid = create_entity(Dummy.create_components());
-            var ap = asteroid.get_component<Position>();
+            var r = asteroid.get_component<Bounding_Circle>().radius;
+
+            Position ap;
+
+            bool colliding = false;
+            /*do {
+                foreach (var ast in Starburst.inst().get_entities_fast(typeof (Bounding_Circle))) {
+                    var d
+                }
+            }*/
+            ap = asteroid.get_component<Position>();
             var av = asteroid.get_component<Velocity>();
             var sp = spawner.get_asteroid_spawn_pos(tile_map);
             ap.x = sp.x;
