@@ -201,7 +201,7 @@ namespace Fab5.Starburst.States {
             animationTime = outDelay + outDuration;
 
             //create_entity(SoundManager.create_backmusic_component()).get_component<SoundLibrary>().song_index = 1;
-            
+
             // load textures
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
             rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
@@ -315,19 +315,25 @@ namespace Fab5.Starburst.States {
             int rectangleY = 300;
 
             for (int i=0; i < maxPlayers; i++) {
+                int team = (i>>1)+1;
                 Rectangle destRect = new Rectangle(startPos + rectSize*i + spacing*i, rectangleY, rectSize, rectSize);
-                sprite_batch.Draw(rectBg, destinationRectangle: destRect, color: Color.White, layerDepth: .1f);
+                //sprite_batch.Draw(rectBg, destinationRectangle: destRect, color: Color.White, layerDepth: .1f);
+                var col = new Color(0.0f, 0.0f, 0.0f, 0.4f);
+                if (parent.gameConfig.mode == 0) {
+                    col = (team==1) ? new Color(1.0f, 0.0f, 0.0f, 0.3f) : new Color(0.0f, 0.5f, 1.0f, 0.3f);
+                }
+                GFX_Util.fill_rect(sprite_batch, destRect, col);
             }
 
             // rita ut lagsaker om lagläge
             if(parent.gameConfig.mode == 0) {
                 String teamText = "Team 1";
                 Vector2 teamTextSize = font.MeasureString(teamText);
-                sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f, rectangleY - 50), Color.CornflowerBlue);
+                sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f, rectangleY - 50), Color.Red);
 
                 teamText = "Team 2";
                 teamTextSize = font.MeasureString(teamText);
-                sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f + (vp.Width * .5f), rectangleY - 50), Color.Red);
+                sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f + (vp.Width * .5f), rectangleY - 50), Color.CornflowerBlue);
             }
 
             /**

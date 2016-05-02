@@ -462,7 +462,7 @@ namespace Fab5.Starburst.States.Playing {
 
                             // @To-do: not gonna fly with NPCs
                             var s     = new [] { "one", "two", "three", "four" };
-                            var text2 = string.Format("Killed by player {0}!", s[bulletInfo.sender.get_component<Ship_Info>().pindex-1]);
+                            var text2 = string.Format("Killed by player {0}", s[bulletInfo.sender.get_component<Ship_Info>().pindex-1]);
                             var ts1   = GFX_Util.measure_string("Respawning in 0.00");
                             var ts2   = GFX_Util.measure_string(text2);
 
