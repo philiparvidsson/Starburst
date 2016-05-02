@@ -156,6 +156,7 @@ public class Playing_State : Game_State {
 
             bool colliding = false;
             do {
+                colliding = false;
                 ap = asteroid.get_component<Position>();
                 var sp = spawner.get_asteroid_spawn_pos(tile_map);
                 ap.x = sp.x;

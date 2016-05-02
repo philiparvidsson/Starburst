@@ -351,21 +351,27 @@ public class Collision_Solver : Subsystem {
         }
 
         if (Math.Abs(v.x) < Math.Abs(v.y)) {
+            bool colliding = false;
             for (int x = left; (xs > 0) ? x <= right : x >= right; x += xs) {
                 for (int y = top; (ys > 0) ? y <= bottom : y >= bottom; y += ys) {
                     if (resolve_circle_tile_collision(e1, x, y))
-                        return true;
+                        colliding = true;
                 }
             }
+
+            return colliding;
         }
         else {
+            bool colliding = false;
 
             for (int y = top; (ys > 0) ? y <= bottom : y >= bottom; y += ys) {
                 for (int x = left; (xs > 0) ? x <= right : x >= right; x += xs) {
                     if (resolve_circle_tile_collision(e1, x, y))
-                        return true;
+                        colliding = true;
                 }
             }
+
+            return colliding;
         }
 
         return false;
