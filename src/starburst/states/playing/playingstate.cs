@@ -148,7 +148,8 @@ public class Playing_State : Game_State {
         create_entity(SoundManager.create_soundeffects_component());
 
 
-        for (int i = 0; i < 30; i++) {
+
+        for (int i = 0; i < game_conf.num_asteroids; i++) {
             var asteroid = create_entity(Dummy.create_components());
             var r = asteroid.get_component<Bounding_Circle>().radius;
 

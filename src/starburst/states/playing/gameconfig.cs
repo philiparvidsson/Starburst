@@ -9,6 +9,8 @@ public class Game_Config {
 
     public bool enable_soccer = true;
 
+    public int num_asteroids = 30;
+
 }
 
 }
