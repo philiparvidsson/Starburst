@@ -301,10 +301,10 @@ namespace Fab5.Engine.Subsystems {
 
                 var r = (float)Math.Atan2(d_y, d_x);
 
-                var p_x = (currentPlayerPosition.x - current.position.x) + current.viewport.Width  * 0.5f + d_x;
-                var p_y = (currentPlayerPosition.y - current.position.y) + current.viewport.Height * 0.5f + d_y;
+                var p_x = current.zoom*(currentPlayerPosition.x - current.position.x) + current.viewport.Width  * 0.5f + d_x;
+                var p_y = current.zoom*(currentPlayerPosition.y - current.position.y) + current.viewport.Height * 0.5f + d_y;
 
-                sprite_batch.Draw(player_indicator_tex,
+                sprite_batch.Draw(tex,
                                   new Vector2(p_x, p_y),
                                   null,
                                   Color.White * 0.65f,
