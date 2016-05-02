@@ -58,7 +58,6 @@
                     if (is_key_clicked(inputHandler.secondary_fire, currentKeyboardState, inputHandler.keyboardState))
                         Fab5_Game.inst().message("back", new { Player = entity });
 
-                    inputHandler.keyboardState = currentKeyboardState;
                 }
                 else {
                     GamePadState currentState = GamePad.GetState(inputHandler.gp_index);
@@ -81,12 +80,13 @@
                 }
                 if (currentKeyboardState.IsKeyDown(Keys.LeftAlt) && is_key_clicked(Keys.Enter, currentKeyboardState, inputHandler.keyboardState))
                     Fab5_Game.inst().message("fullscreen", null);
-                if (is_key_clicked(Keys.Enter, currentKeyboardState, inputHandler.keyboardState))
+                else if (is_key_clicked(Keys.Enter, currentKeyboardState, inputHandler.keyboardState))
                     Fab5_Game.inst().message("start", null);
 
-                if (is_key_clicked(inputHandler.left, currentKeyboardState, inputHandler.keyboardState))
+                if (is_key_clicked(Keys.P, currentKeyboardState, inputHandler.keyboardState))
                     Fab5_Game.inst().message("mute", null);
 
+                inputHandler.keyboardState = currentKeyboardState;
             }
         }
     }
