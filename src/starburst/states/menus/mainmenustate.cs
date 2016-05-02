@@ -31,6 +31,7 @@ namespace Fab5.Starburst.States {
         float animationTime; // total animationstid
         float textOpacity;
 
+        float btnDelay = .5f;
         enum options {
             mode,
             soccer,
@@ -41,7 +42,7 @@ namespace Fab5.Starburst.States {
         int gameMode = 0; // 0 för free for all, 1 för team
         bool soccerball = true; // fotboll
         bool captureTheFlag = false;
-        int map = 0;
+        //int map = 0;
         private Texture2D map1;
         public Playing.Game_Config gameConfig;
 
@@ -102,8 +103,10 @@ namespace Fab5.Starburst.States {
                 }
             }
             else if (msg.Equals("start")) {
-                Starburst.inst().message("play_sound", new { name = "menu_click" });
-                proceed();
+                if (btnDelay <= 0) {
+                    Starburst.inst().message("play_sound", new { name = "menu_click" });
+                    proceed();
+                }
             }
             else if (msg.Equals("back")) {
                 /*
@@ -174,6 +177,7 @@ namespace Fab5.Starburst.States {
 
             // räkna upp tid (dt)
             elapsedTime += dt;
+            btnDelay -= dt;
 
             if (elapsedTime >= animationTime) {
                 elapsedTime = 0;

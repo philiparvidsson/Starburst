@@ -37,6 +37,8 @@ namespace Fab5.Starburst.States {
         private Texture2D controller_l_stick;
         private Main_Menu_State parent;
 
+        float btnDelay = .5f;
+
         private enum SlotStatus {
             Empty,
             Hovering,
