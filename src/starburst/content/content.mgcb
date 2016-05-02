@@ -523,3 +523,9 @@
 /processorParam:TextureFormat=Color
 /build:EnergiAtlas.png
 
+#begin sound/effects/goal.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/goal.mp3
+

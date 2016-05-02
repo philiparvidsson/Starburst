@@ -92,10 +92,10 @@
                     turn = state.ThumbSticks.Left.X;
                     input.throttle = state.Triggers.Right - state.Triggers.Left;
 
-                    if (state.Buttons.X == ButtonState.Pressed) {
+                    if (state.Buttons.A == ButtonState.Pressed) {
                         fire(entity, ship, primaryWeapon);
                     }
-                    if (state.Buttons.Y == ButtonState.Pressed) {
+                    if (state.Buttons.B == ButtonState.Pressed) {
                         fire(entity, ship, secondaryWeapon);
                     }
                 }
