@@ -394,38 +394,38 @@ namespace Fab5.Starburst.States.Playing {
                 }
 
                 state.create_entity(new Component[] {
-                    new TTL { max_time = 0.3f },
+                    new TTL { max_time = 0.1f },
                     new Particle_Emitter {
                         emit_fn = () => {
                             var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
-                            var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
-                            var radius = 13.0f * (float)rand.NextDouble();
-                            var speed  = (300.0f + 150.0f * (float)rand.NextDouble());
+                            var theta2 = (-3.141592f + 2.0f*3.1415f*(float)rand.NextDouble())*0.1f;
+                            var radius = 35.0f * (float)rand.NextDouble();
+                            var speed  = (300.0f + 180.0f * (float)rand.NextDouble());
 
                             return new Component[] {
                                 new Position {
                                     x = data.c_x + (float)Math.Cos(theta1) * radius,
-                                    y = data.c_y + (float)Math.Cos(theta1) * radius
+                                    y = data.c_y + (float)Math.Sin(theta1) * radius
                                 },
                                 new Velocity {
-                                    x = (float)Math.Cos(theta2) * speed,
-                                    y = (float)Math.Sin(theta2) * speed
+                                    x = (float)Math.Cos(theta1+theta2) * -speed,
+                                    y = (float)Math.Sin(theta1+theta2) * -speed
                                 },
                                 new Sprite {
                                     blend_mode  = Sprite.BM_ADD,
                                     color       = new Color(0.8f, 0.4f, 0.1f),
                                     layer_depth = 0.3f,
-                                    scale       = 0.4f + (float)rand.NextDouble() * 0.9f,
+                                    scale       = 0.6f + (float)Math.Pow(rand.NextDouble() * 1.2f, 2.0f),
                                     texture     = Starburst.inst().get_content<Texture2D>("particle")
                                 },
                                 new TTL {
                                     alpha_fn = (x, max) => 1.0f - x/max,
-                                    max_time = 0.2f + (float)(rand.NextDouble() * 0.7f)
+                                    max_time = 0.3f + (float)(rand.NextDouble() * 0.7f)
                                 }
                             };
                         },
                         interval = 0.05f,
-                        num_particles_per_emit = 15 + rand.Next(0, 30)
+                        num_particles_per_emit = 35 + rand.Next(0, 60)
                     }
                     });
 
@@ -462,7 +462,7 @@ namespace Fab5.Starburst.States.Playing {
 
                             // @To-do: not gonna fly with NPCs
                             var s     = new [] { "one", "two", "three", "four" };
-                            var text2 = string.Format("Killed by player {0}", s[bulletInfo.sender.get_component<Ship_Info>().pindex-1]);
+                            var text2 = string.Format("Killed by player {0}!", s[bulletInfo.sender.get_component<Ship_Info>().pindex-1]);
                             var ts1   = GFX_Util.measure_string("Respawning in 0.00");
                             var ts2   = GFX_Util.measure_string(text2);
 
@@ -496,7 +496,7 @@ namespace Fab5.Starburst.States.Playing {
                             var t     = 5.0f - (Fab5_Game.inst().get_time() - time_of_death);
                             var a = (float)Math.Min(Math.Max(0.0f, (3.0f*t*(1.0f/5.0f)-1.0f)), 1.0f);
                             var s    = new [] { "one", "two", "three", "four" };
-                            var text = string.Format("Killed player {0}", s[playerShip.pindex-1]);
+                            var text = string.Format("Killed player {0}!", s[playerShip.pindex-1]);
                             var ts    = GFX_Util.measure_string(text);
                             GFX_Util.draw_def_text(sprite_batch, text, (camera.viewport.Width-ts.X)*0.5f, 90.0f, a);
                         }

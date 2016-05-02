@@ -187,7 +187,7 @@ public class Collision_Solver : Subsystem {
 
         if (a1 != null) {
             var w = (-r_y*i_x+r_x*i_y);
-            a1.ang_vel += w/(r_x*r_x+r_y*r_y) * friction;
+            a1.ang_vel += (w/(r_x*r_x+r_y*r_y) - a1.ang_vel)*friction;
         }
     }
 
@@ -592,12 +592,12 @@ public class Collision_Solver : Subsystem {
 
         if (a1 != null) {
             var w = (-p1_y*i_x+p1_x*i_y);
-            a1.ang_vel += w/(p1_x*p1_x+p1_y*p1_y) * friction;
+            a1.ang_vel += (w/(p1_x*p1_x+p1_y*p1_y) - a1.ang_vel) * friction;
         }
 
         if (a2 != null) {
             var w = (-(p2_y)*i_x+(p2_x)*i_y);
-            a2.ang_vel -= w/(p2_x*p2_x+p2_y*p2_y) * friction;
+            a2.ang_vel += (w/(p2_x*p2_x+p2_y*p2_y) - a2.ang_vel) * friction;
         }
 
         return true;
