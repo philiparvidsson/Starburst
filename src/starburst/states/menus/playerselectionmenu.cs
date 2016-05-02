@@ -35,6 +35,7 @@ namespace Fab5.Starburst.States {
         private Texture2D controller_a_button;
         private Texture2D keyboard_key;
         private Texture2D controller_l_stick;
+        private Main_Menu_State parent;
 
         private enum SlotStatus {
             Empty,
@@ -42,8 +43,9 @@ namespace Fab5.Starburst.States {
             Selected
         }
 
-        public Player_Selection_Menu(Entity soundmgr) {
-            soundmgr.state = this;
+        public Player_Selection_Menu(Main_Menu_State parentState) {
+            parent = parentState;
+            parentState.soundMgr.state = this;
         }
 
         private void tryStartGame() {
@@ -65,7 +67,7 @@ namespace Fab5.Starburst.States {
                 // ta bort tomma inputs
                 while (inputs.Contains(null))
                     inputs.Remove(null);
-                Starburst.inst().enter_state(new Playing_State(inputs));
+                Starburst.inst().enter_state(new Playing_State(inputs, parent.gameConfig));
             }
         }
 
@@ -151,6 +153,10 @@ namespace Fab5.Starburst.States {
                     playerSlots[(int)position.x] -= 1;
                     Starburst.inst().message("play_sound", new { name = "menu_click" });
                 }
+                else if (position.y == 0) {
+                    parent.soundMgr.state = parent;
+                    Starburst.inst().leave_state();
+                }
             }
         }
 
@@ -198,9 +204,9 @@ namespace Fab5.Starburst.States {
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
             rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>("sector034");
-            controller_a_button = Starburst.inst().get_content<Texture2D>("menu/Xbox_A");
+            controller_a_button = Starburst.inst().get_content<Texture2D>("menu/Xbox_A_white");
             keyboard_key = Starburst.inst().get_content<Texture2D>("menu/Key");
-            controller_l_stick = Starburst.inst().get_content<Texture2D>("menu/Xbox_L");
+            controller_l_stick = Starburst.inst().get_content<Texture2D>("menu/Xbox_L_white");
 
             Inputhandler wasd = new Inputhandler() {
                 left = Keys.A,
@@ -279,10 +285,6 @@ namespace Fab5.Starburst.States {
                 }
                 gamepads[i] = current;
             }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
-                Starburst.inst().Quit();
-            }
             if (Keyboard.GetState().IsKeyDown(Keys.Enter)) {
                 tryStartGame();
             }
@@ -315,20 +317,24 @@ namespace Fab5.Starburst.States {
                 sprite_batch.Draw(rectBg, destinationRectangle: destRect, color: Color.White, layerDepth: .1f);
             }
 
+            // rita ut lagsaker om lagläge
+            if(parent.gameConfig.mode == 0) {
+                String teamText = "Team 1";
+                Vector2 teamTextSize = font.MeasureString(teamText);
+                sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f, rectangleY - 50), Color.CornflowerBlue);
+
+                teamText = "Team 2";
+                teamTextSize = font.MeasureString(teamText);
+                sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f + (vp.Width * .5f), rectangleY - 50), Color.Red);
+            }
+
             /**
              * Rita ut kontroller
              **/
             Vector2 controllerIconSize = new Vector2(50, 50);
-            int controllerBtnSize = 40;
-            /*
-           // räkna hur många kontroller som är inaktiva just nu
-           int inactive = 0;
-           for (int i = 0; i < entities.Count; i++) {
-               if (entities[i].get_component<Position>().y == 0)
-                   inactive++;
-           }
-           int totalControllerWidth = (int)(inactive * controllerIconSize.X);
-           */
+            int controllerBtnSize = 50;
+            int keyboardBtnSize = 40;
+
             int totalControllerWidth = (int)(entities.Count * controllerIconSize.X);
 
             String selectText = "press fire";
@@ -356,16 +362,14 @@ namespace Fab5.Starburst.States {
                     if (position.y == 1) {
                         iconRect = new Rectangle(positionX, rectangleY - (int)(controllerIconSize.Y * .5f), (int)controllerIconSize.X, (int)controllerIconSize.Y);
                         if (input.device == Inputhandler.InputType.Controller) {
-                            sprite_batch.Draw(controller_a_button, new Rectangle((int)(currentRectStartPos + rectSize * .5f - controllerBtnSize * .5f), (int)(rectangleY + rectSize * .5f + controllerBtnSize), controllerBtnSize, controllerBtnSize), new Color(Color.White, textOpacity));
+                            sprite_batch.Draw(controller_a_button, new Rectangle((int)(currentRectStartPos + rectSize * .5f - controllerBtnSize * .5f), (int)(rectangleY + rectSize * .5f + controllerBtnSize*.5f + 5), controllerBtnSize, controllerBtnSize), new Color(Color.White, textOpacity));
                         }
                         else {
                             String key = input.primary_fire.ToString();
-                            if (input.primary_fire == Keys.OemComma)
-                                key = ",";
                             // annan font?
                             Vector2 keySize = font.MeasureString(key);
-                            sprite_batch.Draw(keyboard_key, new Rectangle((int)(currentRectStartPos + rectSize * .5f - controllerBtnSize * .5f), (int)(rectangleY + rectSize * .5f + controllerBtnSize), controllerBtnSize, controllerBtnSize), new Color(Color.White, textOpacity));
-                            sprite_batch.DrawString(font, key, new Vector2(currentRectStartPos + rectSize * .5f - keySize.X * .5f, rectangleY + rectSize * .5f + controllerBtnSize), new Color(Color.White, textOpacity));
+                            sprite_batch.Draw(keyboard_key, new Rectangle((int)(currentRectStartPos + rectSize * .5f - keyboardBtnSize * .5f), (int)(rectangleY + rectSize * .5f + keyboardBtnSize), keyboardBtnSize, keyboardBtnSize), new Color(Color.White, textOpacity));
+                            sprite_batch.DrawString(font, key, new Vector2(currentRectStartPos + rectSize * .5f - keySize.X * .5f, rectangleY + rectSize * .5f + keyboardBtnSize), new Color(Color.White, textOpacity));
                         }
                     }
                     else {
@@ -400,15 +404,17 @@ namespace Fab5.Starburst.States {
             }
 
             // kontroll-"tutorial"
-            String text_ok = "Ok";
-            String text_select = "Select";
-            textSize = font.MeasureString(text_ok);
-            int yPos = (int)(vp.Height - textSize.Y - 20);
-            int heightDiff = (int)(controllerBtnSize - textSize.Y);
-            sprite_batch.Draw(controller_a_button, new Rectangle(20, yPos, controllerBtnSize, controllerBtnSize), Color.White);
-            sprite_batch.DrawString(font, text_ok, new Vector2(20 + controllerBtnSize + 10, yPos + heightDiff*.5f), Color.White);
-            sprite_batch.Draw(controller_l_stick, new Rectangle((int)(20 + controllerBtnSize + 10 + textSize.X + 10), yPos, controllerBtnSize, controllerBtnSize), Color.White);
-            sprite_batch.DrawString(font, text_select, new Vector2(20 + controllerBtnSize + 10 + textSize.X + 10 + controllerBtnSize + 10, yPos + heightDiff*.5f), Color.White);
+            if (gamepads.Contains(true)) {
+                String text_ok = "Ok";
+                String text_select = "Select";
+                textSize = font.MeasureString(text_ok);
+                int yPos = (int)(vp.Height - textSize.Y - 20);
+                int heightDiff = (int)(controllerBtnSize - textSize.Y);
+                sprite_batch.Draw(controller_a_button, new Rectangle(20, yPos, controllerBtnSize, controllerBtnSize), Color.White);
+                sprite_batch.DrawString(font, text_ok, new Vector2(20 + controllerBtnSize + 10, yPos + heightDiff * .5f), Color.White);
+                sprite_batch.Draw(controller_l_stick, new Rectangle((int)(20 + controllerBtnSize + 10 + textSize.X + 10), yPos, controllerBtnSize, controllerBtnSize), Color.White);
+                sprite_batch.DrawString(font, text_select, new Vector2(20 + controllerBtnSize + 10 + textSize.X + 10 + controllerBtnSize + 10, yPos + heightDiff * .5f), Color.White);
+            }
 
             text = "Start game";
             textSize = font.MeasureString(text);

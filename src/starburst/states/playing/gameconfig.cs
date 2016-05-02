@@ -5,7 +5,7 @@ public class Game_Config {
     public const int GM_DEATHMATCH      = 1;
 
 
-    public readonly int mode = GM_TEAM_DEATHMATCH; // game mode, one of following: deathmatch, team-deathmatch
+    public int mode = GM_TEAM_DEATHMATCH; // game mode, one of following: deathmatch, team-deathmatch
 
 }
 

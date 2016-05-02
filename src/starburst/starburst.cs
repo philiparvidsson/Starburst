@@ -18,7 +18,7 @@ public class Starburst : Fab5_Game {
             }
             else {
                 GraphicsMgr.PreferredBackBufferWidth = 1280;
-                GraphicsMgr.PreferredBackBufferHeight = 768;
+                GraphicsMgr.PreferredBackBufferHeight = 680;
             }
        // GraphicsMgr.PreferMultiSampling = true;
 
