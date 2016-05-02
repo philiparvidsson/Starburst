@@ -38,8 +38,7 @@ namespace Fab5.Engine.Subsystems {
         private Texture2D stardrop;
 
         private Texture2D player_indicator_tex;
-
-
+        private Texture2D player_indicator2_tex;
 
         public Rendering_System(GraphicsDevice graphicsDevice) {
             sprite_batch = new SpriteBatch(graphicsDevice);
@@ -48,8 +47,8 @@ namespace Fab5.Engine.Subsystems {
             backdrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/backdrop4");
             stardrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/stardrop");
 
-
             player_indicator_tex = Fab5_Game.inst().get_content<Texture2D>("indicator");
+            player_indicator2_tex = Fab5_Game.inst().get_content<Texture2D>("indicator2");
         }
 
         private void draw_backdrop(SpriteBatch sprite_batch, Camera camera) {
@@ -272,9 +271,17 @@ namespace Fab5.Engine.Subsystems {
         }
 
 
-        private void draw_indicators(Camera current, int currentPlayerNumber, Position currentPlayerPosition) {
+        private void draw_indicators(Camera current, int currentPlayerNumber, Entity player) {
+            var team = player.get_component<Ship_Info>().team;
+            var currentPlayerPosition = player.get_component<Position>();
             for (int p2 = 0; p2 < currentPlayerNumber; p2++) {
                 var player2 = players[p2];
+
+                var tex = player_indicator_tex;
+                if (player2.get_component<Ship_Info>().team == team) {
+                    tex = player_indicator2_tex;
+                }
+
                 var player2_pos = player2.get_component<Position>();
                 var d_x = player2_pos.x - current.position.x;
                 var d_y = player2_pos.y - current.position.y;
@@ -389,7 +396,7 @@ namespace Fab5.Engine.Subsystems {
 
                 sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
-                draw_indicators(current, currentPlayerNumber, currentPlayerPosition);
+                draw_indicators(current, currentPlayerNumber, currentPlayer);
                 hudsystem_instance.drawHUD(currentPlayer, dt, current);
 
                 foreach (var hook in hooks) {

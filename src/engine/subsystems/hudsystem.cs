@@ -60,7 +60,7 @@
 
         }
 
-        private void draw_minimap(Position position) {
+        private void draw_minimap(Entity player) {
             var vp_size = Fab5_Game.inst().GraphicsDevice.Viewport.Width;
             var scale = 1.0f*(float)System.Math.Sqrt(1.0f+vp_size/1920.0f);
 
@@ -88,20 +88,36 @@
                               SpriteEffects.None,
                               0.0f);
 
-            var tw = 16.0f;
-            var th = 16.0f;
-            var map_pos_x = minimap_left + scale*0.5f*(position.x+2048.0f) / tw;
-            var map_pos_y = minimap_top + scale*0.5f*(position.y+2048.0f)  / th;
+            var team = player.get_component<Ship_Info>().team;
 
-            sprite_batch.Draw(white_pixel_tex,
-                              new Vector2(map_pos_x, map_pos_y),
-                              null,
-                              Color.White,
-                              0.0f,
-                              new Vector2(0.5f, 0.5f),
-                              new Vector2(4.0f, 4.0f),
-                              SpriteEffects.None,
-                              1.0f);
+            foreach (var team_mate in Fab5_Game.inst().get_entities_fast(typeof (Ship_Info))) {
+                var tm_team = team_mate.get_component<Ship_Info>().team;
+                if (tm_team != team) {
+                    continue;
+                }
+
+                var color = Color.White;
+                if (team_mate != player) {
+                    color = (tm_team == 1) ? Color.Red : Color.Blue;
+                }
+
+                var position = team_mate.get_component<Position>();
+
+                var tw = 16.0f;
+                var th = 16.0f;
+                var map_pos_x = minimap_left + scale*0.5f*(position.x+2048.0f) / tw;
+                var map_pos_y = minimap_top + scale*0.5f*(position.y+2048.0f)  / th;
+
+                sprite_batch.Draw(white_pixel_tex,
+                                  new Vector2(map_pos_x, map_pos_y),
+                                  null,
+                                  color,
+                                  0.0f,
+                                  new Vector2(0.5f, 0.5f),
+                                  new Vector2(4.0f, 4.0f),
+                                  SpriteEffects.None,
+                                  1.0f);
+            }
         }
 
         public void drawHUD(Entity player, float dt, Camera camera)
@@ -115,7 +131,7 @@
             //drawHP();
             drawEnergy(playerPos, camera, dt);
             drawScore(player.get_component<Score>(), dt);
-            draw_minimap(playerPos);
+            draw_minimap(player);
 
             //sprite_batch.End();
         }
