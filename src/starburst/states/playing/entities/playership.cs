@@ -41,6 +41,9 @@
 
             lol++;
             int team = (lol % 2)+1;
+            if (conf.mode != Game_Config.GM_TEAM_DEATHMATCH) {
+                team = pindex; // all vs all
+            }
 
             int ig_value = 0;
 

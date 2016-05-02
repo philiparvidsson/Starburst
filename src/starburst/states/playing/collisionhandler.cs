@@ -479,6 +479,29 @@ namespace Fab5.Starburst.States.Playing {
                     }
                 });
 
+                var killer = bulletInfo.sender.get_component<Ship_Info>();
+
+                Fab5_Game.inst().create_entity(new Component[] {
+                    new Post_Render_Hook  {
+                        render_fn = (camera, sprite_batch) => {
+                            if (camera.index != killer.pindex) {
+                                return;
+                            }
+
+                            var t     = 5.0f - (Fab5_Game.inst().get_time() - time_of_death);
+                            var a = (float)Math.Min(Math.Max(0.0f, (t*2.0f/10.0f)), 1.0f);
+                            var s    = new [] { "one", "two", "three", "four" };
+                            var text = string.Format("Killed player {0}", s[playerShip.pindex-1]);
+                            var ts    = GFX_Util.measure_string(text);
+                            GFX_Util.draw_def_text(sprite_batch, text, (camera.viewport.Width-ts.X)*0.5f, 10.0f, a);
+                        }
+                    },
+
+                    new TTL {
+                        max_time = 5.0f,
+                    }
+                });
+
                 foreach (var powerup in playerShip.powerups) {
                     powerup.end();
                 }

@@ -7,6 +7,8 @@ using Fab5.Engine.Components;
 using Fab5.Engine.Core;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Fab5.Starburst.States;
+using Fab5.Starburst.States.Playing;
 
 namespace Fab5.Engine.Subsystems {
     class Rendering_System : Subsystem {
@@ -39,17 +41,13 @@ namespace Fab5.Engine.Subsystems {
 
         private Texture2D player_indicator_tex;
         private Texture2D player_indicator2_tex;
+        private bool team_play;
+        private GraphicsDevice graphicsDevice;
 
         public Rendering_System(GraphicsDevice graphicsDevice) {
-            sprite_batch = new SpriteBatch(graphicsDevice);
-            defaultViewport = graphicsDevice.Viewport;
-
-            backdrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/backdrop4");
-            stardrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/stardrop");
-
-            player_indicator_tex = Fab5_Game.inst().get_content<Texture2D>("indicator");
-            player_indicator2_tex = Fab5_Game.inst().get_content<Texture2D>("indicator2");
+            this.graphicsDevice = graphicsDevice;
         }
+
 
         private void draw_backdrop(SpriteBatch sprite_batch, Camera camera) {
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
@@ -158,9 +156,21 @@ namespace Fab5.Engine.Subsystems {
 
         public override void init()
         {
+            team_play = ((Playing_State)state).game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH;
+
+            sprite_batch = new SpriteBatch(graphicsDevice);
+            defaultViewport = graphicsDevice.Viewport;
+
+            backdrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/backdrop4");
+            stardrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/stardrop");
+
+            player_indicator_tex = Fab5_Game.inst().get_content<Texture2D>("indicator");
+            player_indicator2_tex = Fab5_Game.inst().get_content<Texture2D>("indicator2");
+
             // kör uppdatering av viewports och kameror
             updatePlayers();
             this.hudsystem_instance = new Hudsystem(sprite_batch, tile_map);
+
 
  	        base.init();
         }
@@ -277,7 +287,7 @@ namespace Fab5.Engine.Subsystems {
                 var player2 = players[p2];
 
                 var tex = player_indicator_tex;
-                if (player2.get_component<Ship_Info>().team == 2) {
+                if (team_play && player2.get_component<Ship_Info>().team == 2) {
                     tex = player_indicator2_tex;
                 }
 
