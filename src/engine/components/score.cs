@@ -18,9 +18,11 @@
         public float display_score;
         public float linear_start_score; // Last score when doing smooth increasing of score.
         public float current_time_span; // Time since starting the increase of score.
+        public int num_kills_since_last_spawn;
 
         public Score()
         {
+            num_kills_since_last_spawn = 0;
             current_time_span = 0.0f;
             score = 0;
             linear_start_score = 0;

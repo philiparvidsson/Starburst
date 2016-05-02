@@ -111,7 +111,7 @@
                     layer_depth = 0.6f
                     //color = new Color(0.6f, 0.9f, 1.0f)
                 },
-                new Ship_Info(100,130,100,100) { team = team, pindex = pindex },
+                new Ship_Info(5,130,100,100) { team = team, pindex = pindex },
                 new Bounding_Circle() { radius = 20.0f, ignore_collisions2 = ig_value },
                 new Mass() { mass = 15.0f, restitution_coeff = 0.6f },
                 new Primary_Weapon(),
