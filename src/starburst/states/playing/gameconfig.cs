@@ -7,6 +7,8 @@ public class Game_Config {
 
     public int mode = GM_TEAM_DEATHMATCH; // game mode, one of following: deathmatch, team-deathmatch
 
+    public bool enable_soccer = true;
+
 }
 
 }

@@ -189,11 +189,13 @@ public class Playing_State : Game_State {
             av.y = -15 + 30 * (float)rand.NextDouble();
         }
 
-        var ball = create_entity(Soccer_Ball.create_components());
-        var ball_pos = spawner.get_soccerball_spawn_pos(tile_map);
-        ball.get_component<Position>().x = ball_pos.x;
-        ball.get_component<Position>().y = ball_pos.y;
-        ball.get_component<Angle>().ang_vel = 3.141592f * 2.0f * -2.0f;
+        if (game_conf.enable_soccer) {
+            var ball = create_entity(Soccer_Ball.create_components());
+            var ball_pos = spawner.get_soccerball_spawn_pos(tile_map);
+            ball.get_component<Position>().x = ball_pos.x;
+            ball.get_component<Position>().y = ball_pos.y;
+            ball.get_component<Angle>().ang_vel = 3.141592f * 2.0f * -2.0f;
+        }
 
         create_entity(Multifire_Powerup.create_components());
         create_entity(Turbo_Powerup.create_components());
