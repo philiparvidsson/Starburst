@@ -272,13 +272,12 @@ namespace Fab5.Engine.Subsystems {
 
 
         private void draw_indicators(Camera current, int currentPlayerNumber, Entity player) {
-            var team = player.get_component<Ship_Info>().team;
             var currentPlayerPosition = player.get_component<Position>();
             for (int p2 = 0; p2 < currentPlayerNumber; p2++) {
                 var player2 = players[p2];
 
                 var tex = player_indicator_tex;
-                if (player2.get_component<Ship_Info>().team == team) {
+                if (player2.get_component<Ship_Info>().team == 2) {
                     tex = player_indicator2_tex;
                 }
 
