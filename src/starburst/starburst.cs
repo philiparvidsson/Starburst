@@ -30,6 +30,7 @@ public class Starburst : Fab5_Game {
 
 
         GraphicsMgr.ApplyChanges();
+        Microsoft.Xna.Framework.Media.MediaPlayer.Volume = 0.7f;
 
         enter_state(new Splash_Screen_State());
 

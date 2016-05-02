@@ -597,7 +597,7 @@ public class Collision_Solver : Subsystem {
 
         if (a2 != null) {
             var w = (-(p2_y)*i_x+(p2_x)*i_y);
-            a2.ang_vel += w/(p2_x*p2_x+p2_y*p2_y) * friction;
+            a2.ang_vel -= w/(p2_x*p2_x+p2_y*p2_y) * friction;
         }
 
         return true;

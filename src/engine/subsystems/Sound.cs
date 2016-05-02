@@ -10,7 +10,7 @@ namespace Fab5.Engine.Subsystems
 {
     public class Sound : Subsystem
     {
-        public override void update(float t, float dt)
+        public override void draw(float t, float dt)
         {
 
             var entities = Fab5_Game.inst().get_entities_fast(typeof(SoundLibrary));
@@ -33,6 +33,25 @@ namespace Fab5.Engine.Subsystems
 
                 }
             }
+
+            if (fading_in) {
+
+                fade_cur += fade_val*dt;
+                if (fade_cur > fade_vol) {
+                    fade_cur = fade_vol;
+                    fading_in = false;
+                }
+                MediaPlayer.Volume = (float)Math.Max(0.0f, Math.Min(fade_cur, 1.0f));
+            }
+            else if (fading_out) {
+                fade_cur += fade_val*dt;
+                if (fade_cur < fade_vol) {
+                    fade_cur = fade_vol;
+                    fading_out = false;
+                }
+                //System.Console.WriteLine("faded down to " + fade_cur + ", " + fade_val);
+                MediaPlayer.Volume = (float)Math.Max(0.0f, Math.Min(fade_cur, 1.0f));
+            }
         }
         public override void cleanup()
         {
@@ -43,6 +62,36 @@ namespace Fab5.Engine.Subsystems
             { "begin_game", "sound/effects/air_horn" },
             { "menu_click", "sound/effects/click" }
         };
+
+        bool fading_out = false;
+        bool fading_in = false;
+        float fade_cur = 0.0f;
+        float fade_val = 0.0f;
+        float fade_vol = 0.0f;
+        private void music_fade_out(float t, float vol=0.0f) {
+            if (fading_out) {
+                return;
+            }
+            fading_in = false;
+            fading_out = true;
+
+            fade_vol = vol;
+            fade_cur = MediaPlayer.Volume;
+
+            fade_val = (fade_vol-fade_cur)/t; // lerp val
+        }
+
+        private void music_fade_in(float t, float vol=0.7f) {
+            if (fading_in) {
+                return;
+            }
+            fading_in = true;
+            fading_out = false;
+
+            fade_vol = vol;
+            fade_cur = MediaPlayer.Volume;
+            fade_val = (fade_vol-fade_cur)/t; // lerp val
+        }
 
         public override void on_message(string msg, dynamic data)
         {
@@ -58,6 +107,26 @@ namespace Fab5.Engine.Subsystems
                 var sound_effect = Fab5_Game.inst().get_content<SoundEffect>(asset);
                 sound_effect.Play();
                 return;
+            }
+            else if (msg == "play_song") {
+                var asset = data.name;
+                if (soundlib.ContainsKey(asset)) {
+                    // map name to asset file
+                    asset = soundlib[asset];
+                }
+
+                var song = Fab5_Game.inst().get_content<SoundEffect>(asset);
+                music_fade_out(1.0f);
+                song.Play();
+
+                Fab5_Game.inst().create_entity(new Component[] {
+                    new TTL {
+                        max_time = data.fade_time,
+                        destroy_cb = () => {
+                            music_fade_in(1.0f);
+                        }
+                    }
+                });
             }
 
             var entities = Fab5_Game.inst().get_entities_fast(typeof(SoundLibrary));

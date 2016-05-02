@@ -168,12 +168,12 @@ public class Playing_State : Game_State {
                     }
 
                     var dx = ast.get_component<Position>().x - asteroid.get_component<Position>().x;
-                    var dy = ast.get_component<Position>().x - asteroid.get_component<Position>().y;
+                    var dy = ast.get_component<Position>().y - asteroid.get_component<Position>().y;
 
                     var dist = (dx*dx+dy*dy);
 
                     var min_dist = ast.get_component<Bounding_Circle>().radius + asteroid.get_component<Bounding_Circle>().radius;
-                    min_dist *= 1.5f;
+                    min_dist *= 2.0f;
                     min_dist *= min_dist;
 
                     if (dist < min_dist) {
