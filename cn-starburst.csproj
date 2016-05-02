@@ -128,6 +128,7 @@
     <Content Include="src\starburst\content\EnergyBar.png" />
     <Content Include="src\starburst\content\HPBar.png" />
     <Content Include="src\starburst\content\indicator.png" />
+    <Content Include="src\starburst\content\indicator2.png" />
     <Content Include="src\starburst\content\keyboard.png" />
     <Content Include="src\starburst\content\map.png" />
     <Content Include="src\starburst\content\map\tiles.png" />

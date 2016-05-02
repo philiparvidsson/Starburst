@@ -21,17 +21,12 @@
         {
             this.sprite_batch = sprite_batch;
 
-            Random random = new Random();
-
-            this.number_of_players = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler)).Count;
-
             enball = new Sprite()
             {
                 texture = Fab5_Game.inst().get_content<Texture2D>("EnergiAtlas"),
                 frame_width = 150,
                 frame_height = 150,
                 num_frames = 4,
-                frame_timer = 0.2f * this.number_of_players,
                 color = new Color(0.70f, 0.70f, 0.70f)
             };
 
@@ -123,6 +118,8 @@
         {
 
             //sprite_batch.Begin(SpriteSortMode.Deferred);
+            if (!player.get_component<Inputhandler>().enabled)
+                return;
 
             Position playerPos = player.get_component<Position>();
 
@@ -181,6 +178,10 @@
 
         private void updateEnergySprite(float dt)
         {
+            this.number_of_players = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler)).Count;
+
+            enball.fps = 20.0f / this.number_of_players;
+
             enball.frame_timer += dt;
             if (enball.frame_timer > (1.0f / enball.fps))
             {
