@@ -246,7 +246,8 @@ public class Collision_Solver : Subsystem {
 
             if ((p.y+c.radius >= (top*th - 2048.0f))
              && (p.y-c.radius < ((bottom+1)*th - 2048.0f))
-             && (p.x+dx > c_x))
+             && (p.x+dx > c_x)
+             && (p.x < c_x))
             {
 //            Console.WriteLine("left " + x + "," + y);
                 p.x = c_x-dx-eps;
@@ -268,7 +269,8 @@ public class Collision_Solver : Subsystem {
 
             if ((p.y+c.radius >= (top*th - 2048.0f))
              && (p.y-c.radius < ((bottom+1)*th - 2048.0f))
-             && (p.x-dx < c_x))
+             && (p.x-dx < c_x)
+             && (p.x > c_x))
             {
 //            Console.WriteLine("right " + x + "," + y);
                 p.x = c_x+dx+eps;
@@ -327,7 +329,8 @@ public class Collision_Solver : Subsystem {
 
             if ((p.x+c.radius >= (left*tw - 2048.0f))
              && (p.x-c.radius < ((right+1)*tw - 2048.0f))
-             && (p.y+dy > c_y))
+             && (p.y+dy > c_y)
+             && (p.y < c_y))
             {
 //            Console.WriteLine("top " + x + "," + y);
                 p.y = c_y-dy-eps;
@@ -348,7 +351,8 @@ public class Collision_Solver : Subsystem {
 
             if ((p.x+c.radius >= (left*tw - 2048.0f))
              && (p.x-c.radius < ((right+1)*tw - 2048.0f))
-             && (p.y-dy < c_y))
+             && (p.y-dy < c_y)
+             && (p.y > c_y))
             {
 //            Console.WriteLine("bottom " + x + "," + y);
                 p.y = c_y+dy+eps;

@@ -83,7 +83,7 @@ namespace Fab5.Starburst.States {
                 var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
                 Entity cursor = entities[0];
                 Position cursorPosition = cursor.get_component<Position>();
-                
+
                 if (cursorPosition.y == (int)options.mode)
                     gameMode = (gameMode == 0 ? 1 : 0);
                 else if (cursorPosition.y == (int)options.soccer)
@@ -91,7 +91,7 @@ namespace Fab5.Starburst.States {
                 else if (cursorPosition.y == (int)options.flag)
                     captureTheFlag = !captureTheFlag;
                 Starburst.inst().message("play_sound", new { name = "menu_click" });
-                
+
             }
             else if (msg.Equals("select")) {
                 Starburst.inst().message("play_sound", new { name = "menu_click" });
@@ -140,13 +140,13 @@ namespace Fab5.Starburst.States {
 
             soundMgr = create_entity(SoundManager.create_backmusic_component());
             soundMgr.get_component<SoundLibrary>().song_index = 1;
-            
+
             // load textures
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
             rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>("sector034");
             map1 = Starburst.inst().get_content<Texture2D>("map");
-            
+
             Inputhandler wasd = new Inputhandler() {
                 left = Keys.A,
                 right = Keys.D,
@@ -191,7 +191,7 @@ namespace Fab5.Starburst.States {
             else if (elapsedTime >= outDelay) {
                 textOpacity = 1 - quadInOut(outDelay, outDuration, 0, 1);
             }
-            
+
             if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
                 Starburst.inst().Quit();
             }
@@ -216,7 +216,7 @@ namespace Fab5.Starburst.States {
             sprite_batch.Draw(background, destinationRectangle: new Rectangle(0, 0, vp.Width, vp.Height), color: Color.White);
 
             sprite_batch.DrawString(font, "Game mode", new Vector2(leftOffset, 100), Color.White);
-            sprite_batch.DrawString(font, (gameMode == 0 ? "< team match >" : "< free for all >"), new Vector2(menuOffset, 100), (position.y == (int)options.mode ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, (gameMode == 0 ? "< Team Match >" : "< Free for All >"), new Vector2(menuOffset, 100), (position.y == (int)options.mode ? new Color(Color.Gold, textOpacity) : Color.White));
 
             sprite_batch.DrawString(font, "Soccer ball", new Vector2(leftOffset, 140), Color.White);
             sprite_batch.DrawString(font, (soccerball ? "< on >" : "< off >"), new Vector2(menuOffset, 140), (position.y == (int)options.soccer ? new Color(Color.Gold, textOpacity) : Color.White));

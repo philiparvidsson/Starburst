@@ -7,6 +7,7 @@
     using Microsoft.Xna.Framework.Graphics;
     using Engine;
     using System;
+    using Fab5.Starburst;
     public class Hudsystem
     {
         SpriteBatch sprite_batch;
@@ -161,7 +162,7 @@
 
         private void drawEnergy(Position shipPos, Camera camera, float dt)
         {
-            float energyScale = ship_info.energy_value / ship_info.top_energy;
+            float energyScale = (ship_info.energy_value / ship_info.top_energy)*camera.zoom;
             
             var source_rect = new Rectangle(enball.frame_x, enball.frame_y, enball.frame_width, enball.frame_height);
             
@@ -223,8 +224,12 @@
                 score.display_score += (2.0f - score.current_time_span) * (score.score - score.linear_start_score) * dt;
             }
 
-            var score_str = "P" + ship_info.pindex + " Score: " + ((int)score.display_score).ToString();
-            sprite_batch.DrawString(spriteFont,
+            //var s = new [] { "one", "two", "three", "four" };
+
+            var score_str = "P. " + ship_info.pindex + " Score: " + ((int)score.display_score).ToString();
+
+            GFX_Util.draw_def_text(sprite_batch, score_str, scoreposition.X, scoreposition.Y);
+            /*sprite_batch.DrawString(spriteFont,
                 score_str, 
                 position: scoreposition, 
                 color: Color.Black * 0.75f
@@ -234,7 +239,7 @@
                 score_str,
                 position: scoreposition + new Vector2(4.0f, 4.0f), 
                 color: Color.White
-            );
+            );*/
         }
     }
 }

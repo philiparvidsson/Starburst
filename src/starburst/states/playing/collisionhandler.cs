@@ -358,7 +358,11 @@ namespace Fab5.Starburst.States.Playing {
         Ship_Info playerShip = player.get_component<Ship_Info>();
         Bullet_Info bulletInfo = bullet.get_component<Bullet_Info>();
         Score shooterScore = bulletInfo.sender.get_component<Score>();
-        float bulletDamage = bulletInfo.damage;
+        var vx = bullet.get_component<Velocity>().x;
+        var vy = bullet.get_component<Velocity>().y;
+        float bulletSpeed = (float)Math.Sqrt(vx*vx+vy*vy);
+        var fac = (float)Math.Max(0.7f, Math.Min(1.2f, bulletSpeed/bulletInfo.max_speed));
+        float bulletDamage = bulletInfo.damage * fac;
 
         /*if (playerShip.team == bulletInfo.sender.get_component<Ship_Info>().team) {
             return;
@@ -458,7 +462,7 @@ namespace Fab5.Starburst.States.Playing {
 
                             // @To-do: not gonna fly with NPCs
                             var s     = new [] { "one", "two", "three", "four" };
-                            var text2 = string.Format("Owned by player {0}!", s[bulletInfo.sender.get_component<Ship_Info>().pindex-1]);
+                            var text2 = string.Format("Killed by player {0}!", s[bulletInfo.sender.get_component<Ship_Info>().pindex-1]);
                             var ts1   = GFX_Util.measure_string("Respawning in 0.00");
                             var ts2   = GFX_Util.measure_string(text2);
 
@@ -466,10 +470,11 @@ namespace Fab5.Starburst.States.Playing {
                             var text4 = string.Format("Deaths: {0}", player_deaths);
 
                             var a = 0.5f*(float)Math.Min(Math.Max(0.0f, (10.0f-t*2.0f)), 1.0f);
+                            var a2 = (float)Math.Min(Math.Max(0.0f, (3.0f*t*(1.0f/5.0f)-1.0f)), 1.0f);
                             GFX_Util.fill_rect(sprite_batch, new Rectangle(0, 0, camera.viewport.Width, camera.viewport.Height), Color.Black * a);
-                            GFX_Util.draw_def_text(sprite_batch, text2, (camera.viewport.Width-ts2.X)*0.5f, (camera.viewport.Height-ts2.Y)*0.5f-190.0f);
-                            GFX_Util.draw_def_text(sprite_batch, text3, (camera.viewport.Width-ts2.X)*0.5f, (camera.viewport.Height-ts2.Y)*0.5f-95.0f);
-                            GFX_Util.draw_def_text(sprite_batch, text4, (camera.viewport.Width-ts2.X)*0.5f, (camera.viewport.Height-ts2.Y)*0.5f-125.0f);
+                            GFX_Util.draw_def_text(sprite_batch, text2, (camera.viewport.Width-ts2.X)*0.5f, 90.0f, a2);
+                            GFX_Util.draw_def_text(sprite_batch, text3, (camera.viewport.Width-ts2.X)*0.5f, (camera.viewport.Height-ts2.Y)*0.5f-90.0f);
+                            GFX_Util.draw_def_text(sprite_batch, text4, (camera.viewport.Width-ts2.X)*0.5f, (camera.viewport.Height-ts2.Y)*0.5f-130.0f);
                             GFX_Util.draw_def_text(sprite_batch, text1, (camera.viewport.Width-ts1.X)*0.5f, (camera.viewport.Height-ts1.Y)*0.5f);
                         }
                     },
@@ -493,7 +498,7 @@ namespace Fab5.Starburst.States.Playing {
                             var s    = new [] { "one", "two", "three", "four" };
                             var text = string.Format("Killed player {0}", s[playerShip.pindex-1]);
                             var ts    = GFX_Util.measure_string(text);
-                            GFX_Util.draw_def_text(sprite_batch, text, (camera.viewport.Width-ts.X)*0.5f, 10.0f, a);
+                            GFX_Util.draw_def_text(sprite_batch, text, (camera.viewport.Width-ts.X)*0.5f, 90.0f, a);
                         }
                     },
 

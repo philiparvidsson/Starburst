@@ -177,14 +177,15 @@ namespace Fab5.Engine.Subsystems {
 
         private void updatePlayers() {
             // ev hantering för om inga spelare hittas?
-            float zoom = 1;
+            var x = (float)Math.Max(Fab5_Game.inst().GraphicsMgr.PreferredBackBufferWidth, Fab5_Game.inst().GraphicsMgr.PreferredBackBufferHeight);
+            float zoom = 1.0f * (x/1920.0f);
             if(currentPlayerNumber == 1) {
                 // full screen
                 viewports = new Viewport[1];
                 cameras = new Camera[1];
                 viewports[0] = defaultViewport;
                 currentPlayerNumber = 1;
-                zoom = 1.3f;
+                zoom *= 1.3f;
             }
             else if(currentPlayerNumber <= 2) {
                 // 1/2 screen, handle heights and y position
@@ -199,7 +200,7 @@ namespace Fab5.Engine.Subsystems {
 
                 viewports[0] = top;
                 viewports[1] = bottom;
-                zoom = 1.0f;
+                zoom *= 1.0f;
             }
             else if(currentPlayerNumber == 3){
                 // 1/4 screen, handle sizes and positions
@@ -223,7 +224,7 @@ namespace Fab5.Engine.Subsystems {
                 viewports[1] = topRight;
                 viewports[2] = bottom;
 
-                zoom = .9f;
+                zoom *= .9f;
             }
             else {
                 // 1/4 screen, handle sizes and positions
@@ -254,7 +255,7 @@ namespace Fab5.Engine.Subsystems {
                 viewports[2] = bottomLeft;
                 viewports[3] = bottomRight;
 
-                zoom = .9f;
+                zoom *= .9f;
             }
 
             // add cameras to each viewport
@@ -286,6 +287,11 @@ namespace Fab5.Engine.Subsystems {
             for (int p2 = 0; p2 < currentPlayerNumber; p2++) {
                 var player2 = players[p2];
 
+                var ih = player2.get_component<Inputhandler>();
+                if (ih != null && !ih.enabled) {
+                    continue;
+                }
+
                 var tex = player_indicator_tex;
                 if (team_play && player2.get_component<Ship_Info>().team == 2) {
                     tex = player_indicator2_tex;
@@ -305,8 +311,8 @@ namespace Fab5.Engine.Subsystems {
                 d_x /= d;
                 d_y /= d;
 
-                d_x *= 36.0f;
-                d_y *= 36.0f;
+                d_x *= 36.0f * current.zoom;
+                d_y *= 36.0f * current.zoom;
 
                 var r = (float)Math.Atan2(d_y, d_x);
 
@@ -319,7 +325,7 @@ namespace Fab5.Engine.Subsystems {
                                   Color.White * 0.65f,
                                   r,
                                   new Vector2(player_indicator_tex.Width/2.0f, player_indicator_tex.Height/2.0f),
-                                  1.0f,
+                                  current.zoom,
                                   SpriteEffects.None,
                                   0.5f);
             }
