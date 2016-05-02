@@ -384,7 +384,10 @@ namespace Fab5.Starburst.States.Playing {
             if (playerShip.hp_value <= 0) {
                 // offret blir dödsmördat
                 if (player != bulletInfo.sender)
+                {
                     shooterScore.score += 240;
+                    shooterScore.num_kills_since_last_spawn++;
+                }
 
                 state.create_entity(new Component[] {
                     new TTL { max_time = 0.3f },
@@ -424,7 +427,7 @@ namespace Fab5.Starburst.States.Playing {
 
                 playerShip.hp_value = playerShip.top_hp;
                 playerShip.energy_value = playerShip.top_energy;
-
+                    
                 player.get_component<Inputhandler>().enabled = false;
 
                 var old_particle_emitter = player.remove_component<Particle_Emitter>();
@@ -432,6 +435,10 @@ namespace Fab5.Starburst.States.Playing {
                 var old_sprite           = player.remove_component<Sprite>();
 
                 Starburst.inst().message("play_sound", new { name = "sound/effects/explosion" });
+                Score player_score = player.get_component<Score>();
+                int player_kills = player_score.num_kills_since_last_spawn;
+                player_score.num_kills_since_last_spawn = 0;
+                
 
                 var time_of_death = Fab5_Game.inst().get_time();
                 Fab5_Game.inst().create_entity(new Component[] {
@@ -450,9 +457,12 @@ namespace Fab5.Starburst.States.Playing {
                             var ts1   = GFX_Util.measure_string("Respawning in 0.00");
                             var ts2   = GFX_Util.measure_string(text2);
 
+                            var text3 = string.Format("You killed {0} enemies!", player_kills);
+
                             var a = 0.5f*(float)Math.Min(Math.Max(0.0f, (10.0f-t*2.0f)), 1.0f);
                             GFX_Util.fill_rect(sprite_batch, new Rectangle(0, 0, camera.viewport.Width, camera.viewport.Height), Color.Black * a);
-                            GFX_Util.draw_def_text(sprite_batch, text2, (camera.viewport.Width-ts2.X)*0.5f, (camera.viewport.Height-ts2.Y)*0.5f-95.0f);
+                            GFX_Util.draw_def_text(sprite_batch, text2, (camera.viewport.Width-ts2.X)*0.5f, (camera.viewport.Height-ts2.Y)*0.5f-190.0f);
+                            GFX_Util.draw_def_text(sprite_batch, text3, (camera.viewport.Width-ts2.X)*0.5f, (camera.viewport.Height-ts2.Y)*0.5f-95.0f);
                             GFX_Util.draw_def_text(sprite_batch, text1, (camera.viewport.Width-ts1.X)*0.5f, (camera.viewport.Height-ts1.Y)*0.5f);
                         }
                     },
@@ -467,19 +477,20 @@ namespace Fab5.Starburst.States.Playing {
                 }
                 playerShip.powerups.Clear();
 
+
                 Fab5_Game.inst().create_entity(new Component[] {
-                    new TTL {
-                        destroy_cb = () => {
-                            player.add_components(old_particle_emitter, old_bounding_circle, old_sprite);
-                            player.get_component<Inputhandler>().enabled = true;
+                new TTL {
+                    destroy_cb = () => {
+                        player.add_components(old_particle_emitter, old_bounding_circle, old_sprite);
+                        player.get_component<Inputhandler>().enabled = true;
 
-                            var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
-                            player.get_component<Position>().x = spawn_pos.x;
-                            player.get_component<Position>().y = spawn_pos.y;
-                        },
+                        var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
+                        player.get_component<Position>().x = spawn_pos.x;
+                        player.get_component<Position>().y = spawn_pos.y;
+                    },
 
-                        max_time = 5.0f,
-                    }
+                    max_time = 5.0f,
+                }
                 });
 
                 /*var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
