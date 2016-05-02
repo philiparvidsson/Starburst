@@ -134,6 +134,12 @@ public class Collision_Solver : Subsystem {
     }
 
     private void collide(Entity e1, float c_x, float c_y, float n_x, float n_y) {
+
+        var n = (float)Math.Sqrt(n_x*n_x+n_y*n_y);
+
+        n_x /= n;
+        n_y /= n;
+
         var p1  = e1.get_component<Position>();
         var c1  = e1.get_component<Bounding_Circle>();
         var v1  = e1.get_component<Velocity>();
@@ -203,36 +209,70 @@ public class Collision_Solver : Subsystem {
         bool check_right  = !has_tile(x+1, y);
         bool check_left   = !has_tile(x-1, y);
 
+        var top = y;
+        var bottom = y;
+
+        // @To-do: Do we need to check further out here?
+        for (int i = 1; i < 5; i++) {
+            if (!has_tile(x, y-i)) {
+                break;
+            }
+
+            top--;
+        }
+
+        for (int i = 1; i < 5; i++) {
+            if (!has_tile(x, y+i)) {
+                break;
+            }
+
+            bottom++;
+        }
+
         int tw = 16;
         int th = 16;
 
-        if (check_left) {
-            var c_x = x*tw - 2048.0f;
+        var eps = 0.01f;
+
+        if (check_left && v.x > 0.0f) {
+
             var c_y = p.y;
+            if (c_y < top*th-2048.0f) c_y = top*th-2048.0f;
+            if (c_y > (bottom+1)*th-2048.0f) c_y = (bottom+1)*th-2048.0f;
 
-            if ((p.y+c.radius >= (y*th - 2048.0f))
-             && (p.y-c.radius < ((y+1)*th - 2048.0f))
-             && (p.x+c.radius > c_x)
-             && (v.x > 0.0f))
+            var dy  = c_y - p.y;
+            var dx  = c.radius - dy*dy/c.radius;
+            var c_x = x*tw - 2048.0f;
+
+            if ((p.y+c.radius >= (top*th - 2048.0f))
+             && (p.y-c.radius < ((bottom+1)*th - 2048.0f))
+             && (p.x+dx > c_x))
             {
-                p.x = c_x - c.radius;
-                collide(e1, c_x, c_y, -1.0f, 0.0f);
-
+            Console.WriteLine("left " + x + "," + y);
+                p.x = c_x-dx-eps;
+                collide(e1, c_x, c_y, -dx, -dy);
+                Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
                 return true;
             }
         }
 
-        if (check_right) {
-            var c_x = (x+1)*tw - 2048.0f;
-            var c_y = p.y;
+        if (check_right && v.x < 0.0f) {
 
-            if ((p.y+c.radius >= (y*th - 2048.0f))
-             && (p.y-c.radius < ((y+1)*th - 2048.0f))
-             && (p.x-c.radius < c_x)
-             && (v.x < 0.0f))
+            var c_y = p.y;
+            if (c_y < top*th-2048.0f) c_y = top*th-2048.0f;
+            if (c_y > (bottom+1)*th-2048.0f) c_y = (bottom+1)*th-2048.0f;
+
+            var dy  = c_y - p.y;
+            var dx  = c.radius - dy*dy/c.radius;
+            var c_x = (x+1)*tw - 2048.0f;
+
+            if ((p.y+c.radius >= (top*th - 2048.0f))
+             && (p.y-c.radius < ((bottom+1)*th - 2048.0f))
+             && (p.x-dx < c_x))
             {
-                p.x = c_x + c.radius;
-                collide(e1, c_x, c_y, 1.0f, 0.0f);
+            Console.WriteLine("right " + x + "," + y);
+                p.x = c_x+dx+eps;
+                collide(e1, c_x, c_y, dx, -dy);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
                 return true;
             }
@@ -249,36 +289,70 @@ public class Collision_Solver : Subsystem {
         bool check_top    = !has_tile(x, y-1);
         bool check_bottom = !has_tile(x, y+1);
 
+        var left = x;
+        var right = x;
+
+        // @To-do: Do we need to check further out here?
+        for (int i = 1; i < 5; i++) {
+            if (!has_tile(x-i, y)) {
+                break;
+            }
+
+            left--;
+        }
+
+        for (int i = 1; i < 5; i++) {
+            if (!has_tile(x+i, y)) {
+                break;
+            }
+
+            right++;
+        }
+
+
         int tw = 16;
         int th = 16;
 
-        if (check_top) {
+        var eps = 0.01f;
+
+        if (check_top && v.y > 0.0f) {
+
             var c_x = p.x;
+            if (c_x < left*tw-2048.0f) c_x = left*tw-2048.0f;
+            if (c_x > (right+1)*tw-2048.0f) c_x = (right+1)*tw-2048.0f;
+
+            var dx = c_x - p.x;
+            var dy = c.radius - dx*dx/c.radius;
             var c_y = y*th - 2048.0f;
 
-            if ((p.x+c.radius >= (x*tw - 2048.0f))
-             && (p.x-c.radius < ((x+1)*tw - 2048.0f))
-             && (p.y+c.radius > c_y)
-             && (v.y > 0.0f))
+            if ((p.x+c.radius >= (left*tw - 2048.0f))
+             && (p.x-c.radius < ((right+1)*tw - 2048.0f))
+             && (p.y+dy > c_y))
             {
-                p.y = c_y - c.radius;
-                collide(e1, c_x, c_y, 0.0f, -1.0f);
+            Console.WriteLine("top " + x + "," + y);
+                p.y = c_y-dy-eps;
+                collide(e1, c_x, c_y, -dx, -dy);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
                 return true;
             }
         }
 
-        if (check_bottom) {
+        if (check_bottom && v.y < 0.0f) {
             var c_x = p.x;
+            if (c_x < left*tw-2048.0f) c_x = left*tw-2048.0f;
+            if (c_x > (right+1)*tw-2048.0f) c_x = (right+1)*tw-2048.0f;
+
+            var dx = c_x - p.x;
+            var dy = c.radius - dx*dx/c.radius;
             var c_y = (y+1)*th - 2048.0f;
 
-            if ((p.x+c.radius >= (x*tw - 2048.0f))
-             && (p.x-c.radius < ((x+1)*tw - 2048.0f))
-             && (p.y-c.radius < c_y)
-             && (v.y < 0.0f))
+            if ((p.x+c.radius >= (left*tw - 2048.0f))
+             && (p.x-c.radius < ((right+1)*tw - 2048.0f))
+             && (p.y-dy < c_y))
             {
-                p.y = c_y + c.radius;
-                collide(e1, c_x, c_y, 0.0f, 1.0f);
+            Console.WriteLine("bottom " + x + "," + y);
+                p.y = c_y+dy+eps;
+                collide(e1, c_x, c_y, -dx, dy);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
                 return true;
             }
@@ -287,11 +361,11 @@ public class Collision_Solver : Subsystem {
         return false;
     }
 
-    private bool resolve_circle_tile_collision(Entity e1, int x, int y) {
-        if (x < 0 || x > 255 || y < 0 || y > 255) return false;
+    private void resolve_circle_tile_collision(Entity e1, int x, int y, ref bool coll_h, ref bool coll_v) {
+        if (x < 0 || x > 255 || y < 0 || y > 255) return;
         var k = tile_map.tiles[x+y*256];
         if (k == 0 || k >= 6) { // 6 and up are specials
-            return false;
+            return;
         }
 
         var v = e1.get_component<Velocity>();
@@ -306,17 +380,33 @@ public class Collision_Solver : Subsystem {
 
 
 
-        bool r = false;
-        if (rect.Width < rect.Height) {
-            r |= check_left_right(e1, x, y);
-            r |= check_top_bottom(e1, x, y);
+
+        if (Math.Abs(v.x) > Math.Abs(v.y)) {
+            if (!coll_h) {
+                bool lr = check_left_right(e1, x, y);
+                coll_h |= lr;
+
+            }
+            if (!coll_v) {
+                var tb = check_top_bottom(e1, x, y);
+                coll_v |= tb;
+
+            }
         }
         else {
-            r |= check_top_bottom(e1, x, y);
-            r |= check_left_right(e1, x, y);
+
+            if (!coll_v) {
+                var tb = check_top_bottom(e1, x, y);
+                coll_v |= tb;
+
+            }
+            if (!coll_h) {
+                bool lr = check_left_right(e1, x, y);
+                coll_h |= lr;
+
+            }
         }
 
-        return r;
     }
 
     private bool resolve_circle_map_collision(Entity e1) {
@@ -351,30 +441,37 @@ public class Collision_Solver : Subsystem {
         }
 
         if (Math.Abs(v.x) < Math.Abs(v.y)) {
-            bool colliding = false;
+            bool coll_v = false;
+            bool coll_h = false;
             for (int x = left; (xs > 0) ? x <= right : x >= right; x += xs) {
                 for (int y = top; (ys > 0) ? y <= bottom : y >= bottom; y += ys) {
-                    if (resolve_circle_tile_collision(e1, x, y))
-                        colliding = true;
+                    if (coll_h && coll_v) {
+                        break;
+                    }
+
+                    resolve_circle_tile_collision(e1, x, y, ref coll_h, ref coll_v);
                 }
             }
 
-            return colliding;
+            return coll_v|coll_h;
         }
         else {
-            bool colliding = false;
+            bool coll_v = false;
+            bool coll_h = false;
 
             for (int y = top; (ys > 0) ? y <= bottom : y >= bottom; y += ys) {
                 for (int x = left; (xs > 0) ? x <= right : x >= right; x += xs) {
-                    if (resolve_circle_tile_collision(e1, x, y))
-                        colliding = true;
+                    if (coll_h && coll_v) {
+                        break;
+                    }
+
+                    resolve_circle_tile_collision(e1, x, y, ref coll_h, ref coll_v);
                 }
             }
 
-            return colliding;
+            return coll_v|coll_h;
         }
 
-        return false;
     }
 
     private bool resolve_circle_circle_collision(Entity e1, Entity e2) {
