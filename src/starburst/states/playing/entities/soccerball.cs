@@ -94,11 +94,21 @@ public static class Soccer_Ball {
                         var ball_x = position.x;
                         var ball_y = position.y;
 
+                        foreach (var e in Starburst.inst().get_entities_fast(typeof (Ship_Info))) {
+                            var si = e.get_component<Ship_Info>();
+                            if (si.team == scoring_team) {
+                                var score = e.get_component<Score>();
+                                if (score != null) {
+                                    score.score += 5000;
+                                }
+                            }
+                        }
+
                         Console.WriteLine("team {0} scored", scoring_team);
                         Fab5_Game.inst().create_entity(new Component[] {
                             new Post_Render_Hook  {
                                 render_fn = (camera, sprite_batch) => {
-                                    if ((camera.index % 2)+1 != scoring_team) {
+                                    if (((camera.index-1) % 2)+1 != scoring_team) {
                                         return;
                                     }
 

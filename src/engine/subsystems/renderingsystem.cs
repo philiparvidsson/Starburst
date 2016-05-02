@@ -389,8 +389,8 @@ namespace Fab5.Engine.Subsystems {
 
                 sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
-                draw_indicators(cameras[p], currentPlayerNumber, currentPlayerPosition);
-                hudsystem_instance.drawHUD(currentPlayer, dt);
+                draw_indicators(current, currentPlayerNumber, currentPlayerPosition);
+                hudsystem_instance.drawHUD(currentPlayer, dt, current);
 
                 foreach (var hook in hooks) {
                     hook.get_component<Post_Render_Hook>().render_fn(current, sprite_batch);

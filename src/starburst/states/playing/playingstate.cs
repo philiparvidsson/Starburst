@@ -148,13 +148,43 @@ public class Playing_State : Game_State {
         create_entity(SoundManager.create_soundeffects_component());
 
 
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 0; i++) {
             var asteroid = create_entity(Dummy.create_components());
-            var ap = asteroid.get_component<Position>();
+            var r = asteroid.get_component<Bounding_Circle>().radius;
+
+            Position ap;
+
+            bool colliding = false;
+            do {
+                colliding = false;
+                ap = asteroid.get_component<Position>();
+                var sp = spawner.get_asteroid_spawn_pos(tile_map);
+                ap.x = sp.x;
+                ap.y = sp.y;
+
+                foreach (var ast in Starburst.inst().get_entities_fast(typeof (Bounding_Circle))) {
+                    if (ast == asteroid) {
+                        continue;
+                    }
+
+                    var dx = ast.get_component<Position>().x - asteroid.get_component<Position>().x;
+                    var dy = ast.get_component<Position>().x - asteroid.get_component<Position>().y;
+
+                    var dist = (dx*dx+dy*dy);
+
+                    var min_dist = ast.get_component<Bounding_Circle>().radius + asteroid.get_component<Bounding_Circle>().radius;
+                    min_dist *= 1.5f;
+                    min_dist *= min_dist;
+
+                    if (dist < min_dist) {
+                        colliding = true;
+                        break;
+                    }
+                }
+            } while (colliding);
+
             var av = asteroid.get_component<Velocity>();
-            var sp = spawner.get_asteroid_spawn_pos(tile_map);
-            ap.x = sp.x;
-            ap.y = sp.y;
+
             av.x = -15 + 30 * (float)rand.NextDouble();
             av.y = -15 + 30 * (float)rand.NextDouble();
         }
