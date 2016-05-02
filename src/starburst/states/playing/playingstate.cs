@@ -155,16 +155,35 @@ public class Playing_State : Game_State {
             Position ap;
 
             bool colliding = false;
-            /*do {
+            do {
+                ap = asteroid.get_component<Position>();
+                var sp = spawner.get_asteroid_spawn_pos(tile_map);
+                ap.x = sp.x;
+                ap.y = sp.y;
+
                 foreach (var ast in Starburst.inst().get_entities_fast(typeof (Bounding_Circle))) {
-                    var d
+                    if (ast == asteroid) {
+                        continue;
+                    }
+
+                    var dx = ast.get_component<Position>().x - asteroid.get_component<Position>().x;
+                    var dy = ast.get_component<Position>().x - asteroid.get_component<Position>().y;
+
+                    var dist = (dx*dx+dy*dy);
+
+                    var min_dist = ast.get_component<Bounding_Circle>().radius + asteroid.get_component<Bounding_Circle>().radius;
+                    min_dist *= 1.5f;
+                    min_dist *= min_dist;
+
+                    if (dist < min_dist) {
+                        colliding = true;
+                        break;
+                    }
                 }
-            }*/
-            ap = asteroid.get_component<Position>();
+            } while (colliding);
+
             var av = asteroid.get_component<Velocity>();
-            var sp = spawner.get_asteroid_spawn_pos(tile_map);
-            ap.x = sp.x;
-            ap.y = sp.y;
+
             av.x = -15 + 30 * (float)rand.NextDouble();
             av.y = -15 + 30 * (float)rand.NextDouble();
         }
