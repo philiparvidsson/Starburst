@@ -26,11 +26,11 @@
         public int team;
         public int pindex;
 
-        public System.Collections.Generic.List<Powerup> powerups = new System.Collections.Generic.List<Powerup>();
+        public System.Collections.Generic.List<Powerup_Impl> powerups = new System.Collections.Generic.List<Powerup_Impl>();
 
         public bool has_powerup(string name) {
             foreach (var powerup in powerups) {
-                if (powerup.impl.name == name) {
+                if (powerup.name == name) {
                     return true;
                 }
             }

@@ -11,22 +11,17 @@ using System;
 public interface Powerup_Impl {
     string name { get; }
 
-    void on_begin(Entity player, Entity powerup);
-    void on_end(Entity player, Entity powerup);
+    void on_begin(Entity holder, Entity powerup);
+
+    void end();
 }
 
 public class Powerup : Component {
     public Powerup_Impl impl;
-    public void begin(Entity player, Entity powerup) {
-        player.get_component<Ship_Info>().powerups.Add(this);
+    public void begin(Entity holder, Entity powerup) {
+        holder.get_component<Ship_Info>().powerups.Add(impl);
 
-        impl.on_begin(player, powerup);
-    }
-
-    public void end(Entity player, Entity powerup) {
-        player.get_component<Ship_Info>().powerups.Remove(this);
-
-        impl.on_end(player, powerup);
+        impl.on_begin(holder, powerup);
     }
 }
 

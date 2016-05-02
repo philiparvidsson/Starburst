@@ -102,6 +102,21 @@ public abstract class Fab5_Game : Game {
         return (null);
     }
 
+    public void destroy_entity(Int64 id) {
+        var entity = get_entity(id);
+        if (entity != null) {
+            entity.destroy();
+        }
+    }
+
+    public Entity get_entity(Int64 id) {
+        if (top_state != null) {
+            return top_state.get_entity(id);
+        }
+
+        return null;
+    }
+
 
      public List<Entity> get_entities_fast(Type component_type) {
         if (top_state != null) {

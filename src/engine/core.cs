@@ -190,6 +190,13 @@ public abstract class Game_State {
     static List<Entity> results = new List<Entity>();
 
 
+    public Entity get_entity(Int64 id) {
+        if (entities.ContainsKey(id)) {
+            return entities[id];
+        }
+
+        return null;
+    }
 
     public List<Entity> get_entities_fast(Type component_type) {
         List<Entity> e = null;

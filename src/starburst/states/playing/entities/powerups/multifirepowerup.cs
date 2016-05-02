@@ -10,12 +10,16 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 
 public class Multifire_Powerup : Powerup_Impl {
-    private Entity effect;
+    private Int64 effect_id;
 
     private static System.Random rand = new System.Random();
 
     public string name {
         get { return "multifire"; }
+    }
+
+    public void end() {
+        Fab5_Game.inst().destroy_entity(effect_id);
     }
 
     public static Component[] create_components() {
@@ -103,11 +107,11 @@ public class Multifire_Powerup : Powerup_Impl {
         });
     }
 
-    private void do_persistent_effect(Entity player) {
-        var pos = player.get_component<Position>();
-        var vel = player.get_component<Velocity>();
+    private void do_persistent_effect(Entity holder) {
+        var pos = holder.get_component<Position>();
+        var vel = holder.get_component<Velocity>();
 
-        effect = Fab5_Game.inst().create_entity(new Component [] {
+        effect_id = Fab5_Game.inst().create_entity(new Component [] {
             new Particle_Emitter {
                 emit_fn = () => {
                     var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
@@ -137,16 +141,14 @@ public class Multifire_Powerup : Powerup_Impl {
                 interval               = 0.05f,
                 num_particles_per_emit = 7
             }
-        });
+        }).id;
     }
 
-    public void on_begin(Entity player, Entity powerup) {
+    public void on_begin(Entity holder, Entity powerup) {
         do_pickup_effect(powerup);
-        do_persistent_effect(player);
+        do_persistent_effect(holder);
     }
 
-    public void on_end(Entity player, Entity powerup) {
-    }
 }
 
 }

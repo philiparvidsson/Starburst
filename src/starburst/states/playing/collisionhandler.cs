@@ -462,6 +462,11 @@ namespace Fab5.Starburst.States.Playing {
                     }
                 });
 
+                foreach (var powerup in playerShip.powerups) {
+                    powerup.end();
+                }
+                playerShip.powerups.Clear();
+
                 Fab5_Game.inst().create_entity(new Component[] {
                     new TTL {
                         destroy_cb = () => {
