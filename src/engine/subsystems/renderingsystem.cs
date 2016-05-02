@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Fab5.Starburst.States;
 using Fab5.Starburst.States.Playing;
+using Fab5.Starburst;
 
 namespace Fab5.Engine.Subsystems {
     class Rendering_System : Subsystem {
@@ -38,6 +39,8 @@ namespace Fab5.Engine.Subsystems {
 
         private Texture2D backdrop;
         private Texture2D stardrop;
+
+        private Texture2D timer_tex;
 
         private Texture2D player_indicator_tex;
         private Texture2D player_indicator2_tex;
@@ -156,6 +159,8 @@ namespace Fab5.Engine.Subsystems {
 
         public override void init()
         {
+            timer_tex = Fab5_Game.inst().get_content<Texture2D>("clock");
+
             team_play = ((Playing_State)state).game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH;
 
             sprite_batch = new SpriteBatch(graphicsDevice);
@@ -279,6 +284,11 @@ namespace Fab5.Engine.Subsystems {
             {
                 cameras[i].position = players[i].get_component<Position>();
             }*/
+        }
+
+        private void draw_match_time() {
+            sprite_batch.Draw(timer_tex, new Vector2(760.0f, 40.0f), null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.5f);
+            GFX_Util.draw_def_text(sprite_batch, "0.00", 800.0f, 40.0f);
         }
 
 
@@ -421,6 +431,10 @@ namespace Fab5.Engine.Subsystems {
                 sprite_batch.End();
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;
+
+            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            draw_match_time();
+            sprite_batch.End();
 
             base.draw(t, dt);
         }
