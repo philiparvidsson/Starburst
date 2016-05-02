@@ -122,11 +122,21 @@
     <Content Include="src\starburst\content\ball.png" />
     <Content Include="src\starburst\content\beams1.png" />
     <Content Include="src\starburst\content\beams2.png" />
+    <Content Include="src\starburst\content\controller.png" />
+    <Content Include="src\starburst\content\controller_rectangle.png" />
+    <Content Include="src\starburst\content\EnergiAtlas.png" />
     <Content Include="src\starburst\content\EnergyBar.png" />
     <Content Include="src\starburst\content\HPBar.png" />
     <Content Include="src\starburst\content\indicator.png" />
+    <Content Include="src\starburst\content\keyboard.png" />
     <Content Include="src\starburst\content\map.png" />
     <Content Include="src\starburst\content\map\tiles.png" />
+    <Content Include="src\starburst\content\menu\Key.png" />
+    <Content Include="src\starburst\content\menu\Xbox_A.png" />
+    <Content Include="src\starburst\content\menu\Xbox_A_white.png" />
+    <Content Include="src\starburst\content\menu\Xbox_B.png" />
+    <Content Include="src\starburst\content\menu\Xbox_L.png" />
+    <Content Include="src\starburst\content\menu\Xbox_L_white.png" />
     <Content Include="src\starburst\content\particle.png" />
     <Content Include="src\starburst\content\ships\ship11.png" />
     <Content Include="src\starburst\content\ships\ship12.png" />
@@ -152,6 +162,7 @@
     <Content Include="src\starburst\content\sound\effects\thrust.wav" />
     <Content Include="src\starburst\content\splash.png" />
     <Content Include="src\starburst\content\tgrid.png" />
+    <Content Include="src\starburst\content\turbo_powerup.png" />
     <Content Include="src\starburst\content\wbound.png" />
   </ItemGroup>
   <ItemGroup>
