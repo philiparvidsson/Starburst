@@ -10,19 +10,16 @@
     public class Hudsystem
     {
         SpriteBatch sprite_batch;
-        Texture2D hpbar_texture;
-        Texture2D energybar_texture;
         Ship_Info ship_info;
         Sprite enball;
 
         private Texture2D minimap_tex;
         private Texture2D white_pixel_tex;
+        private int number_of_players;
 
         public Hudsystem(SpriteBatch sprite_batch, Tile_Map tile_map)
         {
             this.sprite_batch = sprite_batch;
-
-            Random random = new Random();
 
             enball = new Sprite()
             {
@@ -30,11 +27,8 @@
                 frame_width = 150,
                 frame_height = 150,
                 num_frames = 4,
-                frame_timer = 0.2f,
                 color = new Color(0.70f, 0.70f, 0.70f)
             };
-
-
 
             minimap_tex = new Texture2D(Fab5_Game.inst().GraphicsDevice, 256, 256);
 
@@ -60,7 +54,7 @@
 
         }
 
-        private void draw_minimap(Position position) {
+        private void draw_minimap(Entity player) {
             var vp_size = Fab5_Game.inst().GraphicsDevice.Viewport.Width;
             var scale = 1.0f*(float)System.Math.Sqrt(1.0f+vp_size/1920.0f);
 
@@ -88,26 +82,44 @@
                               SpriteEffects.None,
                               0.0f);
 
-            var tw = 16.0f;
-            var th = 16.0f;
-            var map_pos_x = minimap_left + scale*0.5f*(position.x+2048.0f) / tw;
-            var map_pos_y = minimap_top + scale*0.5f*(position.y+2048.0f)  / th;
+            var team = player.get_component<Ship_Info>().team;
 
-            sprite_batch.Draw(white_pixel_tex,
-                              new Vector2(map_pos_x, map_pos_y),
-                              null,
-                              Color.White,
-                              0.0f,
-                              new Vector2(0.5f, 0.5f),
-                              new Vector2(4.0f, 4.0f),
-                              SpriteEffects.None,
-                              1.0f);
+            foreach (var team_mate in Fab5_Game.inst().get_entities_fast(typeof (Ship_Info))) {
+                var tm_team = team_mate.get_component<Ship_Info>().team;
+                if (tm_team != team) {
+                    continue;
+                }
+
+                var color = Color.White;
+                if (team_mate != player) {
+                    color = (tm_team == 1) ? Color.Red : Color.Blue;
+                }
+
+                var position = team_mate.get_component<Position>();
+
+                var tw = 16.0f;
+                var th = 16.0f;
+                var map_pos_x = minimap_left + scale*0.5f*(position.x+2048.0f) / tw;
+                var map_pos_y = minimap_top + scale*0.5f*(position.y+2048.0f)  / th;
+
+                sprite_batch.Draw(white_pixel_tex,
+                                  new Vector2(map_pos_x, map_pos_y),
+                                  null,
+                                  color,
+                                  0.0f,
+                                  new Vector2(0.5f, 0.5f),
+                                  new Vector2(4.0f, 4.0f),
+                                  SpriteEffects.None,
+                                  1.0f);
+            }
         }
 
         public void drawHUD(Entity player, float dt, Camera camera)
         {
 
             //sprite_batch.Begin(SpriteSortMode.Deferred);
+            if (!player.get_component<Inputhandler>().enabled)
+                return;
 
             Position playerPos = player.get_component<Position>();
 
@@ -115,23 +127,23 @@
             //drawHP();
             drawEnergy(playerPos, camera, dt);
             drawScore(player.get_component<Score>(), dt);
-            draw_minimap(playerPos);
+            draw_minimap(player);
 
             //sprite_batch.End();
         }
 
         private void drawHP()
         {
-            Position hpposition;
+            /*Position hpposition;
             hpposition = new Position() { x = 20, y = Fab5_Game.inst().GraphicsDevice.Viewport.Height - 15 - hpbar_texture.Height };
             sprite_batch.Draw(hpbar_texture, new Vector2(hpposition.x, hpposition.y), color: Color.White);
 
             // X = 9, Y = 7, W = 68, H = 16 Coordinates for the filling in hpbar-sprite
 
-            /*sprite_batch.Draw(hpball,
+            sprite_batch.Draw(hpball,
                 new Vector2(50, 50),
                 scale: new Vector2(5*(ship_info.hp_value / ship_info.top_hp), 5*(ship_info.hp_value / ship_info.top_hp))
-                );*/
+                );
 
             sprite_batch.Draw(hpbar_texture,
                 new Vector2(hpposition.x + 9, hpposition.y + 7),
@@ -141,7 +153,7 @@
             sprite_batch.Draw(hpbar_texture,
                 destinationRectangle: new Rectangle((int)hpposition.x + 9, (int)hpposition.y + 7, (int)(68 * (ship_info.hp_value / 100)), 16),
                 sourceRectangle: new Rectangle(9, 7, 68, 16),
-                color: Color.Red);
+                color: Color.Red);*/
 
 
 
@@ -166,6 +178,10 @@
 
         private void updateEnergySprite(float dt)
         {
+            this.number_of_players = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler)).Count;
+
+            enball.fps = 20.0f / this.number_of_players;
+
             enball.frame_timer += dt;
             if (enball.frame_timer > (1.0f / enball.fps))
             {

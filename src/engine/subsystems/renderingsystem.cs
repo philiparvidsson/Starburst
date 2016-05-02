@@ -7,6 +7,8 @@ using Fab5.Engine.Components;
 using Fab5.Engine.Core;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Fab5.Starburst.States;
+using Fab5.Starburst.States.Playing;
 
 namespace Fab5.Engine.Subsystems {
     class Rendering_System : Subsystem {
@@ -38,19 +40,14 @@ namespace Fab5.Engine.Subsystems {
         private Texture2D stardrop;
 
         private Texture2D player_indicator_tex;
-
-
+        private Texture2D player_indicator2_tex;
+        private bool team_play;
+        private GraphicsDevice graphicsDevice;
 
         public Rendering_System(GraphicsDevice graphicsDevice) {
-            sprite_batch = new SpriteBatch(graphicsDevice);
-            defaultViewport = graphicsDevice.Viewport;
-
-            backdrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/backdrop4");
-            stardrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/stardrop");
-
-
-            player_indicator_tex = Fab5_Game.inst().get_content<Texture2D>("indicator");
+            this.graphicsDevice = graphicsDevice;
         }
+
 
         private void draw_backdrop(SpriteBatch sprite_batch, Camera camera) {
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
@@ -159,9 +156,21 @@ namespace Fab5.Engine.Subsystems {
 
         public override void init()
         {
+            team_play = ((Playing_State)state).game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH;
+
+            sprite_batch = new SpriteBatch(graphicsDevice);
+            defaultViewport = graphicsDevice.Viewport;
+
+            backdrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/backdrop4");
+            stardrop = Fab5_Game.inst().get_content<Texture2D>("backdrops/stardrop");
+
+            player_indicator_tex = Fab5_Game.inst().get_content<Texture2D>("indicator");
+            player_indicator2_tex = Fab5_Game.inst().get_content<Texture2D>("indicator2");
+
             // kör uppdatering av viewports och kameror
             updatePlayers();
             this.hudsystem_instance = new Hudsystem(sprite_batch, tile_map);
+
 
  	        base.init();
         }
@@ -272,9 +281,16 @@ namespace Fab5.Engine.Subsystems {
         }
 
 
-        private void draw_indicators(Camera current, int currentPlayerNumber, Position currentPlayerPosition) {
+        private void draw_indicators(Camera current, int currentPlayerNumber, Entity player) {
+            var currentPlayerPosition = player.get_component<Position>();
             for (int p2 = 0; p2 < currentPlayerNumber; p2++) {
                 var player2 = players[p2];
+
+                var tex = player_indicator_tex;
+                if (team_play && player2.get_component<Ship_Info>().team == 2) {
+                    tex = player_indicator2_tex;
+                }
+
                 var player2_pos = player2.get_component<Position>();
                 var d_x = player2_pos.x - current.position.x;
                 var d_y = player2_pos.y - current.position.y;
@@ -294,10 +310,10 @@ namespace Fab5.Engine.Subsystems {
 
                 var r = (float)Math.Atan2(d_y, d_x);
 
-                var p_x = (currentPlayerPosition.x - current.position.x) + current.viewport.Width  * 0.5f + d_x;
-                var p_y = (currentPlayerPosition.y - current.position.y) + current.viewport.Height * 0.5f + d_y;
+                var p_x = current.zoom*(currentPlayerPosition.x - current.position.x) + current.viewport.Width  * 0.5f + d_x;
+                var p_y = current.zoom*(currentPlayerPosition.y - current.position.y) + current.viewport.Height * 0.5f + d_y;
 
-                sprite_batch.Draw(player_indicator_tex,
+                sprite_batch.Draw(tex,
                                   new Vector2(p_x, p_y),
                                   null,
                                   Color.White * 0.65f,
@@ -389,8 +405,8 @@ namespace Fab5.Engine.Subsystems {
 
                 sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
-                draw_indicators(current, currentPlayerNumber, currentPlayerPosition);
                 hudsystem_instance.drawHUD(currentPlayer, dt, current);
+                draw_indicators(current, currentPlayerNumber, currentPlayer);
 
                 foreach (var hook in hooks) {
                     hook.get_component<Post_Render_Hook>().render_fn(current, sprite_batch);
