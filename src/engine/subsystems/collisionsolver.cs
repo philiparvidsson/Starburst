@@ -209,11 +209,14 @@ public class Collision_Solver : Subsystem {
         bool check_right  = !has_tile(x+1, y);
         bool check_left   = !has_tile(x-1, y);
 
+        int tw = 16;
+        int th = 16;
         var top = y;
         var bottom = y;
+        var h = (int)(c.radius / th)+1;
 
         // @To-do: Do we need to check further out here?
-        for (int i = 1; i < 5; i++) {
+        for (int i = 1; i < h; i++) {
             if (!has_tile(x, y-i)) {
                 break;
             }
@@ -221,7 +224,7 @@ public class Collision_Solver : Subsystem {
             top--;
         }
 
-        for (int i = 1; i < 5; i++) {
+        for (int i = 1; i < h; i++) {
             if (!has_tile(x, y+i)) {
                 break;
             }
@@ -229,8 +232,6 @@ public class Collision_Solver : Subsystem {
             bottom++;
         }
 
-        int tw = 16;
-        int th = 16;
 
         var eps = 0.01f;
 
@@ -247,7 +248,7 @@ public class Collision_Solver : Subsystem {
             if ((p.y+c.radius >= (top*th - 2048.0f))
              && (p.y-c.radius < ((bottom+1)*th - 2048.0f))
              && (p.x+dx > c_x)
-             && (p.x < c_x))
+             && (p.x < c_x+16.0f))
             {
 //            Console.WriteLine("left " + x + "," + y);
                 p.x = c_x-dx-eps;
@@ -270,7 +271,7 @@ public class Collision_Solver : Subsystem {
             if ((p.y+c.radius >= (top*th - 2048.0f))
              && (p.y-c.radius < ((bottom+1)*th - 2048.0f))
              && (p.x-dx < c_x)
-             && (p.x > c_x))
+             && (p.x > c_x-16.0f))
             {
 //            Console.WriteLine("right " + x + "," + y);
                 p.x = c_x+dx+eps;
@@ -293,9 +294,12 @@ public class Collision_Solver : Subsystem {
 
         var left = x;
         var right = x;
+        int tw = 16;
+        int th = 16;
+        var w = (int)(c.radius / tw)+1;
 
         // @To-do: Do we need to check further out here?
-        for (int i = 1; i < 5; i++) {
+        for (int i = 1; i < w; i++) {
             if (!has_tile(x-i, y)) {
                 break;
             }
@@ -303,7 +307,7 @@ public class Collision_Solver : Subsystem {
             left--;
         }
 
-        for (int i = 1; i < 5; i++) {
+        for (int i = 1; i < w; i++) {
             if (!has_tile(x+i, y)) {
                 break;
             }
@@ -312,8 +316,7 @@ public class Collision_Solver : Subsystem {
         }
 
 
-        int tw = 16;
-        int th = 16;
+
 
         var eps = 0.01f;
 
@@ -330,7 +333,7 @@ public class Collision_Solver : Subsystem {
             if ((p.x+c.radius >= (left*tw - 2048.0f))
              && (p.x-c.radius < ((right+1)*tw - 2048.0f))
              && (p.y+dy > c_y)
-             && (p.y < c_y))
+             && (p.y < c_y+16.0f))
             {
 //            Console.WriteLine("top " + x + "," + y);
                 p.y = c_y-dy-eps;
@@ -352,7 +355,7 @@ public class Collision_Solver : Subsystem {
             if ((p.x+c.radius >= (left*tw - 2048.0f))
              && (p.x-c.radius < ((right+1)*tw - 2048.0f))
              && (p.y-dy < c_y)
-             && (p.y > c_y))
+             && (p.y > c_y-16.0f))
             {
 //            Console.WriteLine("bottom " + x + "," + y);
                 p.y = c_y+dy+eps;
