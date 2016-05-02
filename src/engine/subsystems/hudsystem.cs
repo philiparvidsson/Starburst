@@ -10,13 +10,12 @@
     public class Hudsystem
     {
         SpriteBatch sprite_batch;
-        Texture2D hpbar_texture;
-        Texture2D energybar_texture;
         Ship_Info ship_info;
         Sprite enball;
 
         private Texture2D minimap_tex;
         private Texture2D white_pixel_tex;
+        private int number_of_players;
 
         public Hudsystem(SpriteBatch sprite_batch, Tile_Map tile_map)
         {
@@ -24,17 +23,17 @@
 
             Random random = new Random();
 
+            this.number_of_players = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler)).Count;
+
             enball = new Sprite()
             {
                 texture = Fab5_Game.inst().get_content<Texture2D>("EnergiAtlas"),
                 frame_width = 150,
                 frame_height = 150,
                 num_frames = 4,
-                frame_timer = 0.2f,
+                frame_timer = 0.2f * this.number_of_players,
                 color = new Color(0.70f, 0.70f, 0.70f)
             };
-
-
 
             minimap_tex = new Texture2D(Fab5_Game.inst().GraphicsDevice, 256, 256);
 
@@ -122,16 +121,16 @@
 
         private void drawHP()
         {
-            Position hpposition;
+            /*Position hpposition;
             hpposition = new Position() { x = 20, y = Fab5_Game.inst().GraphicsDevice.Viewport.Height - 15 - hpbar_texture.Height };
             sprite_batch.Draw(hpbar_texture, new Vector2(hpposition.x, hpposition.y), color: Color.White);
 
             // X = 9, Y = 7, W = 68, H = 16 Coordinates for the filling in hpbar-sprite
 
-            /*sprite_batch.Draw(hpball,
+            sprite_batch.Draw(hpball,
                 new Vector2(50, 50),
                 scale: new Vector2(5*(ship_info.hp_value / ship_info.top_hp), 5*(ship_info.hp_value / ship_info.top_hp))
-                );*/
+                );
 
             sprite_batch.Draw(hpbar_texture,
                 new Vector2(hpposition.x + 9, hpposition.y + 7),
@@ -141,7 +140,7 @@
             sprite_batch.Draw(hpbar_texture,
                 destinationRectangle: new Rectangle((int)hpposition.x + 9, (int)hpposition.y + 7, (int)(68 * (ship_info.hp_value / 100)), 16),
                 sourceRectangle: new Rectangle(9, 7, 68, 16),
-                color: Color.Red);
+                color: Color.Red);*/
 
 
 
