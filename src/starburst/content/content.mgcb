@@ -85,30 +85,6 @@
 /processorParam:TextureFormat=Color
 /build:backdrops/backdrop4.png
 
-#begin EnergyBar.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:EnergyBar.png
-
-#begin HPBar.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:HPBar.png
-
 #begin asteroid2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -540,4 +516,10 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:indicator2.png
+
+#begin sound/effects/song_victory.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:sound/effects/song_victory.mp3
 
