@@ -248,7 +248,7 @@ public class Collision_Solver : Subsystem {
              && (p.y-c.radius < ((bottom+1)*th - 2048.0f))
              && (p.x+dx > c_x))
             {
-            Console.WriteLine("left " + x + "," + y);
+//            Console.WriteLine("left " + x + "," + y);
                 p.x = c_x-dx-eps;
                 collide(e1, c_x, c_y, -dx, -dy);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
@@ -270,7 +270,7 @@ public class Collision_Solver : Subsystem {
              && (p.y-c.radius < ((bottom+1)*th - 2048.0f))
              && (p.x-dx < c_x))
             {
-            Console.WriteLine("right " + x + "," + y);
+//            Console.WriteLine("right " + x + "," + y);
                 p.x = c_x+dx+eps;
                 collide(e1, c_x, c_y, dx, -dy);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
@@ -329,7 +329,7 @@ public class Collision_Solver : Subsystem {
              && (p.x-c.radius < ((right+1)*tw - 2048.0f))
              && (p.y+dy > c_y))
             {
-            Console.WriteLine("top " + x + "," + y);
+//            Console.WriteLine("top " + x + "," + y);
                 p.y = c_y-dy-eps;
                 collide(e1, c_x, c_y, -dx, -dy);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
@@ -350,7 +350,7 @@ public class Collision_Solver : Subsystem {
              && (p.x-c.radius < ((right+1)*tw - 2048.0f))
              && (p.y-dy < c_y))
             {
-            Console.WriteLine("bottom " + x + "," + y);
+//            Console.WriteLine("bottom " + x + "," + y);
                 p.y = c_y+dy+eps;
                 collide(e1, c_x, c_y, -dx, dy);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
