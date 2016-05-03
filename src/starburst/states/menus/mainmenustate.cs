@@ -147,7 +147,8 @@ namespace Fab5.Starburst.States {
         }
 
         private void proceed() {
-            this.gameConfig = new Playing.Game_Config() { mode = this.gameMode, enable_soccer = soccerball, num_asteroids = (int)asteroidCount*10 };
+            int asteroid = (int)asteroidCount * 20;
+            this.gameConfig = new Playing.Game_Config() { mode = this.gameMode, enable_soccer = soccerball, num_asteroids = asteroid };
             Starburst.inst().enter_state(new Player_Selection_Menu(this));
         }
 
@@ -250,11 +251,11 @@ namespace Fab5.Starburst.States {
             sprite_batch.DrawString(font, "Asteroids", new Vector2(leftOffset, 220), Color.White);
             String asteroidString = "off";
             if (asteroidCount == asteroids.few)
-                asteroidString = "10";
-            else if (asteroidCount == asteroids.medium)
                 asteroidString = "20";
+            else if (asteroidCount == asteroids.medium)
+                asteroidString = "40";
             else if (asteroidCount == asteroids.many)
-                asteroidString = "30";
+                asteroidString = "60";
             sprite_batch.DrawString(font, "< " + asteroidString + " >", new Vector2(menuOffset, 220), (position.y == (int)options.asteroids ? new Color(Color.Gold, textOpacity) : Color.White));
 
             sprite_batch.DrawString(font, "Map", new Vector2(leftOffset, 280), Color.White);
