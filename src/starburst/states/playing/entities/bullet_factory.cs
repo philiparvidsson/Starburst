@@ -21,7 +21,7 @@
 
 
         private static Component[] weapon1(Entity origin, Weapon weapon, Angle shipAngle) {
-            float shipRadian = 25f; // offset från skeppets mitt där skottet utgår ifrån
+            float shipRadian = 21f; // offset från skeppets mitt där skottet utgår ifrån
             float speed = 600f; // skottets hastighet (kanske ska vara vapenberoende?)
             float lifeTime = 1.5f; // skottets livstid (i sekunder? iaf baserad på dt)
 
@@ -33,7 +33,7 @@
             float cfa = (float)Math.Cos(dAngle);
 
             var pos   = new Position() { x = position.x + shipRadian * cfa, y =  position.y + shipRadian * sfa };
-            var angle = new Angle() { angle = shipAngle.angle + rotationOffset, ang_vel = 20.0f };
+            var angle = new Angle() { angle = shipAngle.angle + rotationOffset, ang_vel = 0.0f };
             var velocity = new Velocity() { x = cfa*speed+shipVel.x, y = sfa*speed+shipVel.y };
 
             Sprite bulletSprite = new Sprite() { texture = bulletTexture1, layer_depth = 1, blend_mode = Sprite.BM_ADD, scale = 0.35f };
@@ -41,11 +41,16 @@
             return new Component[] {
                 new Particle_Emitter() {
                     emit_fn = () => {
+                        var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
+                        var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
+                        var radius = 6.0f * (float)rand.NextDouble();
+                        var speed2  = (20.0f * (float)Math.Pow(rand.NextDouble(), 2.0f));
+
                         return new Component[] {
-                            new Position() { x = pos.x + (float)Math.Cos(2.0f*3.1415f*(float)rand.NextDouble()) * 6.0f * (float)rand.NextDouble(),
-                                             y = pos.y + (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 6.0f * (float)rand.NextDouble() },
-                            new Velocity() { x = velocity.x * 0.05f + (float)Math.Cos(2.0f*3.1415f*(float)rand.NextDouble()) * 20.0f * (float)(0.5f+rand.NextDouble()),
-                                             y = velocity.y * 0.05f + (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 20.0f * (float)(0.5f+rand.NextDouble()) },
+                            new Position() { x = pos.x + (float)Math.Cos(theta1) * radius,
+                                             y = pos.y + (float)Math.Sin(theta1) * radius },
+                            new Velocity() { x = velocity.x * 0.05f + (float)Math.Cos(theta2) * speed2,
+                                             y = velocity.y * 0.05f + (float)Math.Sin(theta2) * speed2 },
                             new Sprite() {
                                 texture = Starburst.inst().get_content<Texture2D>("particle"),
                                 color = new Color(1.0f, 0.6f, 0.2f, 1.0f),
@@ -75,7 +80,7 @@
         }
 
         private static Component[] weapon2(Entity origin, Weapon weapon) {
-            float shipRadian = 27f; // offset från skeppets mitt där skottet utgår ifrån
+            float shipRadian = 23f; // offset från skeppets mitt där skottet utgår ifrån
             float speed = 300f; // skottets hastighet (kanske ska vara vapenberoende?)
             float lifeTime = 5.0f; // skottets livstid (i sekunder? iaf baserad på dt)
 
@@ -88,23 +93,28 @@
             float cfa = (float)Math.Cos(dAngle);
 
             var pos   = new Position() { x = position.x + shipRadian * cfa, y =  position.y + shipRadian * sfa };
-            var angle = new Angle() { angle = shipAngle.angle + rotationOffset, ang_vel = 20.0f };
+            var angle = new Angle() { angle = shipAngle.angle + rotationOffset, ang_vel = 0.0f };
             var velocity = new Velocity() { x = cfa*speed+shipVel.x, y = sfa*speed+shipVel.y };
 
-            Sprite bulletSprite = new Sprite() { texture = bulletTexture2, layer_depth = 1, blend_mode = Sprite.BM_ADD};
+            Sprite bulletSprite = new Sprite() { texture = bulletTexture2, layer_depth = 1, num_frames = 4, frame_width = 32, frame_height = 32, fps = 8.0f};
 
             return new Component[] {
                 new Particle_Emitter() {
                     emit_fn = () => {
+                        var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
+                        var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
+                        var radius = 13.0f * (float)rand.NextDouble();
+                        var speed2  = (20.0f * (float)Math.Pow(rand.NextDouble(), 2.0f));
+
                         return new Component[] {
-                            new Position() { x = pos.x + (float)Math.Cos(2.0f*3.1415f*(float)rand.NextDouble()) * 10.0f * (float)rand.NextDouble(),
-                                             y = pos.y + (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 10.0f * (float)rand.NextDouble() },
-                            new Velocity() { x = velocity.x * 0.05f + (float)Math.Cos(2.0f*3.1415f*(float)rand.NextDouble()) * 20.0f * (float)(0.5f+rand.NextDouble()),
-                                             y = velocity.y * 0.05f + (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 20.0f * (float)(0.5f+rand.NextDouble()) },
+                            new Position() { x = pos.x + (float)Math.Cos(theta1) * radius,
+                                             y = pos.y + (float)Math.Sin(theta1) * radius },
+                            new Velocity() { x = velocity.x * 0.05f + (float)Math.Cos(theta2) * speed2,
+                                             y = velocity.y * 0.05f + (float)Math.Sin(theta2) * speed2 },
                             new Sprite() {
-                                texture = Starburst.inst().get_content<Texture2D>("particle"),
-                                color = new Color(1.0f, 0.2f, 0.1f, 1.0f),
-                                scale = 0.2f + (float)rand.NextDouble() * 1.4f,
+                                texture = Starburst.inst().get_content<Texture2D>("particle2"),
+                                color = new Color(0.9f, 0.7f, 1.0f, 1.0f),
+                                scale = 0.2f + (float)rand.NextDouble() * 0.6f,
                                 blend_mode = Sprite.BM_ADD,
                                 layer_depth = 0.3f
                             },
@@ -123,7 +133,7 @@
                 bulletSprite,
                 //bulletDrawArea,
                 new Bounding_Circle() { radius = 14.0f, ignore_collisions = IG_BULLET, ignore_collisions2 = origin.get_component<Ship_Info>().team },
-                new Mass { mass = 50.0f, restitution_coeff = -1.0f, friction = 0.0f },
+                new Mass { mass = 90.0f, restitution_coeff = -1.0f, friction = 0.0f },
                 new TTL() { alpha_fn = (x, max) => 20.0f-20.0f*x/max, max_time = lifeTime },
                 new Bullet_Info() { damage = weapon.damage, sender = origin, max_speed = speed }
             };

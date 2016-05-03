@@ -51,7 +51,6 @@ namespace Fab5.Engine.Subsystems {
             this.graphicsDevice = graphicsDevice;
         }
 
-
         private void draw_backdrop(SpriteBatch sprite_batch, Camera camera) {
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
 
@@ -103,8 +102,9 @@ namespace Fab5.Engine.Subsystems {
             int right  = (int)(left + w/tw)+1;
             int bottom = (int)(top  + h/th)+1;
 
-            float xfrac = left*tw - (int)(camera.position.x+2048.0f-w*0.5f);
-            float yfrac = top *th - (int)(camera.position.y+2048.0f-h*0.5f);
+            float xfrac = left*tw - (camera.position.x+2048.0f-w*0.5f);
+            float yfrac = top *th - (camera.position.y+2048.0f-h*0.5f);
+//            System.Console.WriteLine(yfrac);
 
             xfrac *= camera.zoom;
             yfrac *= camera.zoom;
