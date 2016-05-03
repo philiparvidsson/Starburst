@@ -33,7 +33,8 @@ namespace Fab5.Starburst.States {
             base.update(t, dt);
             elapsedTime += dt;
 
-            var skip_button_pressed = Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter);
+            KeyboardState state = Keyboard.GetState();
+            var skip_button_pressed = state.IsKeyDown(Keys.Enter);
 
             for (int i = 0; i <= 3; i++) {
                 if (GamePad.GetState((PlayerIndex)i).IsConnected && GamePad.GetState((PlayerIndex)i).Buttons.Start == ButtonState.Pressed) {
@@ -47,12 +48,8 @@ namespace Fab5.Starburst.States {
                 return;
             }
 
-            if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape)) {
-                Starburst.inst().Quit();
-            }
-
-            if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftAlt) &&
-                Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter))
+            if (state.IsKeyDown(Keys.LeftAlt) &&
+                state.IsKeyDown(Keys.Enter))
             {
                 Starburst.inst().GraphicsMgr.ToggleFullScreen();
             }
@@ -72,7 +69,7 @@ namespace Fab5.Starburst.States {
                 sprite_batch.Draw(splash, destRect, new Color(255, 255, 255, 1-quadInOut(outDelay, 0, 1)));
                 //sprite_batch.DrawString(font, "Out: " + (1-quadInOut(outDelay, 0, 1)), new Vector2(20, 20), Color.White);
             }
-            String text = "Press start to skip";
+            String text = "Press the any key to skip";
             Vector2 textSize = font.MeasureString(text);
             sprite_batch.DrawString(font, text, new Vector2(vp.Width * .5f - textSize.X * .5f, vp.Height - textSize.Y - 20), Color.White);
 
