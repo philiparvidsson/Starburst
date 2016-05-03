@@ -130,7 +130,9 @@ public class Playing_State : Game_State {
         create_entity(new FpsCounter());
 
         for(int i = 0; i < inputs.Count; i++) {
-            var player = create_entity(Player_Ship.create_components(inputs[i], game_conf));
+            if (inputs[i] == null)
+                continue;
+            var player = create_entity(Player_Ship.create_components(inputs[i], game_conf, i < 2 ? 1 : 2));
             var player_spawn = spawner.get_player_spawn_pos(player, tile_map);
             player.get_component<Position>().x = player_spawn.x;
             player.get_component<Position>().y = player_spawn.y;

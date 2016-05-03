@@ -68,9 +68,11 @@ namespace Fab5.Starburst.States {
                     if (position.y == 2)
                         inputs[(int)position.x] = input;
                 }
+                /*
                 // ta bort tomma inputs
                 while (inputs.Contains(null))
                     inputs.Remove(null);
+                */
                 Starburst.inst().enter_state(new Playing_State(inputs, parent.gameConfig));
             }
         }

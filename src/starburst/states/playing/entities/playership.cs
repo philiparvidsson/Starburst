@@ -16,7 +16,7 @@
         public static System.Random rand = new System.Random();
 
         static int lol = 1;
-        public static Component[] create_components(Inputhandler input ,Game_Config conf)
+        public static Component[] create_components(Inputhandler input, Game_Config conf, int team)
         {
             int pindex = lol;
             /*
@@ -40,7 +40,7 @@
 //                ship = "ships/qship11";
 
             lol++;
-            int team = (lol % 2)+1;
+            //int team = (lol % 2)+1;
             if (conf.mode != Game_Config.GM_TEAM_DEATHMATCH) {
                 team = pindex; // all vs all
             }
