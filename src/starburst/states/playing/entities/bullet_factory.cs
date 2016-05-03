@@ -38,6 +38,8 @@
 
             Sprite bulletSprite = new Sprite() { texture = bulletTexture1, layer_depth = 1, blend_mode = Sprite.BM_ADD, scale = 0.35f };
 
+            var particle_tex = Starburst.inst().get_content<Texture2D>("particle");
+
             return new Component[] {
                 new Particle_Emitter() {
                     emit_fn = () => {
@@ -52,7 +54,7 @@
                             new Velocity() { x = velocity.x * 0.05f + (float)Math.Cos(theta2) * speed2,
                                              y = velocity.y * 0.05f + (float)Math.Sin(theta2) * speed2 },
                             new Sprite() {
-                                texture = Starburst.inst().get_content<Texture2D>("particle"),
+                                texture = particle_tex,
                                 color = new Color(1.0f, 0.6f, 0.2f, 1.0f),
                                 scale = 0.2f + (float)rand.NextDouble() * 0.6f,
                                 blend_mode = Sprite.BM_ADD,

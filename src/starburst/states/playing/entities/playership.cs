@@ -60,6 +60,7 @@
             var playerrot = new  Angle() { angle = 0 };
             var playerpos = new Position() {x = 300, y = 200 };
             var playervel = new Velocity() {x = 0.0f, y = 0.0f };
+            var particle_tex = Starburst.inst().get_content<Texture2D>("particle");
             return new Component[] {
                 new Particle_Emitter() {
                     emit_fn = () => {
@@ -70,7 +71,7 @@
                                 new Velocity() { x = playervel.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 250.0f * (float)(rand.NextDouble()+0.5) * (input.throttle+0.3f),
                                     y = playervel.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 250.0f * (float)(rand.NextDouble()+0.5) * (input.throttle + 0.3f) },
                                 new Sprite() {
-                                    texture = Starburst.inst().get_content<Texture2D>("particle"),
+                                    texture = particle_tex,
                                     color = new Color(1.0f, 0.7f, 0.3f) * 0.75f,
                                     scale = 0.9f + (float)rand.NextDouble() * 1.3f,
                                     blend_mode = Sprite.BM_ADD,
@@ -88,7 +89,7 @@
                                 new Velocity() { x = playervel.x*0.5f - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 1.5) * 90.0f * (float)(rand.NextDouble()+0.5) * (input.throttle+0.3f),
                                 y = playervel.y*0.5f - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 1.5) * 90.0f * (float)(rand.NextDouble()+0.5) * (input.throttle + 0.3f) },
                                 new Sprite() {
-                                    texture = Starburst.inst().get_content<Texture2D>("particle"),
+                                    texture = particle_tex,
                                     color = new Color(1.0f, 0.7f, 0.2f) * 0.95f,
                                     scale = 0.4f + (float)rand.NextDouble() * 0.3f,
                                     blend_mode = Sprite.BM_ADD,

@@ -265,7 +265,8 @@ public abstract class Game_State {
     }
 
     private Comparer<Entity> sort_on_blend_mode = Comparer<Entity>.Create((e1, e2) => e1.get_component<Sprite>().blend_mode.CompareTo(e2.get_component<Sprite>().blend_mode));
-    private Comparer<Entity> sort_on_layer_depth = Comparer<Entity>.Create((e1, e2) => e1.get_component<Sprite>().layer_depth.CompareTo(e2.get_component<Sprite>().layer_depth));
+    //private Comparer<Entity> sort_on_layer_depth = Comparer<Entity>.Create((e1, e2) => e1.get_component<Sprite>().layer_depth.CompareTo(e2.get_component<Sprite>().layer_depth));
+    private Comparer<Entity> sort_on_texture = Comparer<Entity>.Create((e1, e2) => e1.get_component<Sprite>().texture.Name.CompareTo(e2.get_component<Sprite>().texture.Name));
 
     public virtual void draw(float t, float dt) {
         if (resort_sprites) {
@@ -273,49 +274,9 @@ public abstract class Game_State {
 
 
             var sprites = get_entities_fast(typeof(Sprite));
-            int num_sprites = sprites.Count;
-// Only re-sort on new sprites... lol
+            // Only re-sort on new sprites... lol
+            //sprites.Sort(sort_on_texture);
             sprites.Sort(sort_on_blend_mode);
-            //sprites.Sort(sort_on_layer_depth);
-            /*for (int i = 0; i < num_sprites; i++) {
-                var s1 = sprites[i].get_component<Sprite>();
-
-                for (int j = (i+1); j < num_sprites; j++) {
-                    var s2 = sprites[j].get_component<Sprite>();
-
-                    if (s1.blend_mode > s2.blend_mode) {
-                        var tmp = sprites[i];
-                        sprites[i] = sprites[j];
-                        sprites[j] = tmp;
-                    }
-                }
-            }*/
-
-            /*for (int i = 0; i < num_sprites; i++) {
-                var s1 = sprites[i].get_component<Sprite>();
-                for (int j = (i+1); j < num_sprites; j++) {
-                    var s2 = sprites[j].get_component<Sprite>();
-
-                    if (string.Compare(s1.texture.Name, s2.texture.Name) > 0) {
-                        var tmp = sprites[i];
-                        sprites[i] = sprites[j];
-                        sprites[j] = tmp;
-                    }
-                }
-            }
-
-            for (int i = 0; i < num_sprites; i++) {
-                var s1 = sprites[i].get_component<Sprite>();
-                for (int j = (i+1); j < num_sprites; j++) {
-                    var s2 = sprites[j].get_component<Sprite>();
-
-                    if (s1.layer_depth < s2.layer_depth) {
-                        var tmp = sprites[i];
-                        sprites[i] = sprites[j];
-                        sprites[j] = tmp;
-                    }
-                }
-            }*/
         }
         foreach (var subsystem in subsystems) {
             subsystem.draw(t, dt);
