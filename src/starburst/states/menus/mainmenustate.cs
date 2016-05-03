@@ -50,7 +50,7 @@ namespace Fab5.Starburst.States {
         int gameMode = 0; // 0 för free for all, 1 för team
         bool soccerball = true; // fotboll
         bool captureTheFlag = false;
-        asteroids asteroidCount = asteroids.few;
+        asteroids asteroidCount = asteroids.medium;
         //int map = 0;
         private Texture2D map1;
         public Playing.Game_Config gameConfig;
