@@ -332,7 +332,7 @@ namespace Fab5.Engine.Subsystems {
                 sprite_batch.Draw(tex,
                                   new Vector2(p_x, p_y),
                                   null,
-                                  Color.White * 0.65f,
+                                  Color.White * 0.9f,
                                   r,
                                   new Vector2(player_indicator_tex.Width/2.0f, player_indicator_tex.Height/2.0f),
                                   current.zoom,
