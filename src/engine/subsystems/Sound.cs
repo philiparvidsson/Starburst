@@ -55,7 +55,7 @@ namespace Fab5.Engine.Subsystems
         }
         public override void cleanup()
         {
-            MediaPlayer.Stop();
+            //MediaPlayer.Stop();
         }
 
         private Dictionary<string, string> soundlib = new Dictionary<string, string>() {
