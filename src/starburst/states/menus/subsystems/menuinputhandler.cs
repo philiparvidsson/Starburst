@@ -44,9 +44,8 @@
                 var inputHandler = entity.get_component<Inputhandler>();
 
                 if (inputHandler.device == Inputhandler.InputType.Keyboard) {
-                    if (is_key_clicked(inputHandler.up, currentKeyboardState, inputHandler.keyboardState)) {
+                    if (is_key_clicked(inputHandler.up, currentKeyboardState, inputHandler.keyboardState))
                         Fab5_Game.inst().message("up", new { Player = entity });
-                    }
                     if (is_key_clicked(inputHandler.left, currentKeyboardState, inputHandler.keyboardState))
                         Fab5_Game.inst().message("left", new { Player = entity });
                     if (is_key_clicked(inputHandler.down, currentKeyboardState, inputHandler.keyboardState))
@@ -57,7 +56,6 @@
                         Fab5_Game.inst().message("select", new { Player = entity });
                     if (is_key_clicked(inputHandler.secondary_fire, currentKeyboardState, inputHandler.keyboardState))
                         Fab5_Game.inst().message("back", new { Player = entity });
-
                 }
                 else {
                     GamePadState currentState = GamePad.GetState(inputHandler.gp_index);
@@ -82,9 +80,8 @@
                     Fab5_Game.inst().message("fullscreen", null);
                 else if (is_key_clicked(Keys.Enter, currentKeyboardState, inputHandler.keyboardState))
                     Fab5_Game.inst().message("start", null);
-
-                if (is_key_clicked(Keys.P, currentKeyboardState, inputHandler.keyboardState))
-                    Fab5_Game.inst().message("mute", null);
+                else if (is_key_clicked(Keys.Escape, currentKeyboardState, inputHandler.keyboardState))
+                    Fab5_Game.inst().message("escape", null);
 
                 inputHandler.keyboardState = currentKeyboardState;
             }

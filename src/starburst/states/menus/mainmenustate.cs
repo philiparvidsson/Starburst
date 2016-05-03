@@ -131,9 +131,6 @@ namespace Fab5.Starburst.States {
                     Starburst.inst().message("play_sound", new { name = "menu_click" });
                     proceed();
                 }
-                else if (msg.Equals("back")) {
-                    Starburst.inst().message("play_sound", new { name = "menu_click" });
-                }
             }
         }
 

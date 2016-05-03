@@ -122,12 +122,10 @@
     <Content Include="src\starburst\content\ball.png" />
     <Content Include="src\starburst\content\beams1.png" />
     <Content Include="src\starburst\content\beams2.png" />
-    <Content Include="src\starburst\content\controller.png" />
     <Content Include="src\starburst\content\controller_rectangle.png" />
     <Content Include="src\starburst\content\EnergiAtlas.png" />
     <Content Include="src\starburst\content\indicator.png" />
     <Content Include="src\starburst\content\indicator2.png" />
-    <Content Include="src\starburst\content\keyboard.png" />
     <Content Include="src\starburst\content\map.png" />
     <Content Include="src\starburst\content\map\tiles.png" />
     <Content Include="src\starburst\content\menu\Key.png" />
