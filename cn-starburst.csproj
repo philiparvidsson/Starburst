@@ -129,10 +129,7 @@
     <Content Include="src\starburst\content\map.png" />
     <Content Include="src\starburst\content\map\tiles.png" />
     <Content Include="src\starburst\content\menu\Key.png" />
-    <Content Include="src\starburst\content\menu\Xbox_A.png" />
     <Content Include="src\starburst\content\menu\Xbox_A_white.png" />
-    <Content Include="src\starburst\content\menu\Xbox_B.png" />
-    <Content Include="src\starburst\content\menu\Xbox_L.png" />
     <Content Include="src\starburst\content\menu\Xbox_L_white.png" />
     <Content Include="src\starburst\content\particle.png" />
     <Content Include="src\starburst\content\ships\ship11.png" />
@@ -158,9 +155,7 @@
     <Content Include="src\starburst\content\sound\effects\throw_knife.wav" />
     <Content Include="src\starburst\content\sound\effects\thrust.wav" />
     <Content Include="src\starburst\content\splash.png" />
-    <Content Include="src\starburst\content\tgrid.png" />
     <Content Include="src\starburst\content\turbo_powerup.png" />
-    <Content Include="src\starburst\content\wbound.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

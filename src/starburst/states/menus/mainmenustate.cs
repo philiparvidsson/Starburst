@@ -18,6 +18,7 @@ namespace Fab5.Starburst.States {
         Texture2D background;
         Texture2D rectBg;
         SpriteFont font;
+        private SpriteFont largeFont;
         SpriteBatch sprite_batch;
         List<bool> gamepads;
         public Entity soundMgr;
@@ -51,14 +52,24 @@ namespace Fab5.Starburst.States {
         bool soccerball = true; // fotboll
         bool captureTheFlag = false;
         asteroids asteroidCount = asteroids.medium;
-        //int map = 0;
-        private Texture2D map1;
+        int map = 1;
+        int maps = 4;
         public Playing.Game_Config gameConfig;
+        private Texture2D map1;
+        private Texture2D map0;
+        private Texture2D map2;
+        private int largeMapSize = 256;
+        private int smallMapSize = 128;
+
+        private Texture2D controller_a_button;
+        private Texture2D keyboard_key;
+        private Texture2D controller_l_stick;
 
         public override void on_message(string msg, dynamic data) {
 
             if (btnDelay <= 0) {
                 if (msg.Equals("fullscreen")) {
+                    btnDelay = .5f;
                     Starburst.inst().GraphicsMgr.ToggleFullScreen();
                 }
                 else if (msg.Equals("up")) {
@@ -97,6 +108,14 @@ namespace Fab5.Starburst.States {
                         else
                             asteroidCount--;
                     }
+                    else if (cursorPosition.y == (int)options.map) {
+                        if (map <= 1) { 
+                            map = maps;
+                        }
+                        else
+                            map--;
+                        updateMaps();
+                    }
                     Starburst.inst().message("play_sound", new { name = "menu_click" });
                 }
                 else if (msg.Equals("right")) {
@@ -116,6 +135,13 @@ namespace Fab5.Starburst.States {
                         else
                             asteroidCount++;
                     }
+                    else if (cursorPosition.y == (int)options.map) {
+                        if (map == maps)
+                            map = 1;
+                        else
+                            map++;
+                        updateMaps();
+                    }
                     Starburst.inst().message("play_sound", new { name = "menu_click" });
                 }
                 else if (msg.Equals("select")) {
@@ -132,6 +158,12 @@ namespace Fab5.Starburst.States {
                     proceed();
                 }
             }
+        }
+
+        private void updateMaps() {
+            map0 = Starburst.inst().get_content<Texture2D>("menu/map" + (map > 1 ? map-1 : maps));
+            map1 = Starburst.inst().get_content<Texture2D>("menu/map" + map);
+            map2 = Starburst.inst().get_content<Texture2D>("menu/map" + (map < maps ? map+1 : 1));
         }
 
         private void proceed() {
@@ -163,7 +195,11 @@ namespace Fab5.Starburst.States {
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
             rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>("sector034");
-            map1 = Starburst.inst().get_content<Texture2D>("map");
+            largeFont = Starburst.inst().get_content<SpriteFont>("large");
+            updateMaps();
+            controller_a_button = Starburst.inst().get_content<Texture2D>("menu/Xbox_A_white");
+            keyboard_key = Starburst.inst().get_content<Texture2D>("menu/Key");
+            controller_l_stick = Starburst.inst().get_content<Texture2D>("menu/Xbox_L_white");
 
             Inputhandler wasd = new Inputhandler() {
                 left = Keys.A,
@@ -233,6 +269,10 @@ namespace Fab5.Starburst.States {
             sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             sprite_batch.Draw(background, destinationRectangle: new Rectangle(0, 0, vp.Width, vp.Height), color: Color.White);
 
+            String logo = "Starburst";
+            Vector2 logoSize = largeFont.MeasureString(logo);
+            sprite_batch.DrawString(largeFont, logo, new Vector2(vp.Width*.5f - logoSize.X*.5f, 20), Color.Gold);
+
             String ctfString = "Capture the flag";
             Vector2 leftTextSize = font.MeasureString(ctfString);
             int leftTextX = (int)(vp.Width * .5f - leftTextSize.X - middleSpacing);
@@ -260,9 +300,28 @@ namespace Fab5.Starburst.States {
             Vector2 mapTextSize = font.MeasureString(map);
             sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, 280), Color.White);
             // visa pilar eller något?
-            sprite_batch.Draw(map1, new Rectangle((int)(vp.Width*.5f - map1.Width*.5f), 310, map1.Width, map1.Height), Color.White);
-            sprite_batch.DrawString(font, "<", new Vector2((int)(vp.Width*.5f-middleSpacing-10), 310 + map1.Height + 10), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
-            sprite_batch.DrawString(font, ">", new Vector2((int)(vp.Width * .5f + middleSpacing), 310 + map1.Height + 10), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
+            int mapY = 330;
+            sprite_batch.Draw(map0, new Rectangle((int)(vp.Width*.5f - largeMapSize*.5f - smallMapSize - 20), (int)(mapY + (largeMapSize - smallMapSize) * .5f), smallMapSize, smallMapSize), Color.White);
+            sprite_batch.Draw(map2, new Rectangle((int)(vp.Width*.5f + largeMapSize * .5f + 20), (int)(mapY + (largeMapSize-smallMapSize)*.5f), smallMapSize, smallMapSize), Color.White);
+            sprite_batch.Draw(map1, new Rectangle((int)(vp.Width*.5f - largeMapSize * .5f), mapY, largeMapSize, largeMapSize), Color.White);
+            
+            sprite_batch.DrawString(font, "<", new Vector2((int)(vp.Width*.5f-middleSpacing-10), mapY + largeMapSize + 10), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, ">", new Vector2((int)(vp.Width * .5f + middleSpacing), mapY + largeMapSize + 10), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
+            
+            // kontroll-"tutorial"
+
+            if (gamepads.Contains(true)) {
+                String text_ok = "Ok";
+                String text_select = "Select";
+                Vector2 okSize = font.MeasureString(text_ok);
+                int controllerBtnSize = 50; // ikon för knapp
+                int yPos = (int)(vp.Height - controllerBtnSize - 15);
+                int heightDiff = (int)(controllerBtnSize - okSize.Y);
+                sprite_batch.Draw(controller_a_button, new Rectangle(20, yPos, controllerBtnSize, controllerBtnSize), Color.White);
+                sprite_batch.DrawString(font, text_ok, new Vector2(20 + controllerBtnSize + 10, yPos + heightDiff * .5f), Color.White);
+                sprite_batch.Draw(controller_l_stick, new Rectangle((int)(20 + controllerBtnSize + 10 + okSize.X + 10), yPos, controllerBtnSize, controllerBtnSize), Color.White);
+                sprite_batch.DrawString(font, text_select, new Vector2(20 + controllerBtnSize + 10 + okSize.X + 10 + controllerBtnSize + 10, yPos + heightDiff * .5f), Color.White);
+            }
 
             String text = "Continue to player selection";
             Vector2 textSize = font.MeasureString(text);
