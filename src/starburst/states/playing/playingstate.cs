@@ -180,6 +180,7 @@ public class Playing_State : Game_State {
 
                     if (dist < min_dist) {
                         colliding = true;
+                        num_fails++;
                         break;
                     }
                 }
