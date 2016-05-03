@@ -8,6 +8,7 @@ namespace Fab5.Starburst.States {
     using Fab5.Starburst.States.Playing.Entities;
     using Main_Menu.Entities;
     using Main_Menu.Subsystems;
+    using Menus.Subsystems;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
@@ -179,10 +180,13 @@ namespace Fab5.Starburst.States {
         }
 
         public override void init() {
+            sprite_batch = new SpriteBatch(Starburst.inst().GraphicsDevice);
+
             add_subsystems(
                 new Menu_Inputhandler_System(),
                 new Sound(),
-                new Particle_System()
+                new Particle_System(),
+                new Background_Renderer(sprite_batch)
             );
 
             outDelay = delay + inDuration + displayTime;
@@ -222,7 +226,6 @@ namespace Fab5.Starburst.States {
                 }
             }
 
-            sprite_batch = new SpriteBatch(Starburst.inst().GraphicsDevice);
         }
 
         public override void update(float t, float dt) {
@@ -253,8 +256,8 @@ namespace Fab5.Starburst.States {
             }
         }
         public override void draw(float t, float dt) {
-            base.draw(t, dt);
             Starburst.inst().GraphicsDevice.Clear(Color.Black);
+            base.draw(t, dt);
             Viewport vp = sprite_batch.GraphicsDevice.Viewport;
 
             int middleSpacing = 20;
@@ -268,7 +271,7 @@ namespace Fab5.Starburst.States {
                 position = new Position();
 
             sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
-            sprite_batch.Draw(background, destinationRectangle: new Rectangle(0, 0, vp.Width, vp.Height), color: Color.White);
+            //sprite_batch.Draw(background, destinationRectangle: new Rectangle(0, 0, vp.Width, vp.Height), color: Color.White);
 
             String logo = "Starburst";
             Vector2 logoSize = largeFont.MeasureString(logo);
