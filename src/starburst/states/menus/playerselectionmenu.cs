@@ -221,7 +221,9 @@ namespace Fab5.Starburst.States {
 
             // load textures
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
-            rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
+            //rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
+            rectBg = new Texture2D(Fab5_Game.inst().GraphicsDevice, 1, 1);
+            rectBg.SetData(new Color[]{Color.Black},1,1);//Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>("sector034");
             smallFont = Starburst.inst().get_content<SpriteFont>("small");
             controller_a_button = Starburst.inst().get_content<Texture2D>("menu/Xbox_A_white");

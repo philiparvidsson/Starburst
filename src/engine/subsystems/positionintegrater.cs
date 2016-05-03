@@ -5,7 +5,6 @@ using Fab5.Engine.Core;
 
 public class Position_Integrator : Subsystem {
     public override void update(float t, float dt) {
-
         var entities = Fab5_Game.inst().get_entities_fast(typeof (Velocity));
         int num_entities = entities.Count;
 
@@ -17,14 +16,13 @@ public class Position_Integrator : Subsystem {
             var mass     = entity.get_component<Mass>();
 
             if (mass != null) {
-                velocity.x -= velocity.x * dt * mass.drag_coeff;
-                velocity.y -= velocity.y * dt * mass.drag_coeff;
+                var dtm = dt*mass.drag_coeff;
+                velocity.x -= velocity.x * dtm;
+                velocity.y -= velocity.y * dtm;
             }
 
             position.x += velocity.x * dt;
             position.y += velocity.y * dt;
-
-
 
             if (angle != null) {
                 angle.angle += angle.ang_vel * dt;
