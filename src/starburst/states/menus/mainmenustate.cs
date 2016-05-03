@@ -149,11 +149,11 @@ namespace Fab5.Starburst.States {
         private void proceed() {
             int asteroid = 0;
             if (asteroidCount == asteroids.few)
-                asteroid = 15;
+                asteroid = 20;
             else if (asteroidCount == asteroids.medium)
-                asteroid = 30;
+                asteroid = 40;
             else if (asteroidCount == asteroids.many)
-                asteroid = 50;
+                asteroid = 80;
             this.gameConfig = new Playing.Game_Config() { mode = this.gameMode, enable_soccer = soccerball, num_asteroids = asteroid };
             Starburst.inst().enter_state(new Player_Selection_Menu(this));
         }
