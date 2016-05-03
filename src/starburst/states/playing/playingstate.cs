@@ -155,6 +155,7 @@ public class Playing_State : Game_State {
 
             Position ap;
 
+            int num_fails = 0;
             bool colliding = false;
             do {
                 colliding = false;
@@ -181,6 +182,12 @@ public class Playing_State : Game_State {
                         colliding = true;
                         break;
                     }
+                }
+
+                if (num_fails > 1000) {
+                    // failed to spawn this one.
+                    asteroid.destroy();
+                    break;
                 }
             } while (colliding);
 
