@@ -18,6 +18,7 @@ public interface Powerup_Impl {
 
 public class Powerup : Component {
     public Powerup_Impl impl;
+
     public void begin(Entity holder, Entity powerup) {
         holder.get_component<Ship_Info>().powerups.Add(impl);
 

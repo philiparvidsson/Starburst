@@ -29,7 +29,7 @@ public class Position_Integrator : Subsystem {
             if (angle != null) {
                 angle.angle += angle.ang_vel * dt;
 
-                angle.ang_vel -= 0.1f * angle.ang_vel * dt;
+                angle.ang_vel -= angle.drag * angle.ang_vel * dt;
             }
         }
     }
