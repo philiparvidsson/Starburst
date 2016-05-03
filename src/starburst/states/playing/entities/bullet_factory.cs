@@ -21,7 +21,7 @@
 
 
         private static Component[] weapon1(Entity origin, Weapon weapon, Angle shipAngle) {
-            float shipRadian = 30f; // offset från skeppets mitt där skottet utgår ifrån
+            float shipRadian = 25f; // offset från skeppets mitt där skottet utgår ifrån
             float speed = 600f; // skottets hastighet (kanske ska vara vapenberoende?)
             float lifeTime = 1.5f; // skottets livstid (i sekunder? iaf baserad på dt)
 
@@ -75,7 +75,7 @@
         }
 
         private static Component[] weapon2(Entity origin, Weapon weapon) {
-            float shipRadian = 33f; // offset från skeppets mitt där skottet utgår ifrån
+            float shipRadian = 27f; // offset från skeppets mitt där skottet utgår ifrån
             float speed = 300f; // skottets hastighet (kanske ska vara vapenberoende?)
             float lifeTime = 5.0f; // skottets livstid (i sekunder? iaf baserad på dt)
 

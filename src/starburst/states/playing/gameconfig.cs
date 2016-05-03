@@ -9,7 +9,7 @@ public class Game_Config {
 
     public bool enable_soccer = true;
 
-    public int num_asteroids = 30;;
+    public int num_asteroids = 30;
 
     public float music_vol = 0.7f;
 

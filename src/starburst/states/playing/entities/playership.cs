@@ -116,7 +116,7 @@
                 },
                 new Ship_Info(5,130,100,100) { team = team, pindex = pindex },
                 new Bounding_Circle() { radius = 20.0f, ignore_collisions2 = ig_value },
-                new Mass() { mass = 15.0f, restitution_coeff = 0.6f },
+                new Mass() { mass = 15.0f, restitution_coeff = 0.6f, friction = 0.1f },
                 new Primary_Weapon(),
                 new Secondary_Weapon(),
                 new Score()

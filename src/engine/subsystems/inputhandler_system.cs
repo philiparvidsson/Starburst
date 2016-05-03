@@ -90,6 +90,7 @@
                 else {
                     GamePadState state = GamePad.GetState(input.gp_index);
                     turn = state.ThumbSticks.Left.X;
+                    //turn = Math.Sign((float)Math.Atan2(-state.ThumbSticks.Left.Y, state.ThumbSticks.Left.X) - angle.angle) * 10.0f;;
                     input.throttle = state.Triggers.Right - state.Triggers.Left;
 
                     if (state.Buttons.A == ButtonState.Pressed) {
