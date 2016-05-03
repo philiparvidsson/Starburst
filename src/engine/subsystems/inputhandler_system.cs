@@ -96,7 +96,7 @@
                     if (state.Buttons.A == ButtonState.Pressed) {
                         fire(entity, ship, primaryWeapon);
                     }
-                    if (state.Buttons.B == ButtonState.Pressed) {
+                    if (state.Buttons.X == ButtonState.Pressed) {
                         fire(entity, ship, secondaryWeapon);
                     }
                 }
