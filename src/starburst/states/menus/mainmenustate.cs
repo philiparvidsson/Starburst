@@ -109,7 +109,7 @@ namespace Fab5.Starburst.States {
                             asteroidCount--;
                     }
                     else if (cursorPosition.y == (int)options.map) {
-                        if (map <= 1) { 
+                        if (map <= 1) {
                             map = maps;
                         }
                         else
@@ -193,7 +193,8 @@ namespace Fab5.Starburst.States {
 
             // load textures
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
-            rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
+            rectBg = new Texture2D(Fab5_Game.inst().GraphicsDevice, 1, 1);
+            rectBg.SetData(new Color[]{Color.Black},1,1);//Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>("sector034");
             largeFont = Starburst.inst().get_content<SpriteFont>("large");
             updateMaps();
@@ -304,10 +305,10 @@ namespace Fab5.Starburst.States {
             sprite_batch.Draw(map0, new Rectangle((int)(vp.Width*.5f - largeMapSize*.5f - smallMapSize - 20), (int)(mapY + (largeMapSize - smallMapSize) * .5f), smallMapSize, smallMapSize), Color.White);
             sprite_batch.Draw(map2, new Rectangle((int)(vp.Width*.5f + largeMapSize * .5f + 20), (int)(mapY + (largeMapSize-smallMapSize)*.5f), smallMapSize, smallMapSize), Color.White);
             sprite_batch.Draw(map1, new Rectangle((int)(vp.Width*.5f - largeMapSize * .5f), mapY, largeMapSize, largeMapSize), Color.White);
-            
+
             sprite_batch.DrawString(font, "<", new Vector2((int)(vp.Width*.5f-middleSpacing-10), mapY + largeMapSize + 10), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
             sprite_batch.DrawString(font, ">", new Vector2((int)(vp.Width * .5f + middleSpacing), mapY + largeMapSize + 10), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
-            
+
             // kontroll-"tutorial"
 
             if (gamepads.Contains(true)) {

@@ -8,7 +8,7 @@
     using Microsoft.Xna.Framework;
     using Components;
     public static class Bullet_Factory {
-        const int IG_BULLET = 179;// random id to make bullets not collide with each other
+        public const int IG_BULLET = 179;// random id to make bullets not collide with each other
 
     static System.Random rand = new System.Random();
 
@@ -98,7 +98,7 @@
             var angle = new Angle() { angle = shipAngle.angle + rotationOffset, ang_vel = 0.0f };
             var velocity = new Velocity() { x = cfa*speed+shipVel.x, y = sfa*speed+shipVel.y };
 
-            Sprite bulletSprite = new Sprite() { texture = bulletTexture2, layer_depth = 1, num_frames = 4, frame_width = 32, frame_height = 32, fps = 8.0f};
+            Sprite bulletSprite = new Sprite() { blend_mode = Sprite.BM_ADD, texture = bulletTexture2, layer_depth = 1, num_frames = 4, frame_width = 32, frame_height = 32, fps = 8.0f};
 
             var bounce_counter = 0;
             return new Component[] {

@@ -63,27 +63,15 @@ set Target=%1
 if "%Target%"=="" set Target=all
 
 :: Find content and build it with MGCB.
-set Content=
-
-for /R %ContentDir% %%Q in (*.fx; *.jpg; *.png; *.spritefont) do (
-    call set "Content=%%Content%% /build:"%%Q""
-)
-
-for /R %ContentDir%\sound\effects %%Q in (*.mp3; *.wav) do (
-    call set "Content=%%Content%% /processor:SoundEffectProcessor /build:"%%Q""
-)
-
-for %%Q in (%ContentDir%\sound\*.mp3; %ContentDir%\sound\*.wav) do (
-    call set "Content=%%Content%% /processor:SongProcessor /build:"%%Q""
-)
+rem set Content=
 
 :: Find source code files.
 set Sources=
 for /R %SourcesDir% %%Q in (*.cs) do call set "Sources=%%Sources%% "%%Q""
 
 if "%Target%"=="all" (
-    call %Self%  program
-    if not "%Content%"=="" call %Self% content
+    call %Self% program
+    call %Self% content
 ) else if "%Target%"=="clean" (
     echo Cleaning...
     del %OutputDir%\%Exe%
@@ -93,7 +81,28 @@ if "%Target%"=="all" (
     echo Building content...
     if not exist "%OutputDir%" mkdir %OutputDir%
     if not exist "%IntermDir%" mkdir %IntermDir%
-    %Mgcb% %MgcbFlags% %Content%>NUL
+
+    echo #mgcb temp file>content.mgcb
+    for %%Q in (%MgcbFlags%) do (
+        echo %%Q>>content.mgcb
+    )
+
+    for /R %ContentDir% %%Q in (*.fx; *.jpg; *.png; *.spritefont) do (
+        echo /build:%%Q>>content.mgcb
+    )
+
+    for /R %ContentDir%\sound\effects %%Q in (*.mp3; *.wav) do (
+        echo /processor:SoundEffectProcessor>>content.mgcb
+        echo /build:%%Q>>content.mgcb
+    )
+
+    for %%Q in (%ContentDir%\sound\*.mp3; %ContentDir%\sound\*.wav) do (
+        echo /processor:SongProcessor>>content.mgcb
+        echo /build:%%Q>>content.mgcb
+    )
+
+    %Mgcb% /@:content.mgcb>nul
+    del content.mgcb
 ) else if "%Target%"=="program" (
     echo Building program...
     if not exist "%OutputDir%" mkdir %OutputDir%
