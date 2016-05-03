@@ -74,89 +74,91 @@ namespace Fab5.Starburst.States {
         }
 
         public override void on_message(string msg, dynamic data) {
-            if(msg.Equals("fullscreen")) {
-                Starburst.inst().GraphicsMgr.ToggleFullScreen();
-            }
-            else if(msg.Equals("start")) {
-                tryStartGame();
-            }
-
-            if (msg.Equals("up")) {
-                Entity entity = data.Player;
-                var position = entity.get_component<Position>();
-                if (position.y == 1) {
-                    position.y -= 1;
-                    playerSlots[(int)position.x] = SlotStatus.Empty;
-                    position.x = 0;
-
-                    Starburst.inst().message("play_sound", new { name = "menu_click" });
+            if (btnDelay <= 0) {
+                if (msg.Equals("fullscreen")) {
+                    Starburst.inst().GraphicsMgr.ToggleFullScreen();
                 }
-            }
-            else if (msg.Equals("left")) {
-                Entity entity = data.Player;
-                var position = entity.get_component<Position>();
-                var players = Starburst.inst().get_entities_fast(typeof(Inputhandler));
-                if (position.y == 1) {
-                    for (int x = (int)position.x - 1; x >= 0; x--) {
-                        if (playerSlots[x] == SlotStatus.Empty) {
-                            playerSlots[(int)position.x] = SlotStatus.Empty;
-                            position.x = x;
-                            playerSlots[x] = SlotStatus.Hovering;
-                            Starburst.inst().message("play_sound", new { name = "menu_click" });
-                            break;
+                else if (msg.Equals("start")) {
+                    tryStartGame();
+                }
+
+                if (msg.Equals("up")) {
+                    Entity entity = data.Player;
+                    var position = entity.get_component<Position>();
+                    if (position.y == 1) {
+                        position.y -= 1;
+                        playerSlots[(int)position.x] = SlotStatus.Empty;
+                        position.x = 0;
+
+                        Starburst.inst().message("play_sound", new { name = "menu_click" });
+                    }
+                }
+                else if (msg.Equals("left")) {
+                    Entity entity = data.Player;
+                    var position = entity.get_component<Position>();
+                    var players = Starburst.inst().get_entities_fast(typeof(Inputhandler));
+                    if (position.y == 1) {
+                        for (int x = (int)position.x - 1; x >= 0; x--) {
+                            if (playerSlots[x] == SlotStatus.Empty) {
+                                playerSlots[(int)position.x] = SlotStatus.Empty;
+                                position.x = x;
+                                playerSlots[x] = SlotStatus.Hovering;
+                                Starburst.inst().message("play_sound", new { name = "menu_click" });
+                                break;
+                            }
                         }
                     }
                 }
-            }
-            else if (msg.Equals("down")) {
-                Entity entity = data.Player;
-                var myPosition = entity.get_component<Position>();
-                if (myPosition.y == 0) {
-                    tryMoveDown(entity);
+                else if (msg.Equals("down")) {
+                    Entity entity = data.Player;
+                    var myPosition = entity.get_component<Position>();
+                    if (myPosition.y == 0) {
+                        tryMoveDown(entity);
+                    }
                 }
-            }
-            else if (msg.Equals("right")) {
-                Entity entity = data.Player;
-                var position = entity.get_component<Position>();
-                var players = Starburst.inst().get_entities_fast(typeof(Inputhandler));
-                if (position.y == 1) {
-                    for (int x = (int)position.x+1; x < 4; x++) {
-                        if (playerSlots[x] == SlotStatus.Empty) {
-                            playerSlots[(int)position.x] = SlotStatus.Empty;
-                            position.x = x;
-                            playerSlots[x] = SlotStatus.Hovering;
-                            Starburst.inst().message("play_sound", new { name = "menu_click" });
-                            break;
+                else if (msg.Equals("right")) {
+                    Entity entity = data.Player;
+                    var position = entity.get_component<Position>();
+                    var players = Starburst.inst().get_entities_fast(typeof(Inputhandler));
+                    if (position.y == 1) {
+                        for (int x = (int)position.x + 1; x < 4; x++) {
+                            if (playerSlots[x] == SlotStatus.Empty) {
+                                playerSlots[(int)position.x] = SlotStatus.Empty;
+                                position.x = x;
+                                playerSlots[x] = SlotStatus.Hovering;
+                                Starburst.inst().message("play_sound", new { name = "menu_click" });
+                                break;
+                            }
                         }
                     }
                 }
-            }
-            else if (msg.Equals("select")) {
-                Entity entity = data.Player;
-                var position = entity.get_component<Position>();
-                if (position.y == 0) {
-                    tryMoveDown(entity);
+                else if (msg.Equals("select")) {
+                    Entity entity = data.Player;
+                    var position = entity.get_component<Position>();
+                    if (position.y == 0) {
+                        tryMoveDown(entity);
+                    }
+                    else if (position.y == 1) {
+                        position.y += 1;
+                        playerSlots[(int)position.x] = SlotStatus.Selected;
+                        playerCount++;
+                        Starburst.inst().message("play_sound", new { name = "menu_click" });
+                    }
                 }
-                else if (position.y == 1) {
-                    position.y += 1;
-                    playerSlots[(int)position.x] = SlotStatus.Selected;
-                    playerCount++;
-                    Starburst.inst().message("play_sound", new { name = "menu_click" });
-                }
-            }
-            else if (msg.Equals("back")) {
-                Entity entity = data.Player;
-                var position = entity.get_component<Position>();
-                if (position.y == 2) {
-                    playerCount--;
-                }
-                if (position.y > 0) {
-                    position.y -= 1;
-                    playerSlots[(int)position.x] -= 1;
-                    Starburst.inst().message("play_sound", new { name = "menu_click" });
-                }
-                else if (position.y == 0) {
-                    Starburst.inst().leave_state();
+                else if (msg.Equals("back")) {
+                    Entity entity = data.Player;
+                    var position = entity.get_component<Position>();
+                    if (position.y == 2) {
+                        playerCount--;
+                    }
+                    if (position.y > 0) {
+                        position.y -= 1;
+                        playerSlots[(int)position.x] -= 1;
+                        Starburst.inst().message("play_sound", new { name = "menu_click" });
+                    }
+                    else if (position.y == 0) {
+                        Starburst.inst().leave_state();
+                    }
                 }
             }
         }
@@ -243,6 +245,8 @@ namespace Fab5.Starburst.States {
 
             // räkna upp tid (dt)
             elapsedTime += dt;
+            if (btnDelay > 0)
+                btnDelay -= dt;
 
             if (elapsedTime >= animationTime) {
                 elapsedTime -= animationTime;
@@ -326,11 +330,12 @@ namespace Fab5.Starburst.States {
 
             // rita ut lagsaker om lagläge
             if(parent.gameConfig.mode == 0) {
-                String teamText = "Team 1";
+                String teamText = "Red Team";
                 Vector2 teamTextSize = font.MeasureString(teamText);
                 sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f, rectangleY - 50), Color.Red);
 
-                teamText = "Team 2";
+                teamText = "Blue Team";
+                teamTextSize = font.MeasureString(teamText);
                 teamTextSize = font.MeasureString(teamText);
                 sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f + (vp.Width * .5f), rectangleY - 50), Color.CornflowerBlue);
             }
