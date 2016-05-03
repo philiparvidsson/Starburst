@@ -26,7 +26,9 @@ namespace Fab5.Engine.Subsystems {
                 Ship_Info ship = data.Ship;
 
                 Bullet_Factory.fire_weapon(origin, weapon);
-                ship.energy_value -= weapon.energy_cost;
+                if (!ship.has_powerup("free-fire")) {
+                    ship.energy_value -= weapon.energy_cost;
+                }
                 Fab5_Game.inst().message("fire", weapon);
                 weapon.timeSinceLastShot = 0f;
             }

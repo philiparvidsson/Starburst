@@ -66,7 +66,7 @@ public class Turbo_Powerup : Powerup_Impl {
                                      scale       = 0.6f + (float)rand.NextDouble() * 0.4f,
                                      texture     = Fab5_Game.inst().get_content<Texture2D>("particle") },
 
-                        new TTL { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max),
+                        new TTL { alpha_fn = (x, max) => 1.0f - (x*x)/(max*max),
                                   max_time = 0.55f + 1.5f * (float)Math.Pow((rand.NextDouble() * 0.9f), 2.0f) }
                     };
                 },

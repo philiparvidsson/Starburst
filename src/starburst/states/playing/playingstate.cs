@@ -210,7 +210,7 @@ public class Playing_State : Game_State {
 
         //create_entity(Multifire_Powerup.create_components());
         //create_entity(Turbo_Powerup.create_components());
-        create_entity(Powerup.create(new Turbo_Powerup()));
+        create_entity(Powerup.create(new Free_Fire_Powerup()));
 
         //create_entity(Dummy_Enemy.create_components());
 
