@@ -58,7 +58,6 @@
                 var max_speed = ship.top_velocity;
                 var acc       = ship.acceleration;
 
-
                 float turn = 0.0f;
 
                 // Keyboard device

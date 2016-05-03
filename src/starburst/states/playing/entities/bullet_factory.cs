@@ -58,7 +58,7 @@
                                 blend_mode = Sprite.BM_ADD,
                                 layer_depth = 0.3f
                             },
-                            new TTL() { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max), max_time = 0.15f + (float)(rand.NextDouble() * 0.1f) }
+                            new TTL() { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max), max_time = 0.1f + (float)(rand.NextDouble() * 0.05f) }
     //                        new Bounding_Circle() { radius = 1.0f },
     //                        new Mass() { mass = 0.0f }
 

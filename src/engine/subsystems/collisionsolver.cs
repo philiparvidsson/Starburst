@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 // Solves collision between bounding circles.
 public class Collision_Solver : Subsystem {
     private readonly Tile_Map tile_map;
+    private System.Threading.AutoResetEvent mre = new System.Threading.AutoResetEvent(false);
 
     public Collision_Solver(Tile_Map tile_map) {
         this.tile_map = tile_map;
@@ -82,7 +83,7 @@ public class Collision_Solver : Subsystem {
 
         // @To-do: Implement a quad tree or spatial grid here to reduce the
         //         number of candidates for collision testing.
-        System.Threading.ManualResetEvent mre = new System.Threading.ManualResetEvent(false);
+
         int counter = entities.Count;
 
         foreach (var entity in entities) {

@@ -210,7 +210,19 @@ public class Playing_State : Game_State {
 
         //create_entity(Multifire_Powerup.create_components());
         //create_entity(Turbo_Powerup.create_components());
-        create_entity(Powerup.create(new Free_Fire_Powerup()));
+
+
+        var shield = create_entity(Powerup.create(new Shield_Powerup()));
+        shield.get_component<Position>().x = -1800.0f; shield.get_component<Position>().y = 1500.0f;
+
+        var multi = create_entity(Powerup.create(new Multifire_Powerup()));
+        multi.get_component<Position>().x = -1700.0f; multi.get_component<Position>().y = 1500.0f;
+
+        var freefire = create_entity(Powerup.create(new Free_Fire_Powerup()));
+        freefire.get_component<Position>().x = -1600.0f; freefire.get_component<Position>().y = 1500.0f;
+
+        var turbo = create_entity(Powerup.create(new Turbo_Powerup()));
+        turbo.get_component<Position>().x = -1500.0f; turbo.get_component<Position>().y = 1500.0f;
 
         //create_entity(Dummy_Enemy.create_components());
 
