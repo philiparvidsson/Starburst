@@ -36,12 +36,21 @@ namespace Fab5.Starburst.States {
             mode,
             soccer,
             flag,
+            asteroids,
             map,
             proceed
         };
+        enum asteroids {
+            off,
+            few,
+            medium,
+            many
+        }
+
         int gameMode = 0; // 0 för free for all, 1 för team
         bool soccerball = true; // fotboll
         bool captureTheFlag = false;
+        asteroids asteroidCount = asteroids.few;
         //int map = 0;
         private Texture2D map1;
         public Playing.Game_Config gameConfig;
@@ -69,17 +78,7 @@ namespace Fab5.Starburst.States {
                     Starburst.inst().message("play_sound", new { name = "menu_click" });
                 }
             }
-            /*
             else if (msg.Equals("left")) {
-                var entities = Starburst.inst().get_entities_fast(typeof(Position));
-                Entity entity = entities[0];
-                var position = entity.get_component<Position>();
-                if (position.x > 0) {
-                    position.x -= 1;
-                    Starburst.inst().message("play_sound", new { name = "menu_click" });
-                }
-            }*/
-            else if (msg.Equals("right") || msg.Equals("left")) {
                 var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
                 Entity cursor = entities[0];
                 Position cursorPosition = cursor.get_component<Position>();
@@ -90,8 +89,32 @@ namespace Fab5.Starburst.States {
                     soccerball = !soccerball;
                 else if (cursorPosition.y == (int)options.flag)
                     captureTheFlag = !captureTheFlag;
+                else if (cursorPosition.y == (int)options.asteroids) {
+                    if (asteroidCount == asteroids.off)
+                        asteroidCount = asteroids.many;
+                    else
+                        asteroidCount--;
+                }
                 Starburst.inst().message("play_sound", new { name = "menu_click" });
+            }
+            else if (msg.Equals("right")) {
+                var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
+                Entity cursor = entities[0];
+                Position cursorPosition = cursor.get_component<Position>();
 
+                if (cursorPosition.y == (int)options.mode)
+                    gameMode = (gameMode == 0 ? 1 : 0);
+                else if (cursorPosition.y == (int)options.soccer)
+                    soccerball = !soccerball;
+                else if (cursorPosition.y == (int)options.flag)
+                    captureTheFlag = !captureTheFlag;
+                else if (cursorPosition.y == (int)options.asteroids) {
+                    if (asteroidCount == asteroids.many)
+                        asteroidCount = asteroids.off;
+                    else
+                        asteroidCount++;
+                }
+                Starburst.inst().message("play_sound", new { name = "menu_click" });
             }
             else if (msg.Equals("select")) {
                 Starburst.inst().message("play_sound", new { name = "menu_click" });
@@ -124,7 +147,7 @@ namespace Fab5.Starburst.States {
         }
 
         private void proceed() {
-            this.gameConfig = new Playing.Game_Config() { mode = this.gameMode };
+            this.gameConfig = new Playing.Game_Config() { mode = this.gameMode, enable_soccer = soccerball, num_asteroids = (int)asteroidCount*10 };
             Starburst.inst().enter_state(new Player_Selection_Menu(this));
         }
 
@@ -224,9 +247,21 @@ namespace Fab5.Starburst.States {
             sprite_batch.DrawString(font, "Capture the flag", new Vector2(leftOffset, 180), Color.White);
             sprite_batch.DrawString(font, (captureTheFlag ? "< on >" : "< off >"), new Vector2(menuOffset, 180), (position.y == (int)options.flag ? new Color(Color.Gold, textOpacity) : Color.White));
 
-            sprite_batch.DrawString(font, "Map", new Vector2(leftOffset, 240), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, "Asteroids", new Vector2(leftOffset, 220), Color.White);
+            String asteroidString = "off";
+            if (asteroidCount == asteroids.few)
+                asteroidString = "10";
+            else if (asteroidCount == asteroids.medium)
+                asteroidString = "20";
+            else if (asteroidCount == asteroids.many)
+                asteroidString = "30";
+            sprite_batch.DrawString(font, "< " + asteroidString + " >", new Vector2(menuOffset, 220), (position.y == (int)options.asteroids ? new Color(Color.Gold, textOpacity) : Color.White));
+
+            sprite_batch.DrawString(font, "Map", new Vector2(leftOffset, 280), Color.White);
             // visa pilar eller något?
-            sprite_batch.Draw(map1, new Rectangle(leftOffset, 270, map1.Width, map1.Height), Color.White);
+            sprite_batch.Draw(map1, new Rectangle(leftOffset, 310, map1.Width, map1.Height), Color.White);
+            sprite_batch.DrawString(font, "<", new Vector2(leftOffset + map1.Width * .5f - 40, 310 + map1.Height + 10), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, ">", new Vector2(leftOffset + map1.Width * .5f + 30, 310 + map1.Height + 10), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
 
             String text = "Continue to player selection";
             Vector2 textSize = font.MeasureString(text);
