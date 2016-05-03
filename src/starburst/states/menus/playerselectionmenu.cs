@@ -47,7 +47,7 @@ namespace Fab5.Starburst.States {
 
         public Player_Selection_Menu(Main_Menu_State parentState) {
             parent = parentState;
-            parentState.soundMgr.state = this;
+            //parentState.soundMgr.state = this;
         }
 
         private void tryStartGame() {
@@ -156,7 +156,6 @@ namespace Fab5.Starburst.States {
                     Starburst.inst().message("play_sound", new { name = "menu_click" });
                 }
                 else if (position.y == 0) {
-                    parent.soundMgr.state = parent;
                     Starburst.inst().leave_state();
                 }
             }
