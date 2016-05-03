@@ -220,7 +220,7 @@ namespace Fab5.Starburst.States {
             //create_entity(SoundManager.create_backmusic_component()).get_component<SoundLibrary>().song_index = 1;
 
             // load textures
-            background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
+            background = Starburst.inst().get_content<Texture2D>("backdrops/menubg");
             //rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
             rectBg = new Texture2D(Fab5_Game.inst().GraphicsDevice, 1, 1);
             rectBg.SetData(new Color[]{Color.Black},1,1);//Starburst.inst().get_content<Texture2D>("controller_rectangle");
@@ -313,10 +313,11 @@ namespace Fab5.Starburst.States {
         }
 
         private void draw_background(SpriteBatch sprite_batch, float t) {
-            var x = (float)Math.Cos(0.5f*t*0.07f) * 270.0f - 1.5f*background.Width * 0.5f + Fab5_Game.inst().GraphicsDevice.Viewport.Width * 0.5f;
-            var y = (float)Math.Sin(0.5f*t*0.1f) * 200.0f - 1.5f*background.Height * 0.5f + Fab5_Game.inst().GraphicsDevice.Viewport.Height * 0.5f;
+            var scale = 1.1f;
+            var x = (float)Math.Cos(0.5f*t*0.07f) * 270.0f - scale*background.Width * 0.5f + Fab5_Game.inst().GraphicsDevice.Viewport.Width * 0.5f;
+            var y = (float)Math.Sin(0.5f*t*0.1f) * 200.0f - scale*background.Height * 0.5f + Fab5_Game.inst().GraphicsDevice.Viewport.Height * 0.5f;
 
-            sprite_batch.Draw(background, new Vector2(x, y), null, null, null, 0.0f, new Vector2(1.5f, 1.5f), Color.White);
+            sprite_batch.Draw(background, new Vector2(x, y), null, null, null, 0.0f, new Vector2(scale, scale), Color.White * 0.9f);
         }
 
         public override void draw(float t, float dt) {
@@ -349,7 +350,7 @@ namespace Fab5.Starburst.States {
                 //sprite_batch.Draw(rectBg, destinationRectangle: destRect, color: Color.White, layerDepth: .1f);
                 var col = new Color(0.0f, 0.0f, 0.0f, 0.4f);
                 if (parent.gameConfig.mode == 0) {
-                    col = (team==1) ? new Color(1.0f, 0.0f, 0.0f, 0.3f) : new Color(0.0f, 0.5f, 1.0f, 0.3f);
+                    col = (team==1) ? new Color(1.0f, 0.2f, 0.2f, 0.3f) : new Color(0.0f, 0.5f, 1.0f, 0.3f);
                 }
 
                 GFX_Util.fill_rect(sprite_batch, destRect, col);
@@ -363,12 +364,12 @@ namespace Fab5.Starburst.States {
             if(parent.gameConfig.mode == 0) {
                 String teamText = "Red Team";
                 Vector2 teamTextSize = font.MeasureString(teamText);
-                sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f, rectangleY - 50), Color.Red);
+                sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f, rectangleY - 50), new Color(1.0f, 0.2f, 0.2f));
 
                 teamText = "Blue Team";
                 teamTextSize = font.MeasureString(teamText);
                 teamTextSize = font.MeasureString(teamText);
-                sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f + (vp.Width * .5f), rectangleY - 50), Color.CornflowerBlue);
+                sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f + (vp.Width * .5f), rectangleY - 50), new Color(0.0f, 0.5f, 1.0f));
             }
 
             /**
