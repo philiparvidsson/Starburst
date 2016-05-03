@@ -40,6 +40,7 @@ namespace Fab5.Starburst.States {
 
         float btnDelay = .5f;
         private SpriteFont smallFont;
+        private Texture2D downArrow;
 
         private enum SlotStatus {
             Empty,
@@ -80,6 +81,7 @@ namespace Fab5.Starburst.States {
         public override void on_message(string msg, dynamic data) {
             if (btnDelay <= 0) {
                 if (msg.Equals("fullscreen")) {
+                    btnDelay = .5f;
                     Starburst.inst().GraphicsMgr.ToggleFullScreen();
                 }
                 else if (msg.Equals("start")) {
@@ -225,6 +227,7 @@ namespace Fab5.Starburst.States {
             controller_a_button = Starburst.inst().get_content<Texture2D>("menu/Xbox_A_white");
             keyboard_key = Starburst.inst().get_content<Texture2D>("menu/Key");
             controller_l_stick = Starburst.inst().get_content<Texture2D>("menu/Xbox_L_white");
+            downArrow = Starburst.inst().get_content<Texture2D>("menu/arrow_down");
 
             Inputhandler wasd = new Inputhandler() {
                 left = Keys.A,
@@ -358,6 +361,7 @@ namespace Fab5.Starburst.States {
             Vector2 controllerIconSize = new Vector2(84, 60); //ikon för kontroll
             int controllerBtnSize = 50; // ikon för knapp
             int keyboardBtnSize = 40; // ikon för knapp
+            int arrowSize = 30; // nedåtpil
 
             int totalControllerWidth = (int)(entities.Count * controllerIconSize.X);
 
@@ -376,7 +380,9 @@ namespace Fab5.Starburst.States {
                 Rectangle iconRect = new Rectangle();
                 // om längst upp, sprid ut jämnt
                 if (position.y == 0) {
-                    iconRect = new Rectangle((int)(vp.Width * .5f - totalControllerWidth * .5f) + (int)(controllerIconSize.X * i + 1), rectangleY - 150, (int)controllerIconSize.X, (int)controllerIconSize.Y);
+                    iconRect = new Rectangle((int)(vp.Width * .5f - totalControllerWidth * .5f + controllerIconSize.X * i), rectangleY - 150, (int)controllerIconSize.X, (int)controllerIconSize.Y);
+                    int arrowX = (int)(vp.Width * .5f - totalControllerWidth * .5f + controllerIconSize.X * i + controllerIconSize.X * .5f - arrowSize * .5f);
+                    sprite_batch.Draw(downArrow, new Rectangle(arrowX, (int)(rectangleY - 150 + controllerIconSize.Y), arrowSize, arrowSize), new Color(Color.White, textOpacity));
                 }
                 // annars en plats per kontroll
                 else {
@@ -417,12 +423,14 @@ namespace Fab5.Starburst.States {
                 if(playerSlots[i] == SlotStatus.Hovering) {
                     int currentRectStartPos = startPos + rectSize * i + spacing * i;
                     int currentRectXCenter = (int)(currentRectStartPos + rectSize * .5f);
-                    sprite_batch.DrawString(font, "press fire\nto confirm", new Vector2(currentRectXCenter - selectTextSize.X * .5f, rectangleY + (int)(rectSize*.5f) - selectTextSize.Y), new Color(Color.White, textOpacity));
+                    sprite_batch.DrawString(font, "Press fire\nto confirm", new Vector2(currentRectXCenter - selectTextSize.X * .5f, rectangleY + (int)(rectSize*.5f) - selectTextSize.Y), new Color(Color.White, textOpacity));
                 }
                 else if (playerSlots[i] == SlotStatus.Selected) {
+                    String ready = "Ready";
+                    Vector2 size = font.MeasureString(ready);
                     int currentRectStartPos = startPos + rectSize * i + spacing * i;
-                    int positionX = (int)(currentRectStartPos + rectSize * .5f - (int)(selectTextSize.X * .5f));
-                    sprite_batch.DrawString(font, "confirmed", new Vector2(positionX, rectangleY + rectSize * .5f - controllerIconSize.Y * .5f - selectTextSize.Y * .5f + controllerIconSize.Y), Color.White);
+                    int positionX = (int)(currentRectStartPos + rectSize * .5f - (int)(size.X * .5f));
+                    sprite_batch.DrawString(font, ready, new Vector2(positionX, rectangleY + rectSize * .5f - controllerIconSize.Y * .5f - selectTextSize.Y * .5f + controllerIconSize.Y), Color.White);
                     /*
                     // undo text
                     String undoText = "press secondary";

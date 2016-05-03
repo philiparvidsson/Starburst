@@ -11,6 +11,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 // Starburst game implementation.
 public class Starburst : Fab5_Game {
+        public Starburst() {
+            GraphicsMgr.HardwareModeSwitch = false;
+        }
     protected override void init() {
             if (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height > 800 && GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width > 1400) {
                 GraphicsMgr.PreferredBackBufferWidth = 1920;
@@ -22,14 +25,14 @@ public class Starburst : Fab5_Game {
             }
        // GraphicsMgr.PreferMultiSampling = true;
 
-//        GraphicsMgr.GraphicsDevice.RasterizerState = new RasterizerState { MultiSampleAntiAlias = true };
+            //        GraphicsMgr.GraphicsDevice.RasterizerState = new RasterizerState { MultiSampleAntiAlias = true };
 
 
-//        GraphicsMgr.SynchronizeWithVerticalRetrace = false;
-  //      IsFixedTimeStep = false;
+            //        GraphicsMgr.SynchronizeWithVerticalRetrace = false;
+            //      IsFixedTimeStep = false;
 
 
-        GraphicsMgr.ApplyChanges();
+            GraphicsMgr.ApplyChanges();
         Microsoft.Xna.Framework.Media.MediaPlayer.Volume = 0.7f;
 
         enter_state(new Splash_Screen_State());
