@@ -35,7 +35,7 @@ public class Powerup : Component {
         var powerup = new Component[] {
             new Bounding_Circle { radius = 14.0f },
       pos = new Position        { x = -1800.0f, y = 1600.0f },
-            new Sprite          { blend_mode = Sprite.BM_ADD, texture = Fab5_Game.inst().get_content<Texture2D>("powerup"), color = Color.White * 0.7f },
+            new Sprite          { texture = Fab5_Game.inst().get_content<Texture2D>("powerup") },
             new Powerup         { impl = impl },
       vel = new Velocity        { x = 0.0f, y = 0.0f },
       ang = new Angle           { ang_vel = 3.14f*0.7f, drag = 0.0f },
@@ -70,10 +70,10 @@ public class Powerup : Component {
                         new Sprite { blend_mode  = Sprite.BM_ADD,
                                      color       = color,
                                      layer_depth = 0.3f,
-                                     scale       = 0.6f + (float)rand.NextDouble() * 0.9f,
+                                     scale       = 0.4f + (float)rand.NextDouble() * 0.7f,
                                      texture     = Fab5_Game.inst().get_content<Texture2D>("particle2") },
 
-                        new TTL { alpha_fn = (x, max) => (1.0f - ((x*x*x)/(max*max*max)))*0.4f,
+                        new TTL { alpha_fn = (x, max) => (1.0f - ((x*x*x)/(max*max*max)))*0.9f,
                                   max_time = 0.55f + (float)Math.Pow((rand.NextDouble() * 1.2f), 2.0f) }
                     };
                 },

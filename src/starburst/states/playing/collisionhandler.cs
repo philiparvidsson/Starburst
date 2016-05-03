@@ -327,7 +327,7 @@ namespace Fab5.Starburst.States.Playing {
                         new Mass { drag_coeff = 2.5f },
                         new Position {
                             x = data.c_x + (float)Math.Cos(theta1) * radius,
-                            y = data.c_y + (float)Math.Cos(theta1) * radius
+                            y = data.c_y + (float)Math.Sin(theta1) * radius
                         },
                         new Velocity {
                             x = (float)Math.Cos(theta2) * speed,
@@ -555,7 +555,7 @@ namespace Fab5.Starburst.States.Playing {
                         new Mass { drag_coeff = 2.5f },
                         new Position {
                             x = data.c_x + (float)Math.Cos(theta1) * radius,
-                            y = data.c_y + (float)Math.Cos(theta1) * radius
+                            y = data.c_y + (float)Math.Sin(theta1) * radius
                         },
                         new Velocity {
                             x = (float)Math.Cos(theta2) * speed,
@@ -599,7 +599,7 @@ namespace Fab5.Starburst.States.Playing {
                         new Mass { drag_coeff = 2.5f },
                         new Position {
                             x = data.c_x + (float)Math.Cos(theta1) * radius,
-                            y = data.c_y + (float)Math.Cos(theta1) * radius
+                            y = data.c_y + (float)Math.Sin(theta1) * radius
                         },
                         new Velocity {
                             x = (float)Math.Cos(theta2) * speed,

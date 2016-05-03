@@ -72,7 +72,9 @@
                 angle,
                 bulletSprite,
                 //bulletDrawArea,
-                new Bounding_Circle() { radius = 6, ignore_collisions = IG_BULLET, ignore_collisions2 = origin.get_component<Ship_Info>().team },
+                new Bounding_Circle() { radius = 6,
+                                        ignore_collisions = IG_BULLET,
+                                        ignore_collisions2 = origin.get_component<Ship_Info>().team },
                 new Mass { mass = 1.0f, restitution_coeff = -1.0f, friction = 0.0f },
                 new TTL() { alpha_fn = (x, max) => 10.0f-10.0f*x/max, max_time = lifeTime },
                 new Bullet_Info() { damage = weapon.damage, sender = origin, max_speed = speed }
@@ -82,7 +84,7 @@
         private static Component[] weapon2(Entity origin, Weapon weapon) {
             float shipRadian = 23f; // offset från skeppets mitt där skottet utgår ifrån
             float speed = 300f; // skottets hastighet (kanske ska vara vapenberoende?)
-            float lifeTime = 5.0f; // skottets livstid (i sekunder? iaf baserad på dt)
+            float lifeTime = 4.0f; // skottets livstid (i sekunder? iaf baserad på dt)
 
             Position position = origin.get_component<Position>();
             Angle shipAngle = origin.get_component<Angle>();
@@ -98,6 +100,7 @@
 
             Sprite bulletSprite = new Sprite() { texture = bulletTexture2, layer_depth = 1, num_frames = 4, frame_width = 32, frame_height = 32, fps = 8.0f};
 
+            var bounce_counter = 0;
             return new Component[] {
                 new Particle_Emitter() {
                     emit_fn = () => {
@@ -132,7 +135,52 @@
                 angle,
                 bulletSprite,
                 //bulletDrawArea,
-                new Bounding_Circle() { radius = 14.0f, ignore_collisions = IG_BULLET, ignore_collisions2 = origin.get_component<Ship_Info>().team },
+                new Bounding_Circle() { radius = 14.0f,
+                                        ignore_collisions = IG_BULLET,
+                                        ignore_collisions2 = origin.get_component<Ship_Info>().team,
+                                        collision_cb = (self, other_entity) => {
+                                            if(bounce_counter++ > 2) {
+                                                var p_x = self.get_component<Position>().x;
+                                                var p_y = self.get_component<Position>().y;
+                                                Fab5_Game.inst().create_entity(new Component[] {
+                                                    new TTL { max_time = 0.01f },
+                                                    new Particle_Emitter {
+                                                        emit_fn = () => {
+                                                            var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
+                                                            var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
+                                                            var radius = 20.0f * (float)rand.NextDouble();
+                                                            var speed2  = (5.0f + 20.0f * (float)Math.Pow(rand.NextDouble(), 2.0f));
+
+                                                            return new Component[] {
+                                                                new Mass { drag_coeff = 0.5f },
+                                                                new Position {
+                                                                    x = p_x + (float)Math.Cos(theta1) * radius,
+                                                                    y = p_y + (float)Math.Sin(theta1) * radius
+                                                                },
+                                                                new Velocity {
+                                                                    x = (float)Math.Cos(theta2) * speed2,
+                                                                    y = (float)Math.Sin(theta2) * speed2
+                                                                },
+                                                                new Sprite {
+                                                                    blend_mode  = Sprite.BM_ADD,
+                                                                    color       = new Color(0.9f, 0.7f, 1.0f, 1.0f),
+                                                                    layer_depth = 0.3f,
+                                                                    scale       = 0.4f + (float)rand.NextDouble() * 0.7f,
+                                                                    texture     = Starburst.inst().get_content<Texture2D>("particle2")
+                                                                },
+                                                                new TTL {
+                                                                    alpha_fn = (x, max) => 1.0f - x/max,
+                                                                    max_time = 0.3f + 1.8f * (float)(Math.Pow(rand.NextDouble(), 3.0f))
+                                                                }
+                                                            };
+                                                        },
+                                                        interval = 0.01f,
+                                                        num_particles_per_emit = 50
+                                                    }
+                                                });
+                                                self.destroy();
+                                            }
+                                        } },
                 new Mass { mass = 90.0f, restitution_coeff = -1.0f, friction = 0.0f },
                 new TTL() { alpha_fn = (x, max) => 20.0f-20.0f*x/max, max_time = lifeTime },
                 new Bullet_Info() { damage = weapon.damage, sender = origin, max_speed = speed }

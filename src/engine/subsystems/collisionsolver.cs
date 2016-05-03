@@ -16,7 +16,9 @@ public class Collision_Solver : Subsystem {
         this.tile_map = tile_map;
     }
 
-    private void get_entities(Position p1, Bounding_Circle c1, Dictionary<uint, HashSet<Entity>> grid, HashSet<Entity> entities) {
+    private void get_entities(Position p1, Bounding_Circle c1, Dictionary<uint, HashSet<Entity>> grid, out HashSet<Entity> entities) {
+        entities = null;
+
         uint left   = (uint)(p1.x - c1.radius + 2048.0f) / grid_size;
         uint right  = (uint)(p1.x + c1.radius + 2048.0f) / grid_size;
         uint top    = (uint)(p1.y - c1.radius + 2048.0f) / grid_size;
@@ -25,7 +27,13 @@ public class Collision_Solver : Subsystem {
         for (uint x = left; x <= right; x++) {
             for (uint y = top; y <= bottom; y++) {
                 uint key = (y<<16)+x;
-                if (grid.ContainsKey(key)) entities.UnionWith(grid[key]);
+                if (grid.ContainsKey(key)) {
+                    if (entities == null) {
+                        entities = new HashSet<Entity>();
+                    }
+
+                    entities.UnionWith(grid[key]);
+                }
             }
         }
     }
@@ -108,20 +116,22 @@ public class Collision_Solver : Subsystem {
                     v1.y = -v1.y * rc1;
                 }
 
-                if (!resolve_circle_map_collision(e1)) {
-                    HashSet<Entity> hash_set = new HashSet<Entity>();
+                resolve_circle_map_collision(e1);
 
-                    get_entities(p1, e1.get_component<Bounding_Circle>(), grid, hash_set);
+                HashSet<Entity> hash_set;
+
+                get_entities(p1, e1.get_component<Bounding_Circle>(), grid, out hash_set);
+                if (hash_set != null) {
                     foreach (Entity e2 in hash_set) {
                         if (e2 == e1) continue;
                         // only test against higher ids. oh lol what a hack if i ever saw one lulz
                         if (e2.id < e1.id) continue;
 
                         if (resolve_circle_circle_collision(e1, e2)) {
-                            break;
+                            // is it sane to break here? lol
+                            //break;
                         }
                     }
-
                 }
 
                 if (System.Threading.Interlocked.Decrement(ref counter) == 0) {
@@ -188,6 +198,10 @@ public class Collision_Solver : Subsystem {
         if (a1 != null) {
             var w = (-r_y*i_x+r_x*i_y);
             a1.ang_vel += (w/(r_x*r_x+r_y*r_y) - a1.ang_vel)*friction;
+        }
+
+        if (c1.collision_cb != null) {
+            c1.collision_cb(e1, null);
         }
     }
 
@@ -513,6 +527,12 @@ public class Collision_Solver : Subsystem {
         var c_y  = p2.y + n_y * c2.radius;
 
         Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = e2, c_x = c_x, c_y = c_y });
+        if (c1.collision_cb != null) {
+            c1.collision_cb(e1, e2);
+        }
+        if (c2.collision_cb != null) {
+            c2.collision_cb(e2, e1);
+        }
 
         var m1 = e1.get_component<Mass>();
         var m2 = e2.get_component<Mass>();
