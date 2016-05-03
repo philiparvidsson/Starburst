@@ -649,3 +649,9 @@
 /processorParam:TextureFormat=Color
 /build:particle2.png
 
+#begin sound/effects/click.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/click.wav
+
