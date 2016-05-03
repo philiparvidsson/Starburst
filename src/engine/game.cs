@@ -170,8 +170,18 @@ public abstract class Fab5_Game : Game {
         return (s_inst);
     }
 
+    //private Dictionary<string, object> content_dic = new Dictionary<string, object>();
     public T get_content<T>(string asset) {
-        return (Content.Load<T>(asset));
+        /*object r;
+        if (content_dic.TryGetValue(asset, out r)) {
+            return (T)r;
+        }
+
+        var o = Content.Load<T>(asset);
+        content_dic[asset] = o;
+
+        return o;*/
+        return Content.Load<T>(asset);
     }
 }
 

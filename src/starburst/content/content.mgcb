@@ -325,18 +325,6 @@
 /processorParam:TextureFormat=Color
 /build:ships/ship14.png
 
-#begin controller_rectangle.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:controller_rectangle.png
-
 #begin turbo_powerup.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -366,12 +354,6 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sound/effects/air_horn.mp3
-
-#begin sound/effects/click.mp3
-/importer:Mp3Importer
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/click.mp3
 
 #begin menu/Xbox_A_white.png
 /importer:TextureImporter

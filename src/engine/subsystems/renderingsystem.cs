@@ -119,6 +119,7 @@ namespace Fab5.Engine.Subsystems {
             var x = 0.0f;
             th *= camera.zoom;
             tw *= camera.zoom;
+            var tiles = tile_map.tiles;
             for (int i = left; i <= right; i++) {
                 var y = 0.0f;
                 var sx = x+xfrac;
@@ -133,7 +134,7 @@ namespace Fab5.Engine.Subsystems {
 
 //                    sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
 
-                    int k = tile_map.tiles[o];
+                    int k = tiles[o];
                     if (k != 0 && k < 9) {// 9 and up are not visible walls
                         var v = k-1;
 
@@ -332,7 +333,7 @@ namespace Fab5.Engine.Subsystems {
                 sprite_batch.Draw(tex,
                                   new Vector2(p_x, p_y),
                                   null,
-                                  Color.White * 0.65f,
+                                  Color.White * 0.9f,
                                   r,
                                   new Vector2(player_indicator_tex.Width/2.0f, player_indicator_tex.Height/2.0f),
                                   current.zoom,

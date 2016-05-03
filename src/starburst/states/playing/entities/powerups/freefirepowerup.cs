@@ -9,36 +9,23 @@ using Microsoft.Xna.Framework.Graphics;
 
 using System;
 
-public class Turbo_Powerup : Powerup_Impl {
-    private float old_acc;
-    private float old_vel;
-
-    private Int64 holder_id;
+public class Free_Fire_Powerup : Powerup_Impl {
     private Int64 effect_id;
 
     private static System.Random rand = new System.Random();
 
     public string name {
-        get { return "turbo"; }
+        get { return "free-fire"; }
     }
 
     public void end() {
         Fab5_Game.inst().destroy_entity(effect_id);
-
-        var holder = Fab5_Game.inst().get_entity(holder_id);
-        if (holder != null) {
-            var ship_info = holder.get_component<Ship_Info>();
-
-            ship_info.acceleration = old_acc;
-            ship_info.top_velocity = old_vel;
-        }
     }
 
     private void activate_effect(Entity holder) {
         var pos = holder.get_component<Position>();
         var vel = holder.get_component<Velocity>();
 
-        holder_id = holder.id;
         effect_id = Fab5_Game.inst().create_entity(new Component [] {
             new Particle_Emitter {
                 emit_fn = () => {
@@ -78,14 +65,6 @@ public class Turbo_Powerup : Powerup_Impl {
     }
 
     public void on_begin(Entity holder, Entity powerup) {
-        var ship_info = holder.get_component<Ship_Info>();
-
-        old_acc = ship_info.acceleration;
-        old_vel = ship_info.top_velocity;
-
-        ship_info.acceleration *= 1.4f;
-        ship_info.top_velocity *= 1.2f;
-
         activate_effect(holder);
     }
 

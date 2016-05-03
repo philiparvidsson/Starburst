@@ -221,7 +221,9 @@ namespace Fab5.Starburst.States {
 
             // load textures
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
-            rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
+            //rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
+            rectBg = new Texture2D(Fab5_Game.inst().GraphicsDevice, 1, 1);
+            rectBg.SetData(new Color[]{Color.Black},1,1);//Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>("sector034");
             smallFont = Starburst.inst().get_content<SpriteFont>("small");
             controller_a_button = Starburst.inst().get_content<Texture2D>("menu/Xbox_A_white");
@@ -309,6 +311,14 @@ namespace Fab5.Starburst.States {
                 gamepads[i] = current;
             }
         }
+
+        private void draw_background(SpriteBatch sprite_batch, float t) {
+            var x = (float)Math.Cos(0.5f*t*0.07f) * 270.0f - 1.5f*background.Width * 0.5f + Fab5_Game.inst().GraphicsDevice.Viewport.Width * 0.5f;
+            var y = (float)Math.Sin(0.5f*t*0.1f) * 200.0f - 1.5f*background.Height * 0.5f + Fab5_Game.inst().GraphicsDevice.Viewport.Height * 0.5f;
+
+            sprite_batch.Draw(background, new Vector2(x, y), null, null, null, 0.0f, new Vector2(1.5f, 1.5f), Color.White);
+        }
+
         public override void draw(float t, float dt) {
             base.draw(t, dt);
             Starburst.inst().GraphicsDevice.Clear(Color.Black);
@@ -317,7 +327,8 @@ namespace Fab5.Starburst.States {
             var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
 
             sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
-            sprite_batch.Draw(background, destinationRectangle: new Rectangle(0, 0, vp.Width, vp.Height), color: Color.White);
+            draw_background(sprite_batch, t);
+            //sprite_batch.Draw(background, destinationRectangle: new Rectangle(0, 0, vp.Width, vp.Height), color: Color.White);
 
             String text = "Choose players";
             Vector2 textSize = font.MeasureString(text);
@@ -340,7 +351,12 @@ namespace Fab5.Starburst.States {
                 if (parent.gameConfig.mode == 0) {
                     col = (team==1) ? new Color(1.0f, 0.0f, 0.0f, 0.3f) : new Color(0.0f, 0.5f, 1.0f, 0.3f);
                 }
+
                 GFX_Util.fill_rect(sprite_batch, destRect, col);
+                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
+                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Right-4, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
+                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Top, destRect.Width, 4), new Color(col.R, col.G, col.B, 255));
+                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Bottom-4, destRect.Width, 4), new Color(col.R, col.G, col.B, 255));
             }
 
             // rita ut lagsaker om lagläge

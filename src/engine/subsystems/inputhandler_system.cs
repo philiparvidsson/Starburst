@@ -43,7 +43,7 @@
                 var angle = entity.get_component<Angle>();
 
                 // all player controlled objects get an angular drag force to prevent the players from going insane lol
-                angle.ang_vel -= angle.ang_vel * 10.0f * dt;
+                angle.ang_vel -= angle.ang_vel * 5.0f * dt;
 
                 if (!input.enabled) {
                     continue;
@@ -57,7 +57,6 @@
 
                 var max_speed = ship.top_velocity;
                 var acc       = ship.acceleration;
-
 
                 float turn = 0.0f;
 
@@ -101,14 +100,20 @@
                     }
                 }
 
-                if (Math.Abs(turn) > 0.001f) {
-                    var ang_acc = 60.0f * dt;
+                if (Math.Abs(turn) > 0.01f) {
+                    var ang_acc = 30.0f * dt;
 
                     angle.ang_vel += ang_acc * turn;
 
                     if (angle.ang_vel > 5.0f) {
                         angle.ang_vel = 5.0f;
                     }
+                    else if (angle.ang_vel < -5.0f) {
+                        angle.ang_vel = -5.0f;
+                    }
+                }
+                else {
+                    angle.ang_vel = 0.0f;
                 }
                 if (Math.Abs(input.throttle) > 0.01f) {
                     //Fab5_Game.inst().message("throttle", new { gp_index = input.gp_index });

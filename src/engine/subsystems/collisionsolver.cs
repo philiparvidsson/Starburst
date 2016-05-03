@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 // Solves collision between bounding circles.
 public class Collision_Solver : Subsystem {
     private readonly Tile_Map tile_map;
+    private System.Threading.AutoResetEvent mre = new System.Threading.AutoResetEvent(false);
 
     public Collision_Solver(Tile_Map tile_map) {
         this.tile_map = tile_map;
@@ -19,14 +20,15 @@ public class Collision_Solver : Subsystem {
     private void get_entities(Position p1, Bounding_Circle c1, Dictionary<uint, HashSet<Entity>> grid, out HashSet<Entity> entities) {
         entities = null;
 
-        uint left   = (uint)(p1.x - c1.radius + 2048.0f) / grid_size;
-        uint right  = (uint)(p1.x + c1.radius + 2048.0f) / grid_size;
-        uint top    = (uint)(p1.y - c1.radius + 2048.0f) / grid_size;
-        uint bottom = (uint)(p1.y + c1.radius + 2048.0f) / grid_size;
+        var radius = c1.radius;
+        uint left   = (uint)(p1.x - radius + 2048.0f) / grid_size;
+        uint right  = (uint)(p1.x + radius + 2048.0f) / grid_size;
+        uint top    = (uint)(p1.y - radius + 2048.0f) / grid_size;
+        uint bottom = (uint)(p1.y + radius + 2048.0f) / grid_size;
 
         for (uint x = left; x <= right; x++) {
             for (uint y = top; y <= bottom; y++) {
-                uint key = (y<<16)+x;
+                uint key = (y<<16)|x;
                 if (grid.ContainsKey(key)) {
                     if (entities == null) {
                         entities = new HashSet<Entity>();
@@ -82,7 +84,7 @@ public class Collision_Solver : Subsystem {
 
         // @To-do: Implement a quad tree or spatial grid here to reduce the
         //         number of candidates for collision testing.
-        System.Threading.ManualResetEvent mre = new System.Threading.ManualResetEvent(false);
+
         int counter = entities.Count;
 
         foreach (var entity in entities) {
@@ -90,28 +92,31 @@ public class Collision_Solver : Subsystem {
                 var e1  = (Entity)o;//entities[(int)o];
                 var p1  = e1.get_component<Position>();
                 var v1  = e1.get_component<Velocity>();
-                var rc1 = Math.Abs(e1.get_component<Mass>()?.restitution_coeff ?? 1.0f);
 
                 if (p1 == null || v1 == null) {
                     return;
                 }
 
                 if (p1.x < -2048.0f) {
+                    var rc1 = Math.Abs(e1.get_component<Mass>()?.restitution_coeff ?? 1.0f);
                     p1.x = -2048.0f;
                     v1.x = -v1.x * rc1;
                 }
 
                 if (p1.x > 2048.0f) {
+                    var rc1 = Math.Abs(e1.get_component<Mass>()?.restitution_coeff ?? 1.0f);
                     p1.x = 2048.0f;
                     v1.x = -v1.x * rc1;
                 }
 
                 if (p1.y < -2048.0f) {
+                    var rc1 = Math.Abs(e1.get_component<Mass>()?.restitution_coeff ?? 1.0f);
                     p1.y = -2048.0f;
                     v1.y = -v1.y * rc1;
                 }
 
                 if (p1.y > 2048.0f) {
+                    var rc1 = Math.Abs(e1.get_component<Mass>()?.restitution_coeff ?? 1.0f);
                     p1.y = 2048.0f;
                     v1.y = -v1.y * rc1;
                 }
@@ -434,12 +439,12 @@ public class Collision_Solver : Subsystem {
         var p = e1.get_component<Position>();
         var c = e1.get_component<Bounding_Circle>();
 
-        int tw     = 16;
-        int th     = 16;
-        int left   = (int)(p.x - c.radius+2048.0f) / tw;
-        int top    = (int)(p.y - c.radius+2048.0f) / th;
-        int right  = (int)(p.x + c.radius+2048.0f) / tw;
-        int bottom = (int)(p.y + c.radius+2048.0f) / th;
+        //int tw     = 16;
+        //int th     = 16; shifting instead lewl
+        int left   = (int)(p.x - c.radius+2048.0f) >> 4;
+        int top    = (int)(p.y - c.radius+2048.0f) >> 4;
+        int right  = (int)(p.x + c.radius+2048.0f) >> 4;
+        int bottom = (int)(p.y + c.radius+2048.0f) >> 4;
 
         var v = e1.get_component<Velocity>();
 
