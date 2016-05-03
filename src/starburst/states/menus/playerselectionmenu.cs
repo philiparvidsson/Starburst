@@ -313,9 +313,9 @@ namespace Fab5.Starburst.States {
         }
 
         private void draw_background(SpriteBatch sprite_batch, float t) {
-            var scale = 1.1f;
-            var x = (float)Math.Cos(0.5f*t*0.07f) * 270.0f - scale*background.Width * 0.5f + Fab5_Game.inst().GraphicsDevice.Viewport.Width * 0.5f;
-            var y = (float)Math.Sin(0.5f*t*0.1f) * 200.0f - scale*background.Height * 0.5f + Fab5_Game.inst().GraphicsDevice.Viewport.Height * 0.5f;
+            var scale = 1.5f;
+            var x = (float)Math.Cos(0.4f*t*0.07f) * 270.0f - scale*background.Width * 0.5f + Fab5_Game.inst().GraphicsDevice.Viewport.Width * 0.5f;
+            var y = (float)Math.Sin(0.4f*t*0.1f) * 200.0f - scale*background.Height * 0.5f + Fab5_Game.inst().GraphicsDevice.Viewport.Height * 0.5f;
 
             sprite_batch.Draw(background, new Vector2(x, y), null, null, null, 0.0f, new Vector2(scale, scale), Color.White * 0.9f);
         }
