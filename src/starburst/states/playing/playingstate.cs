@@ -208,8 +208,9 @@ public class Playing_State : Game_State {
             ball.get_component<Angle>().ang_vel = 3.141592f * 2.0f * -2.0f;
         }
 
-        create_entity(Multifire_Powerup.create_components());
-        create_entity(Turbo_Powerup.create_components());
+        //create_entity(Multifire_Powerup.create_components());
+        //create_entity(Turbo_Powerup.create_components());
+        create_entity(Powerup.create(new Turbo_Powerup()));
 
         //create_entity(Dummy_Enemy.create_components());
 

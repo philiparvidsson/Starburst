@@ -37,10 +37,10 @@ namespace Fab5.Starburst.States.Playing {
         reg("ships/ship13", "ships/ship14", player_player);
         reg("ships/ship14", "ships/ship14", player_player);
 
-        reg("ships/ship11", "turbo_powerup", player_turbo_powerup);
-        reg("ships/ship12", "turbo_powerup", player_turbo_powerup);
-        reg("ships/ship13", "turbo_powerup", player_turbo_powerup);
-        reg("ships/ship14", "turbo_powerup", player_turbo_powerup);
+        reg("ships/ship11", "powerup", player_powerup);
+        reg("ships/ship12", "powerup", player_powerup);
+        reg("ships/ship13", "powerup", player_powerup);
+        reg("ships/ship14", "powerup", player_powerup);
 
 
         reg("asteroid" , "asteroid" , asteroid_asteroid);
@@ -81,8 +81,8 @@ namespace Fab5.Starburst.States.Playing {
         handlers[a][b].Add(action);
     }
 
-    private void player_turbo_powerup(Entity a, Entity b, dynamic data) {
-        var powerup = (a.get_component<Sprite>().texture.Name == "turbo_powerup") ? a : b;
+    private void player_powerup(Entity a, Entity b, dynamic data) {
+        var powerup = (a.get_component<Sprite>().texture.Name == "powerup") ? a : b;
         var player = (powerup == a) ? b : a;
 
         powerup.get_component<Powerup>().begin(player, powerup);
@@ -321,10 +321,10 @@ namespace Fab5.Starburst.States.Playing {
                     var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
                     var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
                     var radius = 13.0f * (float)rand.NextDouble();
-                    var speed  = (300.0f + 150.0f * (float)rand.NextDouble());
+                    var speed  = (500.0f + 180.0f * (float)Math.Pow(rand.NextDouble(), 2.0f));
 
                     return new Component[] {
-                        new Mass { drag_coeff = -4.0f },
+                        new Mass { drag_coeff = 2.5f },
                         new Position {
                             x = data.c_x + (float)Math.Cos(theta1) * radius,
                             y = data.c_y + (float)Math.Cos(theta1) * radius
@@ -335,10 +335,10 @@ namespace Fab5.Starburst.States.Playing {
                         },
                         new Sprite {
                             blend_mode  = Sprite.BM_ADD,
-                            color       = new Color(1.0f, 0.3f, 0.1f),
+                            color       = new Color(0.9f, 0.7f, 1.0f, 1.0f),
                             layer_depth = 0.3f,
-                            scale       = 0.9f + (float)rand.NextDouble() * 0.9f,
-                            texture     = Starburst.inst().get_content<Texture2D>("particle")
+                            scale       = 0.4f + (float)rand.NextDouble() * 0.7f,
+                            texture     = Starburst.inst().get_content<Texture2D>("particle2")
                         },
                         new TTL {
                             alpha_fn = (x, max) => 1.0f - x/max,
@@ -549,10 +549,10 @@ namespace Fab5.Starburst.States.Playing {
                     var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
                     var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
                     var radius = 13.0f * (float)rand.NextDouble();
-                    var speed  = (300.0f + 150.0f * (float)rand.NextDouble());
+                    var speed  = (500.0f + 180.0f * (float)Math.Pow(rand.NextDouble(), 2.0f));
 
                     return new Component[] {
-                        new Mass { drag_coeff = -4.0f },
+                        new Mass { drag_coeff = 2.5f },
                         new Position {
                             x = data.c_x + (float)Math.Cos(theta1) * radius,
                             y = data.c_y + (float)Math.Cos(theta1) * radius
@@ -563,10 +563,10 @@ namespace Fab5.Starburst.States.Playing {
                         },
                         new Sprite {
                             blend_mode  = Sprite.BM_ADD,
-                            color       = new Color(1.0f, 0.3f, 0.1f),
+                            color       = new Color(0.9f, 0.7f, 1.0f, 1.0f),
                             layer_depth = 0.3f,
-                            scale       = 0.9f + (float)rand.NextDouble() * 0.9f,
-                            texture     = Starburst.inst().get_content<Texture2D>("particle")
+                            scale       = 0.4f + (float)rand.NextDouble() * 0.7f,
+                            texture     = Starburst.inst().get_content<Texture2D>("particle2")
                         },
                         new TTL {
                             alpha_fn = (x, max) => 1.0f - x/max,
@@ -593,10 +593,10 @@ namespace Fab5.Starburst.States.Playing {
                     var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
                     var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
                     var radius = 13.0f * (float)rand.NextDouble();
-                    var speed  = (300.0f + 150.0f * (float)rand.NextDouble());
+                    var speed  = (500.0f + 180.0f * (float)Math.Pow(rand.NextDouble(), 2.0f));
 
                     return new Component[] {
-                        new Mass { drag_coeff = -3.0f },
+                        new Mass { drag_coeff = 2.5f },
                         new Position {
                             x = data.c_x + (float)Math.Cos(theta1) * radius,
                             y = data.c_y + (float)Math.Cos(theta1) * radius
@@ -607,10 +607,10 @@ namespace Fab5.Starburst.States.Playing {
                         },
                         new Sprite {
                             blend_mode  = Sprite.BM_ADD,
-                            color       = new Color(1.0f, 0.3f, 0.1f),
+                            color       = new Color(0.9f, 0.7f, 1.0f, 1.0f),
                             layer_depth = 0.3f,
-                            scale       = 0.9f + (float)rand.NextDouble() * 0.9f,
-                            texture     = Starburst.inst().get_content<Texture2D>("particle")
+                            scale       = 0.4f + (float)rand.NextDouble() * 0.7f,
+                            texture     = Starburst.inst().get_content<Texture2D>("particle2")
                         },
                         new TTL {
                             alpha_fn = (x, max) => 1.0f - x/max,
