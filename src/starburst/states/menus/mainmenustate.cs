@@ -56,93 +56,84 @@ namespace Fab5.Starburst.States {
         public Playing.Game_Config gameConfig;
 
         public override void on_message(string msg, dynamic data) {
-            if(msg.Equals("fullscreen")) {
-                Starburst.inst().GraphicsMgr.ToggleFullScreen();
-            }
-            else if (msg.Equals("up")) {
-                var entities = Starburst.inst().get_entities_fast(typeof(Position));
-                Entity entity = entities[0];
-                var position = entity.get_component<Position>();
-                if (position.y > (int)options.mode) {
-                    position.y -= 1;
-                    position.x = 0;
+
+            if (btnDelay <= 0) {
+                if (msg.Equals("fullscreen")) {
+                    Starburst.inst().GraphicsMgr.ToggleFullScreen();
+                }
+                else if (msg.Equals("up")) {
+                    var entities = Starburst.inst().get_entities_fast(typeof(Position));
+                    Entity entity = entities[0];
+                    var position = entity.get_component<Position>();
+                    if (position.y > (int)options.mode) {
+                        position.y -= 1;
+                        position.x = 0;
+                        Starburst.inst().message("play_sound", new { name = "menu_click" });
+                    }
+                }
+                else if (msg.Equals("down")) {
+                    var entities = Starburst.inst().get_entities_fast(typeof(Position));
+                    Entity entity = entities[0];
+                    var position = entity.get_component<Position>();
+                    if (position.y < (int)options.proceed) {
+                        position.y += 1;
+                        Starburst.inst().message("play_sound", new { name = "menu_click" });
+                    }
+                }
+                else if (msg.Equals("left")) {
+                    var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
+                    Entity cursor = entities[0];
+                    Position cursorPosition = cursor.get_component<Position>();
+
+                    if (cursorPosition.y == (int)options.mode)
+                        gameMode = (gameMode == 0 ? 1 : 0);
+                    else if (cursorPosition.y == (int)options.soccer)
+                        soccerball = !soccerball;
+                    else if (cursorPosition.y == (int)options.flag)
+                        captureTheFlag = !captureTheFlag;
+                    else if (cursorPosition.y == (int)options.asteroids) {
+                        if (asteroidCount == asteroids.off)
+                            asteroidCount = asteroids.many;
+                        else
+                            asteroidCount--;
+                    }
                     Starburst.inst().message("play_sound", new { name = "menu_click" });
                 }
-            }
-            else if (msg.Equals("down")) {
-                var entities = Starburst.inst().get_entities_fast(typeof(Position));
-                Entity entity = entities[0];
-                var position = entity.get_component<Position>();
-                if (position.y < (int)options.proceed) {
-                    position.y += 1;
+                else if (msg.Equals("right")) {
+                    var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
+                    Entity cursor = entities[0];
+                    Position cursorPosition = cursor.get_component<Position>();
+
+                    if (cursorPosition.y == (int)options.mode)
+                        gameMode = (gameMode == 0 ? 1 : 0);
+                    else if (cursorPosition.y == (int)options.soccer)
+                        soccerball = !soccerball;
+                    else if (cursorPosition.y == (int)options.flag)
+                        captureTheFlag = !captureTheFlag;
+                    else if (cursorPosition.y == (int)options.asteroids) {
+                        if (asteroidCount == asteroids.many)
+                            asteroidCount = asteroids.off;
+                        else
+                            asteroidCount++;
+                    }
                     Starburst.inst().message("play_sound", new { name = "menu_click" });
                 }
-            }
-            else if (msg.Equals("left")) {
-                var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
-                Entity cursor = entities[0];
-                Position cursorPosition = cursor.get_component<Position>();
-
-                if (cursorPosition.y == (int)options.mode)
-                    gameMode = (gameMode == 0 ? 1 : 0);
-                else if (cursorPosition.y == (int)options.soccer)
-                    soccerball = !soccerball;
-                else if (cursorPosition.y == (int)options.flag)
-                    captureTheFlag = !captureTheFlag;
-                else if (cursorPosition.y == (int)options.asteroids) {
-                    if (asteroidCount == asteroids.off)
-                        asteroidCount = asteroids.many;
-                    else
-                        asteroidCount--;
+                else if (msg.Equals("select")) {
+                    Starburst.inst().message("play_sound", new { name = "menu_click" });
+                    var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
+                    Entity cursor = entities[0];
+                    Position cursorPosition = cursor.get_component<Position>();
+                    if (cursorPosition.y == (int)options.proceed) {
+                        proceed();
+                    }
                 }
-                Starburst.inst().message("play_sound", new { name = "menu_click" });
-            }
-            else if (msg.Equals("right")) {
-                var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
-                Entity cursor = entities[0];
-                Position cursorPosition = cursor.get_component<Position>();
-
-                if (cursorPosition.y == (int)options.mode)
-                    gameMode = (gameMode == 0 ? 1 : 0);
-                else if (cursorPosition.y == (int)options.soccer)
-                    soccerball = !soccerball;
-                else if (cursorPosition.y == (int)options.flag)
-                    captureTheFlag = !captureTheFlag;
-                else if (cursorPosition.y == (int)options.asteroids) {
-                    if (asteroidCount == asteroids.many)
-                        asteroidCount = asteroids.off;
-                    else
-                        asteroidCount++;
-                }
-                Starburst.inst().message("play_sound", new { name = "menu_click" });
-            }
-            else if (msg.Equals("select")) {
-                Starburst.inst().message("play_sound", new { name = "menu_click" });
-                var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
-                Entity cursor = entities[0];
-                Position cursorPosition = cursor.get_component<Position>();
-                if (cursorPosition.y == (int)options.proceed) {
+                else if (msg.Equals("start")) {
+                    Starburst.inst().message("play_sound", new { name = "menu_click" });
                     proceed();
                 }
-            }
-            else if (msg.Equals("start")) {
-                if (btnDelay <= 0) {
+                else if (msg.Equals("back")) {
                     Starburst.inst().message("play_sound", new { name = "menu_click" });
-                    proceed();
                 }
-            }
-            else if (msg.Equals("back")) {
-                /*
-                Entity entity = data.Player;
-                var position = entity.get_component<Position>();
-                if (position.y == 2) {
-                    playerCount--;
-                }
-                if (position.y > 0) {
-                    position.y -= 1;
-                    playerSlots[(int)position.x] -= 1;*/
-                    Starburst.inst().message("play_sound", new { name = "menu_click" });
-                //}
             }
         }
 
@@ -207,7 +198,8 @@ namespace Fab5.Starburst.States {
 
             // räkna upp tid (dt)
             elapsedTime += dt;
-            btnDelay -= dt;
+            if(btnDelay > 0)
+                btnDelay -= dt;
 
             if (elapsedTime >= animationTime) {
                 elapsedTime = 0;
