@@ -212,17 +212,29 @@ public class Playing_State : Game_State {
         //create_entity(Turbo_Powerup.create_components());
 
 
-        var shield = create_entity(Powerup.create(new Shield_Powerup()));
-        shield.get_component<Position>().x = -1800.0f; shield.get_component<Position>().y = 1500.0f;
+        var shield1 = create_entity(Powerup.create(new Shield_Powerup()));
+        shield1.get_component<Position>().x = -1800.0f; shield1.get_component<Position>().y = 1500.0f;
 
-        var multi = create_entity(Powerup.create(new Multifire_Powerup()));
-        multi.get_component<Position>().x = -1700.0f; multi.get_component<Position>().y = 1500.0f;
+        var multi1 = create_entity(Powerup.create(new Multifire_Powerup()));
+        multi1.get_component<Position>().x = -1700.0f; multi1.get_component<Position>().y = 1500.0f;
 
-        var freefire = create_entity(Powerup.create(new Free_Fire_Powerup()));
-        freefire.get_component<Position>().x = -1600.0f; freefire.get_component<Position>().y = 1500.0f;
+        var freefire1 = create_entity(Powerup.create(new Free_Fire_Powerup()));
+        freefire1.get_component<Position>().x = -1600.0f; freefire1.get_component<Position>().y = 1500.0f;
 
-        var turbo = create_entity(Powerup.create(new Turbo_Powerup()));
-        turbo.get_component<Position>().x = -1500.0f; turbo.get_component<Position>().y = 1500.0f;
+        var turbo1 = create_entity(Powerup.create(new Turbo_Powerup()));
+        turbo1.get_component<Position>().x = -1500.0f; turbo1.get_component<Position>().y = 1500.0f;
+
+        var shield2 = create_entity(Powerup.create(new Shield_Powerup()));
+        shield2.get_component<Position>().x = 1800.0f; shield2.get_component<Position>().y = -1500.0f;
+
+        var multi2 = create_entity(Powerup.create(new Multifire_Powerup()));
+        multi2.get_component<Position>().x = 1700.0f; multi2.get_component<Position>().y = -1500.0f;
+
+        var freefire2 = create_entity(Powerup.create(new Free_Fire_Powerup()));
+        freefire2.get_component<Position>().x = 1600.0f; freefire2.get_component<Position>().y = -1500.0f;
+
+        var turbo2 = create_entity(Powerup.create(new Turbo_Powerup()));
+        turbo2.get_component<Position>().x = 1500.0f; turbo2.get_component<Position>().y = -1500.0f;
 
         //create_entity(Dummy_Enemy.create_components());
 

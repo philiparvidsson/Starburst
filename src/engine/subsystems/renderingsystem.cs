@@ -344,6 +344,7 @@ namespace Fab5.Engine.Subsystems {
         }
 
 
+        List<Entity> temp_ = new List<Entity>(256);
         public override void draw(float t, float dt)
         {
             sprite_batch.GraphicsDevice.Clear(Color.Black);
@@ -360,23 +361,33 @@ namespace Fab5.Engine.Subsystems {
             var entities = Fab5_Game.inst().get_entities_fast(typeof(Sprite));
             var num_entities = entities.Count;
 
-            var temp = new List<Entity>(256);
+            var temp = temp_;
+            temp.Clear();
 
-            bool in_any_view = false;
             foreach (Entity e in entities) {
                 var pos = e.get_component<Position>();
-                var tex = e.get_component<Sprite  >().texture;
+                var px = pos.x;
+                var py = pos.y;
+                var tex = e.get_component<Sprite >().texture;
+                var texw = tex.Width*0.5f;
+                var texh = tex.Height*0.5f;
+                var left = px+texw;
+                var right = px-texw;
+                var top = py+texh;
+                var bottom = py-texh;
+
+                var in_any_view = false;
 
                 foreach (Camera cam in cameras) {
                     var cx = cam.position.x;
                     var cy = cam.position.y;
-                    var hw = cam.viewport.Width /2.0f;
-                    var hh = cam.viewport.Height/2.0f;
+                    var hw = cam.viewport.Width * 0.5f;
+                    var hh = cam.viewport.Height * 0.5f;
 
-                    if ((pos.x+tex.Width  > cx - hw)
-                     || (pos.x-tex.Width  > cx - hh)
-                     || (pos.y+tex.Height > cy + hw)
-                     || (pos.y-tex.Height > cy + hh))
+                    if ((left   > cx - hw)
+                     && (right  < cx + hw)
+                     && (top    > cy - hh)
+                     && (bottom < cy + hh))
                     {
                         in_any_view = true;
                         break;
@@ -388,11 +399,12 @@ namespace Fab5.Engine.Subsystems {
                 }
             }
 
+
             entities     = temp;
-            num_entities = entities.Count;
+            num_entities = temp.Count;
 
             for (int i = 0; i < num_entities; i++) {
-                update_sprite(entities[i], dt);
+                update_sprite(temp[i], dt);
             }
 
             var hooks = Fab5_Game.inst().get_entities_fast(typeof (Post_Render_Hook));
@@ -433,9 +445,9 @@ namespace Fab5.Engine.Subsystems {
             }
             sprite_batch.GraphicsDevice.Viewport = defaultViewport;
 
-            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            /*sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             draw_match_time();
-            sprite_batch.End();
+            sprite_batch.End();*/
 
             base.draw(t, dt);
         }
@@ -532,7 +544,7 @@ namespace Fab5.Engine.Subsystems {
                               source_rect,
                               sprite.color,
                               angle,
-                              new Vector2(source_rect.Width/2.0f, source_rect.Height/2.0f),
+                              new Vector2(source_rect.Width*0.5f, source_rect.Height*0.5f),
                               new Vector2(sprite.scale_x, sprite.scale_y),
                               SpriteEffects.None,
                               sprite.layer_depth);

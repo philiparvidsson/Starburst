@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 
 public class Lifetime_Manager : Subsystem {
     private System.Threading.AutoResetEvent mre = new System.Threading.AutoResetEvent(false);
+
     public override void draw(float t, float dt) {
         var entities = Fab5_Game.inst().get_entities_fast(typeof (TTL));
         int num_entities = entities.Count;
@@ -17,9 +18,10 @@ public class Lifetime_Manager : Subsystem {
         List<Entity> entities_to_destroy = new List<Entity>();
 
         int counter = num_entities;
-
         for (int i = 0; i < num_entities; i++) {
-            System.Threading.ThreadPool.QueueUserWorkItem(o => {
+//            System.Threading.ThreadPool.QueueUserWorkItem(o => {
+            var o = entities[i];
+            System.Threading.Tasks.Task.Factory.StartNew(() => {
                 var entity = (Entity)o;//entities[i];
                 var ttl    = entity.get_component<TTL>();
 
@@ -43,14 +45,14 @@ public class Lifetime_Manager : Subsystem {
                         var a = ttl.alpha_fn(ttl.time, ttl.max_time) * 255.0f;
                         if (a < 0.0f) a = 0.0f;
                         if (a > 255.0f) a = 255.0f;
-                        s.color = new Color(s.color.R, s.color.G, s.color.B, (byte)a);
+                        s.color.A = (byte)a;
                     }
                 }
 
                 if (System.Threading.Interlocked.Decrement(ref counter) == 0) {
                     mre.Set();
                 }
-            }, entities[i]);
+            });
         }
 
         mre.WaitOne();

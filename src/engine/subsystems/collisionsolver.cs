@@ -41,6 +41,7 @@ public class Collision_Solver : Subsystem {
     }
 
     const uint grid_size = 64;
+    private Dictionary<uint, HashSet<Entity>> grid = new Dictionary<uint, HashSet<Entity>>();
     public override void update(float t, float dt) {
         // Collisions occur at an instant so who cares about dt?
 
@@ -53,9 +54,10 @@ public class Collision_Solver : Subsystem {
         );*/
 
         // Spatial grid ftw!
-        var grid = new Dictionary<uint, HashSet<Entity>>();
+        //var grid = new Dictionary<uint, HashSet<Entity>>();
 //        for (int i = 0; i < num_entities; i++) {
   //          var e1  = entities[i];
+        grid.Clear();
         var entities = Fab5_Game.inst().get_entities_fast(typeof (Bounding_Circle));
         foreach (var e1 in entities) {
             var p1  = e1.get_component<Position>();
@@ -88,8 +90,9 @@ public class Collision_Solver : Subsystem {
         int counter = entities.Count;
 
         foreach (var entity in entities) {
-            System.Threading.ThreadPool.QueueUserWorkItem(o => {
-                var e1  = (Entity)o;//entities[(int)o];
+            //System.Threading.ThreadPool.QueueUserWorkItem(o => {
+            System.Threading.Tasks.Task.Factory.StartNew(() => {
+                var e1  = entity;//entities[(int)o];
                 var p1  = e1.get_component<Position>();
                 var v1  = e1.get_component<Velocity>();
 
@@ -128,21 +131,19 @@ public class Collision_Solver : Subsystem {
                 get_entities(p1, e1.get_component<Bounding_Circle>(), grid, out hash_set);
                 if (hash_set != null) {
                     foreach (Entity e2 in hash_set) {
-                        if (e2 == e1) continue;
                         // only test against higher ids. oh lol what a hack if i ever saw one lulz
-                        if (e2.id < e1.id) continue;
-
-                        if (resolve_circle_circle_collision(e1, e2)) {
-                            // is it sane to break here? lol
-                            //break;
+                        if (e2.id <= e1.id) {
+                            continue;
                         }
+
+                        resolve_circle_circle_collision(e1, e2);
                     }
                 }
 
                 if (System.Threading.Interlocked.Decrement(ref counter) == 0) {
                     mre.Set();
                 }
-            }, entity);
+            });
         }
 
         mre.WaitOne();
@@ -517,7 +518,8 @@ public class Collision_Solver : Subsystem {
         var d_x    = p1.x - p2.x;
         var d_y    = p1.y - p2.y;
         var r2     = d_x*d_x + d_y*d_y;
-        var r2_min = (c1.radius+c2.radius) * (c1.radius+c2.radius);
+        var cs     = (c1.radius+c2.radius);
+        var r2_min = cs * cs;
 
         if (r2 < 0.00001f || r2 >= r2_min) {
             // No penetration or full penetration (which cannot be
