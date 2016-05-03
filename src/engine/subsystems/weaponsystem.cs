@@ -33,7 +33,7 @@ namespace Fab5.Engine.Subsystems {
                 weapon.timeSinceLastShot = 0f;
             }
         }
-        public override void update(float t, float dt) {
+        public override void draw(float t, float dt) {
             var entities = Fab5_Game.inst().get_entities_fast( typeof(Primary_Weapon));
             int numberOfWeapons = entities.Count;
 

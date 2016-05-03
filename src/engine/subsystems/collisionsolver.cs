@@ -40,7 +40,7 @@ public class Collision_Solver : Subsystem {
         }
     }
 
-    const uint grid_size = 64;
+    const uint grid_size = 128;
     private Dictionary<uint, HashSet<Entity>> grid = new Dictionary<uint, HashSet<Entity>>();
     public override void update(float t, float dt) {
         // Collisions occur at an instant so who cares about dt?
@@ -390,7 +390,7 @@ public class Collision_Solver : Subsystem {
 
     private void resolve_circle_tile_collision(Entity e1, int x, int y, ref bool coll_h, ref bool coll_v) {
         if (x < 0 || x > 255 || y < 0 || y > 255) return;
-        var k = tile_map.tiles[x+y*256];
+        var k = tile_map.tiles[x+(y<<8)];
         if (k == 0 || k >= 6) { // 6 and up are specials
             return;
         }
@@ -442,10 +442,11 @@ public class Collision_Solver : Subsystem {
 
         //int tw     = 16;
         //int th     = 16; shifting instead lewl
-        int left   = (int)(p.x - c.radius+2048.0f) >> 4;
-        int top    = (int)(p.y - c.radius+2048.0f) >> 4;
-        int right  = (int)(p.x + c.radius+2048.0f) >> 4;
-        int bottom = (int)(p.y + c.radius+2048.0f) >> 4;
+        var rad = c.radius;
+        int left   = (int)(p.x - rad+2048.0f) >> 4;
+        int top    = (int)(p.y - rad+2048.0f) >> 4;
+        int right  = (int)(p.x + rad+2048.0f) >> 4;
+        int bottom = (int)(p.y + rad+2048.0f) >> 4;
 
         var v = e1.get_component<Velocity>();
 
@@ -504,6 +505,19 @@ public class Collision_Solver : Subsystem {
     private bool resolve_circle_circle_collision(Entity e1, Entity e2) {
         var c1 = e1.get_component<Bounding_Circle>();
         var c2 = e2.get_component<Bounding_Circle>();
+        var p1     = e1.get_component<Position>();
+        var p2     = e2.get_component<Position>();
+        var d_x    = p1.x - p2.x;
+        var d_y    = p1.y - p2.y;
+        var r2     = d_x*d_x + d_y*d_y;
+        var cs     = (c1.radius+c2.radius);
+        var r2_min = cs * cs;
+
+        if (r2 >= r2_min || r2 < 0.0001f) {
+            // No penetration or full penetration (which cannot be
+            // solved in a sane way).
+            return false;
+        }
 
         if (c1.ignore_collisions == c2.ignore_collisions && c1.ignore_collisions > 0) {
             return false;
@@ -513,19 +527,6 @@ public class Collision_Solver : Subsystem {
             return false;
         }
 
-        var p1     = e1.get_component<Position>();
-        var p2     = e2.get_component<Position>();
-        var d_x    = p1.x - p2.x;
-        var d_y    = p1.y - p2.y;
-        var r2     = d_x*d_x + d_y*d_y;
-        var cs     = (c1.radius+c2.radius);
-        var r2_min = cs * cs;
-
-        if (r2 < 0.00001f || r2 >= r2_min) {
-            // No penetration or full penetration (which cannot be
-            // solved in a sane way).
-            return false;
-        }
 
         var r    = (float)Math.Sqrt(r2);
         var n_x  = d_x/r;

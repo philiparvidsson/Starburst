@@ -422,9 +422,9 @@ namespace Fab5.Engine.Subsystems {
 
                 var inv_zoom = 1.0f/current.zoom;
 
-                if (current.position.x + 0.5f*current.viewport.Width*inv_zoom > 2048.0f) current.position.x = 2048.0f - 0.5f*current.viewport.Width*inv_zoom;
-                if (current.position.x - 0.5f*current.viewport.Width*inv_zoom < -2048.0f) current.position.x = -2048.0f + 0.5f*current.viewport.Width*inv_zoom;
-                if (current.position.y + 0.5f*current.viewport.Height*inv_zoom > 2048.0f) current.position.y = 2048.0f - 0.5f*current.viewport.Height/current.zoom;
+                if (current.position.x + 0.5f*current.viewport.Width*inv_zoom  >  2048.0f) current.position.x = 2048.0f - 0.5f*current.viewport.Width*inv_zoom;
+                if (current.position.x - 0.5f*current.viewport.Width*inv_zoom  < -2048.0f) current.position.x = -2048.0f + 0.5f*current.viewport.Width*inv_zoom;
+                if (current.position.y + 0.5f*current.viewport.Height*inv_zoom >  2048.0f) current.position.y = 2048.0f - 0.5f*current.viewport.Height/current.zoom;
                 if (current.position.y - 0.5f*current.viewport.Height*inv_zoom < -2048.0f) current.position.y = -2048.0f + 0.5f*current.viewport.Height*inv_zoom;
 
                 draw_backdrop(sprite_batch, current);
@@ -533,10 +533,13 @@ namespace Fab5.Engine.Subsystems {
                 frame_height = sprite.texture.Height;
             }
 
-            var source_rect = entity.get_component<DrawArea>()?.rectangle ?? new Rectangle(0, 0, frame_width, frame_height);
+            Rectangle source_rect;
 
             if (sprite.num_frames > 1) {
                 source_rect = new Rectangle(sprite.frame_x, sprite.frame_y, frame_width, frame_height);
+            }
+            else {
+                source_rect = entity.get_component<DrawArea>()?.rectangle ?? new Rectangle(0, 0, frame_width, frame_height);
             }
 
             sprite_batch.Draw(sprite.texture,

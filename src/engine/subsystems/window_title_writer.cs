@@ -9,7 +9,6 @@ namespace Fab5.Engine.Subsystems {
     {
         float elapsedTime = 0;
 
-
         public override void draw(float t, float dt)
         {
             var entities = Fab5_Game.inst().get_entities_fast(typeof(FpsCounter));
@@ -18,6 +17,7 @@ namespace Fab5.Engine.Subsystems {
             {
                 var entity = entities[i];
                 var fps = entity.get_component<FpsCounter>();
+                fps.frameCounter += 1;
                 elapsedTime += dt;
 
                 if (elapsedTime > 1)
@@ -25,22 +25,12 @@ namespace Fab5.Engine.Subsystems {
                     elapsedTime -= 1;
                     fps.frameRate = fps.frameCounter;
                     fps.frameCounter = 0;
+
+                    Fab5_Game.inst().Window.Title = " * Starburst * " + fps.frameRate;
                 }
             }
 
-            String windowtitle = " * Starburst * ";
-            //var entities = Fab5_Game.inst().get_entities_fast(typeof(FpsCounter));
-            //int num_entities = entities.Count;
 
-            for (int i = 0; i < num_entities; i++)
-            {
-                var entity = entities[i];
-                var fps = entity.get_component<FpsCounter>();
-                fps.frameCounter++;
-                windowtitle += "FPS " + fps.frameRate;
-            }
-            var window = Fab5_Game.inst().Window;
-            window.Title = windowtitle;
         }
 
     }

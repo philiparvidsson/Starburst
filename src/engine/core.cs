@@ -148,39 +148,32 @@ public abstract class Game_State {
     object dummy_lock = new object();
     private bool resort_sprites;
     public Entity create_entity(params Component[] components) {
-        lock (dummy_lock) {
         var entity = new Entity();
 
         entity.id = Interlocked.Increment(ref next_entity_id);
         entity.state = this;
         entity.add_components(components);
 
-        entities[entity.id] = entity;
-
-        /*foreach (Component comp in components) {
-            var type = comp.GetType();
-
-            add_component(entity, type);
-        }*/
-
+        lock (dummy_lock) {
+            entities[entity.id] = entity;
+        }
 
         return (entity);
-        }
     }
 
     public void remove_entity(Int64 id) {
         lock (dummy_lock) {
-        if (!entities.ContainsKey(id)) {
-            return;
-        }
+            if (!entities.ContainsKey(id)) {
+                return;
+            }
 
-        var entity = entities[id];
+            var entity = entities[id];
 
-        foreach (var c in entity.components.Values) {
-            entity_dic[c.GetType()].Remove(entity);
-        }
+            foreach (var c in entity.components.Values) {
+                entity_dic[c.GetType()].Remove(entity);
+            }
 
-        entities.Remove(id);
+            entities.Remove(id);
         }
     }
 
@@ -198,11 +191,12 @@ public abstract class Game_State {
         return null;
     }
 
+    List<Entity> empty = new List<Entity>();
     public List<Entity> get_entities_fast(Type component_type) {
         List<Entity> e = null;
         entity_dic.TryGetValue(component_type, out e);
         if (e == null) {
-            return new List<Entity>();
+            return empty;
         }
         return e;
     }
@@ -266,18 +260,18 @@ public abstract class Game_State {
 
     private Comparer<Entity> sort_on_blend_mode = Comparer<Entity>.Create((e1, e2) => e1.get_component<Sprite>().blend_mode.CompareTo(e2.get_component<Sprite>().blend_mode));
     //private Comparer<Entity> sort_on_layer_depth = Comparer<Entity>.Create((e1, e2) => e1.get_component<Sprite>().layer_depth.CompareTo(e2.get_component<Sprite>().layer_depth));
-    private Comparer<Entity> sort_on_texture = Comparer<Entity>.Create((e1, e2) => e1.get_component<Sprite>().texture.Name.CompareTo(e2.get_component<Sprite>().texture.Name));
+    //private Comparer<Entity> sort_on_texture = Comparer<Entity>.Create((e1, e2) => e1.get_component<Sprite>().texture.Name.CompareTo(e2.get_component<Sprite>().texture.Name));
 
     public virtual void draw(float t, float dt) {
         if (resort_sprites) {
             resort_sprites = false;
 
-
             var sprites = get_entities_fast(typeof(Sprite));
-            // Only re-sort on new sprites... lol
+
             //sprites.Sort(sort_on_texture);
             sprites.Sort(sort_on_blend_mode);
         }
+
         foreach (var subsystem in subsystems) {
             subsystem.draw(t, dt);
         }

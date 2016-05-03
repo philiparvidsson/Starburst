@@ -10,43 +10,10 @@ using Microsoft.Xna.Framework.Graphics;
 public class Particle_System : Subsystem {
     private static Random rand = new Random();
 
-    public static Component[] explosion(float x, float y, Func<Sprite> sprite_fn) {
-        return new Component[] {
-            new TTL() { max_time = 0.05f },
-            new Particle_Emitter() {
-                emit_fn = () => {
-                    return new Component[] {
-                        new Position() { x = x,
-                                         y = y },
-                        new Velocity() { x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (100.0f + 50.0f * (float)rand.NextDouble()),
-                                         y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (100.0f + 50.0f * (float)rand.NextDouble()) },
-                        sprite_fn(),
-                        new TTL() { max_time = 0.2f + (float)(rand.NextDouble() * 0.1f) }
-                        //                        new Bounding_Circle() { radius = 1.0f },
-                        //                        new Mass() { mass = 0.0f }
-
-                    };
-                },
-                interval = 0.01f,
-                num_particles_per_emit = 10 + rand.Next(0, 20)
-            }
-        };
-    }
-
     public override void draw(float t, float dt) {
-        //int num_components;
-
-        //     var entities = Fab5_Game.inst().get_entities(out num_components,
-        //       typeof (Particle_Emitter)
-        // );
-
-        //        for (int i = 0; i < num_components; i++) {
-
-        //          var entity  = entities[i];
         foreach (var entity in Fab5_Game.inst().get_entities_fast(typeof (Particle_Emitter))) {
 
             var emitter = entity.get_component<Particle_Emitter>();
-
 
             emitter.time_since_emit += dt;
             if (emitter.time_since_emit >= emitter.interval) {

@@ -91,7 +91,7 @@ public abstract class Fab5_Game : Game {
             top_state.dispatch_messages();
         }
 
-        GC.Collect(2, System.GCCollectionMode.Optimized, false);
+        GC.Collect(1, System.GCCollectionMode.Optimized, false);
     }
 
     public Entity create_entity(params Component[] components) {
