@@ -220,8 +220,7 @@ namespace Fab5.Starburst.States {
             Starburst.inst().GraphicsDevice.Clear(Color.Black);
             Viewport vp = sprite_batch.GraphicsDevice.Viewport;
 
-            int menuOffset = 400;
-            int leftOffset = 40;
+            int middleSpacing = 20;
 
             // hämta spelare och position
             var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
@@ -234,16 +233,21 @@ namespace Fab5.Starburst.States {
             sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             sprite_batch.Draw(background, destinationRectangle: new Rectangle(0, 0, vp.Width, vp.Height), color: Color.White);
 
-            sprite_batch.DrawString(font, "Game mode", new Vector2(leftOffset, 100), Color.White);
-            sprite_batch.DrawString(font, (gameMode == 0 ? "< Team Match >" : "< Free for All >"), new Vector2(menuOffset, 100), (position.y == (int)options.mode ? new Color(Color.Gold, textOpacity) : Color.White));
+            String ctfString = "Capture the flag";
+            Vector2 leftTextSize = font.MeasureString(ctfString);
+            int leftTextX = (int)(vp.Width * .5f - leftTextSize.X - middleSpacing);
+            int rightTextX = (int)(vp.Width * .5f + middleSpacing);
 
-            sprite_batch.DrawString(font, "Soccer ball", new Vector2(leftOffset, 140), Color.White);
-            sprite_batch.DrawString(font, (soccerball ? "< on >" : "< off >"), new Vector2(menuOffset, 140), (position.y == (int)options.soccer ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, "Game mode", new Vector2(leftTextX, 100), Color.White);
+            sprite_batch.DrawString(font, (gameMode == 0 ? "< Team Match >" : "< Free for All >"), new Vector2(rightTextX, 100), (position.y == (int)options.mode ? new Color(Color.Gold, textOpacity) : Color.White));
 
-            sprite_batch.DrawString(font, "Capture the flag", new Vector2(leftOffset, 180), Color.White);
-            sprite_batch.DrawString(font, (captureTheFlag ? "< on >" : "< off >"), new Vector2(menuOffset, 180), (position.y == (int)options.flag ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, "Soccer ball", new Vector2(leftTextX, 140), Color.White);
+            sprite_batch.DrawString(font, (soccerball ? "< on >" : "< off >"), new Vector2(rightTextX, 140), (position.y == (int)options.soccer ? new Color(Color.Gold, textOpacity) : Color.White));
 
-            sprite_batch.DrawString(font, "Asteroids", new Vector2(leftOffset, 220), Color.White);
+            sprite_batch.DrawString(font, ctfString, new Vector2(leftTextX, 180), Color.White);
+            sprite_batch.DrawString(font, (captureTheFlag ? "< on >" : "< off >"), new Vector2(rightTextX, 180), (position.y == (int)options.flag ? new Color(Color.Gold, textOpacity) : Color.White));
+
+            sprite_batch.DrawString(font, "Asteroids", new Vector2(leftTextX, 220), Color.White);
             String asteroidString = "Off";
             if (asteroidCount == asteroids.few)
                 asteroidString = "Few";
@@ -251,13 +255,14 @@ namespace Fab5.Starburst.States {
                 asteroidString = "Medium";
             else if (asteroidCount == asteroids.many)
                 asteroidString = "Many";
-            sprite_batch.DrawString(font, "< " + asteroidString + " >", new Vector2(menuOffset, 220), (position.y == (int)options.asteroids ? new Color(Color.Gold, textOpacity) : Color.White));
-
-            sprite_batch.DrawString(font, "Map", new Vector2(leftOffset, 280), Color.White);
+            sprite_batch.DrawString(font, "< " + asteroidString + " >", new Vector2(rightTextX, 220), (position.y == (int)options.asteroids ? new Color(Color.Gold, textOpacity) : Color.White));
+            String map = "Map";
+            Vector2 mapTextSize = font.MeasureString(map);
+            sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, 280), Color.White);
             // visa pilar eller något?
-            sprite_batch.Draw(map1, new Rectangle(leftOffset, 310, map1.Width, map1.Height), Color.White);
-            sprite_batch.DrawString(font, "<", new Vector2(leftOffset + map1.Width * .5f - 40, 310 + map1.Height + 10), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
-            sprite_batch.DrawString(font, ">", new Vector2(leftOffset + map1.Width * .5f + 30, 310 + map1.Height + 10), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.Draw(map1, new Rectangle((int)(vp.Width*.5f - map1.Width*.5f), 310, map1.Width, map1.Height), Color.White);
+            sprite_batch.DrawString(font, "<", new Vector2((int)(vp.Width*.5f-middleSpacing-10), 310 + map1.Height + 10), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, ">", new Vector2((int)(vp.Width * .5f + middleSpacing), 310 + map1.Height + 10), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
 
             String text = "Continue to player selection";
             Vector2 textSize = font.MeasureString(text);
