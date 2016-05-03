@@ -179,7 +179,17 @@
 
         private void updateEnergySprite(float dt)
         {
-            this.number_of_players = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler)).Count;
+            var players = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler));
+
+
+            this.number_of_players = 0;
+
+            foreach(Entity p in players)
+            {
+                if(p.get_component<Inputhandler>().enabled)
+                    this.number_of_players++;
+            }
+            
 
             enball.fps = 20.0f / this.number_of_players;
 
