@@ -41,11 +41,16 @@
             return new Component[] {
                 new Particle_Emitter() {
                     emit_fn = () => {
+                        var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
+                        var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
+                        var radius = 6.0f * (float)rand.NextDouble();
+                        var speed2  = (20.0f * (float)Math.Pow(rand.NextDouble(), 2.0f));
+
                         return new Component[] {
-                            new Position() { x = pos.x + (float)Math.Cos(2.0f*3.1415f*(float)rand.NextDouble()) * 6.0f * (float)rand.NextDouble(),
-                                             y = pos.y + (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 6.0f * (float)rand.NextDouble() },
-                            new Velocity() { x = velocity.x * 0.05f + (float)Math.Cos(2.0f*3.1415f*(float)rand.NextDouble()) * 20.0f * (float)(0.5f+rand.NextDouble()),
-                                             y = velocity.y * 0.05f + (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 20.0f * (float)(0.5f+rand.NextDouble()) },
+                            new Position() { x = pos.x + (float)Math.Cos(theta1) * radius,
+                                             y = pos.y + (float)Math.Sin(theta1) * radius },
+                            new Velocity() { x = velocity.x * 0.05f + (float)Math.Cos(theta2) * speed2,
+                                             y = velocity.y * 0.05f + (float)Math.Sin(theta2) * speed2 },
                             new Sprite() {
                                 texture = Starburst.inst().get_content<Texture2D>("particle"),
                                 color = new Color(1.0f, 0.6f, 0.2f, 1.0f),
@@ -91,16 +96,21 @@
             var angle = new Angle() { angle = shipAngle.angle + rotationOffset, ang_vel = 0.0f };
             var velocity = new Velocity() { x = cfa*speed+shipVel.x, y = sfa*speed+shipVel.y };
 
-            Sprite bulletSprite = new Sprite() { texture = bulletTexture2, layer_depth = 1, blend_mode = Sprite.BM_ADD, num_frames = 4, frame_width = 32, frame_height = 32, fps = 8.0f};
+            Sprite bulletSprite = new Sprite() { texture = bulletTexture2, layer_depth = 1, num_frames = 4, frame_width = 32, frame_height = 32, fps = 8.0f};
 
             return new Component[] {
                 new Particle_Emitter() {
                     emit_fn = () => {
+                        var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
+                        var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
+                        var radius = 13.0f * (float)rand.NextDouble();
+                        var speed2  = (20.0f * (float)Math.Pow(rand.NextDouble(), 2.0f));
+
                         return new Component[] {
-                            new Position() { x = pos.x + (float)Math.Cos(2.0f*3.1415f*(float)rand.NextDouble()) * 10.0f * (float)rand.NextDouble(),
-                                             y = pos.y + (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 10.0f * (float)rand.NextDouble() },
-                            new Velocity() { x = velocity.x * 0.05f + (float)Math.Cos(2.0f*3.1415f*(float)rand.NextDouble()) * 20.0f * (float)(0.5f+rand.NextDouble()),
-                                             y = velocity.y * 0.05f + (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 20.0f * (float)(0.5f+rand.NextDouble()) },
+                            new Position() { x = pos.x + (float)Math.Cos(theta1) * radius,
+                                             y = pos.y + (float)Math.Sin(theta1) * radius },
+                            new Velocity() { x = velocity.x * 0.05f + (float)Math.Cos(theta2) * speed2,
+                                             y = velocity.y * 0.05f + (float)Math.Sin(theta2) * speed2 },
                             new Sprite() {
                                 texture = Starburst.inst().get_content<Texture2D>("particle2"),
                                 color = new Color(0.9f, 0.7f, 1.0f, 1.0f),
