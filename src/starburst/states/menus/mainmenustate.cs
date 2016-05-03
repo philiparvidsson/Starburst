@@ -144,7 +144,7 @@ namespace Fab5.Starburst.States {
             else if (asteroidCount == asteroids.medium)
                 asteroid = 40;
             else if (asteroidCount == asteroids.many)
-                asteroid = 80;
+                asteroid = 60;
             this.gameConfig = new Playing.Game_Config() { mode = this.gameMode, enable_soccer = soccerball, num_asteroids = asteroid };
             Starburst.inst().enter_state(new Player_Selection_Menu(this));
         }
