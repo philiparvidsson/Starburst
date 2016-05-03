@@ -139,7 +139,7 @@
                                         ignore_collisions = IG_BULLET,
                                         ignore_collisions2 = origin.get_component<Ship_Info>().team,
                                         collision_cb = (self, other_entity) => {
-                                            if(bounce_counter++ > 2) {
+                                            if(bounce_counter++ > 1) {
                                                 var p_x = self.get_component<Position>().x;
                                                 var p_y = self.get_component<Position>().y;
                                                 Fab5_Game.inst().create_entity(new Component[] {
