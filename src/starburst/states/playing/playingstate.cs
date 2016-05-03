@@ -174,7 +174,7 @@ public class Playing_State : Game_State {
                     var dist = (dx*dx+dy*dy);
 
                     var min_dist = ast.get_component<Bounding_Circle>().radius + asteroid.get_component<Bounding_Circle>().radius;
-                    min_dist *= 2.0f;
+                    min_dist *= 1.05f;
                     min_dist *= min_dist;
 
                     if (dist < min_dist) {
