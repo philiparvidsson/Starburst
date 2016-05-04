@@ -112,6 +112,7 @@ public class Playing_State : Game_State {
         coll_handler = new Collision_Handler(this, tile_map, spawner);
 
         game_conf.powerup_spawn_time = 1.0f;
+        game_conf.num_powerups = 50;
 
 
         load_map();

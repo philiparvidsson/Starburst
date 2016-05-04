@@ -13,7 +13,7 @@ namespace Fab5.Engine.Subsystems {
         float elapsedTime = 0;
 
         public override void on_message(string msg, dynamic data) {
-            if (msg == "set_w_title") {
+            if (msg == "set_w_title" && Fab5_Game.inst().Window != null) {
                 Fab5_Game.inst().Window.Title = data.str;
             }
         }

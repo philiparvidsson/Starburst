@@ -42,6 +42,8 @@ public class Powerup : Component {
 
             new Particle_Emitter {
                 emit_fn = () => {
+                    if ((float)rand.NextDouble() > 0.8f) return null;
+
                     var theta1 = (2.0f/5.0f)*3.1415f*(float)rand.Next(0, 6);
                     var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
                     var radius = 10.0f * (float)rand.NextDouble();
@@ -69,7 +71,7 @@ public class Powerup : Component {
                 },
 
                 interval               = 0.3f,
-                num_particles_per_emit = 1 + rand.Next(0, 2)
+                num_particles_per_emit = 2
             }
         };
 

@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 /*------------------------------------------------
  * CLASSES
@@ -38,6 +40,72 @@ public abstract class Fab5_Game : Game {
         Content.RootDirectory = "Content";
     }
 
+    int num_assets_to_preload;
+    private Queue<string> preload_assets = new Queue<string>();
+    private System.Action<string, float> preload_cb;
+
+    public void begin_preload_content(System.Action<string, float> preload_cb = null) {
+        var s = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), Content.RootDirectory);
+        preload_content(s);
+        num_assets_to_preload = preload_assets.Count;
+        this.preload_cb = preload_cb;
+    }
+
+    public bool preload_next() {
+        if (preload_assets.Count == 0) {
+            preload_assets = null;
+            if (preload_cb != null) {
+                preload_cb(null, 1.0f);
+            }
+            return false;
+        }
+
+        var s = preload_assets.Dequeue();
+
+        // most lol hack ever, but it works!
+        bool ok = false;
+        if (!ok) {
+            try { get_content<Texture2D>(s);
+                  //Console.Write(" " + s);
+                  ok = true; } catch {}
+        }
+        if (!ok) {
+            try { get_content<SoundEffect>(s);
+                  //Console.Write(" " + s);
+                  ok = true; } catch {}
+        }
+        if (!ok) {
+            try { get_content<Song>(s);
+                  //Console.Write(" " + s);
+                  ok = true; } catch {}
+        }
+        if (!ok) {
+            try { get_content<SpriteFont>(s);
+                  //Console.Write(" " + s);
+                  ok = true; } catch {}
+       }
+
+        if (preload_cb != null) {
+            preload_cb(s, 1.0f - (float)preload_assets.Count / (float)num_assets_to_preload);
+        }
+
+        return true;
+    }
+
+    private void preload_content(string path) {
+        foreach (string file in System.IO.Directory.GetFiles(path, "*")) {
+            var i = path.ToLower().LastIndexOf(Content.RootDirectory.ToLower()) + Content.RootDirectory.Length+1;
+            var p = path;
+            if (i < p.Length) p = p.Substring(i); else p = "";
+            var s = System.IO.Path.Combine(p, System.IO.Path.GetFileNameWithoutExtension(file));
+            preload_assets.Enqueue(s);
+        }
+
+        foreach (string dir in System.IO.Directory.GetDirectories(path)) {
+            preload_content(System.IO.Path.Combine(path, dir));
+        }
+    }
+
     protected override void Initialize() {
         // TODO: Add your initialization logic here
 
@@ -47,7 +115,7 @@ public abstract class Fab5_Game : Game {
     }
 
     protected override void LoadContent() {
-        }
+    }
 
     protected override void UnloadContent() {
         // TODO: Unload any non ContentManager content here
@@ -172,16 +240,14 @@ public abstract class Fab5_Game : Game {
 
     //private Dictionary<string, object> content_dic = new Dictionary<string, object>();
     public T get_content<T>(string asset) {
-        /*object r;
-        if (content_dic.TryGetValue(asset, out r)) {
-            return (T)r;
+        var c = Content.Load<T>(asset);
+        if (c.GetType() == typeof(Texture2D)) {
+            // this is actually a bug in monogame. it does not preserve
+            // the name attribute when assets are preloaded. god damnit what noobs
+            (c as Texture2D).Name = asset;
         }
 
-        var o = Content.Load<T>(asset);
-        content_dic[asset] = o;
-
-        return o;*/
-        return Content.Load<T>(asset);
+        return c;
     }
 }
 

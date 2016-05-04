@@ -96,12 +96,12 @@
             var vp_size = Fab5_Game.inst().GraphicsDevice.Viewport.Width;
             var scale = 1.0f*(float)System.Math.Sqrt(1.0f+vp_size/1920.0f);
             var xx  = Fab5_Game.inst().GraphicsDevice.Viewport.Width - 32.0f - 8.0f;
-            var textsize = GFX_Util.measure_string("00.0");
-            var textx = xx - textsize.X - 8.0f;
-            var texty = 16.0f-textsize.Y*0.5f;
             var yy = Fab5_Game.inst().GraphicsDevice.Viewport.Height  - 128.0f * scale - 15.0f - 32.0f - 16.0f;
 
             foreach (var e in si.powerups) {
+                var textsize = GFX_Util.measure_string(e.Value.time >= 100.0f ? "100.9" : "99.9");
+                var textx = xx - textsize.X - 8.0f;
+                var texty = 16.0f-textsize.Y*0.5f;
                 sprite_batch.Draw(e.Value.icon, new Vector2(xx, yy), Color.White);
                 GFX_Util.draw_def_text(sprite_batch, string.Format("{0:0.0}", e.Value.time), textx, yy+texty);
                 yy -= 36.0f;

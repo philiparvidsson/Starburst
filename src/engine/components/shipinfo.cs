@@ -59,7 +59,6 @@
             return powerups.ContainsKey(name);
         }
 
-
         public Ship_Info(float top_hp, float top_energy, float top_velocity, float acceleration)
         {
             this.top_hp = top_hp;
