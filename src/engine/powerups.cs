@@ -23,7 +23,7 @@ public class Powerup : Component {
     private static System.Random rand = new System.Random();
 
     public void begin(Entity holder, Entity powerup) {
-        holder.get_component<Ship_Info>().powerups.Add(impl);
+        holder.get_component<Ship_Info>().add_powerup(impl);
 
         impl.on_begin(holder, powerup);
     }
@@ -43,25 +43,15 @@ public class Powerup : Component {
 
             new Particle_Emitter {
                 emit_fn = () => {
-                    var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
+                    var theta1 = (2.0f/5.0f)*3.1415f*(float)rand.Next(0, 6);
                     var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
                     var radius = 10.0f * (float)rand.NextDouble();
-                    var speed  = 60.0f * (float)(0.5f+rand.NextDouble());
+                    var speed  = 150.0f * (float)(0.5f+rand.NextDouble());
                     var i = rand.Next(0, 6);
-                    var color = Color.Red;
-
-                    switch (i) {
-                        case 0: color = new Color(1.0f, 0.3f, 0.3f); break;
-                        case 1: color = new Color(0.3f, 1.0f, 0.3f); break;
-                        case 2: color = new Color(0.3f, 0.3f, 1.0f); break;
-                        case 3: color = new Color(1.0f, 1.0f, 0.3f); break;
-                        case 4: color = new Color(0.3f, 1.0f, 1.0f); break;
-                        case 5: color = new Color(1.0f, 0.3f, 0.3f); break;
-                        case 6: color = new Color(1.0f, 0.3f, 1.0f); break;
-                    };
+                    var color = Color.White;
 
                     return new Component [] {
-                        new Mass     { drag_coeff = 1.9f },
+                        new Mass     { drag_coeff = 5.9f },
                         new Position { x = pos.x + (float)Math.Cos(theta1) * radius,
                                        y = pos.y + (float)Math.Sin(theta1) * radius },
 
@@ -74,13 +64,13 @@ public class Powerup : Component {
                                      scale       = 0.4f + (float)rand.NextDouble() * 0.7f,
                                      texture     = Fab5_Game.inst().get_content<Texture2D>("particle2") },
 
-                        new TTL { alpha_fn = (x, max) => (1.0f - ((x*x*x)/(max*max*max)))*0.9f,
+                        new TTL { alpha_fn = (x, max) => (1.0f - ((x*x*x)/(max*max*max))),
                                   max_time = 0.55f + (float)Math.Pow((rand.NextDouble() * 1.2f), 2.0f) }
                     };
                 },
 
-                interval               = 0.07f,
-                num_particles_per_emit = 4
+                interval               = 0.3f,
+                num_particles_per_emit = 1 + rand.Next(0, 2)
             }
         };
 

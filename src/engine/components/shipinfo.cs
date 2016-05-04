@@ -26,15 +26,14 @@
         public int team;
         public int pindex;
 
-        public System.Collections.Generic.List<Powerup_Impl> powerups = new System.Collections.Generic.List<Powerup_Impl>();
+        public System.Collections.Generic.Dictionary<string, Powerup_Impl> powerups = new System.Collections.Generic.Dictionary<string, Powerup_Impl>();
+
+        public void add_powerup(Powerup_Impl powerup) {
+            powerups[powerup.name] = powerup;
+        }
 
         public bool has_powerup(string name) {
-            foreach (var powerup in powerups) {
-                if (powerup.name == name) {
-                    return true;
-                }
-            }
-            return false;
+            return powerups.ContainsKey(name);
         }
 
 
