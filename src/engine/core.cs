@@ -145,16 +145,16 @@ public abstract class Game_State {
     }
 
     // Creates an entity from the specified components and assigns an id to it.
-    object dummy_lock = new object();
+    readonly object dummy_lock = new object();
     private bool resort_sprites;
     public Entity create_entity(params Component[] components) {
         var entity = new Entity();
 
         entity.id = Interlocked.Increment(ref next_entity_id);
         entity.state = this;
-        entity.add_components(components);
 
         lock (dummy_lock) {
+            entity.add_components(components);
             entities[entity.id] = entity;
         }
 

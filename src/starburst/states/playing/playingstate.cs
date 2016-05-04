@@ -114,14 +114,18 @@ public class Playing_State : Game_State {
 
         add_subsystems(
             new Position_Integrator(),
-            new Inputhandler_System(),
-            new Window_Title_Writer(),
             new Collision_Solver(tile_map),
-            new Sound(),
-            new Particle_System(),
-            new Lifetime_Manager(),
-            new Weapon_System(this),
-            new AI(),
+
+            new Async_Multi_Subsystem(
+                new Inputhandler_System(),
+                new Sound(),
+                new Particle_System(),
+                new Lifetime_Manager(),
+                new Weapon_System(this),
+                new AI(),
+                new Window_Title_Writer()
+            ),
+
             new Rendering_System(Starburst.inst().GraphicsDevice) {
                 tile_map = tile_map
             }

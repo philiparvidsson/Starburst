@@ -11,30 +11,38 @@ using Microsoft.Xna.Framework;
 public class Lifetime_Manager : Subsystem {
     private System.Threading.AutoResetEvent mre = new System.Threading.AutoResetEvent(false);
 
+    public override void on_message(string msg, dynamic data) {
+        if (msg == "destroy_entity") {
+            var id = data.id;
+            Fab5_Game.inst().destroy_entity(id);
+        }
+    }
     public override void draw(float t, float dt) {
         var entities = Fab5_Game.inst().get_entities_fast(typeof (TTL));
         int num_entities = entities.Count;
 
-        List<Entity> entities_to_destroy = new List<Entity>();
-
         int counter = num_entities;
+
+        if (counter == 0) {
+            return;
+        }
+
         for (int i = 0; i < num_entities; i++) {
 //            System.Threading.ThreadPool.QueueUserWorkItem(o => {
             var o = entities[i];
-            System.Threading.Tasks.Task.Factory.StartNew(() => {
+            //System.Threading.Tasks.Task.Factory.StartNew(() => {
                 var entity = (Entity)o;//entities[i];
                 var ttl    = entity.get_component<TTL>();
 
                 ttl.time += dt;
 
                 if (ttl.time >= ttl.max_time) {
-                    lock (entities_to_destroy) {
-                        entities_to_destroy.Add(entity);
-                    }
-                    if (System.Threading.Interlocked.Decrement(ref counter) == 0) {
+                    Fab5_Game.inst().message("destroy_entity", new { id = entity.id });
+
+                    /*if (System.Threading.Interlocked.Decrement(ref counter) == 0) {
                         mre.Set();
-                    }
-                    return;
+                    }*/
+                    continue;
                 }
 
                 ttl.counter = (ttl.counter+1)&3;
@@ -49,25 +57,13 @@ public class Lifetime_Manager : Subsystem {
                     }
                 }
 
-                if (System.Threading.Interlocked.Decrement(ref counter) == 0) {
+                /*if (System.Threading.Interlocked.Decrement(ref counter) == 0) {
                     mre.Set();
-                }
-            });
+                }*/
+            //});
         }
 
-        mre.WaitOne();
-
-        if (entities_to_destroy != null) {
-            foreach (var e in entities_to_destroy) {
-                e.destroy();
-                var ttl = e.get_component<TTL>();
-
-                if (ttl.destroy_cb != null) {
-                    ttl.destroy_cb();
-                }
-            }
-        }
-
+        //mre.WaitOne();
     }
 }
 

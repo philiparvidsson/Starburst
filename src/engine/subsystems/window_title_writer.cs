@@ -9,6 +9,12 @@ namespace Fab5.Engine.Subsystems {
     {
         float elapsedTime = 0;
 
+        public override void on_message(string msg, dynamic data) {
+            if (msg == "set_w_title") {
+                Fab5_Game.inst().Window.Title = data.str;
+            }
+        }
+
         public override void draw(float t, float dt)
         {
             var entities = Fab5_Game.inst().get_entities_fast(typeof(FpsCounter));
@@ -26,11 +32,9 @@ namespace Fab5.Engine.Subsystems {
                     fps.frameRate = fps.frameCounter;
                     fps.frameCounter = 0;
 
-                    Fab5_Game.inst().Window.Title = " * Starburst * " + fps.frameRate;
+                    Fab5_Game.inst().message("set_w_title", new { str = " * Starburst * " + fps.frameRate });
                 }
             }
-
-
         }
 
     }

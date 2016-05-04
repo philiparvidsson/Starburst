@@ -82,12 +82,14 @@ public class Collision_Solver : Subsystem {
             }
         }
 
-
-
         // @To-do: Implement a quad tree or spatial grid here to reduce the
         //         number of candidates for collision testing.
 
         int counter = entities.Count;
+
+        if (counter == 0) {
+            return;
+        }
 
         foreach (var entity in entities) {
             //System.Threading.ThreadPool.QueueUserWorkItem(o => {
@@ -96,9 +98,9 @@ public class Collision_Solver : Subsystem {
                 var p1  = e1.get_component<Position>();
                 var v1  = e1.get_component<Velocity>();
 
-                if (p1 == null || v1 == null) {
-                    return;
-                }
+                /*if (p1 == null || v1 == null) {
+                    continue;
+                }*/
 
                 if (p1.x < -2048.0f) {
                     var rc1 = Math.Abs(e1.get_component<Mass>()?.restitution_coeff ?? 1.0f);
