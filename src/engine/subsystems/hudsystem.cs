@@ -63,6 +63,20 @@
 
         }
 
+        private void draw_powerup_inv(Camera cam, Entity player) {
+            int size = 64;
+            var spacing = 8.0f;
+            int num_inv = 2;
+
+            var x = cam.viewport.Width * 0.5f - 0.5f*(num_inv*size+(num_inv-1)*spacing);
+            var y = 20.0f;
+
+            for (int i = 0; i < num_inv; i++) {
+                GFX_Util.fill_rect(sprite_batch, new Rectangle((int)x, (int)y, size, size), Color.Black * 0.5f);
+                x += size + spacing;
+            }
+        }
+
         private void draw_minimap(Entity player) {
             var vp_size = Fab5_Game.inst().GraphicsDevice.Viewport.Width;
             var scale = 1.0f*(float)System.Math.Sqrt(1.0f+vp_size/1920.0f);
@@ -137,6 +151,7 @@
             drawEnergy(playerPos, camera, dt);
             drawScore(player.get_component<Score>(), dt);
             draw_minimap(player);
+            draw_powerup_inv(camera, player);
 
             //sprite_batch.End();
         }

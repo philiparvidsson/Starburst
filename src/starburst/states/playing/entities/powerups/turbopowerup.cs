@@ -18,11 +18,11 @@ public class Turbo_Powerup : Powerup_Impl {
 
     private static System.Random rand = new System.Random();
 
-    public string name {
+    public override string name {
         get { return "turbo"; }
     }
 
-    public void end() {
+    public override void end() {
         Fab5_Game.inst().destroy_entity(effect_id);
 
         var holder = Fab5_Game.inst().get_entity(holder_id);
@@ -77,7 +77,7 @@ public class Turbo_Powerup : Powerup_Impl {
         }).id;
     }
 
-    public void on_begin(Entity holder, Entity powerup) {
+    public override void on_begin(Entity holder, Entity powerup) {
         var ship_info = holder.get_component<Ship_Info>();
 
         old_acc = ship_info.acceleration;

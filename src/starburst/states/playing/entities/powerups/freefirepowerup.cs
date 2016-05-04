@@ -14,11 +14,11 @@ public class Free_Fire_Powerup : Powerup_Impl {
 
     private static System.Random rand = new System.Random();
 
-    public string name {
+    public override string name {
         get { return "free-fire"; }
     }
 
-    public void end() {
+    public override void end() {
         Fab5_Game.inst().destroy_entity(effect_id);
     }
 
@@ -64,7 +64,7 @@ public class Free_Fire_Powerup : Powerup_Impl {
         }).id;
     }
 
-    public void on_begin(Entity holder, Entity powerup) {
+    public override void on_begin(Entity holder, Entity powerup) {
         //activate_effect(holder);
     }
 

@@ -17,11 +17,11 @@ public class Shield_Powerup : Powerup_Impl {
     private float old_top_energy;
     private float old_recharge_rate;
 
-    public string name {
+    public override string name {
         get { return "shield"; }
     }
 
-    public void end() {
+    public override void end() {
         Fab5_Game.inst().destroy_entity(effect_id);
     }
 
@@ -63,7 +63,7 @@ public class Shield_Powerup : Powerup_Impl {
         }).id;
     }
 
-    public void on_begin(Entity holder, Entity powerup) {
+    public override void on_begin(Entity holder, Entity powerup) {
         activate_effect(holder);
 
         var si = holder.get_component<Ship_Info>();
@@ -72,7 +72,7 @@ public class Shield_Powerup : Powerup_Impl {
         old_recharge_rate = si.recharge_rate;
 
         si.top_energy *= 1.5f;
-        si.recharge_rate *= 1.5f;
+        //si.recharge_rate *= 1.5f;
     }
 
 }

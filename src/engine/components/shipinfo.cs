@@ -29,7 +29,12 @@
         public System.Collections.Generic.Dictionary<string, Powerup_Impl> powerups = new System.Collections.Generic.Dictionary<string, Powerup_Impl>();
 
         public void add_powerup(Powerup_Impl powerup) {
-            powerups[powerup.name] = powerup;
+            if (powerups.ContainsKey(powerup.name)) {
+                powerups[powerup.name].time += powerup.time;
+            }
+            else {
+                powerups[powerup.name] = powerup;
+            }
         }
 
         public bool has_powerup(string name) {

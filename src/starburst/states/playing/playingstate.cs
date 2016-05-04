@@ -42,7 +42,8 @@ public class Playing_State : Game_State {
     public Tile_Map tile_map;
 
     private void load_map() {
-        var s = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, game_conf.map_name);
+        var s = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), game_conf.map_name);
+        System.Console.WriteLine("loading map " + s);
         using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(s)) {
             for (int x = 0; x < 256; x++) {
                 for (int y = 0; y < 256; y++) {
@@ -114,22 +115,24 @@ public class Playing_State : Game_State {
         load_map();
 
         add_subsystems(
-            new Position_Integrator(),
-            new Collision_Solver(tile_map),
 
             new Async_Multi_Subsystem(
+                new Multi_Subsystem(
+                    new Position_Integrator(),
+                    new Collision_Solver(tile_map)
+                ),
                 new Inputhandler_System(),
                 new Sound(),
                 new Particle_System(),
                 new Lifetime_Manager(),
                 new Weapon_System(this),
-                new AI(),
-                new Window_Title_Writer()
+                new AI()
             ),
 
             new Rendering_System(Starburst.inst().GraphicsDevice) {
                 tile_map = tile_map
-            }
+            },
+            new Window_Title_Writer()
         );
 
         create_entity(new FpsCounter());

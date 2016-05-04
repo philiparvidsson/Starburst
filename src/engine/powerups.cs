@@ -9,15 +9,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 using System;
 
-public interface Powerup_Impl {
-    string name { get; }
+public abstract class Powerup_Impl {
+    public float time = 30.0f;
 
-    void on_begin(Entity holder, Entity powerup);
+    public abstract string name { get; }
 
-    void end();
+    public abstract void on_begin(Entity holder, Entity powerup);
+
+    public abstract void end();
 }
 
 public class Powerup : Component {
+
     public Powerup_Impl impl;
 
     private static System.Random rand = new System.Random();
