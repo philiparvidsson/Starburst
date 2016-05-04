@@ -57,7 +57,8 @@ namespace Fab5.Starburst.States {
 
         private void tryStartGame() {
             // om minsta antal spelare är klara, starta spel
-            if (playerCount >= minPlayers) {
+            if (playerCount >= minPlayers && canStartGame) {
+                canStartGame = false;
                 // hämta inputhandlers, lägg dem i en lista för att vidarebefordra till spel-statet
                 // (sorterade efter position)
                 List<Inputhandler> inputs = new List<Inputhandler>(playerCount);
@@ -87,10 +88,7 @@ namespace Fab5.Starburst.States {
                     Starburst.inst().GraphicsMgr.ToggleFullScreen();
                 }
                 else if (msg.Equals("start")) {
-                    if (canStartGame) {
-                        canStartGame = false;
-                        tryStartGame();
-                    }
+                    tryStartGame();
                 }
 
                 if (msg.Equals("up")) {
