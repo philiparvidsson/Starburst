@@ -60,7 +60,7 @@ public class Multifire_Powerup : Powerup_Impl {
     }
 
     public void on_begin(Entity holder, Entity powerup) {
-        activate_effect(holder);
+        //activate_effect(holder);
     }
 
 }
