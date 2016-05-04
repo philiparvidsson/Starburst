@@ -11,6 +11,7 @@ namespace Fab5.Starburst.States {
     using Menus.Subsystems;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Media;
     using Microsoft.Xna.Framework.Input;
 
     using System;
@@ -67,6 +68,9 @@ namespace Fab5.Starburst.States {
         private Texture2D controller_a_button;
         private Texture2D keyboard_key;
         private Texture2D controller_l_stick;
+
+        public float vol = 0.0f;
+        public float fade = 0.0f;
 
         public override void on_message(string msg, dynamic data) {
 
@@ -284,6 +288,22 @@ namespace Fab5.Starburst.States {
             }
         }
         public override void draw(float t, float dt) {
+            if (vol < 0.7f) {
+                vol += 0.7f * dt/1.5f;
+                if (vol > 0.7f) {
+                    vol = 0.7f;
+                }
+                MediaPlayer.Volume = vol;
+            }
+
+            if (fade < 1.0f) {
+                fade += 1.0f * dt/3.0f;
+                if (fade > 1.0f) {
+                    fade = 1.0f;
+                }
+
+            }
+
             Starburst.inst().GraphicsDevice.Clear(Color.Black);
             base.draw(t, dt);
             Viewport vp = sprite_batch.GraphicsDevice.Viewport;
@@ -299,7 +319,7 @@ namespace Fab5.Starburst.States {
                 position = new Position();
 
             sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
-            
+
             String map = "Map";
             Vector2 mapTextSize = font.MeasureString(map);
             sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, 150), Color.White);
@@ -372,6 +392,7 @@ namespace Fab5.Starburst.States {
             Vector2 textSize = font.MeasureString(text);
             sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), vp.Height - textSize.Y - 20), (position.y == (int)options.proceed ? new Color(Color.Gold, textOpacity) : Color.White));
 
+            GFX_Util.fill_rect(sprite_batch, new Rectangle(0, 0, vp.Width, vp.Height), Color.Black * (1.0f-fade));
             sprite_batch.End();
 
             System.Threading.Thread.Sleep(10); // no need to spam menu

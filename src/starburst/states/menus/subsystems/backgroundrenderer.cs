@@ -39,7 +39,7 @@ namespace Fab5.Starburst.States.Menus.Subsystems {
             var hw = vp.Width * 0.5f;
             var hh = vp.Height * 0.5f;
 
-            var scale = 1.5f;
+            var scale = 1.1f;
             var x = (float)Math.Cos(0.4f * t * 0.07f) * 270.0f;
             var y = (float)Math.Sin(0.4f * t * 0.1f) * 200.0f ;
 
