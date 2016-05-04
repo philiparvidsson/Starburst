@@ -89,8 +89,8 @@ public class Spawn_Util {
         for (int x = 0; x < 256; x++) {
             for (int y = 0; y < 256; y++) {
                 if (conf.mode == Game_Config.GM_DEATHMATCH) {
-                    if (tile_map.tiles[x+y*256] >= 7) {
-                        // spawn pretty much anywhere except inside walls
+                    if (tile_map.tiles[x+y*256] == 11) {
+                        // spawn on team 1 spawn (used for all players in all vs all)
                         positions.Add(new Position { x = -2048.0f + x * 16.0f, y = -2048.0f + y * 16.0f });
                     }
                 }
