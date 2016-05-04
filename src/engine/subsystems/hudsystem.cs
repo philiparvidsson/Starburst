@@ -37,11 +37,19 @@
                 for (int j = 0; j < 256; j++) {
                     var x = i>>1;
                     var y = j>>1;
+
                     minimap_tex.SetData(0, new Rectangle(x, y, 1, 1), new [] { new Color(0.0f, 0.0f, 0.0f, 0.0f) }, 0, 1);
 
                     if ((x%16)==0 || (y%16)==0) {
                         minimap_tex.SetData(0, new Rectangle(x, y, 1, 1), new [] { Color.White * 0.3f }, 0, 1);
                     }
+                }
+            }
+
+            for (int i = 0; i < 256; i++) {
+                for (int j = 0; j < 256; j++) {
+                    var x = i>>1;
+                    var y = j>>1;
 
                     var k = i+256*j;
                     if (tile_map.tiles[k] != 0 && tile_map.tiles[k] < 7) {
