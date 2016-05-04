@@ -216,7 +216,7 @@ public class Playing_State : Game_State {
         //create_entity(Turbo_Powerup.create_components());
 
 
-        var shield1 = create_entity(Powerup.create(new Shield_Powerup()));
+        /*var shield1 = create_entity(Powerup.create(new Shield_Powerup()));
         shield1.get_component<Position>().x = -1800.0f; shield1.get_component<Position>().y = 1500.0f;
 
         var multi1 = create_entity(Powerup.create(new Multifire_Powerup()));
@@ -238,27 +238,54 @@ public class Playing_State : Game_State {
         freefire2.get_component<Position>().x = 1600.0f; freefire2.get_component<Position>().y = -1500.0f;
 
         var turbo2 = create_entity(Powerup.create(new Turbo_Powerup()));
-        turbo2.get_component<Position>().x = 1500.0f; turbo2.get_component<Position>().y = -1500.0f;
+        turbo2.get_component<Position>().x = 1500.0f; turbo2.get_component<Position>().y = -1500.0f;*/
 
         //create_entity(Dummy_Enemy.create_components());
 
         Starburst.inst().message("play_sound", new { name = "begin_game" });
     }
 
+    private Entity new_random_powerup() {
+        var types = new Type[] {
+            typeof (Turbo_Powerup),
+            typeof (Free_Fire_Powerup),
+            typeof (Shield_Powerup),
+            typeof (Multifire_Powerup)
+        };
+
+        var i = rand.Next(0, types.Length);
+        object impl = Activator.CreateInstance(types[i]);
+
+        return create_entity(Powerup.create((Powerup_Impl)impl));
+    }
+
+    private float powerup_spawn_timer;
     public override void draw(float t, float dt) {
         base.draw(t, dt);
 
-            var ships = Starburst.inst().get_entities_fast(typeof(Ship_Info));
-            for(int i=0; i < ships.Count; i++)
-            {
-                Ship_Info ship = ships[i].get_component<Ship_Info>();
-                if (ship.energy_value < ship.top_energy)
-                    ship.energy_value += ship.recharge_rate * dt;
-                else if (ship.energy_value > ship.top_energy)
-                    ship.energy_value = ship.top_energy;
+        var ships = Starburst.inst().get_entities_fast(typeof(Ship_Info));
+        for(int i=0; i < ships.Count; i++)
+        {
+            Ship_Info ship = ships[i].get_component<Ship_Info>();
+            if (ship.energy_value < ship.top_energy)
+                ship.energy_value += ship.recharge_rate * dt;
+            else if (ship.energy_value > ship.top_energy)
+                ship.energy_value = ship.top_energy;
 
+        }
+
+        powerup_spawn_timer -= dt;
+        if (powerup_spawn_timer <= 0.0f) {
+            powerup_spawn_timer = game_conf.powerup_spawn_time;
+
+            int num_powerups_now = Starburst.inst().get_entities_fast(typeof (Powerup)).Count;
+            if (num_powerups_now < game_conf.num_powerups) {
+                var powerup = new_random_powerup();
+                var powerup_pos = spawner.get_powerup_spawn_pos(tile_map);
+                powerup.get_component<Position>().x = powerup_pos.x;
+                powerup.get_component<Position>().y = powerup_pos.y;
             }
-
+        }
 
 
         if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape)) {
