@@ -39,7 +39,7 @@ namespace Fab5.Starburst.States.Menus.Subsystems {
             var hw = vp.Width * 0.5f;
             var hh = vp.Height * 0.5f;
 
-            var scale = 1.8f;
+            var scale = 1.5f;
             var x = (float)Math.Cos(0.4f * t * 0.07f) * 270.0f;
             var y = (float)Math.Sin(0.4f * t * 0.1f) * 200.0f ;
 
@@ -56,18 +56,18 @@ namespace Fab5.Starburst.States.Menus.Subsystems {
                               1.0f);
 
 
-            var fac2 = 1.5f;
+            /*var fac2 = 2.2f;
             var x1 = x*fac2;
             var y1 = y*fac2;
             sprite_batch.Draw(stardrop,
-                              new Vector2(hw - (stardrop.Width * 0.5f) * scale + x, hh - (stardrop.Height * 0.5f) * scale + y),
+                              new Vector2(hw - (stardrop.Width * 0.5f) * scale + x1, hh - (stardrop.Height * 0.5f) * scale + y1),
                               null,
                               Color.White,
                               0.0f,
                               Vector2.Zero,
                               new Vector2(scale, scale),
                               SpriteEffects.None,
-                              1.0f);
+                              1.0f);*/
 
             sprite_batch.End();
 

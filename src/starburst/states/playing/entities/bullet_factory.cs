@@ -151,17 +151,17 @@
                                                             var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
                                                             var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
                                                             var radius = 20.0f * (float)rand.NextDouble();
-                                                            var speed2  = (5.0f + 20.0f * (float)Math.Pow(rand.NextDouble(), 2.0f));
+                                                            var speed2  = (10.0f + 30.0f * (float)Math.Pow(rand.NextDouble(), 2.0f));
 
                                                             return new Component[] {
-                                                                new Mass { drag_coeff = 0.5f },
+                                                                new Mass { drag_coeff = 0.9f },
                                                                 new Position {
                                                                     x = p_x + (float)Math.Cos(theta1) * radius,
                                                                     y = p_y + (float)Math.Sin(theta1) * radius
                                                                 },
                                                                 new Velocity {
-                                                                    x = (float)Math.Cos(theta2) * speed2,
-                                                                    y = (float)Math.Sin(theta2) * speed2
+                                                                    x = velocity.x * 0.1f + (float)Math.Cos(theta2) * speed2,
+                                                                    y = velocity.y * 0.1f + (float)Math.Sin(theta2) * speed2
                                                                 },
                                                                 new Sprite {
                                                                     blend_mode  = Sprite.BM_ADD,

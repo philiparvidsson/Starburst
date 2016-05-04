@@ -121,16 +121,14 @@ public class Playing_State : Game_State {
             new Async_Multi_Subsystem(
                 new Multi_Subsystem(
                     new Position_Integrator(),
-                    new Collision_Solver(tile_map),
-                    new Async_Multi_Subsystem(
-                        new Inputhandler_System(),
-                        new Sound(),
-                        new Particle_System(),
-                        new Lifetime_Manager(),
-                        new Weapon_System(this),
-                        new AI()
-                    )
+                    new Collision_Solver(tile_map)
                 ),
+                new Inputhandler_System(),
+                new Sound(),
+                new Particle_System(),
+                new Lifetime_Manager(),
+                new Weapon_System(this),
+                new AI(),
                 new Multi_Subsystem(
                     new Rendering_System(Starburst.inst().GraphicsDevice) {
                         tile_map = tile_map

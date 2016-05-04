@@ -99,7 +99,40 @@ namespace Fab5.Engine.Subsystems
 
         public override void on_message(string msg, dynamic data)
         {
-            if (msg == "play_sound")
+            if (msg == "collision") {
+                var p1 = new Position() { x = data.c_x, y = data.c_y };
+                if (data.entity2 == null) {
+                var texttureName = data.entity1.get_component<Sprite>().texture.Name;
+                if(texttureName.Contains("ship"))
+                    Fab5_Game.inst().message("play_sound", new { pos = p1, name = "bang2", });
+                }
+                else {
+
+                    var e1 = data.entity1;
+                    var e2 = data.entity2;
+
+           //Decide which soound to play based on speeed
+        Velocity velo = e1.get_component<Velocity>();
+        Velocity velo2 = e2.get_component<Velocity>();
+        Inputhandler input = e1.get_component<Inputhandler>();
+
+        var texttureName = data.entity1.get_component<Sprite>().texture.Name;
+        var texttureName2 = data.entity1.get_component<Sprite>().texture.Name;
+        var speed = Math.Sqrt(Math.Pow(velo.x, 2) + Math.Pow(velo.y, 2));
+        var speed2 = Math.Sqrt(Math.Pow(velo2.x, 2) + Math.Pow(velo2.y, 2));
+        var coolspeed = speed - speed2 * ((velo.x * velo.x + velo.y * velo2.y) / (speed * speed2));
+        Console.WriteLine(texttureName + texttureName2);
+        if ((texttureName.Contains("ship") && texttureName2 == "soccerball") || (texttureName == "soccerball" && texttureName2.Contains("ship")))
+            Fab5_Game.inst().message("play_sound", new { name = "BatmanPunch", pos = p1, gp_index = input.gp_index });
+        else if ((texttureName.Contains("asteroid") && texttureName2.Contains("ship")) || (texttureName2.Contains("asteroid") && texttureName.Contains("ship")))
+            Fab5_Game.inst().message("play_sound", new { name = "rockslide_small" ,pos= p1 , gp_index = input.gp_index });
+        else if (texttureName.Contains("ship") && texttureName2.Contains("ship"))
+            Fab5_Game.inst().message("play_sound", new { name = "bang", pos = p1, gp_index = input.gp_index });
+
+                }
+
+            }
+            else if (msg == "play_sound")
             {
                 //var property = data.GetType().GetProperty("pos");
                 //Position pos;

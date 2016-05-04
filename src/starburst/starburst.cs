@@ -17,7 +17,7 @@ namespace Fab5.Starburst {
         protected override void init() {
             if (false && GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height > 800 && GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width > 1400) {
                 GraphicsMgr.PreferredBackBufferWidth = 1280;
-                GraphicsMgr.PreferredBackBufferHeight = 680;
+                GraphicsMgr.PreferredBackBufferHeight = 720;
             }
             else {
                 GraphicsMgr.PreferredBackBufferWidth = 1920;
@@ -29,8 +29,8 @@ namespace Fab5.Starburst {
 
 
 
-            GraphicsMgr.SynchronizeWithVerticalRetrace = false;
-            IsFixedTimeStep = false;
+            //GraphicsMgr.SynchronizeWithVerticalRetrace = false;
+           // IsFixedTimeStep = false;
 
 
 

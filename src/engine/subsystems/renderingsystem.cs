@@ -352,7 +352,7 @@ namespace Fab5.Engine.Subsystems {
             sprite_batch.GraphicsDevice.Clear(Color.Black);
 
 
-            players              = Fab5_Game.inst().get_entities_safe(typeof(Inputhandler));
+            players              = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler));
             currentPlayerNumber = players.Count;
 
             // är det inte samma antal spelare som förut, räkna om antalet och gör om viewports o kameror (viewports, cameras)
@@ -360,13 +360,14 @@ namespace Fab5.Engine.Subsystems {
                 updatePlayers();
             }
 
-            var entities = Fab5_Game.inst().get_entities_safe(typeof(Sprite));
+            var entities = Fab5_Game.inst().get_entities_fast(typeof(Sprite));
             var num_entities = entities.Count;
 
             var temp = temp_;
             temp.Clear();
 
-            foreach (Entity e in entities) {
+            for (int i = 0; i < entities.Count; i++) {
+                var e = entities[i];
                 var pos = e.get_component<Position>();
                 var px = pos.x;
                 var py = pos.y;
@@ -409,7 +410,7 @@ namespace Fab5.Engine.Subsystems {
                 update_sprite(temp[i], dt);
             }
 
-            var hooks = Fab5_Game.inst().get_entities_safe(typeof (Post_Render_Hook));
+            var hooks = Fab5_Game.inst().get_entities_fast(typeof (Post_Render_Hook));
 
             for (int p = 0; p < currentPlayerNumber; p++) {
                 Camera current = cameras[p];
@@ -439,7 +440,8 @@ namespace Fab5.Engine.Subsystems {
                 hudsystem_instance.drawHUD(currentPlayer, dt, current);
                 draw_indicators(current, currentPlayerNumber, currentPlayer);
 
-                foreach (var hook in hooks) {
+                for (int i = 0; i < hooks.Count; i++) {
+                    var hook = hooks[i];
                     hook.get_component<Post_Render_Hook>().render_fn(current, sprite_batch);
                 }
 

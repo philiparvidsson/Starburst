@@ -275,11 +275,8 @@ public class Collision_Solver : Subsystem {
 //            Console.WriteLine("left " + x + "," + y);
                 p.x = c_x-dx-eps;
                 collide(e1, c_x, c_y, -dx, -dy);
-                var texttureName = e1.get_component<Sprite>().texture.Name;
-                Console.WriteLine(texttureName);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
-                if(texttureName.Contains("ship"))
-                    Fab5_Game.inst().message("play_sound", new { pos = p, name = "bang2", });
+
 
                 return true;
             }
@@ -303,11 +300,7 @@ public class Collision_Solver : Subsystem {
 //            Console.WriteLine("right " + x + "," + y);
                 p.x = c_x+dx+eps;
                 collide(e1, c_x, c_y, dx, -dy);
-                var texttureName = e1.get_component<Sprite>().texture.Name;
-                Console.WriteLine(texttureName);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
-                if(texttureName.Contains("ship"))
-                    Fab5_Game.inst().message("play_sound", new { pos = p, name = "bang2", });
                 return true;
             }
         }
@@ -369,12 +362,7 @@ public class Collision_Solver : Subsystem {
 //            Console.WriteLine("top " + x + "," + y);
                 p.y = c_y-dy-eps;
                 collide(e1, c_x, c_y, -dx, -dy);
-                var texttureName = e1.get_component<Sprite>().texture.Name;
-                Console.WriteLine(texttureName);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
-                if(texttureName.Contains("ship"))
-                    Fab5_Game.inst().message("play_sound", new { pos = p, name = "bang2", });
-
                 return true;
             }
         }
@@ -396,11 +384,7 @@ public class Collision_Solver : Subsystem {
 //            Console.WriteLine("bottom " + x + "," + y);
                 p.y = c_y+dy+eps;
                 collide(e1, c_x, c_y, -dx, dy);
-                var texttureName = e1.get_component<Sprite>().texture.Name;
-                Console.WriteLine(texttureName);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
-                if(texttureName.Contains("ship"))
-                    Fab5_Game.inst().message("play_sound", new { pos = p, name = "bang2", });
                 return true;
             }
         }
@@ -553,23 +537,7 @@ public class Collision_Solver : Subsystem {
         var n_y  = d_y/r;
         var c_x  = p2.x + n_x * c2.radius;
         var c_y  = p2.y + n_y * c2.radius;
-           //Decide which soound to play based on speeed
-        Velocity velo = e1.get_component<Velocity>();
-        Velocity velo2 = e1.get_component<Velocity>();
-        Inputhandler input = e1.get_component<Inputhandler>();
 
-        var texttureName = e1.get_component<Sprite>().texture.Name;
-        var texttureName2 = e1.get_component<Sprite>().texture.Name;
-        var speed = Math.Sqrt(Math.Pow(velo.x, 2) + Math.Pow(velo.y, 2));
-        var speed2 = Math.Sqrt(Math.Pow(velo2.x, 2) + Math.Pow(velo2.y, 2));
-        var coolspeed = speed - speed2 * ((velo.x * velo.x + velo.y * velo2.y) / (speed * speed2));
-        Console.WriteLine(texttureName + texttureName2);
-        if ((texttureName.Contains("ship") && texttureName2 == "soccerball") || (texttureName == "soccerball" && texttureName2.Contains("ship")))
-            Fab5_Game.inst().message("play_sound", new { name = "BatmanPunch", pos = p1, gp_index = input.gp_index });
-        else if ((texttureName.Contains("asteroid") && texttureName2.Contains("ship")) || (texttureName2.Contains("asteroid") && texttureName.Contains("ship")))
-            Fab5_Game.inst().message("play_sound", new { name = "rockslide_small" ,pos= p1 , gp_index = input.gp_index });
-        else if (texttureName.Contains("ship") && texttureName2.Contains("ship"))
-            Fab5_Game.inst().message("play_sound", new { name = "bang", pos = p1, gp_index = input.gp_index });
         Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = e2, c_x = c_x, c_y = c_y });
 
         if (c1.collision_cb != null) {
