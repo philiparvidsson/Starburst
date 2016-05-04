@@ -41,6 +41,7 @@ namespace Fab5.Starburst.States {
         float btnDelay = .5f;
         private SpriteFont smallFont;
         private Texture2D downArrow;
+        private bool canStartGame = true;
 
         private enum SlotStatus {
             Empty,
@@ -85,7 +86,10 @@ namespace Fab5.Starburst.States {
                     Starburst.inst().GraphicsMgr.ToggleFullScreen();
                 }
                 else if (msg.Equals("start")) {
-                    tryStartGame();
+                    if (canStartGame) {
+                        canStartGame = false;
+                        tryStartGame();
+                    }
                 }
 
                 if (msg.Equals("up")) {

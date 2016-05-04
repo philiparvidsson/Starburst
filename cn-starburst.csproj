@@ -66,6 +66,7 @@
     <Compile Include="src\engine\core.cs" />
     <Compile Include="src\engine\game.cs" />
     <Compile Include="src\engine\powerups.cs" />
+    <Compile Include="src\engine\subsystems\asyncmultisubsystem.cs" />
     <Compile Include="src\engine\subsystems\collisionsolver.cs" />
     <Compile Include="src\engine\subsystems\entitylifetime.cs" />
     <Compile Include="src\engine\subsystems\hudsystem.cs" />
