@@ -14,6 +14,13 @@ public class Lifetime_Manager : Subsystem {
     public override void on_message(string msg, dynamic data) {
         if (msg == "destroy_entity") {
             var id = data.id;
+            Entity e = Fab5_Game.inst().get_entity(id);
+
+            var cb = e.get_component<TTL>().destroy_cb;
+            if (cb != null) {
+                cb();
+            }
+
             Fab5_Game.inst().destroy_entity(id);
         }
     }

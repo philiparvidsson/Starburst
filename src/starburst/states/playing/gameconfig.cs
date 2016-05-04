@@ -13,6 +13,10 @@ public class Game_Config {
 
     public float music_vol = 0.7f;
 
+    public string map_name = "map1.png";
+    public float powerup_spawn_time = 30.0f;
+    public int num_powerups = 5;
+
 }
 
 }
