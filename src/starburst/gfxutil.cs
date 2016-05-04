@@ -24,8 +24,8 @@ public static class GFX_Util {
         if (alpha < 0.0f) alpha = 0.0f;
         if (alpha > 1.0f) alpha = 1.0f;
         var font = Starburst.inst().get_content<SpriteFont>("sector034");
-        sprite_batch.DrawString(font, text, new Vector2(x, y), Color.Black*0.75f*alpha);
-        sprite_batch.DrawString(font, text, new Vector2(x+4.0f, y+4.0f), Color.White*alpha);
+        sprite_batch.DrawString(font, text, new Vector2(x-4.0f, y-4.0f), Color.Black*0.75f*alpha);
+        sprite_batch.DrawString(font, text, new Vector2(x, y), Color.White*alpha);
     }
 }
 

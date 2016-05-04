@@ -43,19 +43,16 @@
                 return false;
             }
 
-            entity.get_component<Ship_Info>().add_powerup(powerup);
-            powerup.begin(entity);
-            powerup_inv[index] = null;
-            return true;
-        }
-
-        public void add_powerup(Powerup_Impl powerup) {
             if (powerups.ContainsKey(powerup.name)) {
                 powerups[powerup.name].time += powerup.time;
             }
             else {
                 powerups[powerup.name] = powerup;
+                powerup.begin(entity);
             }
+
+            powerup_inv[index] = null;
+            return true;
         }
 
         public bool has_powerup(string name) {
