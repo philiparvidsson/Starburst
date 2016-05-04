@@ -86,7 +86,7 @@ public class Turbo_Powerup : Powerup_Impl {
         ship_info.acceleration *= 1.4f;
         ship_info.top_velocity *= 1.2f;
 
-        activate_effect(holder);
+        //activate_effect(holder);
     }
 
 }

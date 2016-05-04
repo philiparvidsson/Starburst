@@ -61,10 +61,19 @@
             var playerpos = new Position() {x = 300, y = 200 };
             var playervel = new Velocity() {x = 0.0f, y = 0.0f };
             var particle_tex = Starburst.inst().get_content<Texture2D>("particle");
+            var ship_info = new Ship_Info(5,130,100,100) { team = team, pindex = pindex };
             return new Component[] {
                 new Particle_Emitter() {
                     emit_fn = () => {
                         if (rand.Next(0, 60) > 0) {
+                            var col = new Color(1.0f, 0.7f, 0.3f);
+                            var max_time = 0.05f + (float)(rand.NextDouble() * 0.05f);
+
+                            if (ship_info.has_powerup("turbo")) {
+                                max_time *= 1.7f;
+                                col = new Color(0.5f, 0.7f, 1.0f);
+                            }
+
                             return new Component[] {
                                 new Position() { x = playerpos.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f ,
                                     y = playerpos.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f },
@@ -72,17 +81,20 @@
                                     y = playervel.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 250.0f * (float)(rand.NextDouble()+0.5) * (input.throttle + 0.3f) },
                                 new Sprite() {
                                     texture = particle_tex,
-                                    color = new Color(1.0f, 0.7f, 0.3f) * 0.75f,
+                                    color = col,
                                     scale = 0.9f + (float)rand.NextDouble() * 1.3f,
                                     blend_mode = Sprite.BM_ADD,
                                     layer_depth = 0.1f
                                 },
-                                new TTL() { alpha_fn = (x, max) => 1.0f - (x/max), max_time = 0.05f + (float)(rand.NextDouble() * 0.05f) }
+                                new TTL() { alpha_fn = (x, max) => 1.0f - (x/max), max_time = max_time }
         //                        new Bounding_Circle() { radius = 1.0f },
         //                        new Mass() { mass = 0.0f }
                             };
                         }
                         else {
+                            var col = new Color(1.0f, 0.7f, 0.2f) * 0.95f;
+                            var max_time = 0.35f + (float)(rand.NextDouble() * 0.35f);
+
                             return new Component[] {
                                 new Position() { x = playerpos.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f ,
                                                  y = playerpos.y - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f },
@@ -90,12 +102,12 @@
                                 y = playervel.y*0.5f - (float)Math.Sin(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 1.5) * 90.0f * (float)(rand.NextDouble()+0.5) * (input.throttle + 0.3f) },
                                 new Sprite() {
                                     texture = particle_tex,
-                                    color = new Color(1.0f, 0.7f, 0.2f) * 0.95f,
+                                    color = col,
                                     scale = 0.4f + (float)rand.NextDouble() * 0.3f,
                                     blend_mode = Sprite.BM_ADD,
                                     layer_depth = 0.1f
                                 },
-                                new TTL() { alpha_fn = (x, max) => 1.0f - (x/max), max_time = 0.35f + (float)(rand.NextDouble() * 0.35f) }
+                                new TTL() { alpha_fn = (x, max) => 1.0f - (x/max), max_time = max_time }
         //                        new Bounding_Circle() { radius = 1.0f },
         //                        new Mass() { mass = 0.0f }
 
@@ -115,7 +127,7 @@
                     layer_depth = 0.6f
                     //color = new Color(0.6f, 0.9f, 1.0f)
                 },
-                new Ship_Info(5,130,100,100) { team = team, pindex = pindex },
+                ship_info,
                 new Bounding_Circle() { radius = 20.0f, ignore_collisions2 = ig_value },
                 new Mass() { mass = 15.0f, restitution_coeff = 0.6f, friction = 0.1f },
                 new Primary_Weapon(),

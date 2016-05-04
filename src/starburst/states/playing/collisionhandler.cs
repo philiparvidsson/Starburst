@@ -507,7 +507,7 @@ namespace Fab5.Starburst.States.Playing {
                     }
                 });
 
-                foreach (var powerup in playerShip.powerups) {
+                foreach (var powerup in playerShip.powerups.Values) {
                     powerup.end();
                 }
                 playerShip.powerups.Clear();
