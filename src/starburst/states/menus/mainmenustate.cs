@@ -39,10 +39,11 @@ namespace Fab5.Starburst.States {
             soccer,
             flag,
             asteroids,
+            powerups,
             map,
             proceed
         };
-        enum asteroids {
+        enum Amount {
             off,
             few,
             medium,
@@ -52,9 +53,10 @@ namespace Fab5.Starburst.States {
         int gameMode = 0; // 0 för free for all, 1 för team
         bool soccerball = true; // fotboll
         bool captureTheFlag = false;
-        asteroids asteroidCount = asteroids.medium;
+        Amount asteroidCount = Amount.medium;
+        Amount powerupCount = Amount.medium;
         int map = 1;
-        int maps = 4;
+        int maps = 2;
         public Playing.Game_Config gameConfig;
         private Texture2D map1;
         private Texture2D map0;
@@ -104,10 +106,16 @@ namespace Fab5.Starburst.States {
                     else if (cursorPosition.y == (int)options.flag)
                         captureTheFlag = !captureTheFlag;
                     else if (cursorPosition.y == (int)options.asteroids) {
-                        if (asteroidCount == asteroids.off)
-                            asteroidCount = asteroids.many;
+                        if (asteroidCount == Amount.off)
+                            asteroidCount = Amount.many;
                         else
                             asteroidCount--;
+                    }
+                    else if(cursorPosition.y == (int)options.powerups) {
+                        if (powerupCount == Amount.off)
+                            powerupCount = Amount.many;
+                        else
+                            powerupCount--;
                     }
                     else if (cursorPosition.y == (int)options.map) {
                         if (map <= 1) {
@@ -131,10 +139,16 @@ namespace Fab5.Starburst.States {
                     else if (cursorPosition.y == (int)options.flag)
                         captureTheFlag = !captureTheFlag;
                     else if (cursorPosition.y == (int)options.asteroids) {
-                        if (asteroidCount == asteroids.many)
-                            asteroidCount = asteroids.off;
+                        if (asteroidCount == Amount.many)
+                            asteroidCount = Amount.off;
                         else
                             asteroidCount++;
+                    }
+                    else if (cursorPosition.y == (int)options.powerups) {
+                        if (powerupCount == Amount.many)
+                            powerupCount = Amount.off;
+                        else
+                            powerupCount++;
                     }
                     else if (cursorPosition.y == (int)options.map) {
                         if (map == maps)
@@ -169,13 +183,27 @@ namespace Fab5.Starburst.States {
 
         private void proceed() {
             int asteroid = 0;
-            if (asteroidCount == asteroids.few)
+            if (asteroidCount == Amount.few)
                 asteroid = 20;
-            else if (asteroidCount == asteroids.medium)
+            else if (asteroidCount == Amount.medium)
                 asteroid = 40;
-            else if (asteroidCount == asteroids.many)
+            else if (asteroidCount == Amount.many)
                 asteroid = 60;
-            this.gameConfig = new Playing.Game_Config() { mode = this.gameMode, enable_soccer = soccerball, num_asteroids = asteroid };
+            int powerup = 0;
+            int powerupTime = 0;
+            if (powerupCount == Amount.few) {
+                powerup = 3;
+                powerupTime = 60;
+            }
+            else if (powerupCount == Amount.medium) {
+                powerup = 5;
+                powerupTime = 40;
+            }
+            else if (powerupCount == Amount.many) {
+                powerup = 7;
+                powerupTime = 20;
+            }
+            this.gameConfig = new Playing.Game_Config() { map_name = "map"+map+".png", mode = this.gameMode, enable_soccer = soccerball, num_asteroids = asteroid, num_powerups = powerup, powerup_spawn_time = powerupTime };
             Starburst.inst().enter_state(new Player_Selection_Menu(this));
         }
 
@@ -293,21 +321,29 @@ namespace Fab5.Starburst.States {
 
             sprite_batch.DrawString(font, "Asteroids", new Vector2(leftTextX, 220), Color.White);
             String asteroidString = "Off";
-            if (asteroidCount == asteroids.few)
+            if (asteroidCount == Amount.few)
                 asteroidString = "Few";
-            else if (asteroidCount == asteroids.medium)
+            else if (asteroidCount == Amount.medium)
                 asteroidString = "Medium";
-            else if (asteroidCount == asteroids.many)
+            else if (asteroidCount == Amount.many)
                 asteroidString = "Many";
             sprite_batch.DrawString(font, "< " + asteroidString + " >", new Vector2(rightTextX, 220), (position.y == (int)options.asteroids ? new Color(Color.Gold, textOpacity) : Color.White));
 
             // powerup-inställningar
-
+            sprite_batch.DrawString(font, "Powerups", new Vector2(leftTextX, 260), Color.White);
+            String powerupString = "Off";
+            if (powerupCount == Amount.few)
+                powerupString = "Few";
+            else if (powerupCount == Amount.medium)
+                powerupString = "Medium";
+            else if (powerupCount == Amount.many)
+                powerupString = "Many";
+            sprite_batch.DrawString(font, "< " + powerupString + " >", new Vector2(rightTextX, 260), (position.y == (int)options.powerups ? new Color(Color.Gold, textOpacity) : Color.White));
+            
             String map = "Map";
             Vector2 mapTextSize = font.MeasureString(map);
-            sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, 280), Color.White);
-            // visa pilar eller något?
-            int mapY = 330;
+            sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, 320), Color.White);
+            int mapY = 370;
             sprite_batch.Draw(map0, new Rectangle((int)(vp.Width*.5f - largeMapSize*.5f - smallMapSize - 20), (int)(mapY + (largeMapSize - smallMapSize) * .5f), smallMapSize, smallMapSize), Color.White);
             sprite_batch.Draw(map2, new Rectangle((int)(vp.Width*.5f + largeMapSize * .5f + 20), (int)(mapY + (largeMapSize-smallMapSize)*.5f), smallMapSize, smallMapSize), Color.White);
             sprite_batch.Draw(map1, new Rectangle((int)(vp.Width*.5f - largeMapSize * .5f), mapY, largeMapSize, largeMapSize), Color.White);
