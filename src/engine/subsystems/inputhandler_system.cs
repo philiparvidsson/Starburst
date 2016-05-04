@@ -116,7 +116,7 @@
                     angle.ang_vel = 0.0f;
                 }
                 if (Math.Abs(input.throttle) > 0.01f) {
-                    //Fab5_Game.inst().message("throttle", new { gp_index = input.gp_index });
+                    //Fab5_Game.inst().message("play_sound", new { name = "thrust", gp_index = input.gp_index, pos = pos });
 
                     velocity.x += dt * (float)(Math.Cos(angle.angle)) * acc * input.throttle;
                     velocity.y += dt * (float)(Math.Sin(angle.angle)) * acc * input.throttle;
@@ -129,17 +129,19 @@
                     }
                 }
                 else {
-                    //Fab5_Game.inst().message("nothrottle", new { gp_index = input.gp_index });
+                    //Fab5_Game.inst().message("stop_sound", new { name = "thrust", gp_index = input.gp_index, pos = pos });
                 }
 
 
                 // Misc keys
-                if (input.keyboardState.IsKeyDown(Keys.N)) {
-                    Fab5_Game.inst().message("songchanged", null);
+                if (input.keyboardState.IsKeyDown(Keys.N))
+                {
+                    Fab5_Game.inst().message("change_song", null);
                 }
 
-                if (input.keyboardState.IsKeyDown(Keys.M)) {
-                    Fab5_Game.inst().message("mute", null);
+                if (input.keyboardState.IsKeyDown(Keys.M))
+                {
+                    Fab5_Game.inst().message("play_sound", new { name = "mute" });
                 }
             }
         }
