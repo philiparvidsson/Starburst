@@ -34,7 +34,7 @@ public class Shield_Powerup : Powerup_Impl {
                 emit_fn = () => {
                     var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
                     var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
-                    var radius = 42.0f * (0.9f+0.1f*(float)rand.NextDouble());
+                    var radius = 72.0f * (0.9f+0.1f*(float)rand.NextDouble());
                     var speed  = 5.0f * (float)(0.05f+rand.NextDouble());
                     var col = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
