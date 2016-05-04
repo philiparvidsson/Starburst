@@ -28,44 +28,20 @@ namespace Fab5.Starburst.States.Menus.Subsystems {
         public override void init() {
             backdrop = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
             stardrop = Starburst.inst().get_content<Texture2D>("backdrops/stardrop");
-
-            halfwayTime = animationTime * .5f;
         }
         public override void draw(float t, float dt) {
-            draw_backdrop(sprite_batch, dt);
+            draw_backdrop(sprite_batch, t);
         }
-        private void draw_backdrop(SpriteBatch sprite_batch, float dt) {
+        private void draw_backdrop(SpriteBatch sprite_batch, float t) {
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
             Viewport vp = sprite_batch.GraphicsDevice.Viewport;
 
             var hw = vp.Width * 0.5f;
             var hh = vp.Height * 0.5f;
 
-            elapsedTime += dt;
-
-            if (elapsedTime >= animationTime) {
-                elapsedTime = 0;
-            }
-            /*
-            // Easing-variabler
-            float t = elapsedTime;
-            float b = posX;
-            float c = goalX;
-            float d = animationTime;
-            */
-            
-            float x = posX;
-            float y = posY;
-            // gå från start till mål
-            if (elapsedTime < halfwayTime) {
-                x = goalX * elapsedTime / halfwayTime + posX; // hämta från easing-funktion baserad på ursprungsposition, målposition, tid och animationstid
-                y = goalY * elapsedTime / halfwayTime + posY;
-            }
-            // gå från mål till start
-            else if(elapsedTime >= halfwayTime) {
-                x = posX * (elapsedTime - halfwayTime) / halfwayTime + goalX;
-                y = posY * (elapsedTime - halfwayTime) / halfwayTime + goalY;
-            }
+            var scale = 1.5f;
+            var x = (float)Math.Cos(0.4f * t * 0.07f) * 270.0f - scale * backdrop.Width * 0.5f + hw;
+            var y = (float)Math.Sin(0.4f * t * 0.1f) * 200.0f - scale * backdrop.Height * 0.5f + hh;
 
             var fac1 = 0.05f;
             sprite_batch.Draw(backdrop,

@@ -8,6 +8,7 @@ namespace Fab5.Starburst.States {
     using Fab5.Starburst.States.Playing.Entities;
     using Main_Menu.Entities;
     using Main_Menu.Subsystems;
+    using Menus.Subsystems;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
@@ -212,10 +213,13 @@ namespace Fab5.Starburst.States {
         }
 
         public override void init() {
+            sprite_batch = new SpriteBatch(Starburst.inst().GraphicsDevice);
+
             add_subsystems(
                 new Menu_Inputhandler_System(),
                 new Sound(),
-                new Particle_System()
+                new Particle_System(),
+                new Background_Renderer(sprite_batch)
             );
 
             outDelay = delay + inDuration + displayTime;
@@ -259,7 +263,6 @@ namespace Fab5.Starburst.States {
                 playerSlots.Add(SlotStatus.Empty);
             }
 
-            sprite_batch = new SpriteBatch(Starburst.inst().GraphicsDevice);
         }
 
         public override void update(float t, float dt) {
@@ -316,23 +319,14 @@ namespace Fab5.Starburst.States {
             }
         }
 
-        private void draw_background(SpriteBatch sprite_batch, float t) {
-            var scale = 1.5f;
-            var x = (float)Math.Cos(0.4f*t*0.07f) * 270.0f - scale*background.Width * 0.5f + Fab5_Game.inst().GraphicsDevice.Viewport.Width * 0.5f;
-            var y = (float)Math.Sin(0.4f*t*0.1f) * 200.0f - scale*background.Height * 0.5f + Fab5_Game.inst().GraphicsDevice.Viewport.Height * 0.5f;
-
-            sprite_batch.Draw(background, new Vector2(x, y), null, null, null, 0.0f, new Vector2(scale, scale), Color.White * 0.9f);
-        }
-
         public override void draw(float t, float dt) {
-            base.draw(t, dt);
             Starburst.inst().GraphicsDevice.Clear(Color.Black);
+            base.draw(t, dt);
             Viewport vp = sprite_batch.GraphicsDevice.Viewport;
 
             var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
 
             sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
-            draw_background(sprite_batch, t);
             //sprite_batch.Draw(background, destinationRectangle: new Rectangle(0, 0, vp.Width, vp.Height), color: Color.White);
 
             String text = "Choose players";
