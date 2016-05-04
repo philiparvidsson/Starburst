@@ -84,6 +84,8 @@ public class Turbo_Powerup : Powerup_Impl {
     }
 
     public override void begin(Entity holder) {
+        time = 60.0f;
+
         var ship_info = holder.get_component<Ship_Info>();
 
         old_acc = ship_info.acceleration;

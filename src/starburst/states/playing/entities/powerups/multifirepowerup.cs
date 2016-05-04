@@ -65,6 +65,7 @@ public class Multifire_Powerup : Powerup_Impl {
     }
 
     public override void begin(Entity holder) {
+        time = 60.0f;
         //activate_effect(holder);
     }
 

@@ -70,6 +70,7 @@ public class Free_Fire_Powerup : Powerup_Impl {
     }
 
     public override void begin(Entity holder) {
+        time = 15.0f;
         //activate_effect(holder);
     }
 

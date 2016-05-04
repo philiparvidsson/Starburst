@@ -18,7 +18,7 @@ public class Shield_Powerup : Powerup_Impl {
     private float old_recharge_rate;
 
     public override Texture2D icon {
-        get { return Starburst.inst().get_content<Texture2D>("powerups/turbo"); }
+        get { return Starburst.inst().get_content<Texture2D>("powerups/shield"); }
     }
 
     public override string name {
@@ -71,6 +71,8 @@ public class Shield_Powerup : Powerup_Impl {
     }
 
     public override void begin(Entity holder) {
+        time = 60.0f;
+
         activate_effect(holder);
 
         var si = holder.get_component<Ship_Info>();
