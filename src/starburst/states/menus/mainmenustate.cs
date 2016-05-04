@@ -35,12 +35,12 @@ namespace Fab5.Starburst.States {
 
         float btnDelay = .5f;
         enum options {
+            map,
             mode,
             soccer,
             flag,
             asteroids,
             powerups,
-            map,
             proceed
         };
         enum Amount {
@@ -62,7 +62,7 @@ namespace Fab5.Starburst.States {
         private Texture2D map0;
         private Texture2D map2;
         private int largeMapSize = 256;
-        private int smallMapSize = 128;
+        private int smallMapSize = 192;
 
         private Texture2D controller_a_button;
         private Texture2D keyboard_key;
@@ -79,7 +79,7 @@ namespace Fab5.Starburst.States {
                     var entities = Starburst.inst().get_entities_fast(typeof(Position));
                     Entity entity = entities[0];
                     var position = entity.get_component<Position>();
-                    if (position.y > (int)options.mode) {
+                    if (position.y > 0) {
                         position.y -= 1;
                         position.x = 0;
                         Starburst.inst().message("play_sound", new { name = "menu_click" });
@@ -299,7 +299,20 @@ namespace Fab5.Starburst.States {
                 position = new Position();
 
             sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
-            //sprite_batch.Draw(background, destinationRectangle: new Rectangle(0, 0, vp.Width, vp.Height), color: Color.White);
+            
+            String map = "Map";
+            Vector2 mapTextSize = font.MeasureString(map);
+            sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, 150), Color.White);
+
+            int mapY = 200;
+            sprite_batch.Draw(map0, new Rectangle((int)(vp.Width*.5f - largeMapSize*.5f - smallMapSize - 20), (int)(mapY + (largeMapSize - smallMapSize) * .5f), smallMapSize, smallMapSize), Color.White);
+            sprite_batch.Draw(map2, new Rectangle((int)(vp.Width*.5f + largeMapSize * .5f + 20), (int)(mapY + (largeMapSize-smallMapSize)*.5f), smallMapSize, smallMapSize), Color.White);
+            sprite_batch.Draw(map1, new Rectangle((int)(vp.Width*.5f - largeMapSize * .5f), mapY, largeMapSize, largeMapSize), Color.White);
+
+            sprite_batch.DrawString(font, "<", new Vector2((int)(vp.Width * .5f - largeMapSize * .5f - smallMapSize - 20 - 20), mapY + largeMapSize*.5f - mapTextSize.Y*.5f), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, ">", new Vector2((int)(vp.Width * .5f + largeMapSize * .5f + 20 + smallMapSize + 20), mapY + largeMapSize * .5f - mapTextSize.Y * .5f), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
+
+            int settingOffset = (int)(vp.Height * .5f);
 
             String logo = "Starburst";
             Vector2 logoSize = largeFont.MeasureString(logo);
@@ -310,16 +323,16 @@ namespace Fab5.Starburst.States {
             int leftTextX = (int)(vp.Width * .5f - leftTextSize.X - middleSpacing);
             int rightTextX = (int)(vp.Width * .5f + middleSpacing);
 
-            sprite_batch.DrawString(font, "Game mode", new Vector2(leftTextX, 100), Color.White);
-            sprite_batch.DrawString(font, (gameMode == 0 ? "< Team Match >" : "< Free for All >"), new Vector2(rightTextX, 100), (position.y == (int)options.mode ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, "Game mode", new Vector2(leftTextX, settingOffset), Color.White);
+            sprite_batch.DrawString(font, (gameMode == 0 ? "< Team Match >" : "< Free for All >"), new Vector2(rightTextX, settingOffset), (position.y == (int)options.mode ? new Color(Color.Gold, textOpacity) : Color.White));
 
-            sprite_batch.DrawString(font, "Soccer ball", new Vector2(leftTextX, 140), Color.White);
-            sprite_batch.DrawString(font, (soccerball ? "< on >" : "< off >"), new Vector2(rightTextX, 140), (position.y == (int)options.soccer ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, "Soccer ball", new Vector2(leftTextX, settingOffset+40), Color.White);
+            sprite_batch.DrawString(font, (soccerball ? "< on >" : "< off >"), new Vector2(rightTextX, settingOffset+40), (position.y == (int)options.soccer ? new Color(Color.Gold, textOpacity) : Color.White));
 
-            sprite_batch.DrawString(font, ctfString, new Vector2(leftTextX, 180), Color.White);
-            sprite_batch.DrawString(font, (captureTheFlag ? "< on >" : "< off >"), new Vector2(rightTextX, 180), (position.y == (int)options.flag ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, ctfString, new Vector2(leftTextX, settingOffset+80), Color.White);
+            sprite_batch.DrawString(font, (captureTheFlag ? "< on >" : "< off >"), new Vector2(rightTextX, settingOffset+80), (position.y == (int)options.flag ? new Color(Color.Gold, textOpacity) : Color.White));
 
-            sprite_batch.DrawString(font, "Asteroids", new Vector2(leftTextX, 220), Color.White);
+            sprite_batch.DrawString(font, "Asteroids", new Vector2(leftTextX, settingOffset+120), Color.White);
             String asteroidString = "Off";
             if (asteroidCount == Amount.few)
                 asteroidString = "Few";
@@ -327,10 +340,10 @@ namespace Fab5.Starburst.States {
                 asteroidString = "Medium";
             else if (asteroidCount == Amount.many)
                 asteroidString = "Many";
-            sprite_batch.DrawString(font, "< " + asteroidString + " >", new Vector2(rightTextX, 220), (position.y == (int)options.asteroids ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, "< " + asteroidString + " >", new Vector2(rightTextX, settingOffset+120), (position.y == (int)options.asteroids ? new Color(Color.Gold, textOpacity) : Color.White));
 
             // powerup-inställningar
-            sprite_batch.DrawString(font, "Powerups", new Vector2(leftTextX, 260), Color.White);
+            sprite_batch.DrawString(font, "Powerups", new Vector2(leftTextX, settingOffset+160), Color.White);
             String powerupString = "Off";
             if (powerupCount == Amount.few)
                 powerupString = "Few";
@@ -338,18 +351,7 @@ namespace Fab5.Starburst.States {
                 powerupString = "Medium";
             else if (powerupCount == Amount.many)
                 powerupString = "Many";
-            sprite_batch.DrawString(font, "< " + powerupString + " >", new Vector2(rightTextX, 260), (position.y == (int)options.powerups ? new Color(Color.Gold, textOpacity) : Color.White));
-            
-            String map = "Map";
-            Vector2 mapTextSize = font.MeasureString(map);
-            sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, 320), Color.White);
-            int mapY = 370;
-            sprite_batch.Draw(map0, new Rectangle((int)(vp.Width*.5f - largeMapSize*.5f - smallMapSize - 20), (int)(mapY + (largeMapSize - smallMapSize) * .5f), smallMapSize, smallMapSize), Color.White);
-            sprite_batch.Draw(map2, new Rectangle((int)(vp.Width*.5f + largeMapSize * .5f + 20), (int)(mapY + (largeMapSize-smallMapSize)*.5f), smallMapSize, smallMapSize), Color.White);
-            sprite_batch.Draw(map1, new Rectangle((int)(vp.Width*.5f - largeMapSize * .5f), mapY, largeMapSize, largeMapSize), Color.White);
-
-            sprite_batch.DrawString(font, "<", new Vector2((int)(vp.Width*.5f-middleSpacing-10), mapY + largeMapSize + 10), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
-            sprite_batch.DrawString(font, ">", new Vector2((int)(vp.Width * .5f + middleSpacing), mapY + largeMapSize + 10), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, "< " + powerupString + " >", new Vector2(rightTextX, settingOffset+160), (position.y == (int)options.powerups ? new Color(Color.Gold, textOpacity) : Color.White));
 
             // kontroll-"tutorial"
 
