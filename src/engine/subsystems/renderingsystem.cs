@@ -452,10 +452,16 @@ namespace Fab5.Engine.Subsystems {
             base.draw(t, dt);
         }
 
+        public static int num_begins = 0;
+        public static int num_draws = 0;
+
         private void drawSprites(SpriteBatch sprite_batch, Camera camera, int num_entities, List<Entity> entities, float dt)
         {
             int blend_mode = -1;
 
+            num_draws++;
+
+            var begins = 0;
             for (int i = 0; i < num_entities; i++)
             {
                 var entity = entities[i];
@@ -477,6 +483,7 @@ namespace Fab5.Engine.Subsystems {
                         bs = BlendState.Additive;
                     }
 
+                    begins++;
                     sprite_batch.Begin(SpriteSortMode.Deferred,
                                        bs, null, null, null, null,
                                        transformMatrix: camera.getViewMatrix(camera.viewport));
@@ -484,6 +491,8 @@ namespace Fab5.Engine.Subsystems {
 
                 draw_sprite(entity, dt);
             }
+
+            num_begins += begins;
 
             sprite_batch.End();
         }

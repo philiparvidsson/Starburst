@@ -7,10 +7,12 @@ namespace Fab5.Engine.Subsystems {
     using System;
     using Fab5.Starburst;
 
-
     public class Window_Title_Writer : Subsystem
     {
         float elapsedTime = 0;
+
+        float display_begins;
+        int display_num_entities;
 
         public override void on_message(string msg, dynamic data) {
             if (msg == "set_w_title" && Fab5_Game.inst().Window != null) {
@@ -42,13 +44,17 @@ namespace Fab5.Engine.Subsystems {
                     fps.frameCounter = 0;
 
                     display_fps = (int)fps.frameRate;
+                    display_begins = (float)Rendering_System.num_begins / (float)Rendering_System.num_draws;
 
                     Fab5_Game.inst().message("set_w_title", new { str = " * Starburst * " + fps.frameRate });
+                    display_num_entities = state.get_num_entities();
                 }
             }
 
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            GFX_Util.draw_def_text(sprite_batch, "FPS: " + display_fps, 10, 90);
+            GFX_Util.draw_def_text(sprite_batch, "fps: " + display_fps, 10, 90);
+            GFX_Util.draw_def_text(sprite_batch, "begins: " + string.Format("{0:0.00}", display_begins), 10, 126);
+            GFX_Util.draw_def_text(sprite_batch, "entities: " + display_num_entities, 10, 162);
             sprite_batch.End();
         }
 

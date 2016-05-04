@@ -100,8 +100,8 @@ public abstract class Game_State {
     private class MsgInfo {
         public string msg;
         public object data;
-
     }
+
     private readonly System.Collections.Concurrent.ConcurrentQueue<MsgInfo> messages = new System.Collections.Concurrent.ConcurrentQueue<MsgInfo>();
 
     // Entity id counter. Static to make sure all entity ids are unique.
@@ -121,6 +121,10 @@ public abstract class Game_State {
             on_message(msg.msg, msg.data);
         }
 
+    }
+
+    public int get_num_entities() {
+        return entities.Count;
     }
 
     public virtual void on_message(string msg, dynamic data) {
@@ -272,7 +276,25 @@ public abstract class Game_State {
             var sprites = get_entities_fast(typeof(Sprite));
 
             //sprites.Sort(sort_on_texture);
-            sprites.Sort(sort_on_blend_mode);
+            //sprites.Sort(sort_on_blend_mode);
+            int n = sprites.Count-1;
+            for (int i = 0; i < n; i++) {
+                var j = (i+1);
+                var a = sprites[i].get_component<Sprite>();
+                var b = sprites[j].get_component<Sprite>();
+                if (a.blend_mode > b.blend_mode) {
+                    var tmp = sprites[i];
+                    sprites[i] = sprites[j];
+                    sprites[j] = tmp;
+                    break;
+                }
+                if (a.layer_depth > b.layer_depth) {
+                    var tmp = sprites[i];
+                    sprites[i] = sprites[j];
+                    sprites[j] = tmp;
+                    break;
+                }
+            }
         }
 
         foreach (var subsystem in subsystems) {

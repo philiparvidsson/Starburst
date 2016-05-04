@@ -97,7 +97,11 @@ namespace Fab5.Starburst.States {
             if (preloaded || preloading) {
                 String text = preloaded ? "Press enter to skip" : "Loading... " + percent_preloaded + "%";
                 Vector2 textSize = font.MeasureString(!preloaded ? "Loading... 100%" : "Press enter to skip");
-                sprite_batch.DrawString(font, text, new Vector2(vp.Width * .5f - textSize.X * .5f, vp.Height - textSize.Y - 20), Color.White);
+                var alpha = 1.0f;
+                if (preloaded) {
+                    alpha = (float)Math.Cos(1.7f*t*3.141592)*0.5f+0.5f;
+                }
+                sprite_batch.DrawString(font, text, new Vector2(vp.Width * .5f - textSize.X * .5f, vp.Height - textSize.Y - 20), Color.White * alpha);
             }
             else {
                 String text = "Please wait...";
