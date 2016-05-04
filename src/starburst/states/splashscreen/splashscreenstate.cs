@@ -52,6 +52,9 @@ namespace Fab5.Starburst.States {
             if (!preloaded) skip_button_pressed = false;
 
             if(elapsedTime >= splashTime || skip_button_pressed) {
+                if (!skip_button_pressed) {
+                    System.Threading.Thread.Sleep(700);
+                }
                 Starburst.inst().enter_state(new Main_Menu_State());
                 return;
             }
@@ -101,6 +104,7 @@ namespace Fab5.Starburst.States {
                 if (preloaded) {
                     alpha = (float)Math.Cos(1.7f*t*3.141592)*0.5f+0.5f;
                 }
+                alpha *= 1-quadInOut(outDelay, 0, 1);
                 sprite_batch.DrawString(font, text, new Vector2(vp.Width * .5f - textSize.X * .5f, vp.Height - textSize.Y - 20), Color.White * alpha);
             }
             else {
