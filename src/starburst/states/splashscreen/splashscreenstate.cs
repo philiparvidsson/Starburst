@@ -40,7 +40,7 @@ namespace Fab5.Starburst.States {
             elapsedTime += dt;
 
             KeyboardState state = Keyboard.GetState();
-            var skip_button_pressed = state.IsKeyDown(Keys.Enter) && preloaded;
+            var skip_button_pressed = state.IsKeyDown(Keys.Enter);
 
             for (int i = 0; i <= 3; i++) {
                 if (GamePad.GetState((PlayerIndex)i).IsConnected && GamePad.GetState((PlayerIndex)i).Buttons.Start == ButtonState.Pressed) {
@@ -48,6 +48,8 @@ namespace Fab5.Starburst.States {
                     break;
                 }
             }
+
+            if (!preloaded) skip_button_pressed = false;
 
             if(elapsedTime >= splashTime || skip_button_pressed) {
                 Starburst.inst().enter_state(new Main_Menu_State());
@@ -95,6 +97,11 @@ namespace Fab5.Starburst.States {
             if (preloaded || preloading) {
                 String text = preloaded ? "Press enter to skip" : "Loading... " + percent_preloaded + "%";
                 Vector2 textSize = font.MeasureString(!preloaded ? "Loading... 100%" : "Press enter to skip");
+                sprite_batch.DrawString(font, text, new Vector2(vp.Width * .5f - textSize.X * .5f, vp.Height - textSize.Y - 20), Color.White);
+            }
+            else {
+                String text = "Please wait...";
+                Vector2 textSize = font.MeasureString(text);
                 sprite_batch.DrawString(font, text, new Vector2(vp.Width * .5f - textSize.X * .5f, vp.Height - textSize.Y - 20), Color.White);
             }
 

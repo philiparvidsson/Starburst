@@ -141,7 +141,7 @@ namespace Fab5.Engine.Subsystems {
                         var sy = y+yfrac;
                         sprite_batch.Draw(tile_tex,
                                           new Vector2(sx, sy),
-                                          new Rectangle(18*v, 0, 16, 16),
+                                          new Rectangle(18*v+1, 0, 16, 16),
                                           Color.White,
                                           0.0f,
                                           Vector2.Zero,
