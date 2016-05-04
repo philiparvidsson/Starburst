@@ -35,6 +35,8 @@
             effectlib.Library.Add("throw_knife", new Fab5SoundEffect("sound/effects/throw_knife", "throw_knife"));
             effectlib.Library.Add("LaserBlaster", new Fab5SoundEffect("sound/effects/LaserBlaster", "LaserBlaster"));
             effectlib.Library.Add("LaserBlaster2", new Fab5SoundEffect("sound/effects/LaserBlaster2", "LaserBlaster2"));
+            effectlib.Library.Add("menu_click", new Fab5SoundEffect("sound/effects/air_horn", "begin_game" ));
+            effectlib.Library.Add("begin_game", new Fab5SoundEffect("sound/effects/click", "menu_click" ));
             return (Component)effectlib;
         }
     }

@@ -29,7 +29,7 @@ namespace Fab5.Engine.Subsystems {
                 if (!ship.has_powerup("free-fire")) {
                     ship.energy_value -= weapon.energy_cost;
                 }
-                Fab5_Game.inst().message("fire", weapon);
+                Fab5_Game.inst().message("play_sound", new { name = weapon.sound });
                 weapon.timeSinceLastShot = 0f;
             }
         }

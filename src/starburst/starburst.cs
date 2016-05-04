@@ -16,8 +16,8 @@ public class Starburst : Fab5_Game {
         }
     protected override void init() {
             if (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height > 800 && GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width > 1400) {
-                GraphicsMgr.PreferredBackBufferWidth = 1920;
-                GraphicsMgr.PreferredBackBufferHeight = 1080;
+                GraphicsMgr.PreferredBackBufferWidth = 1280;
+                GraphicsMgr.PreferredBackBufferHeight = 680;
             }
             else {
                 GraphicsMgr.PreferredBackBufferWidth = 1280;
