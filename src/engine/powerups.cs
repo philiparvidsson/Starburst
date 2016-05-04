@@ -12,9 +12,11 @@ using System;
 public abstract class Powerup_Impl {
     public float time = 30.0f;
 
+    public abstract Texture2D icon { get; }
+
     public abstract string name { get; }
 
-    public abstract void on_begin(Entity holder, Entity powerup);
+    public abstract void begin(Entity holder);
 
     public abstract void end();
 }
@@ -24,12 +26,6 @@ public class Powerup : Component {
     public Powerup_Impl impl;
 
     private static System.Random rand = new System.Random();
-
-    public void begin(Entity holder, Entity powerup) {
-        holder.get_component<Ship_Info>().add_powerup(impl);
-
-        impl.on_begin(holder, powerup);
-    }
 
     public static Component[] create(Powerup_Impl impl) {
         Position pos;

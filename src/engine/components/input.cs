@@ -17,6 +17,9 @@
     {
         public bool enabled = true;
 
+        public bool can_use_powerup;
+        public bool can_switch_powerups;
+
         public KeyboardState keyboardState;
         public GamePadState gamepadState;
 

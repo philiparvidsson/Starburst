@@ -65,15 +65,43 @@
 
         private void draw_powerup_inv(Camera cam, Entity player) {
             int size = 64;
-            var spacing = 8.0f;
-            int num_inv = 2;
+            int spacing = 8;
+            var si = player.get_component<Ship_Info>();
+            int num_inv = si.max_powerups_inv;
 
-            var x = cam.viewport.Width * 0.5f - 0.5f*(num_inv*size+(num_inv-1)*spacing);
-            var y = 20.0f;
+            int x = (int)(cam.viewport.Width * 0.5f - 0.5f*(num_inv*size+(num_inv-1)*spacing));
+            int y = 20;
 
             for (int i = 0; i < num_inv; i++) {
-                GFX_Util.fill_rect(sprite_batch, new Rectangle((int)x, (int)y, size, size), Color.Black * 0.5f);
+                GFX_Util.fill_rect(sprite_batch, new Rectangle(x, y, size, size), Color.Black * 0.5f);
+
+                if (si.powerup_inv[i] != null) {
+                    sprite_batch.Draw(si.powerup_inv[i].icon, new Vector2(x+16, y+16), Color.White);
+                    //GFX_Util.fill_rect(sprite_batch, new Rectangle(x, y, 15, 15), Color.White);
+                }
+
+                if (i == si.powerup_inv_index) {
+                    var col = Color.White;
+                    var border = 2;
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(x, y, border, size), col);
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(x+size-border, y, border, size), col);
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(x, y, size, border), col);
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(x, y+size-border, size, border), col);
+                }
+
                 x += size + spacing;
+            }
+
+
+            var vp_size = Fab5_Game.inst().GraphicsDevice.Viewport.Width;
+            var scale = 1.0f*(float)System.Math.Sqrt(1.0f+vp_size/1920.0f);
+            var xx  = Fab5_Game.inst().GraphicsDevice.Viewport.Width - 160.0f * scale - 15.0f;
+            var yy = Fab5_Game.inst().GraphicsDevice.Viewport.Height  - 160.0f * scale - 15.0f;
+
+            foreach (var e in si.powerups) {
+                yy -= 36.0f;
+                sprite_batch.Draw(e.Value.icon, new Vector2(xx, yy), Color.White);
+                GFX_Util.draw_def_text(sprite_batch, string.Format("{0:0.0}", e.Value.time), xx + 38.0f, yy);
             }
         }
 

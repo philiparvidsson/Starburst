@@ -5,7 +5,7 @@ using Fab5.Engine.Core;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
+using Fab5.Starburst;
 
 using System;
 
@@ -17,12 +17,19 @@ public class Shield_Powerup : Powerup_Impl {
     private float old_top_energy;
     private float old_recharge_rate;
 
+    public override Texture2D icon {
+        get { return Starburst.inst().get_content<Texture2D>("powerups/turbo"); }
+    }
+
     public override string name {
         get { return "shield"; }
     }
 
     public override void end() {
-        Fab5_Game.inst().destroy_entity(effect_id);
+        var e = Fab5_Game.inst().get_entity(effect_id);
+        if (e != null) {
+            e.destroy();
+        }
     }
 
     private void activate_effect(Entity holder) {
@@ -63,7 +70,7 @@ public class Shield_Powerup : Powerup_Impl {
         }).id;
     }
 
-    public override void on_begin(Entity holder, Entity powerup) {
+    public override void begin(Entity holder) {
         activate_effect(holder);
 
         var si = holder.get_component<Ship_Info>();

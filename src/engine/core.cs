@@ -20,7 +20,9 @@ using System.Threading;
      *----------------------------------------------*/
 
 // Base component class for all game components.
-public interface Component { };
+public abstract class Component {
+    public Entity entity;
+};
 
 // Base entity class for all game entities.
 public sealed class Entity {
@@ -42,6 +44,7 @@ public sealed class Entity {
         for (int i = 0; i < n; i++) {
             var component = components[i];
             if (component != null) {
+                component.entity = this;
                 this.components.Add(component.GetType(), component);
                 state.add_component(this, component.GetType());
             }

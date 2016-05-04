@@ -2,6 +2,7 @@ namespace Fab5.Engine {
 
 using Fab5.Engine.Components;
 using Fab5.Engine.Core;
+using Fab5.Starburst;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 
 public class Turbo_Powerup : Powerup_Impl {
+
     private float old_acc;
     private float old_vel;
 
@@ -17,6 +19,10 @@ public class Turbo_Powerup : Powerup_Impl {
     private Int64 effect_id;
 
     private static System.Random rand = new System.Random();
+
+    public override Texture2D icon {
+        get { return Starburst.inst().get_content<Texture2D>("powerups/turbo"); }
+    }
 
     public override string name {
         get { return "turbo"; }
@@ -77,7 +83,7 @@ public class Turbo_Powerup : Powerup_Impl {
         }).id;
     }
 
-    public override void on_begin(Entity holder, Entity powerup) {
+    public override void begin(Entity holder) {
         var ship_info = holder.get_component<Ship_Info>();
 
         old_acc = ship_info.acceleration;

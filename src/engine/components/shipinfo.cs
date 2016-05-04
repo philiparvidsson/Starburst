@@ -7,6 +7,7 @@
 
     using Fab5.Engine.Core;
     using Microsoft.Xna.Framework.Graphics;
+    using System.Collections.Generic;
 
 
     /*------------------------------------------------
@@ -23,10 +24,30 @@
         public float acceleration;
         public float recharge_rate;
 
+        public int powerup_inv_index;
+        public int max_powerups_inv = 3;
+        public readonly Powerup_Impl[] powerup_inv = new Powerup_Impl[3];
+
         public int team;
         public int pindex;
 
         public System.Collections.Generic.Dictionary<string, Powerup_Impl> powerups = new System.Collections.Generic.Dictionary<string, Powerup_Impl>();
+
+        public bool use_powerup(int index) {
+            if (index < 0 || index >= powerup_inv.Length) {
+                return false;
+            }
+
+            var powerup = powerup_inv[index];
+            if (powerup == null) {
+                return false;
+            }
+
+            entity.get_component<Ship_Info>().add_powerup(powerup);
+            powerup.begin(entity);
+            powerup_inv[index] = null;
+            return true;
+        }
 
         public void add_powerup(Powerup_Impl powerup) {
             if (powerups.ContainsKey(powerup.name)) {

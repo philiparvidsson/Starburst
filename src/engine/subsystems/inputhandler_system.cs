@@ -28,9 +28,11 @@
         private bool is_gamepad_thumbstick_left(float threshold, GamePadState current, GamePadState previous) {
             return previous.ThumbSticks.Left.X >= threshold - 1 && current.ThumbSticks.Left.X < threshold - 1;
         }
+
         private bool is_gamepad_thumbstick_right(float threshold, GamePadState current, GamePadState previous) {
             return previous.ThumbSticks.Left.X <= threshold && current.ThumbSticks.Left.X > threshold;
         }
+
 
         public override void draw(float t, float dt) {
             var entities = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler));
@@ -62,6 +64,8 @@
 
                 // Keyboard device
                 if (input.device == Inputhandler.InputType.Keyboard) {
+                    // @To-do: keys for managing powerups
+
                     input.keyboardState = Keyboard.GetState();
 
                     if (input.keyboardState.IsKeyDown(input.left))
@@ -97,6 +101,27 @@
                     }
                     if (state.Buttons.X == ButtonState.Pressed) {
                         fire(entity, ship, secondaryWeapon);
+                    }
+
+                    if (state.Buttons.LeftShoulder == ButtonState.Released &&
+                        state.Buttons.RightShoulder == ButtonState.Released)
+                    {
+                        input.can_switch_powerups = true;
+                    }
+                    if (input.can_switch_powerups && state.Buttons.LeftShoulder == ButtonState.Pressed) {
+                        input.can_switch_powerups = false;
+                        ship.powerup_inv_index -= 1;
+                        if (ship.powerup_inv_index < 0) ship.powerup_inv_index = ship.max_powerups_inv-1;
+                    }
+                    if (input.can_switch_powerups && state.Buttons.RightShoulder == ButtonState.Pressed) {
+                        input.can_switch_powerups = false;
+                        ship.powerup_inv_index += 1;
+                        if (ship.powerup_inv_index >= ship.max_powerups_inv) ship.powerup_inv_index = 0;
+                    }
+                    if (state.Buttons.Y == ButtonState.Released) input.can_use_powerup = true;
+                    if (input.can_use_powerup && state.Buttons.Y == ButtonState.Pressed && ship.powerup_inv_index < ship.powerup_inv.Length) {
+                        input.can_use_powerup = false;
+                        ship.use_powerup(ship.powerup_inv_index);
                     }
                 }
 

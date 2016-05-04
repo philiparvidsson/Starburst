@@ -44,6 +44,19 @@ namespace Fab5.Engine.Subsystems {
                     weapon.timeSinceLastShot += dt;
                 if (weapon2 != null && weapon2.timeSinceLastShot <= weapon2.fire_rate)
                     weapon2.timeSinceLastShot += dt;
+
+                // @To-do: putting inv here to not introduce another subsystem
+                var si = entities[i].get_component<Ship_Info>();
+
+                if (si != null) {
+                    foreach (var s in si.powerups.Keys.ToArray()) {
+                        si.powerups[s].time -= dt;
+                        if (si.powerups[s].time <= 0.0f) {
+                            si.powerups[s].end();
+                            si.powerups.Remove(s);
+                        }
+                    }
+                }
             }
 
             base.update(t, dt);

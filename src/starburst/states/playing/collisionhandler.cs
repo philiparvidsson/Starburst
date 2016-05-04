@@ -85,8 +85,20 @@ namespace Fab5.Starburst.States.Playing {
         var powerup = (a.get_component<Sprite>().texture.Name == "powerup") ? a : b;
         var player = (powerup == a) ? b : a;
 
-        powerup.get_component<Powerup>().begin(player, powerup);
-        powerup.destroy();
+        var si = player.get_component<Ship_Info>();
+
+        int i = -1;
+        for (int j = 0; j < si.max_powerups_inv; j++) {
+            if (si.powerup_inv[j] == null) {
+                i = j;
+                break;
+            }
+        }
+
+        if (i >= 0) {
+            si.powerup_inv[i] = powerup.get_component<Powerup>().impl;
+            powerup.destroy();
+        }
     }
 
     private void soccerball_player(Entity a, Entity b, dynamic data) {
