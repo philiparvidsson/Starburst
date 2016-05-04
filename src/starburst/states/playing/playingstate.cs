@@ -42,7 +42,8 @@ public class Playing_State : Game_State {
     public Tile_Map tile_map;
 
     private void load_map() {
-        using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap("map.png")) {
+        var s = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, game_conf.map_name);
+        using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(s)) {
             for (int x = 0; x < 256; x++) {
                 for (int y = 0; y < 256; y++) {
                     int i = x+y*256;
