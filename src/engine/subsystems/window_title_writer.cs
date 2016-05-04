@@ -40,7 +40,8 @@ namespace Fab5.Engine.Subsystems {
                     elapsedTime -= 1;
                     fps.frameRate = fps.frameCounter;
                     fps.frameCounter = 0;
-                    display_fps = (int)fps.frameCounter;
+
+                    display_fps = (int)fps.frameRate;
 
                     Fab5_Game.inst().message("set_w_title", new { str = " * Starburst * " + fps.frameRate });
                 }

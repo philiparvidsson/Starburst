@@ -111,16 +111,16 @@ public class Playing_State : Game_State {
         tile_map = new Tile_Map();
         coll_handler = new Collision_Handler(this, tile_map, spawner);
 
+        game_conf.powerup_spawn_time = 1.0f;
+
 
         load_map();
 
         add_subsystems(
+            new Position_Integrator(),
+            new Collision_Solver(tile_map),
 
             new Async_Multi_Subsystem(
-                new Multi_Subsystem(
-                    new Position_Integrator(),
-                    new Collision_Solver(tile_map)
-                ),
                 new Inputhandler_System(),
                 new Sound(),
                 new Particle_System(),
@@ -132,6 +132,7 @@ public class Playing_State : Game_State {
             new Rendering_System(Starburst.inst().GraphicsDevice) {
                 tile_map = tile_map
             },
+
             new Window_Title_Writer()
         );
 

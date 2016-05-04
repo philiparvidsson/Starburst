@@ -15,13 +15,13 @@ public class Starburst : Fab5_Game {
             GraphicsMgr.HardwareModeSwitch = false;
         }
     protected override void init() {
-            if (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height > 800 && GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width > 1400) {
+            if (false && GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height > 800 && GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width > 1400) {
                 GraphicsMgr.PreferredBackBufferWidth = 1280;
                 GraphicsMgr.PreferredBackBufferHeight = 680;
             }
             else {
-                GraphicsMgr.PreferredBackBufferWidth = 1280;
-                GraphicsMgr.PreferredBackBufferHeight = 680;
+                GraphicsMgr.PreferredBackBufferWidth = 1920;
+                GraphicsMgr.PreferredBackBufferHeight = 1080;
             }
        // GraphicsMgr.PreferMultiSampling = true;
 

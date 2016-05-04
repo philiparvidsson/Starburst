@@ -381,8 +381,8 @@ namespace Fab5.Engine.Subsystems {
                 foreach (Camera cam in cameras) {
                     var cx = cam.position.x;
                     var cy = cam.position.y;
-                    var hw = cam.viewport.Width * 0.5f;
-                    var hh = cam.viewport.Height * 0.5f;
+                    var hw = cam.viewport.Width/cam.zoom * 0.5f;
+                    var hh = cam.viewport.Height/cam.zoom * 0.5f;
 
                     if ((left   > cx - hw)
                      && (right  < cx + hw)
