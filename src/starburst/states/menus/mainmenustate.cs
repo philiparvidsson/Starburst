@@ -162,9 +162,9 @@ namespace Fab5.Starburst.States {
         }
 
         private void updateMaps() {
-            map0 = Starburst.inst().get_content<Texture2D>("menu/map" + (map > 1 ? map-1 : maps));
-            map1 = Starburst.inst().get_content<Texture2D>("menu/map" + map);
-            map2 = Starburst.inst().get_content<Texture2D>("menu/map" + (map < maps ? map+1 : 1));
+            map0 = Starburst.inst().get_content<Texture2D>("maps/preview" + (map > 1 ? map-1 : maps));
+            map1 = Starburst.inst().get_content<Texture2D>("maps/preview" + map);
+            map2 = Starburst.inst().get_content<Texture2D>("maps/preview" + (map < maps ? map+1 : 1));
         }
 
         private void proceed() {
@@ -300,6 +300,9 @@ namespace Fab5.Starburst.States {
             else if (asteroidCount == asteroids.many)
                 asteroidString = "Many";
             sprite_batch.DrawString(font, "< " + asteroidString + " >", new Vector2(rightTextX, 220), (position.y == (int)options.asteroids ? new Color(Color.Gold, textOpacity) : Color.White));
+
+            // powerup-inställningar
+
             String map = "Map";
             Vector2 mapTextSize = font.MeasureString(map);
             sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, 280), Color.White);

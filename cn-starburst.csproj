@@ -129,6 +129,10 @@
     <Content Include="src\starburst\content\indicator.png" />
     <Content Include="src\starburst\content\indicator2.png" />
     <Content Include="src\starburst\content\map.png" />
+    <Content Include="src\starburst\content\maps\map1.png" />
+    <Content Include="src\starburst\content\maps\map2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="src\starburst\content\map\tiles.png" />
     <Content Include="src\starburst\content\menu\Key.png" />
     <Content Include="src\starburst\content\menu\Xbox_A_white.png" />
