@@ -26,7 +26,7 @@ namespace Fab5.Starburst.States.Menus.Subsystems {
             sprite_batch = sb;
         }
         public override void init() {
-            backdrop = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
+            backdrop = Starburst.inst().get_content<Texture2D>("backdrops/menubg");
             stardrop = Starburst.inst().get_content<Texture2D>("backdrops/stardrop");
         }
         public override void draw(float t, float dt) {
