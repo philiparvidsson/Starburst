@@ -111,14 +111,13 @@ public class Playing_State : Game_State {
         tile_map = new Tile_Map();
         coll_handler = new Collision_Handler(this, tile_map, spawner);
 
-  //      game_conf.powerup_spawn_time = 1.0f;
-//        game_conf.num_powerups = 50;
-
+        game_conf.powerup_spawn_time = 1.0f;
+        game_conf.num_powerups = 50;
 
         load_map();
 
         add_subsystems(
-            new Multi_Subsystem(
+            new Async_Multi_Subsystem(
                 new Multi_Subsystem(
                     new Position_Integrator(),
                     new Collision_Solver(tile_map)
@@ -259,7 +258,8 @@ public class Playing_State : Game_State {
             typeof (Turbo_Powerup),
             typeof (Free_Fire_Powerup),
             typeof (Shield_Powerup),
-            typeof (Multifire_Powerup)
+            typeof (Multifire_Powerup),
+            typeof (Bouncy_Bullets_Powerup),
         };
 
         var i = rand.Next(0, types.Length);

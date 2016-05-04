@@ -76,7 +76,7 @@
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(x, y, size, size), Color.Black * 0.5f);
 
                 if (si.powerup_inv[i] != null) {
-                    sprite_batch.Draw(si.powerup_inv[i].icon, new Vector2(x+16, y+16), Color.White);
+                    sprite_batch.Draw(si.powerup_inv[i].icon, new Vector2(x, y), Color.White);
                     //GFX_Util.fill_rect(sprite_batch, new Rectangle(x, y, 15, 15), Color.White);
                 }
 
@@ -102,7 +102,7 @@
                 var textsize = GFX_Util.measure_string(e.Value.time >= 100.0f ? "100.9" : "99.9");
                 var textx = xx - textsize.X - 8.0f;
                 var texty = 16.0f-textsize.Y*0.5f;
-                sprite_batch.Draw(e.Value.icon, new Vector2(xx, yy), Color.White);
+                sprite_batch.Draw(e.Value.icon, new Vector2(xx, yy), null, Color.White, 0.0f, Vector2.Zero, new Vector2(0.5f, 0.5f), SpriteEffects.None, 0.5f);
                 GFX_Util.draw_def_text(sprite_batch, string.Format("{0:0.0}", e.Value.time), textx, yy+texty);
                 yy -= 36.0f;
             }

@@ -289,7 +289,7 @@ namespace Fab5.Starburst.States {
         }
         public override void draw(float t, float dt) {
             if (vol < 0.7f) {
-                vol += 0.7f * dt/1.5f;
+                vol += 0.7f * dt/2.5f;
                 if (vol > 0.7f) {
                     vol = 0.7f;
                 }

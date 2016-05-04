@@ -37,6 +37,9 @@
             var velocity = new Velocity() { x = cfa*speed+shipVel.x, y = sfa*speed+shipVel.y };
 
             Sprite bulletSprite = new Sprite() { texture = bulletTexture1, layer_depth = 1, blend_mode = Sprite.BM_ADD, scale = 0.35f };
+            if (!origin.get_component<Ship_Info>().has_powerup("bouncy-bullets")) {
+                bulletSprite.color = new Color(1.0f, 0.5f, 0.4f);
+            }
 
             var particle_tex = Starburst.inst().get_content<Texture2D>("particle");
 
@@ -45,14 +48,14 @@
                     emit_fn = () => {
                         var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
                         var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
-                        var radius = 6.0f * (float)rand.NextDouble();
-                        var speed2  = (20.0f * (float)Math.Pow(rand.NextDouble(), 2.0f));
+                        var radius = 4.0f * (float)rand.NextDouble();
+                        var speed2  = 20.0f * (float)(rand.NextDouble()+0.5f);
 
                         return new Component[] {
                             new Position() { x = pos.x + (float)Math.Cos(theta1) * radius,
                                              y = pos.y + (float)Math.Sin(theta1) * radius },
-                            new Velocity() { x = velocity.x * 0.05f + (float)Math.Cos(theta2) * speed2,
-                                             y = velocity.y * 0.05f + (float)Math.Sin(theta2) * speed2 },
+                            new Velocity() { x = velocity.x * 0.2f + (float)Math.Cos(theta2) * speed2,
+                                             y = velocity.y * 0.2f + (float)Math.Sin(theta2) * speed2 },
                             new Sprite() {
                                 texture = particle_tex,
                                 color = new Color(1.0f, 0.6f, 0.2f, 1.0f),
@@ -60,13 +63,13 @@
                                 blend_mode = Sprite.BM_ADD,
                                 layer_depth = 0.3f
                             },
-                            new TTL() { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max), max_time = 0.1f + (float)(rand.NextDouble() * 0.05f) }
+                            new TTL() { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max), max_time = 0.05f + (float)(rand.NextDouble() * 0.05f) }
     //                        new Bounding_Circle() { radius = 1.0f },
     //                        new Mass() { mass = 0.0f }
 
                         };
                     },
-                    interval = 0.02f,
+                    interval = 0.03f,
                     num_particles_per_emit = 2
                 },
                 pos,
@@ -76,7 +79,44 @@
                 //bulletDrawArea,
                 new Bounding_Circle() { radius = 6,
                                         ignore_collisions = IG_BULLET,
-                                        ignore_collisions2 = origin.get_component<Ship_Info>().team },
+                                        ignore_collisions2 = origin.get_component<Ship_Info>().team,
+                                        collision_cb = (self, other_entity) => {
+                                            if (self.get_component<Bullet_Info>().sender.get_component<Ship_Info>().has_powerup("bouncy-bullets")) {
+                                                return;
+                                            }
+
+                                            Fab5_Game.inst().create_entity(new Component[] {
+                                                new TTL { max_time = 0.05f },
+                                                new Particle_Emitter {
+                                                    emit_fn = () => {
+                                                        return new Component[] {
+                                                            new Position {
+                                                                x = pos.x,
+                                                                y = pos.y
+                                                            },
+                                                            new Velocity {
+                                                                x = (float)Math.Cos((float)rand.NextDouble() * 6.28) * (100.0f + 80.0f * (float)rand.NextDouble()),
+                                                                y = (float)Math.Sin((float)rand.NextDouble() * 6.28) * (100.0f + 80.0f * (float)rand.NextDouble())
+                                                            },
+                                                            new Sprite {
+                                                                blend_mode  = Sprite.BM_ADD,
+                                                                color       = new Color(0.2f, 0.6f, 1.0f),
+                                                                layer_depth = 0.3f,
+                                                                scale       = 0.2f + (float)rand.NextDouble() * 0.3f,
+                                                                texture     = Starburst.inst().get_content<Texture2D>("particle")
+                                                            },
+                                                            new TTL {
+                                                                alpha_fn = (x, max) => 1.0f - x/max,
+                                                                max_time = 0.1f + (float)(rand.NextDouble() * 0.1f)
+                                                            }
+                                                        };
+                                                    },
+                                                    interval = 0.01f,
+                                                    num_particles_per_emit = 10 + rand.Next(0, 20)
+                                                }
+                                            });
+                                            self.destroy();
+                                        }},
                 new Mass { mass = 1.0f, restitution_coeff = -1.0f, friction = 0.0f },
                 new TTL() { alpha_fn = (x, max) => 10.0f-10.0f*x/max, max_time = lifeTime },
                 new Bullet_Info() { damage = weapon.damage, sender = origin, max_speed = speed }

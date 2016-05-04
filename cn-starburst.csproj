@@ -94,6 +94,7 @@
     <Compile Include="src\starburst\starburst.cs" />
     <Compile Include="src\starburst\states\playing\entities\dummy.cs" />
     <Compile Include="src\starburst\states\playing\entities\enemies\dummy_enemy.cs" />
+    <Compile Include="src\starburst\states\playing\entities\powerups\bouncybulletspowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\freefirepowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\multifirepowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\shieldpowerup.cs" />

@@ -97,6 +97,47 @@ namespace Fab5.Starburst.States.Playing {
 
         if (i >= 0) {
             si.powerup_inv[i] = powerup.get_component<Powerup>().impl;
+
+            state.create_entity(new Component[] {
+                new TTL { max_time = 0.05f },
+                new Particle_Emitter {
+                    emit_fn = () => {
+                        var theta1 = (2.0f/5.0f)*3.1415f*(float)rand.Next(0, 6);
+                        var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
+                        var radius = 10.0f * (float)rand.NextDouble();
+                        var speed  = 170.0f * (float)(0.5f+rand.NextDouble());
+                        var color = Color.White;
+                        var pos   = powerup.get_component<Position>();
+                        var vel   = powerup.get_component<Velocity>();
+
+                        if ((float)rand.NextDouble() > 0.6f) {
+                            color = new Color(1.0f, 0.6f, 0.8f);
+                        }
+
+                        return new Component [] {
+                            new Mass     { drag_coeff = 5.9f },
+                            new Position { x = pos.x + (float)Math.Cos(theta1) * radius,
+                                           y = pos.y + (float)Math.Sin(theta1) * radius },
+
+                            new Velocity { x = vel.x * 0.5f + (float)Math.Cos(theta2) * speed,
+                                           y = vel.y * 0.5f + (float)Math.Sin(theta2) * speed },
+
+                            new Sprite { blend_mode  = Sprite.BM_ADD,
+                                         color       = color,
+                                         layer_depth = 0.3f,
+                                         scale       = 0.4f + (float)rand.NextDouble() * 0.7f,
+                                         texture     = Fab5_Game.inst().get_content<Texture2D>("particle2") },
+
+                            new TTL { alpha_fn = (x, max) => (1.0f - ((x*x*x)/(max*max*max))),
+                                      max_time = 0.55f + (float)Math.Pow((rand.NextDouble() * 1.2f), 2.0f) }
+                        };
+                    },
+
+                    interval               = 0.04f,
+                    num_particles_per_emit = 18+rand.Next(0, 10)
+                }
+            });
+
             powerup.destroy();
         }
     }

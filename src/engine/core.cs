@@ -35,7 +35,8 @@ public sealed class Entity {
     public Game_State state;
 
     public void destroy() {
-        state.remove_entity(id);
+        //state.remove_entity(id);
+        Fab5_Game.inst().message("destroy_entity", new { id = id });
     }
 
     // Adds the specified components to the entity.
@@ -131,12 +132,14 @@ public abstract class Game_State {
     }
 
     internal void remove_component(Entity entity, Type type) {
-        List<Entity> a;
-        if (!entity_dic.TryGetValue(type, out a)) {
-            return;
-        }
+        lock (dummy_lock) {
+            List<Entity> a;
+            if (!entity_dic.TryGetValue(type, out a)) {
+                return;
+            }
 
-        a.Remove(entity);
+            a.Remove(entity);
+        }
     }
 
     internal void add_component(Entity entity, Type type) {
@@ -208,7 +211,7 @@ public abstract class Game_State {
         return e;
     }
 
-    public List<Entity> get_entities_safe(Type component_type) {
+    /*public List<Entity> get_entities_safe(Type component_type) {
         lock (dummy_lock) {
             List<Entity> e = null;
             entity_dic.TryGetValue(component_type, out e);
@@ -218,7 +221,7 @@ public abstract class Game_State {
             var q = new List<Entity>(e);
             return q;
         }
-    }
+    }*/
 
     /*public Entity[] get_entities(out int num_entities,
                                  params Type[] component_types)

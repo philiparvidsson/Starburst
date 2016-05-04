@@ -24,7 +24,10 @@ public class Free_Fire_Powerup : Powerup_Impl {
     }
 
     public override void end() {
-        Fab5_Game.inst().destroy_entity(effect_id);
+        var e = Fab5_Game.inst().get_entity(effect_id);
+        if (e != null) {
+            e.destroy();
+        }
     }
 
     private void activate_effect(Entity holder) {

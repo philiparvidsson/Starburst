@@ -366,9 +366,11 @@ namespace Fab5.Engine.Subsystems {
             var temp = temp_;
             temp.Clear();
 
-            for (int i = 0; i < entities.Count; i++) {
+            for (int i = 0; i < num_entities; i++) {
                 var e = entities[i];
+                if (e == null) continue; // thread safety
                 var pos = e.get_component<Position>();
+                if (pos == null) continue; // thread safety
                 var px = pos.x;
                 var py = pos.y;
                 var tex = e.get_component<Sprite >().texture;

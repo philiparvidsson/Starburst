@@ -15,27 +15,37 @@ public class Lifetime_Manager : Subsystem {
         if (msg == "destroy_entity") {
             var id = data.id;
             Entity e = Fab5_Game.inst().get_entity(id);
-
-            var cb = e.get_component<TTL>().destroy_cb;
-            if (cb != null) {
-                cb();
+            if (e == null) {
+                return;
             }
 
-            Fab5_Game.inst().destroy_entity(id);
+            var ttl = e.get_component<TTL>();
+
+            if (ttl != null) {
+                var cb = ttl.destroy_cb;
+                if (cb != null) {
+                    cb();
+                }
+            }
+
+            var s = e.state;
+            if (s != null) {
+                s.remove_entity(e.id);
+            }
         }
     }
+
     public override void draw(float t, float dt) {
         var entities = Fab5_Game.inst().get_entities_fast(typeof (TTL));
         int num_entities = entities.Count;
 
-        int counter = num_entities;
+        /*        int counter = num_entities;
 
         if (counter == 0) {
             return;
-        }
+        }*/
 
         for (int i = 0; i < num_entities; i++) {
-//            System.Threading.ThreadPool.QueueUserWorkItem(o => {
             var o = entities[i];
             //System.Threading.Tasks.Task.Factory.StartNew(() => {
                 var entity = (Entity)o;//entities[i];
@@ -45,11 +55,6 @@ public class Lifetime_Manager : Subsystem {
 
                 if (ttl.time >= ttl.max_time) {
                     Fab5_Game.inst().message("destroy_entity", new { id = entity.id });
-
-                    /*if (System.Threading.Interlocked.Decrement(ref counter) == 0) {
-                        mre.Set();
-                    }*/
-                    continue;
                 }
 
                 ttl.counter = (ttl.counter+1)&3;
@@ -63,10 +68,6 @@ public class Lifetime_Manager : Subsystem {
                         s.color.A = (byte)a;
                     }
                 }
-
-                /*if (System.Threading.Interlocked.Decrement(ref counter) == 0) {
-                    mre.Set();
-                }*/
             //});
         }
 

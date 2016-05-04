@@ -59,7 +59,8 @@ public class Collision_Solver : Subsystem {
   //          var e1  = entities[i];
         grid.Clear();
         var entities = Fab5_Game.inst().get_entities_fast(typeof (Bounding_Circle));
-        foreach (var e1 in entities) {
+        for (int i = 0; i < entities.Count; i++) {
+            var e1 = entities[i];
             var p1  = e1.get_component<Position>();
             var c1  = e1.get_component<Bounding_Circle>();
 
@@ -85,13 +86,17 @@ public class Collision_Solver : Subsystem {
         // @To-do: Implement a quad tree or spatial grid here to reduce the
         //         number of candidates for collision testing.
 
-        int counter = entities.Count;
+        int counter = 0;
+        int max = 0;
 
-        if (counter == 0) {
+        if (entities.Count == 0) {
             return;
         }
 
-        foreach (var entity in entities) {
+        for (int i = 0; i < entities.Count; i++) {
+            max++;
+
+            var entity = entities[i];
             //System.Threading.ThreadPool.QueueUserWorkItem(o => {
             System.Threading.Tasks.Task.Factory.StartNew(() => {
                 var e1  = entity;//entities[(int)o];
@@ -142,7 +147,7 @@ public class Collision_Solver : Subsystem {
                     }
                 }
 
-                if (System.Threading.Interlocked.Decrement(ref counter) == 0) {
+                if (System.Threading.Interlocked.Increment(ref counter) == max) {
                     mre.Set();
                 }
             });

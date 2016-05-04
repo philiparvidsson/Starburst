@@ -77,7 +77,7 @@ namespace Fab5.Starburst.States {
                 elapsedTime -= dt; // wait until loaded
             }
 
-            System.Threading.Thread.Sleep(1);
+            //System.Threading.Thread.Sleep(1);
         }
 
         public override void draw(float t, float dt) {
@@ -106,6 +106,10 @@ namespace Fab5.Starburst.States {
                 }
                 alpha *= 1-quadInOut(outDelay, 0, 1);
                 sprite_batch.DrawString(font, text, new Vector2(vp.Width * .5f - textSize.X * .5f, vp.Height - textSize.Y - 20), Color.White * alpha);
+
+                if (preloading && !preloaded) {
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(0, vp.Height-4, (int)((float)percent_preloaded * vp.Width/100.0f), 4), Color.White);
+                }
             }
             else {
                 String text = "Please wait...";
