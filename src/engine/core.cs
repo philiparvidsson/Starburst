@@ -208,6 +208,18 @@ public abstract class Game_State {
         return e;
     }
 
+    public List<Entity> get_entities_safe(Type component_type) {
+        lock (dummy_lock) {
+            List<Entity> e = null;
+            entity_dic.TryGetValue(component_type, out e);
+            if (e == null) {
+                return empty;
+            }
+            var q = new List<Entity>(e);
+            return q;
+        }
+    }
+
     /*public Entity[] get_entities(out int num_entities,
                                  params Type[] component_types)
 
@@ -278,7 +290,7 @@ public abstract class Game_State {
             //sprites.Sort(sort_on_texture);
             //sprites.Sort(sort_on_blend_mode);
             int n = sprites.Count-1;
-            for (int i = 0; i < n; i++) {
+            for (int i = (n-1); i >= 0; i--) {
                 var j = (i+1);
                 var a = sprites[i].get_component<Sprite>();
                 var b = sprites[j].get_component<Sprite>();
@@ -288,12 +300,12 @@ public abstract class Game_State {
                     sprites[j] = tmp;
                     break;
                 }
-                if (a.layer_depth > b.layer_depth) {
+                /*if (a.layer_depth > b.layer_depth) {
                     var tmp = sprites[i];
                     sprites[i] = sprites[j];
                     sprites[j] = tmp;
                     break;
-                }
+                }*/
             }
         }
 

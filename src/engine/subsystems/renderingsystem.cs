@@ -160,6 +160,8 @@ namespace Fab5.Engine.Subsystems {
 
         public override void init()
         {
+ 	        base.init();
+
             timer_tex = Fab5_Game.inst().get_content<Texture2D>("clock");
 
             team_play = ((Playing_State)state).game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH;
@@ -178,7 +180,7 @@ namespace Fab5.Engine.Subsystems {
             this.hudsystem_instance = new Hudsystem(sprite_batch, tile_map);
 
 
- 	        base.init();
+
         }
 
         private void updatePlayers() {
@@ -350,7 +352,7 @@ namespace Fab5.Engine.Subsystems {
             sprite_batch.GraphicsDevice.Clear(Color.Black);
 
 
-            players              = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler));
+            players              = Fab5_Game.inst().get_entities_safe(typeof(Inputhandler));
             currentPlayerNumber = players.Count;
 
             // är det inte samma antal spelare som förut, räkna om antalet och gör om viewports o kameror (viewports, cameras)
@@ -358,7 +360,7 @@ namespace Fab5.Engine.Subsystems {
                 updatePlayers();
             }
 
-            var entities = Fab5_Game.inst().get_entities_fast(typeof(Sprite));
+            var entities = Fab5_Game.inst().get_entities_safe(typeof(Sprite));
             var num_entities = entities.Count;
 
             var temp = temp_;
@@ -407,7 +409,7 @@ namespace Fab5.Engine.Subsystems {
                 update_sprite(temp[i], dt);
             }
 
-            var hooks = Fab5_Game.inst().get_entities_fast(typeof (Post_Render_Hook));
+            var hooks = Fab5_Game.inst().get_entities_safe(typeof (Post_Render_Hook));
 
             for (int p = 0; p < currentPlayerNumber; p++) {
                 Camera current = cameras[p];

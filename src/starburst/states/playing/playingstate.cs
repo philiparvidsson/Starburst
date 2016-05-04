@@ -118,23 +118,26 @@ public class Playing_State : Game_State {
         load_map();
 
         add_subsystems(
-            new Position_Integrator(),
-            new Collision_Solver(tile_map),
-
             new Async_Multi_Subsystem(
-                new Inputhandler_System(),
-                new Sound(),
-                new Particle_System(),
-                new Lifetime_Manager(),
-                new Weapon_System(this),
-                new AI()
-            ),
-
-            new Rendering_System(Starburst.inst().GraphicsDevice) {
-                tile_map = tile_map
-            },
-
-            new Window_Title_Writer()
+                new Multi_Subsystem(
+                    new Position_Integrator(),
+                    new Collision_Solver(tile_map),
+                    new Async_Multi_Subsystem(
+                        new Inputhandler_System(),
+                        new Sound(),
+                        new Particle_System(),
+                        new Lifetime_Manager(),
+                        new Weapon_System(this),
+                        new AI()
+                    )
+                ),
+                new Multi_Subsystem(
+                    new Rendering_System(Starburst.inst().GraphicsDevice) {
+                        tile_map = tile_map
+                    },
+                    new Window_Title_Writer()
+               )
+            )
         );
 
         create_entity(new FpsCounter());

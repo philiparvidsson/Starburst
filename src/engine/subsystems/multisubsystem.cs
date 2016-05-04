@@ -16,8 +16,8 @@ public class Multi_Subsystem : Subsystem {
 
     public override void init() {
         foreach (var subsystem in subsystems) {
-            subsystem.init();
             subsystem.state = this.state;
+            subsystem.init();
         }
     }
 

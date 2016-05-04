@@ -71,6 +71,7 @@
     <Compile Include="src\engine\subsystems\entitylifetime.cs" />
     <Compile Include="src\engine\subsystems\hudsystem.cs" />
     <Compile Include="src\engine\subsystems\inputhandler_system.cs" />
+    <Compile Include="src\engine\subsystems\multisubsystem.cs" />
     <Compile Include="src\engine\subsystems\particlesystem.cs" />
     <Compile Include="src\engine\subsystems\positionintegrater.cs" />
     <Compile Include="src\engine\subsystems\renderingsystem.cs" />
