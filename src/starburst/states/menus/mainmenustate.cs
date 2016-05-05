@@ -360,8 +360,8 @@ namespace Fab5.Starburst.States {
             sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, startY), Color.White);
 
             int mapY = startY+50;
-            sprite_batch.Draw(map0, new Rectangle((int)(vp.Width*.5f - largeMapSize*.5f - smallMapSize - 20), (int)(mapY + (largeMapSize - smallMapSize) * .5f), smallMapSize, smallMapSize), Color.White);
-            sprite_batch.Draw(map2, new Rectangle((int)(vp.Width*.5f + largeMapSize * .5f + 20), (int)(mapY + (largeMapSize-smallMapSize)*.5f), smallMapSize, smallMapSize), Color.White);
+            sprite_batch.Draw(map0, new Rectangle((int)(vp.Width*.5f - largeMapSize*.5f - smallMapSize - 20), (int)(mapY + (largeMapSize - smallMapSize) * .5f), smallMapSize, smallMapSize), Color.White*0.5f);
+            sprite_batch.Draw(map2, new Rectangle((int)(vp.Width*.5f + largeMapSize * .5f + 20), (int)(mapY + (largeMapSize-smallMapSize)*.5f), smallMapSize, smallMapSize), Color.White*0.5f);
             sprite_batch.Draw(map1, new Rectangle((int)(vp.Width*.5f - largeMapSize * .5f), mapY, largeMapSize, largeMapSize), Color.White);
 
             String arrow = "<";
