@@ -559,12 +559,6 @@
 /processorParam:TextureFormat=Color
 /build:maps/preview2.png
 
-#begin sound/effects/air_horn.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/air_horn.wav
-
 #begin sound/effects/bang1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -703,15 +697,21 @@
 /processorParam:TextureFormat=Color
 /build:powerups/turbo.png
 
-#begin sound/effects/UIerror5.wav
+#begin sound\effects\menu_positive.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:sound/effects/UIerror5.wav
+/build:sound\effects\menu_positive.wav
 
-#begin sound/effects/click.wav
+#begin sound\effects\click.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:sound/effects/click.wav
+/build:sound\effects\click.wav
+
+#begin sound/effects/menu_negative.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/menu_negative.wav
 

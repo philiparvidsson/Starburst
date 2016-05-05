@@ -35,9 +35,9 @@
             effectlib.Library.Add("throw_knife", new Fab5SoundEffect("sound/effects/throw_knife", "throw_knife"));
             effectlib.Library.Add("LaserBlaster", new Fab5SoundEffect("sound/effects/LaserBlaster", "LaserBlaster"));
             effectlib.Library.Add("LaserBlaster2", new Fab5SoundEffect("sound/effects/LaserBlaster2", "LaserBlaster2"));
-            effectlib.Library.Add("menu_click", new Fab5SoundEffect("sound/effects/air_horn", "menu_click"));
-            effectlib.Library.Add("begin_game", new Fab5SoundEffect("sound/effects/click", "begin_game"));
-            effectlib.Library.Add("menu_positive", new Fab5SoundEffect("sound/effects/click", "UIerror5"));
+            effectlib.Library.Add("menu_click", new Fab5SoundEffect("sound/effects/click", "menu_click"));
+            effectlib.Library.Add("begin_game", new Fab5SoundEffect("sound/effects/air_horn", "begin_game"));
+            effectlib.Library.Add("menu_positive", new Fab5SoundEffect("sound/effects/menu_positive", "menu_positive"));
             return (Component)effectlib;
         }
     }
