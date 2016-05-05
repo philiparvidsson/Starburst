@@ -70,7 +70,7 @@
             int num_inv = si.max_powerups_inv;
 
             int x = (int)(cam.viewport.Width * 0.5f - 0.5f*(num_inv*size+(num_inv-1)*spacing));
-            int y = 20;
+            int y = 40;
 
             for (int i = 0; i < num_inv; i++) {
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(x, y, size, size), Color.Black * 0.5f);
