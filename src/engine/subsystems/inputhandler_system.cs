@@ -5,6 +5,7 @@
     using Fab5.Engine.Components;
     using Fab5.Engine.Core;
     using Microsoft.Xna.Framework.Input;
+    using Microsoft.Xna.Framework;
     using Engine;
     public class Inputhandler_System : Subsystem {
         private void fire(Entity entity, Ship_Info ship, Weapon weapon) {
@@ -60,13 +61,13 @@
                 var vib = rs / 200.0f;
 
                 var input1 = e1?.get_component<Input>();
-                if (input1 != null) {
+                if (input1 != null && input1.device == Input.InputType.Controller) {
                     input1.left_vib += vib;
                     input1.right_vib += vib;
                 }
 
                 var input2 = e2?.get_component<Input>();
-                if (input2 != null) {
+                if (input2 != null && input2.device == Input.InputType.Controller) {
                     input2.left_vib += vib;
                     input2.right_vib += vib;
                 }
@@ -86,7 +87,9 @@
 
                 if (input.left_vib != input.old_left_vib || input.right_vib != input.old_right_vib) {
                     //System.Console.WriteLine("vib " + input.left_vib + ", " + input.right_vib);
-                    Gamepad_Util.vibrate((int)input.gp_index, input.left_vib, input.right_vib);
+                    if (input.device == Input.InputType.Controller) {
+                        Gamepad_Util.vibrate((int)input.gp_index, input.left_vib, input.right_vib);
+                    }
 
                     input.old_left_vib = input.left_vib;
                     input.old_right_vib = input.right_vib;
