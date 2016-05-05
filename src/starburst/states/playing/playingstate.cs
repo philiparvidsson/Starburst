@@ -119,7 +119,7 @@ public class Playing_State : Game_State {
         load_map();
 
         add_subsystems(
-            new Async_Multi_Subsystem(
+            new /*Async_*/Multi_Subsystem(
                 new Multi_Subsystem(
                     new Position_Integrator(),
                     new Collision_Solver(tile_map)

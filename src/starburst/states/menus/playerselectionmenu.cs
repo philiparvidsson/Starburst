@@ -354,11 +354,24 @@ namespace Fab5.Starburst.States {
                     col = (team==1) ? new Color(1.0f, 0.2f, 0.2f, 0.3f) : new Color(0.0f, 0.5f, 1.0f, 0.3f);
                 }
 
-                GFX_Util.fill_rect(sprite_batch, destRect, col);
-                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
-                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Right-4, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
-                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Top, destRect.Width, 4), new Color(col.R, col.G, col.B, 255));
-                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Bottom-4, destRect.Width, 4), new Color(col.R, col.G, col.B, 255));
+                if(i < playerSlots.Count && playerSlots[i] == SlotStatus.Selected) {
+                    //var q = 0.75f + (float)Math.Cos(t*16.0f)*0.25f;// <-- kan ersättas med textOpacity
+                    var q = 0.5f+textOpacity*0.5f;
+                    col = Color.Gold * q;
+                    GFX_Util.fill_rect(sprite_batch, destRect, Color.Gold * 0.2f);
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, col.A));
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Right-4, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, col.A));
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left+4, destRect.Top, destRect.Width-8, 4), new Color(col.R, col.G, col.B, col.A));
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left+4, destRect.Bottom-4, destRect.Width-8, 4), new Color(col.R, col.G, col.B, col.A));
+                }
+                else {
+                    GFX_Util.fill_rect(sprite_batch, destRect, col);
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Right-4, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left+4, destRect.Top, destRect.Width-8, 4), new Color(col.R, col.G, col.B, 255));
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left+4, destRect.Bottom-4, destRect.Width-8, 4), new Color(col.R, col.G, col.B, 255));
+                }
+
             }
 
             // rita ut lagsaker om laglÃ¤ge
