@@ -221,6 +221,7 @@ namespace Fab5.Starburst.States {
             btnDelay = BTN_DELAY;
             Starburst.inst().message("play_sound", new { name = "menu_positive" });
             this.gameConfig = new Playing.Game_Config() { map_name = "map"+map+".png", mode = this.gameMode, enable_soccer = soccerball, num_asteroids = asteroid, num_powerups = powerup, powerup_spawn_time = powerupTime };
+            MediaPlayer.Volume = 0.7f;
             Starburst.inst().enter_state(new Player_Selection_Menu(this));
         }
 

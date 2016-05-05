@@ -10,8 +10,9 @@ using Fab5.Starburst.States.Playing.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
-    using System.Collections.Generic;
+using System.Collections.Generic;
 
 using System;
 
@@ -106,6 +107,7 @@ public class Playing_State : Game_State {
     }
 
     public override void init() {
+        MediaPlayer.Volume = game_conf.music_vol;
 //        Starburst.inst().IsMouseVisible = true;        // @To-do: Load map here.
 
         tile_map = new Tile_Map();

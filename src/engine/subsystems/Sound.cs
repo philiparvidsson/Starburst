@@ -126,14 +126,14 @@ namespace Fab5.Engine.Subsystems
                 }
 
                 var song = Fab5_Game.inst().get_content<SoundEffect>(asset);
-                music_fade_out(1.0f);
+                music_fade_out(1.2f);
                 song.Play();
 
                 Fab5_Game.inst().create_entity(new Component[] {
                     new TTL {
                         max_time = data.fade_time,
                         destroy_cb = () => {
-                            music_fade_in(1.0f);
+                            music_fade_in(1.2f);
                         }
                     }
                 });
