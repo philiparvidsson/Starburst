@@ -13,7 +13,7 @@
      * CLASSES
      *----------------------------------------------*/
 
-    public class Inputhandler : Component
+    public class Input : Component
     {
         public bool enabled = true;
 

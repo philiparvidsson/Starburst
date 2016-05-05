@@ -28,6 +28,9 @@ namespace Fab5.Starburst.States {
         string asset_name;
         int percent_preloaded;
 
+        const float COOLDOWN_TIME = .25f;
+        float btnCoolDown = COOLDOWN_TIME;
+
         public override void init() {
             splash = Starburst.inst().get_content<Texture2D>("splash");
             font = Starburst.inst().get_content<SpriteFont>("sector034");
@@ -38,6 +41,8 @@ namespace Fab5.Starburst.States {
         public override void update(float t, float dt) {
             base.update(t, dt);
             elapsedTime += dt;
+            if (btnCoolDown > 0)
+                btnCoolDown -= dt;
 
             KeyboardState state = Keyboard.GetState();
             var skip_button_pressed = state.IsKeyDown(Keys.Enter);
@@ -59,9 +64,10 @@ namespace Fab5.Starburst.States {
                 return;
             }
 
-            if (state.IsKeyDown(Keys.LeftAlt) &&
+            if (btnCoolDown <= 0 && state.IsKeyDown(Keys.LeftAlt) &&
                 state.IsKeyDown(Keys.Enter))
             {
+                btnCoolDown = COOLDOWN_TIME;
                 Starburst.inst().GraphicsMgr.ToggleFullScreen();
             }
 

@@ -25,6 +25,8 @@ namespace Fab5.Starburst.States {
         List<bool> gamepads;
         public Entity soundMgr;
 
+        private const float BTN_DELAY = .25f;
+
         float elapsedTime;
         float delay = .1f; // tid innan första animation startar
         float inDuration = .4f; // tid för animationer
@@ -34,7 +36,7 @@ namespace Fab5.Starburst.States {
         float animationTime; // total animationstid
         float textOpacity;
 
-        float btnDelay = .5f;
+        float btnDelay = BTN_DELAY;
         enum options {
             map,
             mode,
@@ -73,6 +75,13 @@ namespace Fab5.Starburst.States {
         public float fade = 0.0f;
         private bool lowRes;
 
+        String text_ok;
+        String text_select;
+        Vector2 okSize;
+        int controllerBtnSize;
+        int heightDiff;
+        int yPos;
+
         public override void on_message(string msg, dynamic data) {
 
             if (btnDelay <= 0) {
@@ -100,7 +109,7 @@ namespace Fab5.Starburst.States {
                     }
                 }
                 else if (msg.Equals("left")) {
-                    var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
+                    var entities = Starburst.inst().get_entities_fast(typeof(Input));
                     Entity cursor = entities[0];
                     Position cursorPosition = cursor.get_component<Position>();
 
@@ -133,7 +142,7 @@ namespace Fab5.Starburst.States {
                     Starburst.inst().message("play_sound", new { name = "menu_click" });
                 }
                 else if (msg.Equals("right")) {
-                    var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
+                    var entities = Starburst.inst().get_entities_fast(typeof(Input));
                     Entity cursor = entities[0];
                     Position cursorPosition = cursor.get_component<Position>();
 
@@ -165,8 +174,7 @@ namespace Fab5.Starburst.States {
                     Starburst.inst().message("play_sound", new { name = "menu_click" });
                 }
                 else if (msg.Equals("select")) {
-                    Starburst.inst().message("play_sound", new { name = "menu_click" });
-                    var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
+                    var entities = Starburst.inst().get_entities_fast(typeof(Input));
                     Entity cursor = entities[0];
                     Position cursorPosition = cursor.get_component<Position>();
                     if (cursorPosition.y == (int)options.proceed) {
@@ -174,8 +182,10 @@ namespace Fab5.Starburst.States {
                     }
                 }
                 else if (msg.Equals("start")) {
-                    Starburst.inst().message("play_sound", new { name = "menu_click" });
                     proceed();
+                }
+                else if(msg.Equals("escape")) {
+                    Starburst.inst().Quit();
                 }
             }
         }
@@ -208,6 +218,8 @@ namespace Fab5.Starburst.States {
                 powerup = 7;
                 powerupTime = 20;
             }
+            btnDelay = BTN_DELAY;
+            Starburst.inst().message("play_sound", new { name = "menu_positive" });
             this.gameConfig = new Playing.Game_Config() { map_name = "map"+map+".png", mode = this.gameMode, enable_soccer = soccerball, num_asteroids = asteroid, num_powerups = powerup, powerup_spawn_time = powerupTime };
             Starburst.inst().enter_state(new Player_Selection_Menu(this));
         }
@@ -216,7 +228,7 @@ namespace Fab5.Starburst.States {
             sprite_batch = new SpriteBatch(Starburst.inst().GraphicsDevice);
 
             add_subsystems(
-                new Menu_Inputhandler_System(),
+                new Menu_Input_Handler(),
                 new Sound(),
                 new Particle_System(),
                 new Background_Renderer(sprite_batch)
@@ -242,7 +254,14 @@ namespace Fab5.Starburst.States {
             keyboard_key = Starburst.inst().get_content<Texture2D>("menu/Key");
             controller_l_stick = Starburst.inst().get_content<Texture2D>("menu/Xbox_L_white");
 
-            Inputhandler wasd = new Inputhandler() {
+            text_ok = "Ok";
+            text_select = "Select";
+            okSize = font.MeasureString(text_ok);
+            controllerBtnSize = 50; // ikon för knapp
+            heightDiff = (int)(controllerBtnSize - okSize.Y);
+            yPos = (int)(vp.Height - controllerBtnSize - 15);
+
+            Input wasd = new Input() {
                 left = Keys.A,
                 right = Keys.D,
                 up = Keys.W,
@@ -257,7 +276,7 @@ namespace Fab5.Starburst.States {
             for (int i = 0; i < GamePad.MaximumGamePadCount; i++) {
                 gamepads.Add(GamePad.GetState(i).IsConnected);
                 if (gamepads[i]) {
-                    Inputhandler input = new Inputhandler() { device = Inputhandler.InputType.Controller, gp_index = (PlayerIndex)i };
+                    Input input = new Input() { device = Input.InputType.Controller, gp_index = (PlayerIndex)i };
                     var gamepadPlayer = create_entity(Player.create_components(input));
                 }
             }
@@ -286,10 +305,6 @@ namespace Fab5.Starburst.States {
             else if (elapsedTime >= outDelay) {
                 textOpacity = 1 - quadInOut(outDelay, outDuration, 0, 1);
             }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
-                Starburst.inst().Quit();
-            }
         }
         public override void draw(float t, float dt) {
             if (vol < 0.7f) {
@@ -315,7 +330,7 @@ namespace Fab5.Starburst.States {
             int middleSpacing = 20;
 
             // hämta spelare och position
-            var entities = Starburst.inst().get_entities_fast(typeof(Inputhandler));
+            var entities = Starburst.inst().get_entities_fast(typeof(Input));
             Position position;
             if (entities.Count > 0)
                 position = entities[0].get_component<Position>();
@@ -390,12 +405,6 @@ namespace Fab5.Starburst.States {
             // kontroll-"tutorial"
 
             if (gamepads.Contains(true)) {
-                String text_ok = "Ok";
-                String text_select = "Select";
-                Vector2 okSize = font.MeasureString(text_ok);
-                int controllerBtnSize = 50; // ikon för knapp
-                int yPos = (int)(vp.Height - controllerBtnSize - 15);
-                int heightDiff = (int)(controllerBtnSize - okSize.Y);
                 sprite_batch.Draw(controller_a_button, new Rectangle(20, yPos, controllerBtnSize, controllerBtnSize), Color.White);
                 sprite_batch.DrawString(font, text_ok, new Vector2(20 + controllerBtnSize + 10, yPos + heightDiff * .5f), Color.White);
                 sprite_batch.Draw(controller_l_stick, new Rectangle((int)(20 + controllerBtnSize + 10 + okSize.X + 10), yPos, controllerBtnSize, controllerBtnSize), Color.White);
@@ -404,7 +413,7 @@ namespace Fab5.Starburst.States {
 
             String text = "Continue to player selection";
             Vector2 textSize = font.MeasureString(text);
-            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), vp.Height - textSize.Y - 20), (position.y == (int)options.proceed ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), yPos + heightDiff * .5f), (position.y == (int)options.proceed ? new Color(Color.Gold, textOpacity) : Color.White));
 
             GFX_Util.fill_rect(sprite_batch, new Rectangle(0, 0, vp.Width, vp.Height), Color.Black * (1.0f-fade));
             sprite_batch.End();

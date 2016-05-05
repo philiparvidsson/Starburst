@@ -595,12 +595,6 @@
 /processorParam:Quality=Best
 /build:sound/effects/Cheering.wav
 
-#begin sound/effects/click.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/click.wav
-
 #begin sound/effects/explosion.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -708,4 +702,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:powerups/turbo.png
+
+#begin sound/effects/UIerror5.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/UIerror5.wav
+
+#begin sound/effects/click.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/click.wav
 

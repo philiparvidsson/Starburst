@@ -485,7 +485,7 @@ namespace Fab5.Starburst.States.Playing {
                 playerShip.hp_value = playerShip.top_hp;
                 playerShip.energy_value = playerShip.top_energy;
 
-                player.get_component<Inputhandler>().enabled = false;
+                player.get_component<Input>().enabled = false;
 
                 var old_particle_emitter = player.remove_component<Particle_Emitter>();
                 var old_bounding_circle  = player.remove_component<Bounding_Circle>();
@@ -570,7 +570,7 @@ namespace Fab5.Starburst.States.Playing {
                 new TTL {
                     destroy_cb = () => {
                         player.add_components(old_particle_emitter, old_bounding_circle, old_sprite);
-                        player.get_component<Inputhandler>().enabled = true;
+                        player.get_component<Input>().enabled = true;
 
                         var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
                         player.get_component<Position>().x = spawn_pos.x;

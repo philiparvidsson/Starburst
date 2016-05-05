@@ -35,13 +35,13 @@
 
 
         public override void draw(float t, float dt) {
-            var entities = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler));
+            var entities = Fab5_Game.inst().get_entities_fast(typeof(Input));
             int num_components = entities.Count;
 
             for (int i = 0; i < num_components; i++)
             {
                 var entity = entities[i];
-                var input = entity.get_component<Inputhandler>();
+                var input = entity.get_component<Input>();
                 var angle = entity.get_component<Angle>();
 
                 // all player controlled objects get an angular drag force to prevent the players from going insane lol
@@ -63,7 +63,7 @@
                 float turn = 0.0f;
 
                 // Keyboard device
-                if (input.device == Inputhandler.InputType.Keyboard) {
+                if (input.device == Input.InputType.Keyboard) {
                     // @To-do: keys for managing powerups
 
                     input.keyboardState = Keyboard.GetState();
