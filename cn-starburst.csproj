@@ -119,7 +119,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="map.png" />
     <Content Include="src\starburst\content\asteroid.png" />
     <Content Include="src\starburst\content\asteroid2.png" />
     <Content Include="src\starburst\content\backdrops\backdrop4.png" />

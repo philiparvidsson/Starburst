@@ -37,12 +37,12 @@ namespace Fab5.Starburst.States {
         private Texture2D keyboard_key;
         private Texture2D controller_l_stick;
         private Main_Menu_State parent;
-        private bool canLeaveState = true;
 
         float btnDelay = .5f;
         private SpriteFont smallFont;
         private Texture2D downArrow;
         private bool canStartGame = true;
+        private bool goingBack = false;
 
         private enum SlotStatus {
             Empty,
@@ -176,8 +176,8 @@ namespace Fab5.Starburst.States {
         }
 
         private void goBack() {
-            if (canLeaveState) {
-                canLeaveState = false;
+            if (!goingBack) {
+                goingBack = true;
                 Starburst.inst().leave_state();
             }
         }

@@ -71,6 +71,7 @@ namespace Fab5.Starburst.States {
 
         public float vol = 0.0f;
         public float fade = 0.0f;
+        private bool lowRes;
 
         public override void on_message(string msg, dynamic data) {
 
@@ -227,6 +228,9 @@ namespace Fab5.Starburst.States {
             soundMgr = create_entity(SoundManager.create_backmusic_component());
             soundMgr.get_component<SoundLibrary>().song_index = 1;
 
+            Viewport vp = sprite_batch.GraphicsDevice.Viewport;
+            lowRes = (vp.Height < 800 && vp.Width < 1600);
+
             // load textures
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
             rectBg = new Texture2D(Fab5_Game.inst().GraphicsDevice, 1, 1);
@@ -320,24 +324,34 @@ namespace Fab5.Starburst.States {
 
             sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
 
+            String logo = "Starburst";
+            Vector2 logoSize = largeFont.MeasureString(logo);
+            sprite_batch.DrawString(largeFont, logo, new Vector2(vp.Width*.5f - logoSize.X*.5f, 80), Color.Gold);
+
+            int startY = 225;
+
+            if (lowRes) {
+                int endY = (int)(vp.Height * .5f-15);
+                startY = 160;
+                largeMapSize = endY - startY;
+                smallMapSize = (int)(largeMapSize * .75f);
+            }
+
             String map = "Map";
             Vector2 mapTextSize = font.MeasureString(map);
-            sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, 150), Color.White);
+            sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, startY), Color.White);
 
-            int mapY = 200;
+            int mapY = startY+50;
             sprite_batch.Draw(map0, new Rectangle((int)(vp.Width*.5f - largeMapSize*.5f - smallMapSize - 20), (int)(mapY + (largeMapSize - smallMapSize) * .5f), smallMapSize, smallMapSize), Color.White);
             sprite_batch.Draw(map2, new Rectangle((int)(vp.Width*.5f + largeMapSize * .5f + 20), (int)(mapY + (largeMapSize-smallMapSize)*.5f), smallMapSize, smallMapSize), Color.White);
             sprite_batch.Draw(map1, new Rectangle((int)(vp.Width*.5f - largeMapSize * .5f), mapY, largeMapSize, largeMapSize), Color.White);
 
-            sprite_batch.DrawString(font, "<", new Vector2((int)(vp.Width * .5f - largeMapSize * .5f - smallMapSize - 20 - 20), mapY + largeMapSize*.5f - mapTextSize.Y*.5f), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
+            String arrow = "<";
+            Vector2 arrowSize = font.MeasureString(arrow);
+            sprite_batch.DrawString(font, "<", new Vector2((int)(vp.Width * .5f - largeMapSize * .5f - smallMapSize - 20 - 20 - arrowSize.X), mapY + largeMapSize*.5f - mapTextSize.Y*.5f), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
             sprite_batch.DrawString(font, ">", new Vector2((int)(vp.Width * .5f + largeMapSize * .5f + 20 + smallMapSize + 20), mapY + largeMapSize * .5f - mapTextSize.Y * .5f), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
 
-            int settingOffset = (int)(vp.Height * .5f);
-
-            String logo = "Starburst";
-            Vector2 logoSize = largeFont.MeasureString(logo);
-            sprite_batch.DrawString(largeFont, logo, new Vector2(vp.Width*.5f - logoSize.X*.5f, 20), Color.Gold);
-
+            int settingOffset = (int)(vp.Height * .5f + 75);
             String ctfString = "Capture the flag";
             Vector2 leftTextSize = font.MeasureString(ctfString);
             int leftTextX = (int)(vp.Width * .5f - leftTextSize.X - middleSpacing);
