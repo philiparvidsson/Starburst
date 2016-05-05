@@ -46,6 +46,9 @@ namespace Fab5.Engine.Subsystems {
                     display_fps = (int)fps.frameRate;
                     display_begins = (float)Rendering_System.num_begins / (float)Rendering_System.num_draws;
 
+                    Rendering_System.num_begins = 0;
+                    Rendering_System.num_draws = 0;
+
                     Fab5_Game.inst().message("set_w_title", new { str = " * Starburst * " + fps.frameRate });
                     display_num_entities = state.get_num_entities();
                 }

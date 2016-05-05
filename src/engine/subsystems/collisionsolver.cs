@@ -243,7 +243,7 @@ public class Collision_Solver : Subsystem {
         var h = (int)(c.radius / th)+1;
 
         // @To-do: Do we need to check further out here?
-        for (int i = 1; i < h; i++) {
+        for (int i = 1; i <= h; i++) {
             if (!has_tile(x, y-i)) {
                 break;
             }
@@ -251,14 +251,13 @@ public class Collision_Solver : Subsystem {
             top--;
         }
 
-        for (int i = 1; i < h; i++) {
+        for (int i = 1; i <= h; i++) {
             if (!has_tile(x, y+i)) {
                 break;
             }
 
             bottom++;
         }
-
 
         var eps = 0.01f;
 
@@ -277,7 +276,7 @@ public class Collision_Solver : Subsystem {
              && (p.x+dx > c_x)
              && (p.x < c_x+16.0f))
             {
-//            Console.WriteLine("left " + x + "," + y);
+                //Console.WriteLine("left " + x + "," + y + " normal " + -dx + ", " + -dy);
                 p.x = c_x-dx-eps;
                 collide(e1, c_x, c_y, -dx, -dy);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
@@ -302,7 +301,7 @@ public class Collision_Solver : Subsystem {
              && (p.x-dx < c_x)
              && (p.x > c_x-16.0f))
             {
-//            Console.WriteLine("right " + x + "," + y);
+                //Console.WriteLine("right " + x + "," + y + " normal " + dx + ", " + -dy + " | " + " bottom: " + bottom + "  top: " + top + "  h=" + h);
                 p.x = c_x+dx+eps;
                 collide(e1, c_x, c_y, dx, -dy);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
@@ -328,7 +327,7 @@ public class Collision_Solver : Subsystem {
         var w = (int)(c.radius / tw)+1;
 
         // @To-do: Do we need to check further out here?
-        for (int i = 1; i < w; i++) {
+        for (int i = 1; i <= w; i++) {
             if (!has_tile(x-i, y)) {
                 break;
             }
@@ -336,16 +335,13 @@ public class Collision_Solver : Subsystem {
             left--;
         }
 
-        for (int i = 1; i < w; i++) {
+        for (int i = 1; i <= w; i++) {
             if (!has_tile(x+i, y)) {
                 break;
             }
 
             right++;
         }
-
-
-
 
         var eps = 0.01f;
 
@@ -364,7 +360,7 @@ public class Collision_Solver : Subsystem {
              && (p.y+dy > c_y)
              && (p.y < c_y+16.0f))
             {
-//            Console.WriteLine("top " + x + "," + y);
+                //Console.WriteLine("top " + x + "," + y + " normal " + -dx + ", " + -dy);
                 p.y = c_y-dy-eps;
                 collide(e1, c_x, c_y, -dx, -dy);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
@@ -386,7 +382,7 @@ public class Collision_Solver : Subsystem {
              && (p.y-dy < c_y)
              && (p.y > c_y-16.0f))
             {
-//            Console.WriteLine("bottom " + x + "," + y);
+                //Console.WriteLine("bottom " + x + "," + y + " normal " + -dx + ", " + dy);
                 p.y = c_y+dy+eps;
                 collide(e1, c_x, c_y, -dx, dy);
                 Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
@@ -417,7 +413,7 @@ public class Collision_Solver : Subsystem {
 
 
 
-        if (Math.Abs(v.x) > Math.Abs(v.y)) {
+        if (Math.Abs(rect.Width) > Math.Abs(rect.Height)) {
             if (!coll_h) {
                 bool lr = check_left_right(e1, x, y);
                 coll_h |= lr;
@@ -430,7 +426,6 @@ public class Collision_Solver : Subsystem {
             }
         }
         else {
-
             if (!coll_v) {
                 var tb = check_top_bottom(e1, x, y);
                 coll_v |= tb;
