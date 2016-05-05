@@ -60,8 +60,8 @@ public static class Dummy_Enemy {
 
         if (Math.Abs(theta - self.get_component<Angle>().angle) < 0.1f) {
 
-            self.get_component<Velocity>().x += (float)Math.Cos(self.get_component<Angle>().angle) * 750.0f * THINK_INTERVAL;
-            self.get_component<Velocity>().y += (float)Math.Sin(self.get_component<Angle>().angle) * 750.0f * THINK_INTERVAL;
+            self.get_component<Velocity>().x += (float)Math.Cos(self.get_component<Angle>().angle) * 350.0f * THINK_INTERVAL;
+            self.get_component<Velocity>().y += (float)Math.Sin(self.get_component<Angle>().angle) * 350.0f * THINK_INTERVAL;
         }
     }
 
