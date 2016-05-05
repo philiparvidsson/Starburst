@@ -153,7 +153,7 @@ namespace Fab5.Starburst.States {
                         position.y += 1;
                         playerSlots[(int)position.x] = SlotStatus.Selected;
                         playerCount++;
-                        Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
+                        Starburst.inst().message("play_sound_asset", new { name = "menu_positive" });
                     }
                 }
                 else if (msg.Equals("back")) {
@@ -189,7 +189,7 @@ namespace Fab5.Starburst.States {
             // loopa igenom spelare för att hitta om någon ledig x-koordinat finns
             var players = Starburst.inst().get_entities_fast(typeof(Input));
             // prova de olika spelarpositionerna
-
+            bool moved = false;
             bool all_up = true;
             for (int x = 0; x < 4; x++) {
                 if (playerSlots[x] != SlotStatus.Empty) {
@@ -200,16 +200,19 @@ namespace Fab5.Starburst.States {
 
             for (int x = 0; x < 4; x++) {
                 if (playerSlots[x] == SlotStatus.Empty) {
+                    moved = true;
                     position.y++;
                     position.x = x;
                     playerSlots[x] = SlotStatus.Hovering;
-                    Starburst.inst().message("play_sound_asset", new { name = "menu_positive" });
+                    Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
                     if (all_up) {
                         elapsedTime = 0.5f;
                     }
                     break;
                 }
             }
+            if(!moved)
+                Starburst.inst().message("play_sound_asset", new { name = "menu_negative" });
         }
 
         public override void init() {

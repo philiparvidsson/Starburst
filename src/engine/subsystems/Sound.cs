@@ -99,7 +99,9 @@ namespace Fab5.Engine.Subsystems
 
         private Dictionary<string, string> soundlib = new Dictionary<string, string>() {
             { "begin_game", "sound/effects/air_horn" },
-            { "menu_click", "sound/effects/click" }
+            { "menu_click", "sound/effects/click" },
+            { "menu_positive", "sound/effects/menu_positive" },
+            { "menu_negative", "sound/effects/menu_negative" }
         };
 
         public override void on_message(string msg, dynamic data)
