@@ -114,6 +114,27 @@ public class Playing_State : Game_State {
                         // asteroid spawn
                         tile_map.tiles[i] = 13;
                     }
+                    else if (c.G == 63 && c.B == 63) {
+                        var types = new Type[] {
+                            typeof (Red_Fountain),
+                            typeof (Blue_Fountain)
+                        };
+
+                        int k = c.R % types.Length;
+
+                        var type = types[k];
+                        var factory = type.GetMethod("create_components", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+                        var p = create_entity((Component[])factory.Invoke(null, null)).get_component<Position>();
+                        if (p != null) {
+                            p.x = -2048.0f + x*16.0f+8.0f;
+                            p.y = -2048.0f + y*16.0f+8.0f;
+                            Console.WriteLine("spawned {0} @ {1}, {2}", type.Name, p.x, p.y);
+                        }
+                        else {
+                            Console.WriteLine("spawned {0}", type.Name);
+                        }
+
+                    }
                 }
             }
         }
