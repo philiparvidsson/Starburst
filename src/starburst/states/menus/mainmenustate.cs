@@ -26,6 +26,8 @@ namespace Fab5.Starburst.States {
         public Entity soundMgr;
 
         private const float BTN_DELAY = .25f;
+        float animateInTime = .8f;
+        float startTime;
 
         float elapsedTime;
         float delay = .1f; // tid innan första animation startar
@@ -81,6 +83,7 @@ namespace Fab5.Starburst.States {
         int controllerBtnSize;
         int heightDiff;
         int yPos;
+        private bool started;
 
         public override void on_message(string msg, dynamic data) {
 
@@ -344,7 +347,15 @@ namespace Fab5.Starburst.States {
 
             String logo = "Starburst";
             Vector2 logoSize = largeFont.MeasureString(logo);
-            sprite_batch.DrawString(largeFont, logo, new Vector2(vp.Width*.5f - logoSize.X*.5f, 80), Color.Gold);
+
+            if (!started) {
+                startTime = t;
+                started = true;
+            }
+            float yy = (t-startTime < animateInTime) ? quadInOut2((t-startTime), animateInTime, 40, 40) : 80;
+            float opacity = (t - startTime < animateInTime*.5f) ? quadInOut2((t - startTime), animateInTime*.5f,0, 1) : 1;
+
+            sprite_batch.DrawString(largeFont, logo, new Vector2(vp.Width*.5f - logoSize.X*.5f, yy), new Color(Color.Gold, opacity));
 
             int startY = 225;
 
@@ -429,6 +440,21 @@ namespace Fab5.Starburst.States {
             float t = elapsedTime - delayVal; // current time in seconds
             float d = duration; // duration of animation
 
+            if (t == 0) {
+                return b;
+            }
+
+            if (t == d) {
+                return b + c;
+            }
+
+            if ((t /= d / 2) < 1) {
+                return c / 2 * (float)Math.Pow(2, 10 * (t - 1)) + b;
+            }
+
+            return c / 2 * (-(float)Math.Pow(2, -10 * --t) + 2) + b;
+        }
+        private float quadInOut2(float t, float d, float b, float c) {
             if (t == 0) {
                 return b;
             }
