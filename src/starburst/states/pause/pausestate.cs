@@ -49,7 +49,7 @@ public class Pause_State : Game_State {
                 }
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.P)) {
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
                 MediaPlayer.Volume = restore_vol;
                 Starburst.inst().leave_state();
                 return;
@@ -65,7 +65,7 @@ public class Pause_State : Game_State {
                 }
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.P)) {
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape)) {
                 no_buttons_pressed = false;
             }
 

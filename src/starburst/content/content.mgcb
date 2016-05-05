@@ -709,3 +709,15 @@
 /processorParam:Quality=Best
 /build:sound/effects/air_horn.mp3
 
+#begin sound/effects/menu_negative.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/menu_negative.wav
+
+#begin sound/effects/menu_positive.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/menu_positive.wav
+

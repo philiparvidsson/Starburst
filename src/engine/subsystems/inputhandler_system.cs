@@ -62,31 +62,31 @@
 
                 float turn = 0.0f;
 
+                KeyboardState currentKeyboardState = Keyboard.GetState();
+
                 // Keyboard device
                 if (input.device == Input.InputType.Keyboard) {
                     // @To-do: keys for managing powerups
 
-                    input.keyboardState = Keyboard.GetState();
-
-                    if (input.keyboardState.IsKeyDown(input.left))
+                    if (currentKeyboardState.IsKeyDown(input.left))
                         turn -= 1.0f;
-                    if (input.keyboardState.IsKeyDown(input.right))
+                    if (currentKeyboardState.IsKeyDown(input.right))
                         turn += 1.0f;
 
 
                     input.throttle = 0.0f;
 
-                    if (input.keyboardState.IsKeyDown(input.up)) {
+                    if (currentKeyboardState.IsKeyDown(input.up)) {
                         input.throttle = 1.0f;
                     }
-                    else if (input.keyboardState.IsKeyDown(input.down)) {
+                    else if (currentKeyboardState.IsKeyDown(input.down)) {
                         input.throttle = -1.0f;
                     }
 
 
-                    if (input.keyboardState.IsKeyDown(input.primary_fire))
+                    if (currentKeyboardState.IsKeyDown(input.primary_fire))
                         fire(entity, ship, primaryWeapon);
-                    if (input.keyboardState.IsKeyDown(input.secondary_fire))
+                    if (currentKeyboardState.IsKeyDown(input.secondary_fire))
                         fire(entity, ship, secondaryWeapon);
                 }
                 // Gamepad device
@@ -123,6 +123,10 @@
                         input.can_use_powerup = false;
                         ship.use_powerup(ship.powerup_inv_index);
                     }
+
+                    if (is_gamepad_clicked(Buttons.Start, state, input.gamepadState))
+                        Fab5_Game.inst().message("start", null);
+                    input.gamepadState = state;
                 }
 
                 if (Math.Abs(turn) > 0.01f) {
@@ -168,6 +172,13 @@
                 {
                     Fab5_Game.inst().message("play_sound", new { name = "mute" });
                 }
+
+                if (currentKeyboardState.IsKeyDown(Keys.LeftAlt) && is_key_clicked(Keys.Enter, currentKeyboardState, input.keyboardState))
+                    Fab5_Game.inst().message("fullscreen", null);
+                else if (is_key_clicked(Keys.Escape, currentKeyboardState, input.keyboardState))
+                    Fab5_Game.inst().message("start", null);
+
+                input.keyboardState = Keyboard.GetState();
             }
         }
     }

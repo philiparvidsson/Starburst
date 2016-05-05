@@ -38,7 +38,20 @@ public class Playing_State : Game_State {
             coll_handler.on_collision(data.entity1, data.entity2, data);
             return;
         }
+        else if (msg.Equals("start")) {
+            tryPause();
+        }
+        else if(msg.Equals("fullscreen")) {
+            Starburst.inst().GraphicsMgr.ToggleFullScreen();
+            System.Threading.Thread.Sleep(150);
+        }
     }
+        private void tryPause() {
+            if (can_pause) {
+                can_pause = false;
+                Starburst.inst().enter_state(new Pause_State());
+            }
+        }
 
     public Tile_Map tile_map;
 
@@ -193,7 +206,7 @@ public class Playing_State : Game_State {
                     var min_dist = ast.get_component<Bounding_Circle>().radius + asteroid.get_component<Bounding_Circle>().radius;
                     min_dist *= 1.05f;
                     min_dist *= min_dist;
-
+                        
                     if (dist < min_dist) {
                         colliding = true;
                         num_fails++;
@@ -302,12 +315,9 @@ public class Playing_State : Game_State {
             }
         }
 
-
-        if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape)) {
-            Starburst.inst().Quit();
-        }
-
         if (!can_pause) {
+                can_pause = true;
+                /*
             bool no_buttons_pressed = true;
 
             for (int i = 0; i <= 3; i++) {
@@ -317,35 +327,13 @@ public class Playing_State : Game_State {
                 }
             }
 
-            if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.P)) {
+            if (Keyboard.GetState().IsKeyDown(Keys.P)) {
                 no_buttons_pressed = false;
             }
 
             if (no_buttons_pressed) {
                 can_pause = true;
-            }
-        }
-        else {
-            for (int i = 0; i <= 3; i++) {
-                if (GamePad.GetState((PlayerIndex)i).IsConnected && GamePad.GetState((PlayerIndex)i).Buttons.Start == ButtonState.Pressed) {
-                    can_pause = false;
-                    Starburst.inst().enter_state(new Pause_State());
-                    return;
-                }
-            }
-
-            if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.P)) {
-                can_pause = false;
-                Starburst.inst().enter_state(new Pause_State());
-                return;
-            }
-        }
-
-        if (Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.LeftAlt) &&
-            Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter))
-        {
-            Starburst.inst().GraphicsMgr.ToggleFullScreen();
-            System.Threading.Thread.Sleep(150);
+            }*/
         }
     }
 
