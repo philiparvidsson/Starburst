@@ -559,12 +559,6 @@
 /processorParam:TextureFormat=Color
 /build:maps/preview2.png
 
-#begin sound/effects/air_horn.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/air_horn.wav
-
 #begin sound/effects/bang1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -669,7 +663,7 @@
 
 #begin sound/effects/song_victory.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sound/effects/song_victory.mp3
 
@@ -708,4 +702,10 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:powerups/turbo.png
+
+#begin sound/effects/air_horn.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/air_horn.mp3
 
