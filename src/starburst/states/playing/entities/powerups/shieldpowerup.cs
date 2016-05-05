@@ -21,10 +21,6 @@ public class Shield_Powerup : Powerup_Impl {
         get { return Starburst.inst().get_content<Texture2D>("powerups/shield"); }
     }
 
-    public override string name {
-        get { return "shield"; }
-    }
-
     public override void end() {
         var e = Fab5_Game.inst().get_entity(effect_id);
         if (e != null) {

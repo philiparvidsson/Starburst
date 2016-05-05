@@ -69,7 +69,7 @@
                             var col = new Color(1.0f, 0.7f, 0.3f);
                             var max_time = 0.05f + (float)(rand.NextDouble() * 0.05f);
 
-                            if (ship_info.has_powerup("turbo")) {
+                            if (ship_info.has_powerup(typeof (Turbo_Powerup))) {
                                 max_time *= 1.7f;
                                 col = new Color(0.4f, 0.6f, 1.0f);
                             }

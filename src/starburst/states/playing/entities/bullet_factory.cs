@@ -37,7 +37,7 @@
             var velocity = new Velocity() { x = cfa*speed+shipVel.x, y = sfa*speed+shipVel.y };
 
             Sprite bulletSprite = new Sprite() { texture = bulletTexture1, layer_depth = 1, blend_mode = Sprite.BM_ADD, scale = 0.35f };
-            if (!origin.get_component<Ship_Info>().has_powerup("bouncy-bullets")) {
+            if (!origin.get_component<Ship_Info>().has_powerup(typeof (Bouncy_Bullets_Powerup))) {
                 bulletSprite.color = new Color(1.0f, 0.5f, 0.4f);
             }
 
@@ -81,7 +81,7 @@
                                         ignore_collisions = IG_BULLET,
                                         ignore_collisions2 = origin.get_component<Ship_Info>().team,
                                         collision_cb = (self, other_entity) => {
-                                            if (self.get_component<Bullet_Info>().sender.get_component<Ship_Info>().has_powerup("bouncy-bullets")) {
+                        if (self.get_component<Bullet_Info>().sender.get_component<Ship_Info>().has_powerup(typeof (Bouncy_Bullets_Powerup))) {
                                                 return;
                                             }
 
@@ -235,7 +235,7 @@
                 return;
             }
 
-            if (origin.get_component<Ship_Info>().has_powerup("multifire")) {
+            if (origin.get_component<Ship_Info>().has_powerup(typeof (Multifire_Powerup))) {
                 var a = origin.get_component<Angle>();
                 var angle1 = new Angle { angle = a.angle - 15.0f * 3.141592f/180.0f, ang_vel = a.ang_vel };
                 var angle2 = new Angle { angle = a.angle, ang_vel = a.ang_vel };

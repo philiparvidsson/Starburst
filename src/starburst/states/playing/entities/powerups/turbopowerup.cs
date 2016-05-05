@@ -24,10 +24,6 @@ public class Turbo_Powerup : Powerup_Impl {
         get { return Starburst.inst().get_content<Texture2D>("powerups/turbo"); }
     }
 
-    public override string name {
-        get { return "turbo"; }
-    }
-
     public override void end() {
         var e = Fab5_Game.inst().get_entity(effect_id);
         if (e != null) {

@@ -8,6 +8,7 @@
     using Fab5.Engine.Core;
     using Microsoft.Xna.Framework.Graphics;
     using System.Collections.Generic;
+    using System;
 
 
     /*------------------------------------------------
@@ -31,7 +32,7 @@
         public int team;
         public int pindex;
 
-        public System.Collections.Generic.Dictionary<string, Powerup_Impl> powerups = new System.Collections.Generic.Dictionary<string, Powerup_Impl>();
+        public System.Collections.Generic.Dictionary<Type, Powerup_Impl> powerups = new System.Collections.Generic.Dictionary<Type, Powerup_Impl>();
 
         public bool use_powerup(int index) {
             if (index < 0 || index >= powerup_inv.Length) {
@@ -43,11 +44,11 @@
                 return false;
             }
 
-            if (powerups.ContainsKey(powerup.name)) {
-                powerups[powerup.name].time += powerup.time;
+            if (powerups.ContainsKey(powerup.GetType())) {
+                powerups[powerup.GetType()].time += powerup.time;
             }
             else {
-                powerups[powerup.name] = powerup;
+                powerups[powerup.GetType()] = powerup;
                 powerup.begin(entity);
             }
 
@@ -55,8 +56,8 @@
             return true;
         }
 
-        public bool has_powerup(string name) {
-            return powerups.ContainsKey(name);
+        public bool has_powerup(Type type) {
+            return powerups.ContainsKey(type);
         }
 
         public Ship_Info(float top_hp, float top_energy, float top_velocity, float acceleration)

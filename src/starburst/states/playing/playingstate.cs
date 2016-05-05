@@ -239,13 +239,13 @@ public class Playing_State : Game_State {
         //create_entity(Turbo_Powerup.create_components());
 
 
-        /*var shield1 = create_entity(Powerup.create(new Shield_Powerup()));
+        var shield1 = create_entity(Powerup.create(new Fast_Bombs_Powerup()));
         shield1.get_component<Position>().x = -1800.0f; shield1.get_component<Position>().y = 1500.0f;
 
-        var multi1 = create_entity(Powerup.create(new Multifire_Powerup()));
+        var multi1 = create_entity(Powerup.create(new Free_Fire_Powerup()));
         multi1.get_component<Position>().x = -1700.0f; multi1.get_component<Position>().y = 1500.0f;
 
-        var freefire1 = create_entity(Powerup.create(new Free_Fire_Powerup()));
+        /*var freefire1 = create_entity(Powerup.create(new Free_Fire_Powerup()));
         freefire1.get_component<Position>().x = -1600.0f; freefire1.get_component<Position>().y = 1500.0f;
 
         var turbo1 = create_entity(Powerup.create(new Turbo_Powerup()));
@@ -279,6 +279,7 @@ public class Playing_State : Game_State {
             typeof (Shield_Powerup),
             typeof (Multifire_Powerup),
             typeof (Bouncy_Bullets_Powerup),
+            typeof (Fast_Bombs_Powerup),
         };
 
         var i = rand.Next(0, types.Length);

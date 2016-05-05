@@ -14,8 +14,6 @@ public abstract class Powerup_Impl {
 
     public abstract Texture2D icon { get; }
 
-    public abstract string name { get; }
-
     public abstract void begin(Entity holder);
 
     public abstract void end();
