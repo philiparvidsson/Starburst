@@ -41,27 +41,14 @@ public static class Dummy_Enemy {
             }
         }
 
-        var av1 = theta - angle.angle;
-        var av2 = theta - (angle.angle+2.0f*3.141592f);
-        var w = av1;
-
-        if (Math.Abs(av1) > Math.Abs(av2)) {
-            w = av2;
-        }
-
-        if (Math.Abs(w) > 0.15f) {
-            angle.angle = theta;
-        }
-        else {
-        }
+        angle.angle = theta;
 
         //angle.ang_vel -= angle.ang_vel * 1.0f * dt;
 
 
         if (Math.Abs(theta - self.get_component<Angle>().angle) < 0.1f) {
-
-            self.get_component<Velocity>().x += (float)Math.Cos(self.get_component<Angle>().angle) * 350.0f * THINK_INTERVAL;
-            self.get_component<Velocity>().y += (float)Math.Sin(self.get_component<Angle>().angle) * 350.0f * THINK_INTERVAL;
+            self.get_component<Velocity>().x += (float)Math.Cos(angle.angle) * 150.0f * THINK_INTERVAL;
+            self.get_component<Velocity>().y += (float)Math.Sin(angle.angle) * 150.0f * THINK_INTERVAL;
         }
     }
 
