@@ -71,7 +71,7 @@
 
                             if (ship_info.has_powerup("turbo")) {
                                 max_time *= 1.7f;
-                                col = new Color(0.5f, 0.7f, 1.0f);
+                                col = new Color(0.4f, 0.6f, 1.0f);
                             }
 
                             return new Component[] {
@@ -95,10 +95,10 @@
                             var col = new Color(1.0f, 0.7f, 0.2f) * 0.95f;
                             var max_time = 0.35f + (float)(rand.NextDouble() * 0.35f);
 
-                            if (ship_info.has_powerup("turbo")) {
+                            /*if (ship_info.has_powerup("turbo")) {
                                 max_time *= 1.2f;
                                 col = new Color(1.0f, 1.0f, 1.0f);
-                            }
+                            }*/
 
                             return new Component[] {
                                 new Position() { x = playerpos.x - (float)Math.Cos(playerrot.angle + (float)(rand.NextDouble() - 0.5) * 0.5) * 20.0f ,

@@ -61,7 +61,7 @@ namespace Fab5.Engine.Subsystems {
             var y = camera.position.y;
 
             var fac1 = 0.05f;
-            var scale1 = 1.0f;
+            var scale1 = 1.0f*camera.zoom;
             sprite_batch.Draw(backdrop,
                               new Vector2(hw - (backdrop.Width*0.5f  + x * fac1) * scale1, hh - (backdrop.Height*0.5f + y * fac1) * scale1),
                               null,
@@ -74,7 +74,7 @@ namespace Fab5.Engine.Subsystems {
 
 
             var fac2 = 0.1f;
-            var scale2 = 2.0f;
+            var scale2 = 2.0f*camera.zoom;
             sprite_batch.Draw(stardrop,
                               new Vector2(hw - (stardrop.Width*0.5f  + x * fac2) * scale2, hh - (stardrop.Height*0.5f + y * fac2) * scale2),
                               null,
@@ -86,7 +86,7 @@ namespace Fab5.Engine.Subsystems {
                               0.9f);
 
             var fac3 = 0.1f;
-            var scale3 = 4.0f;
+            var scale3 = 4.0f*camera.zoom;
             sprite_batch.Draw(stardrop,
                               new Vector2(hw - (stardrop.Width*0.5f  + x * fac3) * scale3, hh - (stardrop.Height*0.5f + y * fac3) * scale3),
                               null,

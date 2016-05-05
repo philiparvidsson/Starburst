@@ -94,7 +94,7 @@ public class Turbo_Powerup : Powerup_Impl {
         old_acc = ship_info.acceleration;
         old_vel = ship_info.top_velocity;
 
-        ship_info.acceleration *= 1.4f;
+        ship_info.acceleration *= 1.3f;
         ship_info.top_velocity *= 1.2f;
 
         //activate_effect(holder);
