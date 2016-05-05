@@ -21,10 +21,10 @@ public class Playing_State : Game_State {
     bool can_pause = false;
     public static System.Random rand = new System.Random();
     private Collision_Handler coll_handler;
-    private List<Inputhandler> inputs;
+    private List<Input> inputs;
     public Spawn_Util spawner;
 
-    public Playing_State(List<Inputhandler> inputs, Game_Config conf = null) {
+    public Playing_State(List<Input> inputs, Game_Config conf = null) {
         this.inputs = inputs;
 
         this.game_conf = conf ?? new Game_Config();

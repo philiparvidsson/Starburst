@@ -14,7 +14,7 @@ public static class Dummy_Enemy {
     private const float THINK_INTERVAL = 1.0f/5.0f; // think 5 times per sec
 
     private static void think(Entity self) {
-        var players = Fab5_Game.inst().get_entities_fast(typeof (Inputhandler));
+        var players = Fab5_Game.inst().get_entities_fast(typeof (Input));
 
         if (players.Count == 0) {
             return;

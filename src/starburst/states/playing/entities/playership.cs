@@ -16,15 +16,15 @@
         public static System.Random rand = new System.Random();
 
         static int lol = 1;
-        public static Component[] create_components(Inputhandler input, Game_Config conf, int team)
+        public static Component[] create_components(Input input, Game_Config conf, int team)
         {
             int pindex = lol;
             /*
-            var inputhandler = new Inputhandler() {
+            var inputhandler = new Input() {
             };
             if (lol == 2) {
                 // this ass code sucks
-                inputhandler = new Inputhandler() {
+                inputhandler = new Input() {
                     left = Keys.A,
                     right = Keys.D,
                     up = Keys.W,

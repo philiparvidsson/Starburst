@@ -12,11 +12,11 @@
 
     public static class Player
     {
-        public static Component[] create_components(Inputhandler inputhandler) {
+        public static Component[] create_components(Input inputhandler) {
             string sprite = "keys2";
             if (inputhandler.up == Keys.W)
                 sprite = "keys1";
-            if (inputhandler.device == Inputhandler.InputType.Controller) {
+            if (inputhandler.device == Input.InputType.Controller) {
                 sprite = "controller" + (int)(inputhandler.gp_index+1);
             }
 
@@ -29,7 +29,7 @@
         }
         public static Component[] create_components()
         {
-            return create_components(new Inputhandler());
+            return create_components(new Input());
         }
     }
 }

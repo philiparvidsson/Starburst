@@ -172,7 +172,7 @@
         {
 
             //sprite_batch.Begin(SpriteSortMode.Deferred);
-            if (!player.get_component<Inputhandler>().enabled)
+            if (!player.get_component<Input>().enabled)
                 return;
 
             Position playerPos = player.get_component<Position>();
@@ -233,14 +233,14 @@
 
         private void updateEnergySprite(float dt)
         {
-            var players = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler));
+            var players = Fab5_Game.inst().get_entities_fast(typeof(Input));
 
 
             this.number_of_players = 0;
 
             foreach(Entity p in players)
             {
-                if(p.get_component<Inputhandler>().enabled)
+                if(p.get_component<Input>().enabled)
                     this.number_of_players++;
             }
             

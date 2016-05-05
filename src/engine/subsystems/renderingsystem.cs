@@ -300,7 +300,7 @@ namespace Fab5.Engine.Subsystems {
             for (int p2 = 0; p2 < currentPlayerNumber; p2++) {
                 var player2 = players[p2];
 
-                var ih = player2.get_component<Inputhandler>();
+                var ih = player2.get_component<Input>();
                 if (ih != null && !ih.enabled) {
                     continue;
                 }
@@ -352,7 +352,7 @@ namespace Fab5.Engine.Subsystems {
             sprite_batch.GraphicsDevice.Clear(Color.Black);
 
 
-            players              = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler));
+            players              = Fab5_Game.inst().get_entities_fast(typeof(Input));
             currentPlayerNumber = players.Count;
 
             // är det inte samma antal spelare som förut, räkna om antalet och gör om viewports o kameror (viewports, cameras)

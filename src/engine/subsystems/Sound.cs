@@ -154,7 +154,7 @@ namespace Fab5.Engine.Subsystems
            //Decide which soound to play based on speeed
         Velocity velo = e1.get_component<Velocity>();
         Velocity velo2 = e2.get_component<Velocity>();
-        Inputhandler input = e1.get_component<Inputhandler>();
+        Input input = e1.get_component<Input>();
 
         var texttureName = data.entity1.get_component<Sprite>().texture.Name;
         var texttureName2 = data.entity1.get_component<Sprite>().texture.Name;

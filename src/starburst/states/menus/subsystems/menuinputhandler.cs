@@ -8,7 +8,7 @@
     using Engine;
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
-    public class Menu_Inputhandler_System : Subsystem
+    public class Menu_Input_Handler : Subsystem
         {
         public override void init() {
             base.init();
@@ -34,16 +34,16 @@
         public override void update(float t, float dt)
             {
 
-            var entities = Fab5_Game.inst().get_entities_fast(typeof(Inputhandler));
+            var entities = Fab5_Game.inst().get_entities_fast(typeof(Input));
             int num_components = entities.Count;
             KeyboardState currentKeyboardState = Keyboard.GetState();
 
             for (int i = 0; i < num_components; i++)
             {
                 var entity = entities[i];
-                var inputHandler = entity.get_component<Inputhandler>();
+                var inputHandler = entity.get_component<Input>();
 
-                if (inputHandler.device == Inputhandler.InputType.Keyboard) {
+                if (inputHandler.device == Input.InputType.Keyboard) {
                     if (is_key_clicked(inputHandler.up, currentKeyboardState, inputHandler.keyboardState))
                         Fab5_Game.inst().message("up", new { Player = entity });
                     if (is_key_clicked(inputHandler.left, currentKeyboardState, inputHandler.keyboardState))
