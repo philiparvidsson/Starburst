@@ -48,7 +48,9 @@ set MgcbFlags=                        ^
 
 :: Libraries to link with when compiling the program.
 set Libs= ^
-    /r:"C:\Program Files (x86)\MSBuild\MonoGame\v3.0\Tools\MonoGame.Framework.dll"
+    /r:"C:\Program Files (x86)\MSBuild\MonoGame\v3.0\Tools\MonoGame.Framework.dll" ^
+    /r:"C:\Program Files (x86)\MSBuild\MonoGame\v3.0\Tools\SharpDX.dll"            ^
+    /r:"C:\Program Files (x86)\MSBuild\MonoGame\v3.0\Tools\SharpDX.XInput.dll"
 
 ::------------------------------------------------
 :: SCRIPT

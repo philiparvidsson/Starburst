@@ -15,6 +15,11 @@
 
     public class Input : Component
     {
+        public float old_left_vib;
+        public float old_right_vib;
+        public float left_vib = 0.0f;
+        public float right_vib = 0.0f;
+
         public bool enabled = true;
 
         public bool can_use_powerup;
