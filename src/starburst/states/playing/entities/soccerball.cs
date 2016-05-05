@@ -156,6 +156,8 @@ public static class Soccer_Ball {
                         var ball_pos = ((Playing_State)self.state).spawner.get_soccerball_spawn_pos(((Playing_State)self.state).tile_map);
                         self.get_component<Position>().x = ball_pos.x;
                         self.get_component<Position>().y = ball_pos.y;
+                        self.get_component<Velocity>().x = 0.0f;
+                        self.get_component<Velocity>().y = 0.0f;
                         self.get_component<Angle>().ang_vel = 3.141592f * 2.0f * -2.0f;
 
                         Starburst.inst().message("play_sound_asset", new { name = "sound/effects/goal" });
@@ -169,7 +171,7 @@ public static class Soccer_Ball {
                             }
                         });
 
-                        Starburst.inst().message("play_song_asset", new { name = "sound/effects/song_victory", fade_time = 15.0f });
+                        Starburst.inst().message("play_song_asset", new { name = "sound/effects/song_victory", fade_time = 14.0f });
                         //self.add_components(new TTL { max_time = 0.0f });
                     }
                 }

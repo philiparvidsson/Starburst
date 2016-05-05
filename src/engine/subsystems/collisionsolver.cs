@@ -564,10 +564,10 @@ public class Collision_Solver : Subsystem {
         var v_x  = v1.x - v2.x;
         var v_y  = v1.y - v2.y;
 
-        if (v_x*n_x+v_y*n_y > 0.0f) {
+        /*if (v_x*n_x+v_y*n_y > 0.0f) {
             // moving apart
             return false;
-        }
+        }*/
 
         var a1   = e1.get_component<Angle>();
         var a2   = e2.get_component<Angle>();
