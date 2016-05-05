@@ -45,7 +45,7 @@ namespace Fab5.Engine.Subsystems {
             }
         }
         public override void draw(float t, float dt) {
-            var entities = Fab5_Game.inst().get_entities_fast( typeof(Primary_Weapon));
+            var entities = Fab5_Game.inst().get_entities_fast(typeof(Primary_Weapon));
             int numberOfWeapons = entities.Count;
 
             for (int i = 0; i < numberOfWeapons; i++) {
