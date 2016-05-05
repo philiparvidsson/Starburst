@@ -34,6 +34,7 @@ set Mgcb="C:\Program Files (x86)\MSBuild\MonoGame\v3.0\Tools\MGCB.exe"
 :: Build tool flags.
 
 set CscFlags=   ^
+    /define:GAMEPAD_VIBRATION ^
     /nologo     ^
     /optimize   ^
     /target:exe ^
