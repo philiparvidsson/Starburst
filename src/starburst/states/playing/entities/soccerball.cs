@@ -55,7 +55,7 @@ public static class Soccer_Ball {
 
             new Brain {
                 think_interval = 1.0f/2.0f, // @To-do: Is this enough?
-                think_fn = (self, dt) => {
+                think_fn = (self) => {
                     var position = self.get_component<Position>();
                     var radius   = self.get_component<Bounding_Circle>().radius;
                     var tw       = 16.0f;

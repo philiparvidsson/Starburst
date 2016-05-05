@@ -38,11 +38,10 @@ namespace Fab5.Starburst {
             //GraphicsMgr.ToggleFullScreen();
             Microsoft.Xna.Framework.Media.MediaPlayer.Volume = 0.7f;
 
-            enter_state(new Splash_Screen_State());
-
             var form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(this.Window.Handle);
             form.Location = new System.Drawing.Point(300, 200);
 
+            enter_state(new Splash_Screen_State());
         }
 
         protected override void cleanup() {

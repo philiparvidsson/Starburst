@@ -15,7 +15,7 @@ public class AI : Subsystem {
             brain.time_since_think += dt;
             if (brain.time_since_think > brain.think_interval) {
                 brain.time_since_think = 0.0f;
-                brain.think_fn(entity, dt);
+                brain.think_fn(entity);
             }
         }
     }

@@ -250,6 +250,10 @@ public class Playing_State : Game_State {
 
         //create_entity(Dummy_Enemy.create_components());
 
+        var nme = create_entity(Dummy_Enemy.create_components());
+        nme.get_component<Position>().x = -1800.0f;
+        nme.get_component<Position>().y = 1800.0f;
+
         Starburst.inst().message("play_sound", new { name = "begin_game" });
     }
 
