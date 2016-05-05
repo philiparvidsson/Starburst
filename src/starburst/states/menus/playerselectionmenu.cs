@@ -78,7 +78,7 @@ namespace Fab5.Starburst.States {
                     inputs.Remove(null);
                 */
                 btnDelay = BTN_DELAY;
-                Starburst.inst().message("play_sound", new { name = "menu_positive" });
+                Starburst.inst().message("play_sound_asset", new { name = "menu_positive" });
                 Starburst.inst().enter_state(new Playing_State(inputs, parent.gameConfig));
             }
         }
@@ -101,7 +101,7 @@ namespace Fab5.Starburst.States {
                         playerSlots[(int)position.x] = SlotStatus.Empty;
                         position.x = 0;
 
-                        Starburst.inst().message("play_sound", new { name = "menu_click" });
+                        Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
                     }
                 }
                 else if (msg.Equals("left")) {
@@ -114,7 +114,7 @@ namespace Fab5.Starburst.States {
                                 playerSlots[(int)position.x] = SlotStatus.Empty;
                                 position.x = x;
                                 playerSlots[x] = SlotStatus.Hovering;
-                                Starburst.inst().message("play_sound", new { name = "menu_click" });
+                                Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
                                 break;
                             }
                         }
@@ -137,7 +137,7 @@ namespace Fab5.Starburst.States {
                                 playerSlots[(int)position.x] = SlotStatus.Empty;
                                 position.x = x;
                                 playerSlots[x] = SlotStatus.Hovering;
-                                Starburst.inst().message("play_sound", new { name = "menu_click" });
+                                Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
                                 break;
                             }
                         }
@@ -153,7 +153,7 @@ namespace Fab5.Starburst.States {
                         position.y += 1;
                         playerSlots[(int)position.x] = SlotStatus.Selected;
                         playerCount++;
-                        Starburst.inst().message("play_sound", new { name = "menu_click" });
+                        Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
                     }
                 }
                 else if (msg.Equals("back")) {
@@ -165,7 +165,7 @@ namespace Fab5.Starburst.States {
                     if (position.y > 0) {
                         position.y -= 1;
                         playerSlots[(int)position.x] -= 1;
-                        Starburst.inst().message("play_sound", new { name = "menu_click" });
+                        Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
                     }
                     else if (position.y == 0) {
                         goBack();
@@ -203,7 +203,7 @@ namespace Fab5.Starburst.States {
                     position.y++;
                     position.x = x;
                     playerSlots[x] = SlotStatus.Hovering;
-                    Starburst.inst().message("play_sound", new { name = "menu_positive" });
+                    Starburst.inst().message("play_sound_asset", new { name = "menu_positive" });
                     if (all_up) {
                         elapsedTime = 0.5f;
                     }

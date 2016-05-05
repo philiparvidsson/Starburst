@@ -130,7 +130,7 @@
                 {
                     texture = Starburst.inst().get_content<Texture2D>(ship),
                     layer_depth = 0.6f
-                    //color = new Color(0.6f, 0.9f, 1.0f)
+                    //color = new Color(0.6f, 0.9f, 1.0f),
                 },
                 ship_info,
                 new Bounding_Circle() { radius = 20.0f, ignore_collisions2 = ig_value },

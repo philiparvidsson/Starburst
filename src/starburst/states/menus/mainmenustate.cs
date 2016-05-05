@@ -96,7 +96,7 @@ namespace Fab5.Starburst.States {
                     if (position.y > 0) {
                         position.y -= 1;
                         position.x = 0;
-                        Starburst.inst().message("play_sound", new { name = "menu_click" });
+                        Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
                     }
                 }
                 else if (msg.Equals("down")) {
@@ -105,7 +105,7 @@ namespace Fab5.Starburst.States {
                     var position = entity.get_component<Position>();
                     if (position.y < (int)options.proceed) {
                         position.y += 1;
-                        Starburst.inst().message("play_sound", new { name = "menu_click" });
+                        Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
                     }
                 }
                 else if (msg.Equals("left")) {
@@ -139,7 +139,7 @@ namespace Fab5.Starburst.States {
                             map--;
                         updateMaps();
                     }
-                    Starburst.inst().message("play_sound", new { name = "menu_click" });
+                    Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
                 }
                 else if (msg.Equals("right")) {
                     var entities = Starburst.inst().get_entities_fast(typeof(Input));
@@ -171,7 +171,7 @@ namespace Fab5.Starburst.States {
                             map++;
                         updateMaps();
                     }
-                    Starburst.inst().message("play_sound", new { name = "menu_click" });
+                    Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
                 }
                 else if (msg.Equals("select")) {
                     var entities = Starburst.inst().get_entities_fast(typeof(Input));

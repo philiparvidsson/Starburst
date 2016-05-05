@@ -158,18 +158,18 @@ public static class Soccer_Ball {
                         self.get_component<Position>().y = ball_pos.y;
                         self.get_component<Angle>().ang_vel = 3.141592f * 2.0f * -2.0f;
 
-                        Starburst.inst().message("play_sound", new { name = "sound/effects/goal" });
+                        Starburst.inst().message("play_sound_asset", new { name = "sound/effects/goal" });
 
                         Starburst.inst().create_entity(new Component[] {
                             new TTL {
                                 max_time = 5.0f,
                                 destroy_cb = () => {
-                                    Starburst.inst().message("play_sound", new { name = "sound/effects/goal" });
+                                    Starburst.inst().message("play_sound_asset", new { name = "sound/effects/goal" });
                                 }
                             }
                         });
 
-                        Starburst.inst().message("play_song", new { name = "sound/effects/song_victory", fade_time = 15.0f });
+                        Starburst.inst().message("play_song_asset", new { name = "sound/effects/song_victory", fade_time = 15.0f });
                         //self.add_components(new TTL { max_time = 0.0f });
                     }
                 }
