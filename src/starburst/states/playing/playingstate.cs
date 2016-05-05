@@ -179,7 +179,7 @@ public class Playing_State : Game_State {
 
 
         for (int i = 0; i < game_conf.num_asteroids; i++) {
-            var asteroid = create_entity(Dummy.create_components());
+            var asteroid = create_entity(Asteroid.create_components());
             var r = asteroid.get_component<Bounding_Circle>().radius;
 
             Position ap;
@@ -206,7 +206,7 @@ public class Playing_State : Game_State {
                     var min_dist = ast.get_component<Bounding_Circle>().radius + asteroid.get_component<Bounding_Circle>().radius;
                     min_dist *= 1.05f;
                     min_dist *= min_dist;
-                        
+
                     if (dist < min_dist) {
                         colliding = true;
                         num_fails++;

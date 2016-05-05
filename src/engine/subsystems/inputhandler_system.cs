@@ -5,6 +5,7 @@
     using Fab5.Engine.Components;
     using Fab5.Engine.Core;
     using Microsoft.Xna.Framework.Input;
+    using Microsoft.Xna.Framework;
     using Engine;
     public class Inputhandler_System : Subsystem {
         private void fire(Entity entity, Ship_Info ship, Weapon weapon) {
@@ -38,35 +39,37 @@
                 Entity e1 = data.entity1;
                 Entity e2 = data.entity2;
 
-                var input = e1.get_component<Input>();
+                var vel1   = new Velocity { x = 0.0f, y = 0.0f };
+                var vel2   = new Velocity { x = 0.0f, y = 0.0f };
+                if (e1 != null) {
+                    vel1 = e1.get_component<Velocity>() ?? new Velocity { x = 0.0f, y = 0.0f };
+                }
 
-                if (input != null) {
-                    // This is a player.
-                    var vel1 = e1.get_component<Velocity>();
-                    var vel2 = new Velocity { x = 0.0f, y = 0.0f };
+                if (e2 != null) {
+                    vel2 = e2.get_component<Velocity>() ?? new Velocity { x = 0.0f, y = 0.0f };
+                }
 
-                    if (e2 != null) {
-                        var tmp = e2.get_component<Velocity>();
-                        if (tmp != null) {
-                            vel2 = tmp;
-                        }
-                    }
+                var speed1 = (float)Math.Sqrt(vel1.x*vel1.x + vel1.y*vel1.y);
+                var speed2 = (float)Math.Sqrt(vel2.x*vel2.x + vel2.y*vel2.y);
+                var dot    = vel1.x*vel2.x + vel1.y*vel2.y;
 
-                    var speed1 = (float)Math.Sqrt(vel1.x*vel1.x + vel1.y*vel1.y);
-                    var speed2 = (float)Math.Sqrt(vel2.x*vel2.x + vel2.y*vel2.y);
-                    var dot = vel1.x*vel2.x + vel1.y*vel2.y;
+                var rs = speed2;
+                if (speed1 > 0.0f) {
+                    rs = speed1 - dot/speed1;
+                }
 
-                    var rs = 0.0f;
-                    if (speed1 > 0.0f) {
-                        rs = speed1 - dot/speed1;
-                    }
+                var vib = rs / 200.0f;
 
+                var input1 = e1?.get_component<Input>();
+                if (input1 != null && input1.device == Input.InputType.Controller) {
+                    input1.left_vib += vib;
+                    input1.right_vib += vib;
+                }
 
-                    var vib = rs / 200.0f;
-                    input.left_vib += vib;
-                    input.right_vib += vib;
-
-                    //Console.WriteLine("vibrate " + vib);
+                var input2 = e2?.get_component<Input>();
+                if (input2 != null && input2.device == Input.InputType.Controller) {
+                    input2.left_vib += vib;
+                    input2.right_vib += vib;
                 }
             }
         }
@@ -84,7 +87,9 @@
 
                 if (input.left_vib != input.old_left_vib || input.right_vib != input.old_right_vib) {
                     //System.Console.WriteLine("vib " + input.left_vib + ", " + input.right_vib);
-                    Gamepad_Util.vibrate((int)input.gp_index, input.left_vib, input.right_vib);
+                    if (input.device == Input.InputType.Controller) {
+                        Gamepad_Util.vibrate((int)input.gp_index, input.left_vib, input.right_vib);
+                    }
 
                     input.old_left_vib = input.left_vib;
                     input.old_right_vib = input.right_vib;

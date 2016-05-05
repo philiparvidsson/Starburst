@@ -61,26 +61,40 @@ namespace Fab5.Engine.Subsystems {
             var y = camera.position.y;
 
             var fac1 = 0.05f;
+            var scale1 = 1.0f;
             sprite_batch.Draw(backdrop,
-                              new Vector2(hw - (backdrop.Width*0.5f  + x * fac1) * 1.5f, hh - (backdrop.Height*0.5f + y * fac1) * 1.5f),
+                              new Vector2(hw - (backdrop.Width*0.5f  + x * fac1) * scale1, hh - (backdrop.Height*0.5f + y * fac1) * scale1),
                               null,
-                              new Color(0.8f, 0.8f, 0.8f, 0.8f),
+                              new Color(0.65f, 0.65f, 0.65f, 0.65f),
                               0.0f,
                               Vector2.Zero,
-                              new Vector2(1.5f, 1.5f),
+                              new Vector2(scale1, scale1),
                               SpriteEffects.None,
                               1.0f);
 
 
-            var fac2 = 0.25f;
+            var fac2 = 0.1f;
+            var scale2 = 2.0f;
             sprite_batch.Draw(stardrop,
-                              new Vector2(hw - (stardrop.Width*0.5f  + x * fac2) * 2.0f, hh - (stardrop.Height*0.5f + y * fac2) * 2.0f),
+                              new Vector2(hw - (stardrop.Width*0.5f  + x * fac2) * scale2, hh - (stardrop.Height*0.5f + y * fac2) * scale2),
                               null,
                               Color.White,
                               0.0f,
                               Vector2.Zero,
-                              new Vector2(2.0f, 2.0f),
+                              new Vector2(scale2, scale2),
                               SpriteEffects.None,
+                              0.9f);
+
+            var fac3 = 0.1f;
+            var scale3 = 4.0f;
+            sprite_batch.Draw(stardrop,
+                              new Vector2(hw - (stardrop.Width*0.5f  + x * fac3) * scale3, hh - (stardrop.Height*0.5f + y * fac3) * scale3),
+                              null,
+                              Color.White * 0.8f,
+                              0.0f,
+                              Vector2.Zero,
+                              new Vector2(scale3, scale3),
+                              SpriteEffects.FlipHorizontally,
                               0.9f);
 
             sprite_batch.End();

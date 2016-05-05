@@ -30,7 +30,7 @@ namespace Fab5.Starburst {
 
 
             //GraphicsMgr.SynchronizeWithVerticalRetrace = false;
-           // IsFixedTimeStep = false;
+            //IsFixedTimeStep = false;
 
 
 

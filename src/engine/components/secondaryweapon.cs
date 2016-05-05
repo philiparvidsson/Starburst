@@ -11,6 +11,8 @@ namespace Fab5.Engine.Components {
             this.fire_rate = 1.7f;
             this.sound = "LaserBlaster2";
             this.energy_cost = 50.0f;
+            this.vib_left = 0.73f;
+            this.vib_right = 0.0f;
         }
     }
 }

@@ -7,7 +7,7 @@ using Fab5.Engine;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-public static class Dummy {
+public static class Asteroid {
 
     static int frame = 13;
     static System.Random rand = new System.Random();
@@ -27,6 +27,8 @@ public static class Dummy {
             asset = "asteroid2";
         }
 
+        var col = new Color(0.50f+(float)rand.NextDouble()*0.1f, 0.50f, 0.50f);
+
         return new Component[] {
             //new Angle() { angle = 0.1f * (float)rand.NextDouble() },
             new Position() {x = 600, y = 200 },
@@ -40,7 +42,7 @@ public static class Dummy {
                 frame_timer = (float)rand.NextDouble(),
                 frame_counter = frame,
                 scale = ascale,
-                color = new Color(0.70f, 0.70f, 0.70f)
+                color = col
             },
             new Bounding_Circle() { radius = 50.0f * ascale },
             new Mass() { mass = (30.0f * (ascale+1.0f)*(ascale+1.0f))*10.0f }

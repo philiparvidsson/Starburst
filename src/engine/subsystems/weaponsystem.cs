@@ -29,6 +29,12 @@ namespace Fab5.Engine.Subsystems {
                 if (!ship.has_powerup("free-fire")) {
                     ship.energy_value -= weapon.energy_cost;
                 }
+
+                var input = origin.get_component<Input>();
+                if (input != null) {
+                    input.left_vib += weapon.vib_left;
+                    input.right_vib += weapon.vib_right;
+                }
                 Fab5_Game.inst().message("play_sound", new { name = weapon.sound });
                 weapon.timeSinceLastShot = 0f;
             }
