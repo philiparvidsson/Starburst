@@ -40,8 +40,8 @@ namespace Fab5.Starburst.States.Menus.Subsystems {
             var hh = vp.Height * 0.5f;
 
             var scale = 1.1f * (vp.Width/1920.0f);
-            var x = (float)Math.Cos(0.4f * t * 0.07f) * 270.0f;
-            var y = (float)Math.Sin(0.4f * t * 0.1f) * 200.0f ;
+            var x = scale/1.1f * (float)Math.Cos(0.4f * t * 0.07f) * 270.0f;
+            var y = scale/1.1f *(float)Math.Sin(0.4f * t * 0.1f) * 200.0f ;
 
 
             sprite_batch.Draw(backdrop,

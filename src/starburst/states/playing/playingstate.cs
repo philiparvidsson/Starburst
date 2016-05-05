@@ -254,7 +254,7 @@ public class Playing_State : Game_State {
         //nme.get_component<Position>().x = -1800.0f;
         //nme.get_component<Position>().y = 1800.0f;
 
-        Starburst.inst().message("play_sound", new { name = "begin_game" });
+        Starburst.inst().message("play_sound_asset", new { name = "begin_game" });
     }
 
     private Entity new_random_powerup() {

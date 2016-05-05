@@ -97,9 +97,49 @@ namespace Fab5.Engine.Subsystems
             fade_val = (fade_vol - fade_cur) / t; // lerp val
         }
 
+        private Dictionary<string, string> soundlib = new Dictionary<string, string>() {
+            { "begin_game", "sound/effects/air_horn" },
+            { "menu_click", "sound/effects/click" }
+        };
+
         public override void on_message(string msg, dynamic data)
         {
-            if (msg == "collision") {
+            if (msg == "play_sound_asset") {
+                var asset = data.name;
+
+                if (soundlib.ContainsKey(asset)) {
+                    // map name to asset file
+                    asset = soundlib[asset];
+                }
+
+                Console.WriteLine("playing " + asset);
+
+                var sound_effect = Fab5_Game.inst().get_content<SoundEffect>(asset);
+                sound_effect.Play();
+                return;
+            }
+            else if (msg == "play_song_asset") {
+                var asset = data.name;
+                if (soundlib.ContainsKey(asset)) {
+                    // map name to asset file
+                    asset = soundlib[asset];
+                }
+
+                var song = Fab5_Game.inst().get_content<SoundEffect>(asset);
+                music_fade_out(1.0f);
+                song.Play();
+
+                Fab5_Game.inst().create_entity(new Component[] {
+                    new TTL {
+                        max_time = data.fade_time,
+                        destroy_cb = () => {
+                            music_fade_in(1.0f);
+                        }
+                    }
+                });
+            }
+            // ifsatserna ovanför är temporära tills tobbe implementerar något så vi kan spela upp ljud när vi vill :-)
+            else if (msg == "collision") {
                 var p1 = new Position() { x = data.c_x, y = data.c_y };
                 if (data.entity2 == null) {
                 var texttureName = data.entity1.get_component<Sprite>().texture.Name;

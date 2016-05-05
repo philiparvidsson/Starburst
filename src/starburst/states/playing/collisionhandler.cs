@@ -491,7 +491,7 @@ namespace Fab5.Starburst.States.Playing {
                 var old_bounding_circle  = player.remove_component<Bounding_Circle>();
                 var old_sprite           = player.remove_component<Sprite>();
 
-                Starburst.inst().message("play_sound", new { name = "sound/effects/explosion" });
+                Starburst.inst().message("play_sound_asset", new { name = "sound/effects/explosion" });
 
 
                 Score player_score = player.get_component<Score>();
