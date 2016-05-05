@@ -7,6 +7,9 @@
     using System.Threading.Tasks;
     using Fab5.Engine.Core;
     public abstract class Weapon : Component {
+        public float vib_left = 0.5f;
+        public float vib_right = 0.5f;
+
         public float damage;
         public float fire_rate;
         public string sound;
