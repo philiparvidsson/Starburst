@@ -21,26 +21,32 @@ public static class Soccer_Ball {
         return new Component[] {
             new Particle_Emitter() {
                 emit_fn = () => {
+                    //var speed = vel.x * vel.x + vel.y*vel.y;
+                    var radius = 20.0f;
+                    var theta1 = 2.0f*3.141592f * (float)rand.NextDouble();
+                    var theta2 = 2.0f*3.141592f * (float)rand.NextDouble();
+                    var ball_speed = (float)Math.Sqrt(vel.x*vel.x + vel.y*vel.y)*0.05f;
+                    var speed = 3.0f + 3.0f * (float)rand.NextDouble() + ball_speed;
                     return new Component[] {
-                        new Position() { x = pos.x + (float)Math.Cos(2.0f*3.1415f*(float)rand.NextDouble()) * 13.0f * (float)rand.NextDouble(),
-                                         y = pos.y + (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 13.0f * (float)rand.NextDouble() },
-                        new Velocity() { x = vel.x * 0.2f + (float)Math.Cos(2.0f*3.1415f*(float)rand.NextDouble()) * 20.0f * (float)(0.5f+rand.NextDouble()),
-                                         y = vel.y * 0.2f + (float)Math.Sin(2.0f*3.1415f*(float)rand.NextDouble()) * 20.0f * (float)(0.5f+rand.NextDouble()) },
+                        new Position() { x = pos.x + (float)Math.Cos(theta1) * radius,
+                                         y = pos.y + (float)Math.Sin(theta1) * radius },
+                        new Velocity() { x = vel.x * 0.2f + (float)Math.Cos(theta2) * speed,
+                                         y = vel.y * 0.2f + (float)Math.Sin(theta2) * speed },
                         new Sprite() {
                             texture = Starburst.inst().get_content<Texture2D>("particle"),
                             color = new Color(1.0f, 0.8f, 0.3f, 1.0f),
-                            scale = 0.4f + (float)rand.NextDouble() * 0.3f,
+                            scale = 1.0f + (float)rand.NextDouble() * 0.6f,
                             blend_mode = Sprite.BM_ADD,
-                            layer_depth = 0.3f
+                            layer_depth = 0.95f
                         },
-                        new TTL() { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max), max_time = 1.35f + (float)(rand.NextDouble() * 0.3f) }
+                        new TTL() { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max), max_time = 2.65f + (float)(rand.NextDouble() * 1.3f) }
 //                        new Bounding_Circle() { radius = 1.0f },
 //                        new Mass() { mass = 0.0f }
 
                     };
                 },
-                interval = 0.15f,
-                num_particles_per_emit = 3
+                interval = 0.11f,
+                num_particles_per_emit = 2
             },
             new Angle() { angle = 0.1f * (float)rand.NextDouble(), ang_vel = 1.0f },
                 pos,
@@ -51,7 +57,7 @@ public static class Soccer_Ball {
                 //color = new Color(0.6f, 0.9f, 1.0f)
             },
             new Bounding_Circle() { radius = 17.0f },
-            new Mass() { mass = 5.0f, restitution_coeff = 0.92f, drag_coeff = 0.1f },
+            new Mass() { mass = 15.0f, restitution_coeff = 0.92f, drag_coeff = 0.1f },
 
             new Brain {
                 think_interval = 1.0f/2.0f, // @To-do: Is this enough?
@@ -75,13 +81,13 @@ public static class Soccer_Ball {
                             if (i < 0 || i > 255 || j < 0 || j > 255) continue;
 
                             var t = tiles[i+(j<<8)];
-                            if (t == 7) {
+                            if (t == 8) {
                                 scoring_team = 2;
                                 right = left-1; // to break outer loop
                                 break;
 
                             }
-                            else if (t == 8) {
+                            else if (t == 9) {
                                 scoring_team = 1;
                                 right = left-1; // to break outer loop
                                 break;
@@ -99,7 +105,7 @@ public static class Soccer_Ball {
                             if (si.team == scoring_team) {
                                 var score = e.get_component<Score>();
                                 if (score != null) {
-                                    score.score += 5000;
+                                    score.score += 1500;
                                 }
                             }
                         }

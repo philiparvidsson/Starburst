@@ -129,6 +129,8 @@ namespace Fab5.Engine.Subsystems {
 
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
+            /*camera.zoom += Microsoft.Xna.Framework.Input.GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One).ThumbSticks.Right.Y;*/
+
             var tile_tex = tile_map.tex;
             var x = 0.0f;
             th *= camera.zoom;
@@ -149,7 +151,7 @@ namespace Fab5.Engine.Subsystems {
 //                    sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
 
                     int k = tiles[o];
-                    if (k != 0 && k < 9) {// 9 and up are not visible walls
+                    if (k != 0 && k < 10) {// 10 and up are not visible walls
                         var v = k-1;
 
                         var sy = y+yfrac;
@@ -246,7 +248,7 @@ namespace Fab5.Engine.Subsystems {
                 viewports[1] = topRight;
                 viewports[2] = bottom;
 
-                zoom *= .9f;
+                zoom *= .7f;
             }
             else {
                 // 1/4 screen, handle sizes and positions
@@ -438,6 +440,7 @@ namespace Fab5.Engine.Subsystems {
 
                 current.position.x += ((currentPlayerPosition.x-current.position.x) * 10.0f) * dt;
                 current.position.y += ((currentPlayerPosition.y-current.position.y) * 10.0f) * dt;
+                current.velocity = currentPlayer.get_component<Velocity>();
 
                 var inv_zoom = 1.0f/current.zoom;
 

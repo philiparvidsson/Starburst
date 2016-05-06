@@ -67,52 +67,76 @@ public class Playing_State : Game_State {
 
                     var c = bitmap.GetPixel(x, y);
 
-                    if (c == System.Drawing.Color.FromArgb(0, 0, 0)) {
+                    if (c == System.Drawing.Color.FromArgb(127, 127, 127)) {
                         tile_map.tiles[i] = 1;
                     }
-                    else if (c == System.Drawing.Color.FromArgb(0, 255, 0)) {
+                    if (c == System.Drawing.Color.FromArgb(0, 0, 0)) {
                         tile_map.tiles[i] = 2;
                     }
-                    else if (c == System.Drawing.Color.FromArgb(255, 0, 0)) {
+                    else if (c == System.Drawing.Color.FromArgb(0, 255, 0)) {
                         tile_map.tiles[i] = 3;
                     }
-                    else if (c == System.Drawing.Color.FromArgb(255, 255, 0)) {
+                    else if (c == System.Drawing.Color.FromArgb(255, 0, 0)) {
                         tile_map.tiles[i] = 4;
                     }
-                    else if (c == System.Drawing.Color.FromArgb(127, 0, 0)) {
+                    else if (c == System.Drawing.Color.FromArgb(255, 255, 0)) {
                         tile_map.tiles[i] = 5;
+                    }
+                    else if (c == System.Drawing.Color.FromArgb(127, 0, 0)) {
+                        tile_map.tiles[i] = 6;
                     }
                     else if (c == System.Drawing.Color.FromArgb(127, 63, 127)) {
                         // pepita
-                        tile_map.tiles[i] = 6;
+                        tile_map.tiles[i] = 7;
                     }
                     else if (c == System.Drawing.Color.FromArgb(127, 127, 0)) {
                         // soccer net team 1 (team 2 scores here)
-                        tile_map.tiles[i] = 7;
+                        tile_map.tiles[i] = 8;
                     }
                     else if (c == System.Drawing.Color.FromArgb(127, 63, 0)) {
                         // soccer net team 2 (team 1 scores here)
-                        tile_map.tiles[i] = 8;
+                        tile_map.tiles[i] = 9;
                     }
                     else if (c == System.Drawing.Color.FromArgb(255, 0, 255)) {
                         // soccer spawn
-                        tile_map.tiles[i] = 9;
+                        tile_map.tiles[i] = 10;
                     }
                     else if (c == System.Drawing.Color.FromArgb(0, 255, 255)) {
                         // powerup spawn
-                        tile_map.tiles[i] = 10;
+                        tile_map.tiles[i] = 11;
                     }
                     else if (c == System.Drawing.Color.FromArgb(255, 127, 0)) {
                         // team 1 spawn
-                        tile_map.tiles[i] = 11;
+                        tile_map.tiles[i] = 12;
                     }
                     else if (c == System.Drawing.Color.FromArgb(0, 127, 255)) {
                         // team 2 spawn
-                        tile_map.tiles[i] = 12;
+                        tile_map.tiles[i] = 13;
                     }
                     else if (c == System.Drawing.Color.FromArgb(127, 0, 255)) {
                         // asteroid spawn
-                        tile_map.tiles[i] = 13;
+                        tile_map.tiles[i] = 14;
+                    }
+                    else if (c.G == 63 && c.B == 63) {
+                        var types = new Type[] {
+                            typeof (Red_Fountain),
+                            typeof (Blue_Fountain)
+                        };
+
+                        int k = c.R % types.Length;
+
+                        var type = types[k];
+                        var factory = type.GetMethod("create_components", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+                        var p = create_entity((Component[])factory.Invoke(null, null)).get_component<Position>();
+                        if (p != null) {
+                            p.x = -2048.0f + x*16.0f+8.0f;
+                            p.y = -2048.0f + y*16.0f+8.0f;
+                            Console.WriteLine("spawned {0} @ {1}, {2}", type.Name, p.x, p.y);
+                        }
+                        else {
+                            Console.WriteLine("spawned {0}", type.Name);
+                        }
+
                     }
                 }
             }

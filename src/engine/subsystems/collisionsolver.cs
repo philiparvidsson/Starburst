@@ -86,16 +86,13 @@ public class Collision_Solver : Subsystem {
         // @To-do: Implement a quad tree or spatial grid here to reduce the
         //         number of candidates for collision testing.
 
-        int counter = 0;
-        int max = 0;
+        int counter = entities.Count;
 
-        if (entities.Count == 0) {
+        if (counter == 0) {
             return;
         }
 
         for (int i = 0; i < entities.Count; i++) {
-            max++;
-
             var entity = entities[i];
             //System.Threading.ThreadPool.QueueUserWorkItem(o => {
             System.Threading.Tasks.Task.Factory.StartNew(() => {
@@ -147,7 +144,7 @@ public class Collision_Solver : Subsystem {
                     }
                 }
 
-                if (System.Threading.Interlocked.Increment(ref counter) == max) {
+                if (System.Threading.Interlocked.Decrement(ref counter) == 0) {
                     mre.Set();
                 }
             });
@@ -396,7 +393,7 @@ public class Collision_Solver : Subsystem {
     private void resolve_circle_tile_collision(Entity e1, int x, int y, ref bool coll_h, ref bool coll_v) {
         if (x < 0 || x > 255 || y < 0 || y > 255) return;
         var k = tile_map.tiles[x+(y<<8)];
-        if (k == 0 || k >= 6) { // 6 and up are specials
+        if (k == 0 || k >= 7) { // 7 and up are specials
             return;
         }
 
