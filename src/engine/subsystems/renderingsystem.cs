@@ -440,6 +440,7 @@ namespace Fab5.Engine.Subsystems {
 
                 current.position.x += ((currentPlayerPosition.x-current.position.x) * 10.0f) * dt;
                 current.position.y += ((currentPlayerPosition.y-current.position.y) * 10.0f) * dt;
+                current.velocity = currentPlayer.get_component<Velocity>();
 
                 var inv_zoom = 1.0f/current.zoom;
 

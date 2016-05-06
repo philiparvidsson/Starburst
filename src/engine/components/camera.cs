@@ -9,25 +9,34 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Fab5.Engine.Components {
     public class Camera : Component {
-        public float zoom;
+        private float _zoom;
+        public float zoom {
+            get {
+                if (velocity == null) {
+                    return _zoom;
+                }
+                var speed = (float)Math.Sqrt(velocity.x*velocity.x+velocity.y*velocity.y);
+
+                var fac = speed*0.0004f;
+                return _zoom*(1.0f-fac);
+            }
+
+            set {
+                _zoom = value;
+            }
+        }
         public Position position;
         public Matrix transformMatrix;
         public Vector2 origin;
         public Viewport viewport;
         public int index;
+        public Velocity velocity;
 
         public Camera(Viewport vp) {
             this.viewport = vp;
             this.origin = new Vector2(vp.Width*.5f, vp.Height*.5f);
             this.zoom = 1.0f;
             this.position = new Position();
-        }
-
-        public float get_zoom(Velocity vel) {
-            var speed = (float)Math.Sqrt(vel.x*vel.x+vel.y*vel.y);
-
-            var vel_zoom = (float)Math.Min(0.7f * zoom, speed/1000.0f);
-            return zoom+vel_zoom;
         }
 
         public void Move(Vector2 amount) {
