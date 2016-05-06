@@ -23,6 +23,13 @@ namespace Fab5.Engine.Components {
             this.position = new Position();
         }
 
+        public float get_zoom(Velocity vel) {
+            var speed = (float)Math.Sqrt(vel.x*vel.x+vel.y*vel.y);
+
+            var vel_zoom = (float)Math.Min(0.7f * zoom, speed/1000.0f);
+            return zoom+vel_zoom;
+        }
+
         public void Move(Vector2 amount) {
             position.x += amount.X;
             position.y += amount.Y;
