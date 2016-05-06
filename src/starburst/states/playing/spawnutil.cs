@@ -21,7 +21,7 @@ public class Spawn_Util {
 
         for (int x = 0; x < 256; x++) {
             for (int y = 0; y < 256; y++) {
-                if (tile_map.tiles[x+y*256] == 10) {
+                if (tile_map.tiles[x+y*256] == 11) {
                     positions.Add(new Position { x = -2048.0f + x * 16.0f, y = -2048.0f + y * 16.0f });
                 }
             }
@@ -42,7 +42,7 @@ public class Spawn_Util {
 
         for (int x = 0; x < 256; x++) {
             for (int y = 0; y < 256; y++) {
-                if (tile_map.tiles[x+y*256] == 9) {
+                if (tile_map.tiles[x+y*256] == 10) {
                     positions.Add(new Position { x = -2048.0f + x * 16.0f, y = -2048.0f + y * 16.0f });
                 }
             }
@@ -63,7 +63,7 @@ public class Spawn_Util {
 
         for (int x = 0; x < 256; x++) {
             for (int y = 0; y < 256; y++) {
-                if (tile_map.tiles[x+y*256] == 13) {
+                if (tile_map.tiles[x+y*256] == 14) {
                     positions.Add(new Position { x = -2048.0f + x * 16.0f, y = -2048.0f + y * 16.0f });
                 }
             }
@@ -84,12 +84,12 @@ public class Spawn_Util {
         List<Position> positions = new List<Position>();
 
         // looking for team spawn tile
-        var team = player.get_component<Ship_Info>().team+10;
+        var team = player.get_component<Ship_Info>().team+11;
 
         for (int x = 0; x < 256; x++) {
             for (int y = 0; y < 256; y++) {
                 if (conf.mode == Game_Config.GM_DEATHMATCH) {
-                    if (tile_map.tiles[x+y*256] == 11) {
+                    if (tile_map.tiles[x+y*256] == 12) {
                         // spawn on team 1 spawn (used for all players in all vs all)
                         positions.Add(new Position { x = -2048.0f + x * 16.0f, y = -2048.0f + y * 16.0f });
                     }
