@@ -104,8 +104,8 @@ namespace Fab5.Starburst.States {
             }
 
             if (preloaded || preloading) {
-                String text = preloaded ? "Press enter to skip" : "Loading... " + percent_preloaded + "%";
-                Vector2 textSize = font.MeasureString(!preloaded ? "Loading... 100%" : "Press enter to skip");
+                String text = preloaded ? "Press enter to continue" : "Loading... " + percent_preloaded + "%";
+                Vector2 textSize = font.MeasureString(!preloaded ? "Loading... 100%" : "Press enter to continue");
                 var alpha = 1.0f;
                 if (preloaded) {
                     alpha = (float)Math.Cos(1.7f*t*3.141592)*0.5f+0.5f;

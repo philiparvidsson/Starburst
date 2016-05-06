@@ -63,7 +63,10 @@
     <Compile Include="src\engine\components\ttl.cs" />
     <Compile Include="src\engine\components\velocity.cs" />
     <Compile Include="src\engine\components\weapon.cs" />
-    <Compile Include="src\engine\core.cs" />
+    <Compile Include="src\engine\core\component.cs" />
+    <Compile Include="src\engine\core\entity.cs" />
+    <Compile Include="src\engine\core\gamestate.cs" />
+    <Compile Include="src\engine\core\subsystem.cs" />
     <Compile Include="src\engine\game.cs" />
     <Compile Include="src\engine\powerups.cs" />
     <Compile Include="src\engine\subsystems\asyncmultisubsystem.cs" />
@@ -86,15 +89,16 @@
     <Compile Include="src\starburst\states\menus\subsystems\menuinputhandler.cs" />
     <Compile Include="src\starburst\states\pause\pausestate.cs" />
     <Compile Include="src\starburst\states\playing\collisionhandler.cs" />
+    <Compile Include="src\starburst\states\playing\entities\asteroid.cs" />
     <Compile Include="src\starburst\states\playing\entities\bullet_factory.cs" />
     <Compile Include="src\engine\subsystems\sound.cs" />
     <Compile Include="src\engine\subsystems\weaponsystem.cs" />
     <Compile Include="src\engine\subsystems\window_title_writer.cs" />
     <Compile Include="src\engine\tilemap.cs" />
     <Compile Include="src\starburst\starburst.cs" />
-    <Compile Include="src\starburst\states\playing\entities\dummy.cs" />
     <Compile Include="src\starburst\states\playing\entities\enemies\dummy_enemy.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\bouncybulletspowerup.cs" />
+    <Compile Include="src\starburst\states\playing\entities\powerups\fastbombspowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\freefirepowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\multifirepowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\shieldpowerup.cs" />
@@ -165,7 +169,6 @@
     <Content Include="src\starburst\content\turbo_powerup.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="make.bat" />
     <None Include="README.md" />
     <MonoGameContentReference Include="src\starburst\content\content.mgcb" />
