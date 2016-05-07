@@ -102,42 +102,53 @@ namespace Fab5.Engine.Subsystems {
 
         }
 
-        private void draw_tri(BasicEffect effect, VertexPositionColorTexture[] verts, float x1, float y1, float x2, float y2, float x3, float y3, float u1, float v1, float u2, float v2, float u3, float v3, float light) {
+        private void draw_tri(BasicEffect effect, VertexPositionNormalTexture[] verts, float x1, float y1, float x2, float y2, float x3, float y3, float u1, float v1, float u2, float v2, float u3, float v3, float light, float n_x, float n_y) {
 
             var col = new Color(light, light, light);
             verts[0].Position = new Vector3(x1, y1, 0.0f);
             verts[0].TextureCoordinate = new Vector2(u1, v1);
-            verts[0].Color = col;
+            verts[0].Normal = new Vector3(n_x, n_y, 0.0f);
+            //verts[0].Color = col;
             verts[1].Position = new Vector3(x2, y2, 0.0f);
             verts[1].TextureCoordinate = new Vector2(u2, v2);
-            verts[1].Color = col;
+            verts[1].Normal = new Vector3(n_x, n_y, 0.0f);
+            //verts[1].Color = col;
             verts[2].Position = new Vector3(x3, y3, 0.0f);
             verts[2].TextureCoordinate = new Vector2(u3, v3);
-            verts[2].Color = col;
+            verts[2].Normal = new Vector3(n_x, n_y, 0.0f);
+            //verts[2].Color = col;
 
             foreach (var pass in effect.CurrentTechnique.Passes) {
                 pass.Apply();
 
-                Fab5_Game.inst().GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleStrip, verts, 0, verts.Length, new int[] { 0, 1, 2}, 0, 1);
+                Fab5_Game.inst().GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleStrip, verts, 0, verts.Length, new int[] { 0, 1, 2}, 0, 1);
             }
         }
 
         BasicEffect effect;
-        VertexPositionColorTexture[] verts = new VertexPositionColorTexture[3];
+        VertexPositionNormalTexture[] verts = new VertexPositionNormalTexture[3];
 
         private void draw_tile_sides(Camera cam, int tx, int ty, float x, float y, Texture2D tex, int v) {
-            var one_pixel_x = 2.0f/1920.0f;
-            var one_pixel_y = 2.0f/1080.0f;
+            var one_pixel_x = 2.0f/cam.viewport.Width;
+            var one_pixel_y = 2.0f/cam.viewport.Height;
+
+
             x *= one_pixel_x;
             y *= one_pixel_y;
             x -= 1.0f;
             y = 1.0f-y;
 
-            var fac = 0.023f;// depth factor
-            var dx1 = -x * fac;
-            var dy1 = -y * fac;
-            var dx2 = -(x+16.0f*one_pixel_x*cam.zoom) * fac;
-            var dy2 = -(y+16.0f*one_pixel_y*cam.zoom) * fac;
+            var fac = 0.028f/cam.zoom;// depth factor
+            var dx1 =  -x*fac*cam.zoom;
+            var dy1 = -y*fac*cam.zoom;
+            var dx2 =  -(x+16.0f*one_pixel_x)*fac*cam.zoom;
+            var dy2 = -(y+16.0f*one_pixel_y)*fac*cam.zoom;
+
+
+            /*dx1 *= one_pixel_x;
+            dx2 *= one_pixel_x;
+            dy1 *= one_pixel_y;
+            dy2 *= one_pixel_y;*/
 
             var top = y;
             var left = x;
@@ -152,9 +163,17 @@ namespace Fab5.Engine.Subsystems {
             if (effect == null) {
                 effect = new BasicEffect(Fab5_Game.inst().GraphicsDevice);
                 effect.Texture = tex;
-                effect.LightingEnabled = false;
+                effect.LightingEnabled = true;
                 effect.TextureEnabled = true;
-                effect.VertexColorEnabled = true;
+                effect.VertexColorEnabled = false;
+                effect.PreferPerPixelLighting = true;
+
+                effect.AmbientLightColor = new Vector3(0.29f, 0.27f, 0.45f)*0.7f;
+
+                effect.DirectionalLight0.Enabled = true;
+                effect.DirectionalLight0.DiffuseColor = new Vector3(0.39f, 0.36f, 0.51f)*0.7f;
+                //effect.DirectionalLight0.SpecularColor = new Vector3(1.0f, 1.0f, 1.0f);
+                effect.DirectionalLight0.Direction = new Vector3(-1.0f, -1.0f, 0.0f);
             }
 
 
@@ -175,23 +194,23 @@ namespace Fab5.Engine.Subsystems {
 
             if (!has_tile(tx-1, ty)) {
                 // left side
-                draw_tri(effect, verts, left, top, left, bottom, leftz, bottomz, u1, v1, u2, v2, u3, v3, left_light);
-                draw_tri(effect, verts, leftz, bottomz, leftz, topz, left, top, u3, v3, u4, v4, u1, v1, left_light);
+                draw_tri(effect, verts, left, top, left, bottom, leftz, bottomz, u1, v1, u2, v2, u3, v3, left_light, -1.0f, 0.0f);
+                draw_tri(effect, verts, leftz, bottomz, leftz, topz, left, top, u3, v3, u4, v4, u1, v1, left_light, -1.0f, 0.0f);
             }
             if (!has_tile(tx+1, ty)) {
                 // right side
-                draw_tri(effect, verts, right, top, rightz, topz, rightz, bottomz, u1, v1, u4, v4, u3, v3, right_light);
-                draw_tri(effect, verts, rightz, bottomz, right, bottom, right, top, u3, v3, u2, v2, u1, v1, right_light);
+                draw_tri(effect, verts, right, top, rightz, topz, rightz, bottomz, u1, v1, u4, v4, u3, v3, right_light, 1.0f, 0.0f);
+                draw_tri(effect, verts, rightz, bottomz, right, bottom, right, top, u3, v3, u2, v2, u1, v1, right_light, 1.0f, 0.0f);
             }
             if (!has_tile(tx, ty-1)) {
                 // top side
-                draw_tri(effect, verts, left, top, leftz, topz, rightz, topz, u1, v1, u2, v2, u3, v3, top_light);
-                draw_tri(effect, verts, rightz, topz, right, top, left, top, u3, v3, u4, v4, u1, v1, top_light);
+                draw_tri(effect, verts, left, top, leftz, topz, rightz, topz, u1, v1, u2, v2, u3, v3, top_light, 0.0f, 1.0f);
+                draw_tri(effect, verts, rightz, topz, right, top, left, top, u3, v3, u4, v4, u1, v1, top_light, 0.0f, 1.0f);
             }
             if (!has_tile(tx, ty+1)) {
                 // bottom side
-                draw_tri(effect, verts, left, bottom, right, bottom, rightz, bottomz, u1, v1, u4, v4, u3, v3, bottom_light);
-                draw_tri(effect, verts, rightz, bottomz, leftz, bottomz, left, bottom, u3, v3, u2, v2, u1, v1, bottom_light);
+                draw_tri(effect, verts, left, bottom, right, bottom, rightz, bottomz, u1, v1, u4, v4, u3, v3, bottom_light, 0.0f, -1.0f);
+                draw_tri(effect, verts, rightz, bottomz, leftz, bottomz, left, bottom, u3, v3, u2, v2, u1, v1, bottom_light, 0.0f, -1.0f);
             }
         }
 
