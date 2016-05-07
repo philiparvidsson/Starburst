@@ -433,6 +433,7 @@ namespace Fab5.Engine.Subsystems {
             for (int p = 0; p < currentPlayerNumber; p++) {
                 Camera current = cameras[p];
 
+
                 sprite_batch.GraphicsDevice.Viewport = current.viewport;
 
                 var currentPlayer         = players[p];
@@ -441,6 +442,7 @@ namespace Fab5.Engine.Subsystems {
                 current.position.x += ((currentPlayerPosition.x-current.position.x) * 10.0f) * dt;
                 current.position.y += ((currentPlayerPosition.y-current.position.y) * 10.0f) * dt;
                 current.velocity = currentPlayer.get_component<Velocity>();
+                current.update(dt);
 
                 var inv_zoom = 1.0f/current.zoom;
 

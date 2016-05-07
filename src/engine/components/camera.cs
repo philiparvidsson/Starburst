@@ -9,16 +9,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Fab5.Engine.Components {
     public class Camera : Component {
+        private float out_elastic_small(float t, float b, float c, float d) {
+            t /= d;
+            var ts = t * t;
+            var tc = ts * t;
+            return b+c*(33.0f*tc*ts + (-106.0f)*ts*ts + 126.0f*tc + (-67.0f)*ts + 15.0f*t);
+        }
+
+        private float zoom1, zoom2;
         private float _zoom;
         public float zoom {
             get {
-                if (velocity == null) {
-                    return _zoom;
-                }
-                var speed = (float)Math.Sqrt(velocity.x*velocity.x+velocity.y*velocity.y);
-
-                var fac = speed*0.0004f;
-                return _zoom*(1.0f-fac);
+                return _zoom*(1.0f-zoom1*_zoom);
             }
 
             set {
@@ -31,6 +33,54 @@ namespace Fab5.Engine.Components {
         public Viewport viewport;
         public int index;
         public Velocity velocity;
+
+        float moving_fast_time = 0.0f;
+        float moving_slow_time = 999.0f;
+
+        bool zooming_in = false;
+        bool zooming_out = false;
+
+        public void update(float dt) {
+            if (velocity == null) {
+                zoom2 = 0.0f;
+            }
+            else {
+                var speed = (float)Math.Sqrt(velocity.x*velocity.x+velocity.y*velocity.y);
+                if (zooming_in || (!zooming_out && speed < 60.0f)) {
+                    moving_slow_time += dt;
+                    if (moving_slow_time > 2.5f) {
+                        zooming_in = true;
+                        if (moving_slow_time < 4.5f) {
+                            var x = (moving_slow_time-2.5f)/2.0f;
+                            zoom2 = 0.15f - out_elastic_small(x, 0.0f, 0.15f, 1.0f);
+                        }
+                        else {
+                            moving_fast_time = 0.0f;
+                            zooming_in = false;
+                            zoom2 = 0.0f;
+                        }
+                    }
+                }
+                else if (zooming_out || (!zooming_in && speed > 220.0f)) {
+                    moving_fast_time += dt;
+                    if (moving_fast_time > 1.5f) {
+                        zooming_out = true;
+                        if (moving_fast_time < 3.5f) {
+                            var x = (moving_fast_time-1.5f)/2.0f;
+                            zoom2 = out_elastic_small(x, 0.0f, 0.15f, 1.0f);
+                        }
+                        else {
+                            moving_slow_time = 0.0f;
+                            zooming_out = false;
+                            zoom2 = 0.15f;
+                        }
+                    }
+                }
+            }
+
+            //zoom1 -= 0.1f*(zoom1-zoom2) * dt;
+            zoom1 = zoom2;
+        }
 
         public Camera(Viewport vp) {
             this.viewport = vp;
