@@ -216,7 +216,8 @@ namespace Fab5.Engine.Subsystems {
 
         private bool has_tile(int x, int y) {
             if (x < 0 || x > 255 || y < 0 || y > 255) return false;
-            return tile_map.tiles[x+(y<<8)] != 0;
+            var k = tile_map.tiles[x+(y<<8)];
+            return k > 0 && k < 10;
         }
 
 
