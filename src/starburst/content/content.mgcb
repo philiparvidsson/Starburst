@@ -709,3 +709,9 @@
 /processorParam:Quality=Best
 /build:sound/effects/menu_positive.wav
 
+#begin sound/BoxCat_Games_-_25_-_Victory.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:sound/BoxCat_Games_-_25_-_Victory.mp3
+

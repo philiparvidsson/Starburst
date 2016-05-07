@@ -369,11 +369,11 @@ namespace Fab5.Starburst.States {
                 int team = (i>>1)+1;
                 // kontroll-rutor-animation (vä->hö)
                 int currentLeftX = startPos + rectSize * i + spacing * i;
-                int boxAnimationDistance = (i < 2 ? animationDistance : -animationDistance);
+                int boxAnimationDistance = (int)(i < 2 ? animationDistance*0.5 : -animationDistance*0.5);
                 int startLeftX = currentLeftX - boxAnimationDistance;
 
                 if (t - startTime < animateInTime) 
-                    currentLeftX = (int)Easing.CubicEaseOut((t - startTime), startLeftX, boxAnimationDistance, animateInTime);
+                    currentLeftX = (int)Easing.ElasticEaseOut((t - startTime), startLeftX, boxAnimationDistance, animateInTime);
 
                 Rectangle destRect = new Rectangle(currentLeftX, rectangleY, rectSize, rectSize);
 
