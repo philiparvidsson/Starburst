@@ -102,53 +102,94 @@ namespace Fab5.Engine.Subsystems {
 
         }
 
-        private void draw_tri(BasicEffect effect, VertexPositionNormalTexture[] verts, float x1, float y1, float x2, float y2, float x3, float y3, float u1, float v1, float u2, float v2, float u3, float v3, float light, float n_x, float n_y) {
+        private void draw_tri(float x1, float y1, float x2, float y2, float x3, float y3, float u1, float v1, float u2, float v2, float u3, float v3, float n_x, float n_y, float n_z) {
 
-            var col = new Color(light, light, light);
-            verts[0].Position = new Vector3(x1, y1, 0.0f);
-            verts[0].TextureCoordinate = new Vector2(u1, v1);
-            verts[0].Normal = new Vector3(n_x, n_y, 0.0f);
-            //verts[0].Color = col;
-            verts[1].Position = new Vector3(x2, y2, 0.0f);
-            verts[1].TextureCoordinate = new Vector2(u2, v2);
-            verts[1].Normal = new Vector3(n_x, n_y, 0.0f);
-            //verts[1].Color = col;
-            verts[2].Position = new Vector3(x3, y3, 0.0f);
-            verts[2].TextureCoordinate = new Vector2(u3, v3);
-            verts[2].Normal = new Vector3(n_x, n_y, 0.0f);
-            //verts[2].Color = col;
 
-            foreach (var pass in effect.CurrentTechnique.Passes) {
-                pass.Apply();
 
-                Fab5_Game.inst().GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleStrip, verts, 0, verts.Length, new int[] { 0, 1, 2}, 0, 1);
-            }
+            var v = new VertexPositionNormalTexture[3];
+            var norm = new Vector3(n_x, n_y, n_z);
+            norm.Normalize();
+
+            v[0].Position = new Vector3(x1, y1, 0.0f);
+            v[0].TextureCoordinate = new Vector2(u1, v1);
+            v[0].Normal = norm;
+            v[1].Position = new Vector3(x2, y2, 0.0f);
+            v[1].TextureCoordinate = new Vector2(u2, v2);
+            v[1].Normal = norm;
+            v[2].Position = new Vector3(x3, y3, 0.0f);
+            v[2].TextureCoordinate = new Vector2(u3, v3);
+            v[2].Normal = norm;
+
+            verts.Add(v[0]);
+            verts.Add(v[1]);
+            verts.Add(v[2]);
         }
 
         BasicEffect effect;
-        VertexPositionNormalTexture[] verts = new VertexPositionNormalTexture[3];
+        readonly List<VertexPositionNormalTexture> verts = new List<VertexPositionNormalTexture>();
+        readonly List<VertexPositionNormalTexture> bg_verts = new List<VertexPositionNormalTexture>();
 
-        private void draw_tile_sides(Camera cam, int tx, int ty, float x, float y, Texture2D tex, int v) {
+        readonly Dictionary<int, float> verts_x = new Dictionary<int, float>();
+        readonly Dictionary<int, float> verts_y = new Dictionary<int, float>();
+        readonly Dictionary<int, float> bg_verts_x = new Dictionary<int, float>();
+        readonly Dictionary<int, float> bg_verts_y = new Dictionary<int, float>();
+
+        private void draw_tile_front(Camera cam, int tx, int ty, float x, float y, Texture2D tex, int v) {
             var one_pixel_x = 2.0f/cam.viewport.Width;
             var one_pixel_y = 2.0f/cam.viewport.Height;
-
 
             x *= one_pixel_x;
             y *= one_pixel_y;
             x -= 1.0f;
             y = 1.0f-y;
 
-            var fac = 0.028f/cam.zoom;// depth factor
+            var fac = 0.036f/cam.zoom;// depth factor
             var dx1 =  -x*fac*cam.zoom;
             var dy1 = -y*fac*cam.zoom;
             var dx2 =  -(x+16.0f*one_pixel_x)*fac*cam.zoom;
             var dy2 = -(y+16.0f*one_pixel_y)*fac*cam.zoom;
 
+            var top = y;
+            var left = x;
+            var right = x+16.0f*one_pixel_x*cam.zoom;
+            var bottom = y-16.0f*one_pixel_y*cam.zoom;
 
-            /*dx1 *= one_pixel_x;
-            dx2 *= one_pixel_x;
-            dy1 *= one_pixel_y;
-            dy2 *= one_pixel_y;*/
+            if (tex != effect.Texture) {
+                effect.Texture = tex;
+            }
+
+            var u1 = ((v*18.0f)+1.0f)/tex.Width;//+((v*18.0f)+1.0f)/tex.Width;
+            var v1 = 0.0f;
+            var u2 = u1;
+            var v2 = 1.0f;
+            var u3 = u1+16.0f/tex.Width;
+            var v3 = v2;
+            var u4 = u3;
+            var v4 = v1;
+
+            if (verts_x.ContainsKey(tx)) left = verts_x[tx]; else verts_x[tx] = left;
+            if (verts_x.ContainsKey(tx+1)) right = verts_x[tx+1]; else verts_x[tx+1] = right;
+            if (verts_y.ContainsKey(ty)) top = verts_y[ty]; else verts_y[ty] = top;
+            if (verts_y.ContainsKey(ty+1)) bottom = verts_y[ty+1]; else verts_y[ty+1] = bottom;
+
+            draw_tri(left, top, right, top, right, bottom, u1, v1, u4, v4, u3, v3, 0.0f, 0.0f, 1.0f);
+            draw_tri(right, bottom, left, bottom, left, top, u3, v3, u2, v2, u1, v1, 0.0f, 0.0f, 1.0f);
+        }
+
+        private void draw_tile_back(Camera cam, int tx, int ty, float x, float y, Texture2D tex, int v) {
+            var one_pixel_x = 2.0f/cam.viewport.Width;
+            var one_pixel_y = 2.0f/cam.viewport.Height;
+
+            x *= one_pixel_x;
+            y *= one_pixel_y;
+            x -= 1.0f;
+            y = 1.0f-y;
+
+            var fac = 0.036f/cam.zoom;// depth factor
+            var dx1 =  -x*fac*cam.zoom;
+            var dy1 = -y*fac*cam.zoom;
+            var dx2 =  -(x+16.0f*one_pixel_x)*fac*cam.zoom;
+            var dy2 = -(y+16.0f*one_pixel_y)*fac*cam.zoom;
 
             var top = y;
             var left = x;
@@ -160,23 +201,9 @@ namespace Fab5.Engine.Subsystems {
             var rightz = right+dx2;
             var bottomz = bottom+dy2;
 
-            if (effect == null) {
-                effect = new BasicEffect(Fab5_Game.inst().GraphicsDevice);
+            if (tex != effect.Texture) {
                 effect.Texture = tex;
-                effect.LightingEnabled = true;
-                effect.TextureEnabled = true;
-                effect.VertexColorEnabled = false;
-                effect.PreferPerPixelLighting = true;
-
-                effect.AmbientLightColor = new Vector3(0.29f, 0.27f, 0.45f)*0.7f;
-
-                effect.DirectionalLight0.Enabled = true;
-                effect.DirectionalLight0.DiffuseColor = new Vector3(0.39f, 0.36f, 0.51f)*0.7f;
-                //effect.DirectionalLight0.SpecularColor = new Vector3(1.0f, 1.0f, 1.0f);
-                effect.DirectionalLight0.Direction = new Vector3(-1.0f, -1.0f, 0.0f);
             }
-
-
 
             var u1 = ((v*18.0f)+1.0f)/tex.Width;//+((v*18.0f)+1.0f)/tex.Width;
             var v1 = 0.0f;
@@ -187,30 +214,88 @@ namespace Fab5.Engine.Subsystems {
             var u4 = u3;
             var v4 = v1;
 
-            var left_light = 0.35f;
-            var right_light = 0.55f;
-            var top_light = 0.55f;
-            var bottom_light = 0.35f;
+            if (verts_x.ContainsKey(tx)) left = verts_x[tx]; else verts_x[tx] = left;
+            if (verts_x.ContainsKey(tx+1)) right = verts_x[tx+1]; else verts_x[tx+1] = right;
+            if (bg_verts_x.ContainsKey(tx)) leftz = bg_verts_x[tx]; else bg_verts_x[tx] = leftz;
+            if (bg_verts_x.ContainsKey(tx+1)) rightz = bg_verts_x[tx+1]; else bg_verts_x[tx+1] = rightz;
+            if (verts_y.ContainsKey(ty)) top = verts_y[ty]; else verts_y[ty] = top;
+            if (verts_y.ContainsKey(ty+1)) bottom = verts_y[ty+1]; else verts_y[ty+1] = bottom;
+            if (bg_verts_y.ContainsKey(ty)) topz = bg_verts_y[ty]; else bg_verts_y[ty] = topz;
+            if (bg_verts_y.ContainsKey(ty+1)) bottomz = bg_verts_y[ty+1]; else bg_verts_y[ty+1] = bottomz;
+
+            draw_tri(leftz, topz, rightz, topz, rightz, bottomz, u1, v1, u4, v4, u3, v3, 0.0f, 0.0f, 1.0f);
+            draw_tri(rightz, bottomz, leftz, bottomz, leftz, topz, u3, v3, u2, v2, u1, v1, 0.0f, 0.0f, 1.0f);
+        }
+
+        private void draw_tile_sides(Camera cam, int tx, int ty, float x, float y, Texture2D tex, int v) {
+            var one_pixel_x = 2.0f/cam.viewport.Width;
+            var one_pixel_y = 2.0f/cam.viewport.Height;
+
+            x *= one_pixel_x;
+            y *= one_pixel_y;
+            x -= 1.0f;
+            y = 1.0f-y;
+
+            var fac = 0.036f/cam.zoom;// depth factor
+            var dx1 =  -x*fac*cam.zoom;
+            var dy1 = -y*fac*cam.zoom;
+            var dx2 =  -(x+16.0f*one_pixel_x)*fac*cam.zoom;
+            var dy2 = -(y+16.0f*one_pixel_y)*fac*cam.zoom;
+
+            var top = y;
+            var left = x;
+            var right = x+16.0f*one_pixel_x*cam.zoom;
+            var bottom = y-16.0f*one_pixel_y*cam.zoom;
+
+            var topz = top+dy1;
+            var leftz = left+dx1;
+            var rightz = right+dx2;
+            var bottomz = bottom+dy2;
+
+            if (tex != effect.Texture) {
+                effect.Texture = tex;
+            }
+
+            var u1 = ((v*18.0f)+1.0f)/tex.Width;//+((v*18.0f)+1.0f)/tex.Width;
+            var v1 = 0.0f;
+            var u2 = u1;
+            var v2 = 1.0f;
+            var u3 = u1+16.0f/tex.Width;
+            var v3 = v2;
+            var u4 = u3;
+            var v4 = v1;
+
+            if (verts_x.ContainsKey(tx)) left = verts_x[tx]; else verts_x[tx] = left;
+            if (verts_x.ContainsKey(tx+1)) right = verts_x[tx+1]; else verts_x[tx+1] = right;
+            if (bg_verts_x.ContainsKey(tx)) leftz = bg_verts_x[tx]; else bg_verts_x[tx] = leftz;
+            if (bg_verts_x.ContainsKey(tx+1)) rightz = bg_verts_x[tx+1]; else bg_verts_x[tx+1] = rightz;
+            if (verts_y.ContainsKey(ty)) top = verts_y[ty]; else verts_y[ty] = top;
+            if (verts_y.ContainsKey(ty+1)) bottom = verts_y[ty+1]; else verts_y[ty+1] = bottom;
+            if (bg_verts_y.ContainsKey(ty)) topz = bg_verts_y[ty]; else bg_verts_y[ty] = topz;
+            if (bg_verts_y.ContainsKey(ty+1)) bottomz = bg_verts_y[ty+1]; else bg_verts_y[ty+1] = bottomz;
 
             if (!has_tile(tx-1, ty)) {
                 // left side
-                draw_tri(effect, verts, left, top, left, bottom, leftz, bottomz, u1, v1, u2, v2, u3, v3, left_light, -1.0f, 0.0f);
-                draw_tri(effect, verts, leftz, bottomz, leftz, topz, left, top, u3, v3, u4, v4, u1, v1, left_light, -1.0f, 0.0f);
+                draw_tri(left, top, left, bottom, leftz, bottomz, u1, v1, u2, v2, u3, v3, -1.0f, 0.0f, 0.0f);
+                draw_tri(leftz, bottomz, leftz, topz, left, top, u3, v3, u4, v4, u1, v1, -1.0f, 0.0f, 0.0f);
             }
+
             if (!has_tile(tx+1, ty)) {
                 // right side
-                draw_tri(effect, verts, right, top, rightz, topz, rightz, bottomz, u1, v1, u4, v4, u3, v3, right_light, 1.0f, 0.0f);
-                draw_tri(effect, verts, rightz, bottomz, right, bottom, right, top, u3, v3, u2, v2, u1, v1, right_light, 1.0f, 0.0f);
+                draw_tri(right, top, rightz, topz, rightz, bottomz, u1, v1, u4, v4, u3, v3, 1.0f, 0.0f, 0.0f);
+                draw_tri(rightz, bottomz, right, bottom, right, top, u3, v3, u2, v2, u1, v1, 1.0f, 0.0f, 0.0f);
             }
+
             if (!has_tile(tx, ty-1)) {
                 // top side
-                draw_tri(effect, verts, left, top, leftz, topz, rightz, topz, u1, v1, u2, v2, u3, v3, top_light, 0.0f, 1.0f);
-                draw_tri(effect, verts, rightz, topz, right, top, left, top, u3, v3, u4, v4, u1, v1, top_light, 0.0f, 1.0f);
+                draw_tri(left, top, leftz, topz, rightz, topz, u1, v1, u2, v2, u3, v3, 0.0f, 1.0f, 0.0f);
+                draw_tri(rightz, topz, right, top, left, top, u3, v3, u4, v4, u1, v1, 0.0f, 1.0f, 0.0f);
             }
+
             if (!has_tile(tx, ty+1)) {
                 // bottom side
-                draw_tri(effect, verts, left, bottom, right, bottom, rightz, bottomz, u1, v1, u4, v4, u3, v3, bottom_light, 0.0f, -1.0f);
-                draw_tri(effect, verts, rightz, bottomz, leftz, bottomz, left, bottom, u3, v3, u2, v2, u1, v1, bottom_light, 0.0f, -1.0f);
+                draw_tri(left, bottom, right, bottom, rightz, bottomz, u1, v1, u4, v4, u3, v3, 0.0f, -1.0f, 0.0f);
+                draw_tri(rightz, bottomz, leftz, bottomz, left, bottom, u3, v3, u2, v2, u1, v1, 0.0f, -1.0f, 0.0f);
             }
         }
 
@@ -219,6 +304,10 @@ namespace Fab5.Engine.Subsystems {
             var k = tile_map.tiles[x+(y<<8)];
             return k > 0 && k < 10;
         }
+
+        Texture2D light_tex;
+
+        BlendState light_blend;
 
 
         //Texture2D grid_tex;
@@ -230,23 +319,77 @@ namespace Fab5.Engine.Subsystems {
             float h      = camera.viewport.Height / camera.zoom;
             int left   = (int)((camera.position.x+2048.0f-w*0.5f) / tw)-2;
             int top    = (int)((camera.position.y+2048.0f-h*0.5f) / th)-2;
-            int right  = (int)(left + w/tw)+3;
-            int bottom = (int)(top  + h/th)+3;
+            int right  = (int)(left + w/tw)+4;
+            int bottom = (int)(top  + h/th)+4;
 
             float xfrac = left*tw - (camera.position.x+2048.0f-w*0.5f);
             float yfrac = top *th - (camera.position.y+2048.0f-h*0.5f);
 //            System.Console.WriteLine(yfrac);
 
             Fab5_Game.inst().GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            Fab5_Game.inst().GraphicsDevice.SetRenderTarget(render_targets[0]);
+            Fab5_Game.inst().GraphicsDevice.Clear(Color.Transparent);
+            //Fab5_Game.inst().GraphicsMgr.GraphicsDevice.RasterizerState = new RasterizerState { MultiSampleAntiAlias = true };
 
             xfrac *= camera.zoom;
             yfrac *= camera.zoom;
 
             var tile_tex = tile_map.tex;
+            var bg_tile_tex = tile_map.bg_tex;
             var x = 0.0f;
             th *= camera.zoom;
             tw *= camera.zoom;
             var tiles = tile_map.tiles;
+            var bg_tiles = tile_map.bg_tiles;
+
+            verts_x.Clear();
+            verts_y.Clear();
+            bg_verts_x.Clear();
+            bg_verts_y.Clear();
+            verts.Clear();
+
+            for (int i = left; i <= right+1; i++) {
+                var y  = 0.0f;
+                var sx = x+xfrac;
+
+                for (int j = top; j <= bottom; j++) {
+                    if (i < 0 || i > 255 || j < 0 || j > 255) {
+                        y += th;
+                        continue;
+                    }
+
+                    int o = i + (j<<8);
+                    int k = bg_tiles[o];
+                    if (k != 0) {
+                        var v  = k-1;
+                        var sy = y+yfrac;
+                        draw_tile_back(camera, i, j, sx, sy, bg_tile_tex, v);
+                    }
+                    y += th;
+                }
+
+                x += tw;
+            }
+
+            if (verts.Count > 0) {
+                var indices = new int[verts.Count];
+                for (int i = 0; i < verts.Count; i++) {
+                    indices[i] = i;
+                }
+
+                foreach (var pass in effect.CurrentTechnique.Passes) {
+                    pass.Apply();
+
+                    Fab5_Game.inst().GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, verts.ToArray(), 0, verts.Count, indices, 0, indices.Length / 3);
+                }
+            }
+
+            verts.Clear();
+
+
+
+
+            x = 0.0f;
             for (int i = left; i <= right+1; i++) {
                 var y  = 0.0f;
                 var sx = x+xfrac;
@@ -271,7 +414,45 @@ namespace Fab5.Engine.Subsystems {
                 x += tw;
             }
 
-            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            if (verts.Count > 0) {
+                var indices = new int[verts.Count];
+                for (int i = 0; i < verts.Count; i++) {
+                    indices[i] = i;
+                }
+
+                foreach (var pass in effect.CurrentTechnique.Passes) {
+                    pass.Apply();
+
+                    Fab5_Game.inst().GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, verts.ToArray(), 0, verts.Count, indices, 0, indices.Length / 3);
+                }
+            }
+
+            sprite_batch.Begin(SpriteSortMode.Deferred, light_blend);
+
+            foreach (var e in Fab5_Game.inst().get_entities_fast(typeof (Light_Source))) {
+                var light = e.get_component<Light_Source>();
+                var pos   = e.get_component<Position>();
+
+                var sx = 0.99f*(pos.x - camera.position.x)*camera.zoom + camera.viewport.Width * 0.5f;
+                var sy = 0.99f*(pos.y - camera.position.y)*camera.zoom + camera.viewport.Height * 0.5f;
+
+                sprite_batch.Draw(light_tex,
+                                  new Vector2(sx, sy),
+                                  null,
+                                  light.color,
+                                  0.0f,
+                                  new Vector2(light_tex.Width*0.5f, light_tex.Height*0.5f),
+                                  light.size,
+                                  SpriteEffects.None,
+                                  0.0f);
+            }
+
+            sprite_batch.End();
+            Fab5_Game.inst().GraphicsDevice.BlendState = BlendState.AlphaBlend;
+
+            verts.Clear();
+
+            //sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             x = 0.0f;
             for (int i = left; i <= right; i++) {
                 var y = 0.0f;
@@ -290,7 +471,7 @@ namespace Fab5.Engine.Subsystems {
                         var v = k-1;
                         var sy = y+yfrac;
 
-                        sprite_batch.Draw(tile_tex,
+                        /*sprite_batch.Draw(tile_tex,
                                           new Vector2(sx, sy),
                                           new Rectangle(18*v+1, 0, 16, 16),
                                           Color.White,
@@ -298,7 +479,8 @@ namespace Fab5.Engine.Subsystems {
                                           Vector2.Zero,
                                           camera.zoom,
                                           SpriteEffects.None,
-                                          0.5f);
+                                          0.5f);*/
+                        draw_tile_front(camera, i, j, sx, sy, tile_tex, v);
                     }
 
                     y += th;
@@ -306,12 +488,36 @@ namespace Fab5.Engine.Subsystems {
 
                 x += tw;
             }
-            sprite_batch.End();
+            //sprite_batch.End();
+
+
+            if (verts.Count > 0) {
+                var indices = new int[verts.Count];
+                for (int i = 0; i < verts.Count; i++) {
+                    indices[i] = i;
+                }
+
+                foreach (var pass in effect.CurrentTechnique.Passes) {
+                    pass.Apply();
+
+                    Fab5_Game.inst().GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, verts.ToArray(), 0, verts.Count, indices, 0, indices.Length / 3);
+                }
+            }
+
+            Fab5_Game.inst().GraphicsDevice.SetRenderTarget(null);
         }
 
         public override void init()
         {
  	        base.init();
+
+            light_blend = new BlendState();
+            light_blend.AlphaSourceBlend = Blend.DestinationAlpha;
+            light_blend.AlphaDestinationBlend = Blend.DestinationAlpha;
+            light_blend.ColorSourceBlend = Blend.DestinationAlpha;
+            light_blend.ColorDestinationBlend = Blend.DestinationAlpha;
+
+            light_tex = Fab5_Game.inst().get_content<Texture2D>("light");
 
             timer_tex = Fab5_Game.inst().get_content<Texture2D>("clock");
 
@@ -331,8 +537,24 @@ namespace Fab5.Engine.Subsystems {
             this.hudsystem_instance = new Hudsystem(sprite_batch, tile_map);
 
 
+            effect = new BasicEffect(Fab5_Game.inst().GraphicsDevice);
+            effect.LightingEnabled = true;
+            effect.TextureEnabled = true;
+            effect.VertexColorEnabled = false;
+            effect.PreferPerPixelLighting = true;
 
+            effect.AmbientLightColor = new Vector3(0.33f, 0.3f, 0.6f);
+
+            effect.DirectionalLight0.Enabled = true;
+            effect.DirectionalLight0.DiffuseColor = new Vector3(0.65f, 0.6f, 0.98f);
+            //effect.DirectionalLight0.SpecularColor = new Vector3(1.0f, 1.0f, 1.0f);
+            var dir = new Vector3(-1.0f, -1.0f, -7.0f);
+            dir.Normalize();
+            effect.DirectionalLight0.Direction = dir;
+            System.Console.WriteLine(effect.DirectionalLight0.Direction);
         }
+
+        private RenderTarget2D[] render_targets = new RenderTarget2D[4];
 
         private void updatePlayers() {
             // ev hantering för om inga spelare hittas?
@@ -344,7 +566,9 @@ namespace Fab5.Engine.Subsystems {
                 cameras = new Camera[1];
                 viewports[0] = defaultViewport;
                 currentPlayerNumber = 1;
-                zoom *= 1.3f;
+                zoom *= 1.2f;
+
+                render_targets[0] = new RenderTarget2D(Fab5_Game.inst().GraphicsDevice, viewports[0].Width, viewports[0].Height);
             }
             else if(currentPlayerNumber <= 2) {
                 // 1/2 screen, handle heights and y position
@@ -359,7 +583,7 @@ namespace Fab5.Engine.Subsystems {
 
                 viewports[0] = top;
                 viewports[1] = bottom;
-                zoom *= 1.0f;
+                zoom *= 0.9f;
             }
             else if(currentPlayerNumber == 3){
                 // 1/4 screen, handle sizes and positions
@@ -383,7 +607,7 @@ namespace Fab5.Engine.Subsystems {
                 viewports[1] = topRight;
                 viewports[2] = bottom;
 
-                zoom *= .7f;
+                zoom *= .75f;
             }
             else {
                 // 1/4 screen, handle sizes and positions
@@ -414,7 +638,7 @@ namespace Fab5.Engine.Subsystems {
                 viewports[2] = bottomLeft;
                 viewports[3] = bottomRight;
 
-                zoom *= .9f;
+                zoom *= .75f;
             }
 
             // add cameras to each viewport
@@ -590,8 +814,12 @@ namespace Fab5.Engine.Subsystems {
                 if (current.position.y + 0.5f*current.viewport.Height*inv_zoom >  2048.0f) current.position.y = 2048.0f - 0.5f*current.viewport.Height/current.zoom;
                 if (current.position.y - 0.5f*current.viewport.Height*inv_zoom < -2048.0f) current.position.y = -2048.0f + 0.5f*current.viewport.Height*inv_zoom;
 
-                draw_backdrop(sprite_batch, current);
+
                 draw_tile_map(sprite_batch, current);
+                draw_backdrop(sprite_batch, current);
+            sprite_batch.Begin();
+            sprite_batch.Draw((Texture2D)render_targets[0], Vector2.Zero);
+            sprite_batch.End();
 
                 drawSprites(sprite_batch, current, num_entities, entities, 0.0f);
 

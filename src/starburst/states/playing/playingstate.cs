@@ -55,89 +55,85 @@ public class Playing_State : Game_State {
 
     public Tile_Map tile_map;
 
-    private void load_map() {
-        var s = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), game_conf.map_name);
-        System.Console.WriteLine("loading map " + s);
-        using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(s)) {
-            for (int x = 0; x < 256; x++) {
-                for (int y = 0; y < 256; y++) {
-                    int i = x+y*256;
+    private void load_map(System.Drawing.Bitmap bitmap, int[] tiles) {
+        for (int x = 0; x < 256; x++) {
+            for (int y = 0; y < 256; y++) {
+                int i = x+y*256;
 
-                    tile_map.tiles[i] = 0;
+                tiles[i] = 0;
 
-                    var c = bitmap.GetPixel(x, y);
+                var c = bitmap.GetPixel(x, y);
 
-                    if (c == System.Drawing.Color.FromArgb(127, 127, 127)) {
-                        tile_map.tiles[i] = 1;
-                    }
-                    if (c == System.Drawing.Color.FromArgb(0, 0, 0)) {
-                        tile_map.tiles[i] = 2;
-                    }
-                    else if (c == System.Drawing.Color.FromArgb(0, 255, 0)) {
-                        tile_map.tiles[i] = 3;
-                    }
-                    else if (c == System.Drawing.Color.FromArgb(255, 0, 0)) {
-                        tile_map.tiles[i] = 4;
-                    }
-                    else if (c == System.Drawing.Color.FromArgb(255, 255, 0)) {
-                        tile_map.tiles[i] = 5;
-                    }
-                    else if (c == System.Drawing.Color.FromArgb(127, 0, 0)) {
-                        tile_map.tiles[i] = 6;
-                    }
-                    else if (c == System.Drawing.Color.FromArgb(127, 63, 127)) {
-                        // pepita
-                        tile_map.tiles[i] = 7;
-                    }
-                    else if (c == System.Drawing.Color.FromArgb(127, 127, 0)) {
-                        // soccer net team 1 (team 2 scores here)
-                        tile_map.tiles[i] = 8;
-                    }
-                    else if (c == System.Drawing.Color.FromArgb(127, 63, 0)) {
-                        // soccer net team 2 (team 1 scores here)
-                        tile_map.tiles[i] = 9;
-                    }
-                    else if (c == System.Drawing.Color.FromArgb(255, 0, 255)) {
-                        // soccer spawn
-                        tile_map.tiles[i] = 10;
-                    }
-                    else if (c == System.Drawing.Color.FromArgb(0, 255, 255)) {
-                        // powerup spawn
-                        tile_map.tiles[i] = 11;
-                    }
-                    else if (c == System.Drawing.Color.FromArgb(255, 127, 0)) {
-                        // team 1 spawn
-                        tile_map.tiles[i] = 12;
-                    }
-                    else if (c == System.Drawing.Color.FromArgb(0, 127, 255)) {
-                        // team 2 spawn
-                        tile_map.tiles[i] = 13;
-                    }
-                    else if (c == System.Drawing.Color.FromArgb(127, 0, 255)) {
-                        // asteroid spawn
-                        tile_map.tiles[i] = 14;
-                    }
-                    else if (c.G == 63 && c.B == 63) {
-                        var types = new Type[] {
-                            typeof (Red_Fountain),
-                            typeof (Blue_Fountain)
-                        };
+                if (c == System.Drawing.Color.FromArgb(127, 127, 127)) {
+                    tiles[i] = 1;
+                }
+                if (c == System.Drawing.Color.FromArgb(0, 0, 0)) {
+                    tiles[i] = 2;
+                }
+                else if (c == System.Drawing.Color.FromArgb(0, 255, 0)) {
+                    tiles[i] = 3;
+                }
+                else if (c == System.Drawing.Color.FromArgb(255, 0, 0)) {
+                    tiles[i] = 4;
+                }
+                else if (c == System.Drawing.Color.FromArgb(255, 255, 0)) {
+                    tiles[i] = 5;
+                }
+                else if (c == System.Drawing.Color.FromArgb(127, 0, 0)) {
+                    tiles[i] = 6;
+                }
+                else if (c == System.Drawing.Color.FromArgb(127, 63, 127)) {
+                    // pepita
+                    tiles[i] = 7;
+                }
+                else if (c == System.Drawing.Color.FromArgb(127, 127, 0)) {
+                    // soccer net team 1 (team 2 scores here)
+                    tiles[i] = 8;
+                }
+                else if (c == System.Drawing.Color.FromArgb(127, 63, 0)) {
+                    // soccer net team 2 (team 1 scores here)
+                    tiles[i] = 9;
+                }
+                else if (c == System.Drawing.Color.FromArgb(255, 0, 255)) {
+                    // soccer spawn
+                    tiles[i] = 10;
+                }
+                else if (c == System.Drawing.Color.FromArgb(0, 255, 255)) {
+                    // powerup spawn
+                    tiles[i] = 11;
+                }
+                else if (c == System.Drawing.Color.FromArgb(255, 127, 0)) {
+                    // team 1 spawn
+                    tiles[i] = 12;
+                }
+                else if (c == System.Drawing.Color.FromArgb(0, 127, 255)) {
+                    // team 2 spawn
+                    tiles[i] = 13;
+                }
+                else if (c == System.Drawing.Color.FromArgb(127, 0, 255)) {
+                    // asteroid spawn
+                    tiles[i] = 14;
+                }
+                else if (c.G == 63 && c.B == 63) {
+                    var types = new Type[] {
+                        typeof (Red_Fountain),
+                        typeof (Blue_Fountain)
+                    };
 
-                        int k = c.R % types.Length;
+                    int k = c.R % types.Length;
 
-                        var type = types[k];
-                        var factory = type.GetMethod("create_components", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
-                        var p = create_entity((Component[])factory.Invoke(null, null)).get_component<Position>();
-                        if (p != null) {
-                            p.x = -2048.0f + x*16.0f+8.0f;
-                            p.y = -2048.0f + y*16.0f+8.0f;
-                            Console.WriteLine("spawned {0} @ {1}, {2}", type.Name, p.x, p.y);
-                        }
-                        else {
-                            Console.WriteLine("spawned {0}", type.Name);
-                        }
-
+                    var type = types[k];
+                    var factory = type.GetMethod("create_components", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+                    var p = create_entity((Component[])factory.Invoke(null, null)).get_component<Position>();
+                    if (p != null) {
+                        p.x = -2048.0f + x*16.0f+8.0f;
+                        p.y = -2048.0f + y*16.0f+8.0f;
+                        Console.WriteLine("spawned {0} @ {1}, {2}", type.Name, p.x, p.y);
                     }
+                    else {
+                        Console.WriteLine("spawned {0}", type.Name);
+                    }
+
                 }
             }
         }
@@ -153,7 +149,15 @@ public class Playing_State : Game_State {
 //        game_conf.powerup_spawn_time = 1.0f;
 //        game_conf.num_powerups = 50;
 
-        load_map();
+        var map_name = System.IO.Path.GetFileNameWithoutExtension(game_conf.map_name);
+        var s = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), map_name + ".png");
+        using (var bitmap = new System.Drawing.Bitmap(s)) {
+            load_map(bitmap, tile_map.tiles);
+        }
+        s = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), map_name + "_bg.png");
+        using (var bitmap = new System.Drawing.Bitmap(s)) {
+            load_map(bitmap, tile_map.bg_tiles);
+        }
 
         add_subsystems(
             new /*Async_*/Multi_Subsystem(

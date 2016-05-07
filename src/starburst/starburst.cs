@@ -23,9 +23,13 @@ namespace Fab5.Starburst {
                 GraphicsMgr.PreferredBackBufferWidth = 1920;
                 GraphicsMgr.PreferredBackBufferHeight = 1080;
             }
-            GraphicsMgr.PreferMultiSampling = true;
 
+            GraphicsMgr.PreferMultiSampling = true;
             GraphicsMgr.GraphicsDevice.RasterizerState = new RasterizerState { MultiSampleAntiAlias = true };
+
+            //Fab5_Game.inst().GraphicsDevice.SamplerStates[0].MipFilter = TextureFilter.Anisotropic;
+
+            Fab5_Game.inst().GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
 
 
 

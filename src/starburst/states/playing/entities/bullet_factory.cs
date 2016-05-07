@@ -119,7 +119,8 @@
                                         }},
                 new Mass { mass = 1.0f, restitution_coeff = -1.0f, friction = 0.0f },
                 new TTL() { alpha_fn = (x, max) => 10.0f-10.0f*x/max, max_time = lifeTime },
-                new Bullet_Info() { damage = weapon.damage, sender = origin, max_speed = speed }
+                new Bullet_Info() { damage = weapon.damage, sender = origin, max_speed = speed },
+                new Light_Source { color = new Color(1.0f, 0.6f, 0.2f, 1.0f), size = 0.35f }
             };
         }
 
@@ -225,7 +226,8 @@
                                         } },
                 new Mass { mass = 90.0f, restitution_coeff = -1.0f, friction = 0.0f },
                 new TTL() { alpha_fn = (x, max) => 20.0f-20.0f*x/max, max_time = lifeTime },
-                new Bullet_Info() { damage = weapon.damage, sender = origin, max_speed = speed }
+                new Bullet_Info() { damage = weapon.damage, sender = origin, max_speed = speed },
+                new Light_Source { color = new Color(0.9f, 0.7f, 1.0f, 1.0f) }
             };
         }
 

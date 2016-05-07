@@ -46,7 +46,6 @@ public class Powerup : Component {
                     var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
                     var radius = 10.0f * (float)rand.NextDouble();
                     var speed  = 150.0f * (float)(0.5f+rand.NextDouble());
-                    var i = rand.Next(0, 6);
                     var color = Color.White;
 
                     return new Component [] {
@@ -70,7 +69,9 @@ public class Powerup : Component {
 
                 interval               = 0.3f,
                 num_particles_per_emit = 2
-            }
+            },
+
+            new Light_Source { color = new Color(1.0f, 0.6f, 0.8f) }
         };
 
         return powerup;
