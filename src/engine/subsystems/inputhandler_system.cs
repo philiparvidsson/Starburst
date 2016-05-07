@@ -192,19 +192,10 @@
                 }
 
                 if (Math.Abs(turn) > 0.01f) {
-                    var ang_acc = 30.0f * dt;
+                    var ang_acc = 4.5f * dt;// @To-do: borde specas i shipinfo eller nåt
 
-                    angle.ang_vel += ang_acc * turn;
-
-                    if (angle.ang_vel > 5.0f) {
-                        angle.ang_vel = 5.0f;
-                    }
-                    else if (angle.ang_vel < -5.0f) {
-                        angle.ang_vel = -5.0f;
-                    }
-                }
-                else {
-                    angle.ang_vel = 0.0f;
+                    //angle.ang_vel += ang_acc * turn;
+                    angle.angle += ang_acc * turn;
                 }
                 if (Math.Abs(input.throttle) > 0.01f) {
                     //Fab5_Game.inst().message("play_sound", new { name = "thrust", gp_index = input.gp_index, pos = pos });
