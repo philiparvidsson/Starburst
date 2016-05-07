@@ -25,6 +25,12 @@ namespace Fab5.Starburst.States {
         int playerCount = 0;
         int minPlayers = 1;
 
+        // animation mellan states
+        float animateInTime = 1.4f;
+        float startTime;
+        // randoms för att kunna göra tidsoffset på individuella objekt
+        List<double> randoms;
+
         float elapsedTime;
         float delay = .1f; // tid innan fÃ¶rsta animation startar
         float inDuration = 0.4f; // tid fÃ¶r animationer
@@ -44,6 +50,7 @@ namespace Fab5.Starburst.States {
         private Texture2D downArrow;
         private bool canStartGame = true;
         private bool goingBack = false;
+        private bool started;
 
         private enum SlotStatus {
             Empty,
@@ -227,6 +234,10 @@ namespace Fab5.Starburst.States {
 
             outDelay = delay + inDuration + displayTime;
             animationTime = outDelay + outDuration;
+            randoms = new List<double>();
+            Random rn = new Random();
+            for (int i = 0; i < 30; i++)
+                randoms.Add(rn.NextDouble());
 
             //create_entity(SoundManager.create_backmusic_component()).get_component<SoundLibrary>().song_index = 1;
 
@@ -331,10 +342,19 @@ namespace Fab5.Starburst.States {
 
             sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             //sprite_batch.Draw(background, destinationRectangle: new Rectangle(0, 0, vp.Width, vp.Height), color: Color.White);
+            
+            if (!started) {
+                startTime = t;
+                started = true;
+            }
+            // avstånd för animationerna
+            int animationDistance = 150;
+            // header-animation (upp->ner)
+            float headerY = (t - startTime < animateInTime) ? (float)Easing.BounceEaseOut((t - startTime), -50, animationDistance, animateInTime) : 100;
 
             String text = "Choose players";
             Vector2 textSize = font.MeasureString(text);
-            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), 100), Color.White);
+            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), headerY), Color.White);
             //GFX_Util.draw_def_text(sprite_batch, text, (int)((vp.Width * .5f) - (textSize.X * .5f)), 100);
 
             // rita ut kontrollrutor (4 st)
@@ -347,7 +367,16 @@ namespace Fab5.Starburst.States {
 
             for (int i=0; i < maxPlayers; i++) {
                 int team = (i>>1)+1;
-                Rectangle destRect = new Rectangle(startPos + rectSize*i + spacing*i, rectangleY, rectSize, rectSize);
+                // kontroll-rutor-animation (vä->hö)
+                int currentLeftX = startPos + rectSize * i + spacing * i;
+                int boxAnimationDistance = (i < 2 ? animationDistance : -animationDistance);
+                int startLeftX = currentLeftX - boxAnimationDistance;
+
+                if (t - startTime < animateInTime) 
+                    currentLeftX = (int)Easing.CubicEaseOut((t - startTime), startLeftX, boxAnimationDistance, animateInTime);
+
+                Rectangle destRect = new Rectangle(currentLeftX, rectangleY, rectSize, rectSize);
+
                 //sprite_batch.Draw(rectBg, destinationRectangle: destRect, color: Color.White, layerDepth: .1f);
                 var col = new Color(0.0f, 0.0f, 0.0f, 0.4f);
                 if (parent.gameConfig.mode == 0) {
@@ -360,16 +389,16 @@ namespace Fab5.Starburst.States {
                     col = Color.Gold * q;
                     GFX_Util.fill_rect(sprite_batch, destRect, Color.Gold * 0.2f);
                     GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, col.A));
-                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Right-4, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, col.A));
-                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left+4, destRect.Top, destRect.Width-8, 4), new Color(col.R, col.G, col.B, col.A));
-                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left+4, destRect.Bottom-4, destRect.Width-8, 4), new Color(col.R, col.G, col.B, col.A));
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Right - 4, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, col.A));
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Top, destRect.Width-8, 4), new Color(col.R, col.G, col.B, col.A));
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Bottom-4, destRect.Width-8, 4), new Color(col.R, col.G, col.B, col.A));
                 }
                 else {
                     GFX_Util.fill_rect(sprite_batch, destRect, col);
                     GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
-                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Right-4, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
-                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left+4, destRect.Top, destRect.Width-8, 4), new Color(col.R, col.G, col.B, 255));
-                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left+4, destRect.Bottom-4, destRect.Width-8, 4), new Color(col.R, col.G, col.B, 255));
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Right - 4, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Top, destRect.Width-8, 4), new Color(col.R, col.G, col.B, 255));
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Bottom-4, destRect.Width-8, 4), new Color(col.R, col.G, col.B, 255));
                 }
 
             }
@@ -409,13 +438,28 @@ namespace Fab5.Starburst.States {
                 Vector2 subtitleSize = font.MeasureString(subtitle);
 
                 Rectangle iconRect = new Rectangle();
+
+                // kontroll-animation (kanske med individuell tids-offset)
+                float timeOffset = (float)randoms[i]*.5f;
+                int currentY = rectangleY - 150;
+                int animDistance = 50;
+                int startY = currentY - animDistance;
+                float controllerOpacity = 1;
+
+                if (t - startTime < timeOffset)
+                    controllerOpacity = 0;
+                else if (t - startTime >= timeOffset && t - startTime < animateInTime + timeOffset) {
+                    currentY = (int)Easing.CubicEaseOut((t - startTime - timeOffset), startY, animDistance, animateInTime + timeOffset);
+                    controllerOpacity = (float)Easing.Linear((t - startTime - timeOffset), 0, 1, animateInTime + timeOffset);
+                }
+
                 // om lÃ¤ngst upp, sprid ut jÃ¤mnt
                 if (position.y == 0) {
-                    iconRect = new Rectangle((int)(vp.Width * .5f - totalControllerWidth * .5f + controllerIconSize.X * i), rectangleY - 150, (int)controllerIconSize.X, (int)controllerIconSize.Y);
+                    iconRect = new Rectangle((int)(vp.Width * .5f - totalControllerWidth * .5f + controllerIconSize.X * i), currentY, (int)controllerIconSize.X, (int)controllerIconSize.Y);
                     int arrowX = (int)(vp.Width * .5f - totalControllerWidth * .5f + controllerIconSize.X * i + controllerIconSize.X * .5f - arrowSize * .5f);
                     sprite_batch.Draw(downArrow, new Rectangle(arrowX, (int)(rectangleY - 150 + controllerIconSize.Y), arrowSize, arrowSize), new Color(Color.White, textOpacity));
                 }
-                // annars en plats per kontroll
+                // annars en plats per spelaryta
                 else {
                     int currentRectStartPos = startPos + rectSize * (int)position.x + spacing * (int)position.x;
                     int positionX = (int)(currentRectStartPos + rectSize*.5f -(int)(controllerIconSize.X*.5f));
@@ -437,7 +481,7 @@ namespace Fab5.Starburst.States {
                         iconRect = new Rectangle(positionX, rectangleY + (int)(rectSize*.5f) - (int)(controllerIconSize.Y * .5f) - (int)(selectTextSize.Y*.5f), (int)controllerIconSize.X, (int)controllerIconSize.Y);
                     }
                 }
-                sprite_batch.Draw(texture, destinationRectangle: iconRect, color: Color.White, layerDepth: .5f);
+                sprite_batch.Draw(texture, destinationRectangle: iconRect, color: new Color(Color.White, controllerOpacity), layerDepth: .5f);
                 //sprite_batch.DrawString(font, subtitle, new Vector2((int)(iconRect.Center.X - subtitleSize.X * .5f), iconRect.Y - subtitleSize.Y + 10), Color.White);
                 /*
                 // debug fÃ¶r handkontroll-thumbsticks

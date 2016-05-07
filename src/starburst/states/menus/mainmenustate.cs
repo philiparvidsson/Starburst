@@ -393,10 +393,10 @@ namespace Fab5.Starburst.States {
             }
 
             // map-animation
-            int animLength = 150;
-            int startY = currentTopY - animLength;
+            int animDistance = 150;
+            int startY = currentTopY - animDistance;
             if (t - startTime < animateInTime)
-                currentTopY = (int)Easing.CubicEaseOut((t - startTime), startY, animLength, animateInTime);
+                currentTopY = (int)Easing.CubicEaseOut((t - startTime), startY, animDistance, animateInTime);
 
             String map = "Map";
             Vector2 mapTextSize = font.MeasureString(map);
@@ -419,10 +419,10 @@ namespace Fab5.Starburst.States {
             int rightTextX = (int)(vp.Width * .5f + middleSpacing);
             
             // settings-animation
-            animLength = -150;
-            startY = settingOffset - animLength;
+            animDistance = -150;
+            startY = settingOffset - animDistance;
             if (t - startTime < animateInTime)
-                settingOffset = (int)Easing.CubicEaseOut((t - startTime), startY, animLength, animateInTime);
+                settingOffset = (int)Easing.CubicEaseOut((t - startTime), startY, animDistance, animateInTime);
 
             sprite_batch.DrawString(font, "Game mode", new Vector2(leftTextX, settingOffset), Color.White);
             sprite_batch.DrawString(font, (gameMode == 0 ? "< Team Play >" : "< Deathmatch >"), new Vector2(rightTextX, settingOffset), (position.y == (int)options.mode ? new Color(Color.Gold, textOpacity) : Color.White));
