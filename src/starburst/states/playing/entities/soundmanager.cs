@@ -14,7 +14,8 @@
         public static Component create_backmusic_component() {
             var backlib = new SoundLibrary();
             backlib.Library = new Dictionary<string, Component>();
-            backlib.Library.Add("Battle", new BackgroundMusic("sound/BoxCat_Games_-_03_-_Battle_Special", true));
+            backlib.Library.Add("Battle", new BackgroundMusic("sound/BoxCat_Games_-_25_-_Victory", true));
+
             backlib.Library.Add("Menu", new BackgroundMusic("sound/BoxCat_Games_-_10_-_Epic_Song", true));
             //backlib.Library.Add("SpaceLoungeLoop", new BackgroundMusic("sound/SpaceLoungeLoop", true));
             //backlib.Library.Add("SpaceCube", new BackgroundMusic("sound/SpaceCube", true));
