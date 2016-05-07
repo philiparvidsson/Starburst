@@ -102,40 +102,162 @@ namespace Fab5.Engine.Subsystems {
 
         }
 
+        private void draw_tri(BasicEffect effect, VertexPositionColorTexture[] verts, float x1, float y1, float x2, float y2, float x3, float y3, float u1, float v1, float u2, float v2, float u3, float v3, float light) {
+
+            var col = new Color(light, light, light);
+            verts[0].Position = new Vector3(x1, y1, 0.0f);
+            verts[0].TextureCoordinate = new Vector2(u1, v1);
+            verts[0].Color = col;
+            verts[1].Position = new Vector3(x2, y2, 0.0f);
+            verts[1].TextureCoordinate = new Vector2(u2, v2);
+            verts[1].Color = col;
+            verts[2].Position = new Vector3(x3, y3, 0.0f);
+            verts[2].TextureCoordinate = new Vector2(u3, v3);
+            verts[2].Color = col;
+
+            foreach (var pass in effect.CurrentTechnique.Passes) {
+                pass.Apply();
+
+                Fab5_Game.inst().GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleStrip, verts, 0, verts.Length, new int[] { 0, 1, 2}, 0, 1);
+            }
+        }
+
+        BasicEffect effect;
+        VertexPositionColorTexture[] verts = new VertexPositionColorTexture[3];
+        Texture2D wp_tex;
+        private void draw_tile_sides(Camera cam, int tx, int ty, float x, float y, Texture2D tex, int v) {
+            var one_pixel_x = 2.0f/1920.0f;
+            var one_pixel_y = 2.0f/1080.0f;
+            x *= one_pixel_x;
+            y *= one_pixel_y;
+            x -= 1.0f;
+            y = 1.0f-y;
+
+            var fac = 0.023f;// depth factor
+            var dx1 = -x * fac;
+            var dy1 = -y * fac;
+            var dx2 = -(x+16.0f*one_pixel_x*cam.zoom) * fac;
+            var dy2 = -(y+16.0f*one_pixel_y*cam.zoom) * fac;
+
+            var top = y;
+            var left = x;
+            var right = x+16.0f*one_pixel_x*cam.zoom;
+            var bottom = y-16.0f*one_pixel_y*cam.zoom;
+
+            var topz = top+dy1;
+            var leftz = left+dx1;
+            var rightz = right+dx2;
+            var bottomz = bottom+dy2;
+
+            if (effect == null) {
+                effect = new BasicEffect(Fab5_Game.inst().GraphicsDevice);
+            }
+
+            if (wp_tex == null) {
+                wp_tex = new Texture2D(Fab5_Game.inst().GraphicsDevice, 1, 1);
+                wp_tex.SetData(new Color[] { Color.Red });
+            }
+
+            effect.Texture = tex;
+            effect.LightingEnabled = false;
+            effect.TextureEnabled = true;
+            effect.VertexColorEnabled = true;
+
+
+            var u1 = ((v*18.0f)+1.0f)/tex.Width;//+((v*18.0f)+1.0f)/tex.Width;
+            var v1 = 0.0f;
+            var u2 = u1;
+            var v2 = 1.0f;
+            var u3 = u1+16.0f/tex.Width;
+            var v3 = v2;
+            var u4 = u3;
+            var v4 = v1;
+
+            var left_light = 0.35f;
+            var right_light = 0.55f;
+            var top_light = 0.55f;
+            var bottom_light = 0.35f;
+
+            if (!has_tile(tx-1, ty)) {
+                // left side
+                draw_tri(effect, verts, left, top, left, bottom, leftz, bottomz, u1, v1, u2, v2, u3, v3, left_light);
+                draw_tri(effect, verts, leftz, bottomz, leftz, topz, left, top, u3, v3, u4, v4, u1, v1, left_light);
+            }
+            if (!has_tile(tx+1, ty)) {
+                // right side
+                draw_tri(effect, verts, right, top, rightz, topz, rightz, bottomz, u1, v1, u4, v4, u3, v3, right_light);
+                draw_tri(effect, verts, rightz, bottomz, right, bottom, right, top, u3, v3, u2, v2, u1, v1, right_light);
+            }
+            if (!has_tile(tx, ty-1)) {
+                // top side
+                draw_tri(effect, verts, left, top, leftz, topz, rightz, topz, u1, v1, u2, v2, u3, v3, top_light);
+                draw_tri(effect, verts, rightz, topz, right, top, left, top, u3, v3, u4, v4, u1, v1, top_light);
+            }
+            if (!has_tile(tx, ty+1)) {
+                // bottom side
+                draw_tri(effect, verts, left, bottom, right, bottom, rightz, bottomz, u1, v1, u4, v4, u3, v3, bottom_light);
+                draw_tri(effect, verts, rightz, bottomz, leftz, bottomz, left, bottom, u3, v3, u2, v2, u1, v1, bottom_light);
+            }
+        }
+
+        private bool has_tile(int x, int y) {
+            if (x < 0 || x > 255 || y < 0 || y > 255) return false;
+            return tile_map.tiles[x+(y<<8)] != 0;
+        }
+
 
         //Texture2D grid_tex;
         private void draw_tile_map(SpriteBatch sprite_batch, Camera camera) {
-
 
             float tw     = 16.0f;
             float th     = 16.0f;
             float w      = camera.viewport.Width  / camera.zoom;
             float h      = camera.viewport.Height / camera.zoom;
-            int left   = (int)((camera.position.x+2048.0f-w*0.5f) / tw);
-            int top    = (int)((camera.position.y+2048.0f-h*0.5f) / th);
-            int right  = (int)(left + w/tw)+1;
-            int bottom = (int)(top  + h/th)+1;
+            int left   = (int)((camera.position.x+2048.0f-w*0.5f) / tw)-2;
+            int top    = (int)((camera.position.y+2048.0f-h*0.5f) / th)-2;
+            int right  = (int)(left + w/tw)+3;
+            int bottom = (int)(top  + h/th)+3;
 
             float xfrac = left*tw - (camera.position.x+2048.0f-w*0.5f);
             float yfrac = top *th - (camera.position.y+2048.0f-h*0.5f);
 //            System.Console.WriteLine(yfrac);
 
+            Fab5_Game.inst().GraphicsDevice.BlendState = BlendState.AlphaBlend;
+
             xfrac *= camera.zoom;
             yfrac *= camera.zoom;
-
-            //if (grid_tex == null) {
-              //  grid_tex = Fab5_Game.inst().get_content<Texture2D>("tgrid");
-            //}
-
-            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-
-            /*camera.zoom += Microsoft.Xna.Framework.Input.GamePad.GetState(Microsoft.Xna.Framework.PlayerIndex.One).ThumbSticks.Right.Y;*/
 
             var tile_tex = tile_map.tex;
             var x = 0.0f;
             th *= camera.zoom;
             tw *= camera.zoom;
             var tiles = tile_map.tiles;
+            for (int i = left; i <= right+1; i++) {
+                var y  = 0.0f;
+                var sx = x+xfrac;
+
+                for (int j = top; j <= bottom; j++) {
+                    if (i < 0 || i > 255 || j < 0 || j > 255) {
+                        y += th;
+                        continue;
+                    }
+
+                    int o = i + (j<<8);
+                    int k = tiles[o];
+                    if (k != 0 && k < 10) {// 10 and up are not visible walls
+                        var v  = k-1;
+                        var sy = y+yfrac;
+                        draw_tile_sides(camera, i, j, sx, sy, tile_tex, v);
+                    }
+
+                    y += th;
+                }
+
+                x += tw;
+            }
+
+            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            x = 0.0f;
             for (int i = left; i <= right; i++) {
                 var y = 0.0f;
                 var sx = x+xfrac;
@@ -148,13 +270,11 @@ namespace Fab5.Engine.Subsystems {
 
                     int o = i + (j<<8);
 
-//                    sprite_batch.Draw(grid_tex, new Vector2(x+xfrac, y+yfrac), Color.White * 0.14f);
-
                     int k = tiles[o];
                     if (k != 0 && k < 10) {// 10 and up are not visible walls
                         var v = k-1;
-
                         var sy = y+yfrac;
+
                         sprite_batch.Draw(tile_tex,
                                           new Vector2(sx, sy),
                                           new Rectangle(18*v+1, 0, 16, 16),
