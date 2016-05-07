@@ -313,10 +313,14 @@ namespace Fab5.Engine.Subsystems {
 
         private void draw_indicators(Camera current, int currentPlayerNumber, Entity player) {
             var currentPlayerPosition = player.get_component<Position>();
+            var ih = player.get_component<Input>();
+            if (ih != null && !ih.enabled) {
+                return;
+            }
             for (int p2 = 0; p2 < currentPlayerNumber; p2++) {
                 var player2 = players[p2];
 
-                var ih = player2.get_component<Input>();
+                ih = player2.get_component<Input>();
                 if (ih != null && !ih.enabled) {
                     continue;
                 }

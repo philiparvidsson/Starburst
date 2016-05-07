@@ -46,7 +46,7 @@ namespace Fab5.Engine.Components {
             }
             else {
                 var speed = (float)Math.Sqrt(velocity.x*velocity.x+velocity.y*velocity.y);
-                if (zooming_in || (!zooming_out && speed < 60.0f)) {
+                if (zooming_in || (!zooming_out && speed < 110.0f)) {
                     moving_slow_time += dt;
                     if (moving_slow_time > 2.5f) {
                         zooming_in = true;
