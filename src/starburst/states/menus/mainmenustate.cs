@@ -54,8 +54,11 @@ namespace Fab5.Starburst.States {
             medium,
             many
         }
+        bool soccerModeEnabled = true; // game modes inställning för fotboll
+        bool ctfModeEnabled = false;
+        bool soccerMapEnabled = true; // kartans inställning för fotboll (ska hämtas från mapconfig när det läggs till)
 
-        int gameMode = 0; // 0 för free for all, 1 för team
+        int gameMode = 0; // 0 för team, 1 för free for all
         bool soccerball = true; // fotboll
         bool captureTheFlag = false;
         Amount asteroidCount = Amount.medium;
@@ -103,24 +106,20 @@ namespace Fab5.Starburst.States {
                     }
                 }
                 else if (msg.Equals("down")) {
-                    var entities = Starburst.inst().get_entities_fast(typeof(Position));
-                    Entity entity = entities[0];
-                    var position = entity.get_component<Position>();
-                    if (position.y < (int)options.proceed) {
-                        position.y += 1;
-                        Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
-                    }
+                    moveDown();
                 }
                 else if (msg.Equals("left")) {
                     var entities = Starburst.inst().get_entities_fast(typeof(Input));
                     Entity cursor = entities[0];
                     Position cursorPosition = cursor.get_component<Position>();
 
-                    if (cursorPosition.y == (int)options.mode)
+                    if (cursorPosition.y == (int)options.mode) {
                         gameMode = (gameMode == 0 ? 1 : 0);
-                    else if (cursorPosition.y == (int)options.soccer)
+                        soccerModeEnabled = (gameMode == 0);
+                    }
+                    else if (cursorPosition.y == (int)options.soccer && soccerModeEnabled && soccerMapEnabled)
                         soccerball = !soccerball;
-                    else if (cursorPosition.y == (int)options.flag)
+                    else if (cursorPosition.y == (int)options.flag && ctfModeEnabled)
                         captureTheFlag = !captureTheFlag;
                     else if (cursorPosition.y == (int)options.asteroids) {
                         if (asteroidCount == Amount.off)
@@ -128,7 +127,7 @@ namespace Fab5.Starburst.States {
                         else
                             asteroidCount--;
                     }
-                    else if(cursorPosition.y == (int)options.powerups) {
+                    else if (cursorPosition.y == (int)options.powerups) {
                         if (powerupCount == Amount.off)
                             powerupCount = Amount.many;
                         else
@@ -140,6 +139,7 @@ namespace Fab5.Starburst.States {
                         }
                         else
                             map--;
+                        soccerMapEnabled = (map != 2);
                         updateMaps();
                     }
                     Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
@@ -149,11 +149,13 @@ namespace Fab5.Starburst.States {
                     Entity cursor = entities[0];
                     Position cursorPosition = cursor.get_component<Position>();
 
-                    if (cursorPosition.y == (int)options.mode)
+                    if (cursorPosition.y == (int)options.mode) {
                         gameMode = (gameMode == 0 ? 1 : 0);
-                    else if (cursorPosition.y == (int)options.soccer)
+                        soccerModeEnabled = (gameMode == 0);
+                    }
+                    else if (cursorPosition.y == (int)options.soccer && soccerModeEnabled && soccerMapEnabled)
                         soccerball = !soccerball;
-                    else if (cursorPosition.y == (int)options.flag)
+                    else if (cursorPosition.y == (int)options.flag && ctfModeEnabled)
                         captureTheFlag = !captureTheFlag;
                     else if (cursorPosition.y == (int)options.asteroids) {
                         if (asteroidCount == Amount.many)
@@ -172,6 +174,7 @@ namespace Fab5.Starburst.States {
                             map = 1;
                         else
                             map++;
+                        soccerMapEnabled = (map != 2);
                         updateMaps();
                     }
                     Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
@@ -183,6 +186,8 @@ namespace Fab5.Starburst.States {
                     if (cursorPosition.y == (int)options.proceed) {
                         proceed();
                     }
+                    else
+                        moveDown();
                 }
                 else if (msg.Equals("start")) {
                     proceed();
@@ -190,6 +195,16 @@ namespace Fab5.Starburst.States {
                 else if(msg.Equals("escape")) {
                     Starburst.inst().Quit();
                 }
+            }
+        }
+
+        private void moveDown() {
+            var entities = Starburst.inst().get_entities_fast(typeof(Position));
+            Entity entity = entities[0];
+            var position = entity.get_component<Position>();
+            if (position.y < (int)options.proceed) {
+                position.y += 1;
+                Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
             }
         }
 
@@ -201,12 +216,22 @@ namespace Fab5.Starburst.States {
 
         private void proceed() {
             int asteroid = 0;
-            if (asteroidCount == Amount.few)
-                asteroid = 20;
-            else if (asteroidCount == Amount.medium)
-                asteroid = 40;
-            else if (asteroidCount == Amount.many)
-                asteroid = 60;
+            if (map != 2) { 
+                if (asteroidCount == Amount.few)
+                    asteroid = 20;
+                else if (asteroidCount == Amount.medium)
+                    asteroid = 40;
+                else if (asteroidCount == Amount.many)
+                    asteroid = 60;
+            }
+            else {
+                if (asteroidCount == Amount.few)
+                    asteroid = 5;
+                else if (asteroidCount == Amount.medium)
+                    asteroid = 10;
+                else if (asteroidCount == Amount.many)
+                    asteroid = 25;
+            }
             int powerup = 0;
             int powerupTime = 0;
             if (powerupCount == Amount.few) {
@@ -223,7 +248,7 @@ namespace Fab5.Starburst.States {
             }
             btnDelay = BTN_DELAY;
             Starburst.inst().message("play_sound", new { name = "menu_positive" });
-            this.gameConfig = new Playing.Game_Config() { map_name = "map"+map+".png", mode = this.gameMode, enable_soccer = soccerball, num_asteroids = asteroid, num_powerups = powerup, powerup_spawn_time = powerupTime };
+            this.gameConfig = new Playing.Game_Config() { map_name = "map"+map+".png", mode = this.gameMode, enable_soccer = (soccerMapEnabled && soccerModeEnabled && soccerball), num_asteroids = asteroid, num_powerups = powerup, powerup_spawn_time = powerupTime };
             MediaPlayer.Volume = 0.7f;
             vol = 0.7f;
             fade = 1.0f;
@@ -387,13 +412,19 @@ namespace Fab5.Starburst.States {
             int rightTextX = (int)(vp.Width * .5f + middleSpacing);
 
             sprite_batch.DrawString(font, "Game mode", new Vector2(leftTextX, settingOffset), Color.White);
-            sprite_batch.DrawString(font, (gameMode == 0 ? "< Team Match >" : "< Free for All >"), new Vector2(rightTextX, settingOffset), (position.y == (int)options.mode ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, (gameMode == 0 ? "< Team Play >" : "< Deathmatch >"), new Vector2(rightTextX, settingOffset), (position.y == (int)options.mode ? new Color(Color.Gold, textOpacity) : Color.White));
 
             sprite_batch.DrawString(font, "Soccer ball", new Vector2(leftTextX, settingOffset+40), Color.White);
-            sprite_batch.DrawString(font, (soccerball ? "< on >" : "< off >"), new Vector2(rightTextX, settingOffset+40), (position.y == (int)options.soccer ? new Color(Color.Gold, textOpacity) : Color.White));
+            if(soccerModeEnabled && soccerMapEnabled)
+                sprite_batch.DrawString(font, (soccerball ? "< on >" : "< off >"), new Vector2(rightTextX, settingOffset+40), (position.y == (int)options.soccer ? new Color(Color.Gold, textOpacity) : Color.White));
+            else
+                sprite_batch.DrawString(font, "< off >", new Vector2(rightTextX, settingOffset + 40), (position.y == (int)options.soccer ? new Color(Color.Gray, textOpacity) : Color.Gray));
 
             sprite_batch.DrawString(font, ctfString, new Vector2(leftTextX, settingOffset+80), Color.White);
-            sprite_batch.DrawString(font, (captureTheFlag ? "< on >" : "< off >"), new Vector2(rightTextX, settingOffset+80), (position.y == (int)options.flag ? new Color(Color.Gold, textOpacity) : Color.White));
+            if(ctfModeEnabled)
+                sprite_batch.DrawString(font, (captureTheFlag ? "< on >" : "< off >"), new Vector2(rightTextX, settingOffset+80), (position.y == (int)options.flag ? new Color(Color.Gold, textOpacity) : Color.White));
+            else
+                sprite_batch.DrawString(font, "< off >", new Vector2(rightTextX, settingOffset + 80), (position.y == (int)options.flag ? new Color(Color.Gray, textOpacity) : Color.Gray));
 
             sprite_batch.DrawString(font, "Asteroids", new Vector2(leftTextX, settingOffset+120), Color.White);
             String asteroidString = "Off";
