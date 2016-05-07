@@ -26,7 +26,7 @@ namespace Fab5.Starburst.States {
         public Entity soundMgr;
 
         private const float BTN_DELAY = .25f;
-        float animateInTime = .8f;
+        float animateInTime = 1.4f;
         float startTime;
 
         float elapsedTime;
@@ -377,25 +377,32 @@ namespace Fab5.Starburst.States {
                 startTime = t;
                 started = true;
             }
-            float yy = (t-startTime < animateInTime) ? quadInOut2((t-startTime), animateInTime, 40, 40) : 80;
-            float opacity = (t - startTime < animateInTime*.5f) ? quadInOut2((t - startTime), animateInTime*.5f,0, 1) : 1;
+            //logo-animation
+            float logoY = (t-startTime < animateInTime) ? (float)Easing.BounceEaseOut((t-startTime), -70, 150, animateInTime) : 80;
+            float opacity = (t - startTime < animateInTime*.5f) ? (float)Easing.QuadEaseInOut((t - startTime),0, 1, animateInTime * .5f) : 1;
 
-            sprite_batch.DrawString(largeFont, logo, new Vector2(vp.Width*.5f - logoSize.X*.5f, yy), new Color(Color.Gold, opacity));
+            sprite_batch.DrawString(largeFont, logo, new Vector2(vp.Width*.5f - logoSize.X*.5f, logoY), new Color(Color.Gold, opacity));
 
-            int startY = 225;
+            int currentTopY = 225;
 
             if (lowRes) {
                 int endY = (int)(vp.Height * .5f-15);
-                startY = 160;
-                largeMapSize = endY - startY;
+                currentTopY = 160;
+                largeMapSize = endY - currentTopY;
                 smallMapSize = (int)(largeMapSize * .75f);
             }
 
+            // map-animation
+            int animLength = 150;
+            int startY = currentTopY - animLength;
+            if (t - startTime < animateInTime)
+                currentTopY = (int)Easing.CubicEaseOut((t - startTime), startY, animLength, animateInTime);
+
             String map = "Map";
             Vector2 mapTextSize = font.MeasureString(map);
-            sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, startY), Color.White);
+            sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, currentTopY), Color.White);
 
-            int mapY = startY+50;
+            int mapY = currentTopY+50;
             sprite_batch.Draw(map0, new Rectangle((int)(vp.Width*.5f - largeMapSize*.5f - smallMapSize - 20), (int)(mapY + (largeMapSize - smallMapSize) * .5f), smallMapSize, smallMapSize), Color.White*0.5f);
             sprite_batch.Draw(map2, new Rectangle((int)(vp.Width*.5f + largeMapSize * .5f + 20), (int)(mapY + (largeMapSize-smallMapSize)*.5f), smallMapSize, smallMapSize), Color.White*0.5f);
             sprite_batch.Draw(map1, new Rectangle((int)(vp.Width*.5f - largeMapSize * .5f), mapY, largeMapSize, largeMapSize), Color.White);
@@ -410,6 +417,12 @@ namespace Fab5.Starburst.States {
             Vector2 leftTextSize = font.MeasureString(ctfString);
             int leftTextX = (int)(vp.Width * .5f - leftTextSize.X - middleSpacing);
             int rightTextX = (int)(vp.Width * .5f + middleSpacing);
+            
+            // settings-animation
+            animLength = -150;
+            startY = settingOffset - animLength;
+            if (t - startTime < animateInTime)
+                settingOffset = (int)Easing.CubicEaseOut((t - startTime), startY, animLength, animateInTime);
 
             sprite_batch.DrawString(font, "Game mode", new Vector2(leftTextX, settingOffset), Color.White);
             sprite_batch.DrawString(font, (gameMode == 0 ? "< Team Play >" : "< Deathmatch >"), new Vector2(rightTextX, settingOffset), (position.y == (int)options.mode ? new Color(Color.Gold, textOpacity) : Color.White));
