@@ -103,176 +103,85 @@ namespace Fab5.Engine.Subsystems {
         }
 
         private void draw_tri(float x1, float y1, float x2, float y2, float x3, float y3, float u1, float v1, float u2, float v2, float u3, float v3, float n_x, float n_y, float n_z) {
-
-
-
-            var v = new VertexPositionNormalTexture[3];
             var norm = new Vector3(n_x, n_y, n_z);
-            norm.Normalize();
+            //norm.Normalize();
 
-            v[0].Position = new Vector3(x1, y1, 0.0f);
-            v[0].TextureCoordinate = new Vector2(u1, v1);
-            v[0].Normal = norm;
-            v[1].Position = new Vector3(x2, y2, 0.0f);
-            v[1].TextureCoordinate = new Vector2(u2, v2);
-            v[1].Normal = norm;
-            v[2].Position = new Vector3(x3, y3, 0.0f);
-            v[2].TextureCoordinate = new Vector2(u3, v3);
-            v[2].Normal = norm;
+            verts[num_verts++] = new VertexPositionNormalTexture { Position = new Vector3(x1, y1, 0.0f), TextureCoordinate = new Vector2(u1, v1), Normal = norm };
 
-            verts.Add(v[0]);
-            verts.Add(v[1]);
-            verts.Add(v[2]);
+            verts[num_verts++] = new VertexPositionNormalTexture { Position = new Vector3(x2, y2, 0.0f), TextureCoordinate = new Vector2(u2, v2), Normal = norm };
+
+            verts[num_verts++] = new VertexPositionNormalTexture { Position = new Vector3(x3, y3, 0.0f), TextureCoordinate = new Vector2(u3, v3), Normal = norm };
+
+            indices_cache[3*num_indices] = 3*num_indices;
+            indices_cache[3*num_indices+1] = 3*num_indices+1;
+            indices_cache[3*num_indices+2] = 3*num_indices+2;
+            num_indices++;
         }
 
         BasicEffect effect;
-        readonly List<VertexPositionNormalTexture> verts = new List<VertexPositionNormalTexture>();
-        readonly List<VertexPositionNormalTexture> bg_verts = new List<VertexPositionNormalTexture>();
+
 
         readonly Dictionary<int, float> verts_x = new Dictionary<int, float>();
         readonly Dictionary<int, float> verts_y = new Dictionary<int, float>();
         readonly Dictionary<int, float> bg_verts_x = new Dictionary<int, float>();
         readonly Dictionary<int, float> bg_verts_y = new Dictionary<int, float>();
 
-        private void draw_tile_front(Camera cam, int tx, int ty, float x, float y, Texture2D tex, int v) {
-            var one_pixel_x = 2.0f/cam.viewport.Width;
-            var one_pixel_y = 2.0f/cam.viewport.Height;
-
-            x *= one_pixel_x;
-            y *= one_pixel_y;
-            x -= 1.0f;
-            y = 1.0f-y;
-
-            var fac = 0.036f/cam.zoom;// depth factor
-            var dx1 =  -x*fac*cam.zoom;
-            var dy1 = -y*fac*cam.zoom;
-            var dx2 =  -(x+16.0f*one_pixel_x)*fac*cam.zoom;
-            var dy2 = -(y+16.0f*one_pixel_y)*fac*cam.zoom;
-
-            var top = y;
-            var left = x;
-            var right = x+16.0f*one_pixel_x*cam.zoom;
-            var bottom = y-16.0f*one_pixel_y*cam.zoom;
-
-            if (tex != effect.Texture) {
-                effect.Texture = tex;
-            }
-
-            var u1 = ((v*18.0f)+1.0f)/tex.Width;//+((v*18.0f)+1.0f)/tex.Width;
+        private void draw_tile_front(int tx, int ty, int v) {
+            var u1 = ((v*18.0f)+1.0f)/162.0f;//+((v*18.0f)+1.0f)/tex.Width;
             var v1 = 0.0f;
             var u2 = u1;
             var v2 = 1.0f;
-            var u3 = u1+16.0f/tex.Width;
+            var u3 = u1+16.0f/162.0f;
             var v3 = v2;
             var u4 = u3;
             var v4 = v1;
 
-            if (verts_x.ContainsKey(tx)) left = verts_x[tx]; else verts_x[tx] = left;
-            if (verts_x.ContainsKey(tx+1)) right = verts_x[tx+1]; else verts_x[tx+1] = right;
-            if (verts_y.ContainsKey(ty)) top = verts_y[ty]; else verts_y[ty] = top;
-            if (verts_y.ContainsKey(ty+1)) bottom = verts_y[ty+1]; else verts_y[ty+1] = bottom;
+            var left = verts_x[tx];
+            var right = verts_x[tx+1];
+            var top = verts_y[ty];
+            var bottom = verts_y[ty+1];
 
             draw_tri(left, top, right, top, right, bottom, u1, v1, u4, v4, u3, v3, 0.0f, 0.0f, 1.0f);
             draw_tri(right, bottom, left, bottom, left, top, u3, v3, u2, v2, u1, v1, 0.0f, 0.0f, 1.0f);
         }
 
-        private void draw_tile_back(Camera cam, int tx, int ty, float x, float y, Texture2D tex, int v) {
-            var one_pixel_x = 2.0f/cam.viewport.Width;
-            var one_pixel_y = 2.0f/cam.viewport.Height;
+        private void draw_tile_back(int tx, int ty, int v) {
+            var leftz = bg_verts_x[tx];
+            var rightz = bg_verts_x[tx+1];
+            var topz = bg_verts_y[ty];
+            var bottomz = bg_verts_y[ty+1];
 
-            x *= one_pixel_x;
-            y *= one_pixel_y;
-            x -= 1.0f;
-            y = 1.0f-y;
-
-            var fac = 0.036f/cam.zoom;// depth factor
-            var dx1 =  -x*fac*cam.zoom;
-            var dy1 = -y*fac*cam.zoom;
-            var dx2 =  -(x+16.0f*one_pixel_x)*fac*cam.zoom;
-            var dy2 = -(y+16.0f*one_pixel_y)*fac*cam.zoom;
-
-            var top = y;
-            var left = x;
-            var right = x+16.0f*one_pixel_x*cam.zoom;
-            var bottom = y-16.0f*one_pixel_y*cam.zoom;
-
-            var topz = top+dy1;
-            var leftz = left+dx1;
-            var rightz = right+dx2;
-            var bottomz = bottom+dy2;
-
-            if (tex != effect.Texture) {
-                effect.Texture = tex;
-            }
-
-            var u1 = ((v*18.0f)+1.0f)/tex.Width;//+((v*18.0f)+1.0f)/tex.Width;
+            var u1 = ((v*18.0f)+1.0f)/162.0f;//+((v*18.0f)+1.0f)/tex.Width;
             var v1 = 0.0f;
             var u2 = u1;
             var v2 = 1.0f;
-            var u3 = u1+16.0f/tex.Width;
+            var u3 = u1+16.0f/162.0f;
             var v3 = v2;
             var u4 = u3;
             var v4 = v1;
-
-            if (verts_x.ContainsKey(tx)) left = verts_x[tx]; else verts_x[tx] = left;
-            if (verts_x.ContainsKey(tx+1)) right = verts_x[tx+1]; else verts_x[tx+1] = right;
-            if (bg_verts_x.ContainsKey(tx)) leftz = bg_verts_x[tx]; else bg_verts_x[tx] = leftz;
-            if (bg_verts_x.ContainsKey(tx+1)) rightz = bg_verts_x[tx+1]; else bg_verts_x[tx+1] = rightz;
-            if (verts_y.ContainsKey(ty)) top = verts_y[ty]; else verts_y[ty] = top;
-            if (verts_y.ContainsKey(ty+1)) bottom = verts_y[ty+1]; else verts_y[ty+1] = bottom;
-            if (bg_verts_y.ContainsKey(ty)) topz = bg_verts_y[ty]; else bg_verts_y[ty] = topz;
-            if (bg_verts_y.ContainsKey(ty+1)) bottomz = bg_verts_y[ty+1]; else bg_verts_y[ty+1] = bottomz;
 
             draw_tri(leftz, topz, rightz, topz, rightz, bottomz, u1, v1, u4, v4, u3, v3, 0.0f, 0.0f, 1.0f);
             draw_tri(rightz, bottomz, leftz, bottomz, leftz, topz, u3, v3, u2, v2, u1, v1, 0.0f, 0.0f, 1.0f);
         }
 
-        private void draw_tile_sides(Camera cam, int tx, int ty, float x, float y, Texture2D tex, int v) {
-            var one_pixel_x = 2.0f/cam.viewport.Width;
-            var one_pixel_y = 2.0f/cam.viewport.Height;
-
-            x *= one_pixel_x;
-            y *= one_pixel_y;
-            x -= 1.0f;
-            y = 1.0f-y;
-
-            var fac = 0.036f/cam.zoom;// depth factor
-            var dx1 =  -x*fac*cam.zoom;
-            var dy1 = -y*fac*cam.zoom;
-            var dx2 =  -(x+16.0f*one_pixel_x)*fac*cam.zoom;
-            var dy2 = -(y+16.0f*one_pixel_y)*fac*cam.zoom;
-
-            var top = y;
-            var left = x;
-            var right = x+16.0f*one_pixel_x*cam.zoom;
-            var bottom = y-16.0f*one_pixel_y*cam.zoom;
-
-            var topz = top+dy1;
-            var leftz = left+dx1;
-            var rightz = right+dx2;
-            var bottomz = bottom+dy2;
-
-            if (tex != effect.Texture) {
-                effect.Texture = tex;
-            }
-
-            var u1 = ((v*18.0f)+1.0f)/tex.Width;//+((v*18.0f)+1.0f)/tex.Width;
+        private void draw_tile_sides(int tx, int ty, int v) {
+            var u1 = ((v*18.0f)+1.0f)/162.0f;//+((v*18.0f)+1.0f)/tex.Width;
             var v1 = 0.0f;
             var u2 = u1;
             var v2 = 1.0f;
-            var u3 = u1+16.0f/tex.Width;
+            var u3 = u1+16.0f/162.0f;
             var v3 = v2;
             var u4 = u3;
             var v4 = v1;
 
-            if (verts_x.ContainsKey(tx)) left = verts_x[tx]; else verts_x[tx] = left;
-            if (verts_x.ContainsKey(tx+1)) right = verts_x[tx+1]; else verts_x[tx+1] = right;
-            if (bg_verts_x.ContainsKey(tx)) leftz = bg_verts_x[tx]; else bg_verts_x[tx] = leftz;
-            if (bg_verts_x.ContainsKey(tx+1)) rightz = bg_verts_x[tx+1]; else bg_verts_x[tx+1] = rightz;
-            if (verts_y.ContainsKey(ty)) top = verts_y[ty]; else verts_y[ty] = top;
-            if (verts_y.ContainsKey(ty+1)) bottom = verts_y[ty+1]; else verts_y[ty+1] = bottom;
-            if (bg_verts_y.ContainsKey(ty)) topz = bg_verts_y[ty]; else bg_verts_y[ty] = topz;
-            if (bg_verts_y.ContainsKey(ty+1)) bottomz = bg_verts_y[ty+1]; else bg_verts_y[ty+1] = bottomz;
+            var left = verts_x[tx];
+            var right = verts_x[tx+1];
+            var leftz = bg_verts_x[tx];
+            var rightz = bg_verts_x[tx+1];
+            var top = verts_y[ty];
+            var bottom = verts_y[ty+1];
+            var topz = bg_verts_y[ty];
+            var bottomz = bg_verts_y[ty+1];
 
             if (!has_tile(tx-1, ty)) {
                 // left side
@@ -309,6 +218,11 @@ namespace Fab5.Engine.Subsystems {
 
         BlendState light_blend;
 
+        int[] indices_cache = new int[30000];
+        readonly VertexPositionNormalTexture[] verts = new VertexPositionNormalTexture[30000];
+
+        private int num_verts;
+        private int num_indices;
 
         //Texture2D grid_tex;
         private void draw_tile_map(SpriteBatch sprite_batch, Camera camera) {
@@ -350,15 +264,46 @@ namespace Fab5.Engine.Subsystems {
             verts_y.Clear();
             bg_verts_x.Clear();
             bg_verts_y.Clear();
-            verts.Clear();
+
+            num_verts = 0;
+            num_indices = 0;
+
+            var one_pixel_x = 2.0f/camera.viewport.Width;
+            var one_pixel_y = 2.0f/camera.viewport.Height;
+                var fac = 0.036f/camera.zoom;// depth factor
+
+            for (int i = left; i <= right+2; i++) {
+                var xx = (x+xfrac) * one_pixel_x;
+                xx -= 1.0f;
+
+                var dx1 =  -xx*fac*camera.zoom;
+                var vleft = xx;
+                var vleftz = vleft+dx1;
+
+                verts_x[i]      = vleft;
+                bg_verts_x[i]   = vleftz;
+
+                x += tw;
+            }
+
+            var y = 0.0f;
+            for (int j = top; j <= bottom+2; j++) {
+                var yy = (y+yfrac) * one_pixel_y;
+                yy = 1.0f-yy;
+
+                var dy1 = -yy*fac*camera.zoom;
+                var vtop = yy;
+                var vtopz = vtop+dy1;
+
+                verts_y[j]      = vtop;
+                bg_verts_y[j]   = vtopz;
+
+                y += th;
+            }
 
             for (int i = left; i <= right+1; i++) {
-                var y  = 0.0f;
-                var sx = x+xfrac;
-
                 for (int j = top; j <= bottom; j++) {
                     if (i < 0 || i > 255 || j < 0 || j > 255) {
-                        y += th;
                         continue;
                     }
 
@@ -366,38 +311,27 @@ namespace Fab5.Engine.Subsystems {
                     int k = bg_tiles[o];
                     if (k != 0) {
                         var v  = k-1;
-                        var sy = y+yfrac;
-                        draw_tile_back(camera, i, j, sx, sy, bg_tile_tex, v);
+                        draw_tile_back(i, j, v);
                     }
-                    y += th;
                 }
-
-                x += tw;
             }
 
-            if (verts.Count > 0) {
-                var indices = new int[verts.Count];
-                for (int i = 0; i < verts.Count; i++) {
-                    indices[i] = i;
-                }
-
+            if (num_verts > 0) {
+                effect.Texture = bg_tile_tex;
+                var indices = indices_cache;
                 foreach (var pass in effect.CurrentTechnique.Passes) {
                     pass.Apply();
 
-                    Fab5_Game.inst().GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, verts.ToArray(), 0, verts.Count, indices, 0, indices.Length / 3);
+                    Fab5_Game.inst().GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, verts, 0, num_verts, indices, 0, num_indices);
                 }
             }
 
-            verts.Clear();
+            num_verts = 0;
+            num_indices = 0;
 
-            x = 0.0f;
             for (int i = left; i <= right+1; i++) {
-                var y  = 0.0f;
-                var sx = x+xfrac;
-
                 for (int j = top; j <= bottom; j++) {
                     if (i < 0 || i > 255 || j < 0 || j > 255) {
-                        y += th;
                         continue;
                     }
 
@@ -405,103 +339,73 @@ namespace Fab5.Engine.Subsystems {
                     int k = tiles[o];
                     if (k != 0 && k < 10) {// 10 and up are not visible walls
                         var v  = k-1;
-                        var sy = y+yfrac;
-                        draw_tile_sides(camera, i, j, sx, sy, tile_tex, v);
+                        draw_tile_sides(i, j, v);
                     }
-
-                    y += th;
                 }
-
-                x += tw;
             }
 
-            if (verts.Count > 0) {
-                var indices = new int[verts.Count];
-                for (int i = 0; i < verts.Count; i++) {
-                    indices[i] = i;
-                }
-
+            if (num_verts > 0) {
+                effect.Texture = tile_tex;
+                var indices = indices_cache;
                 foreach (var pass in effect.CurrentTechnique.Passes) {
                     pass.Apply();
 
-                    Fab5_Game.inst().GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, verts.ToArray(), 0, verts.Count, indices, 0, indices.Length / 3);
+                    Fab5_Game.inst().GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, verts, 0, num_verts, indices, 0, num_indices);
                 }
             }
 
-            sprite_batch.Begin(SpriteSortMode.Deferred, light_blend);
+            var lights = Fab5_Game.inst().get_entities_fast(typeof (Light_Source));
+            if (lights.Count > 0) {
+                sprite_batch.Begin(SpriteSortMode.Deferred, light_blend);
 
-            foreach (var e in Fab5_Game.inst().get_entities_fast(typeof (Light_Source))) {
-                var light = e.get_component<Light_Source>();
-                var pos   = e.get_component<Position>();
+                foreach (var e in lights) {
+                    var light = e.get_component<Light_Source>();
+                    var pos   = e.get_component<Position>();
 
-                var sx = 0.99f*(pos.x - camera.position.x)*camera.zoom + camera.viewport.Width * 0.5f;
-                var sy = 0.99f*(pos.y - camera.position.y)*camera.zoom + camera.viewport.Height * 0.5f;
+                    var sx = 0.99f*(pos.x - camera.position.x)*camera.zoom + camera.viewport.Width * 0.5f;
+                    var sy = 0.99f*(pos.y - camera.position.y)*camera.zoom + camera.viewport.Height * 0.5f;
 
-                sprite_batch.Draw(light_tex,
-                                  new Vector2(sx, sy),
-                                  null,
-                                  light.color,
-                                  0.0f,
-                                  new Vector2(light_tex.Width*0.5f, light_tex.Height*0.5f),
-                                  light.size,
-                                  SpriteEffects.None,
-                                  0.0f);
+                    sprite_batch.Draw(light_tex,
+                                      new Vector2(sx, sy),
+                                      null,
+                                      light.color,
+                                      0.0f,
+                                      new Vector2(light_tex.Width*0.5f, light_tex.Height*0.5f),
+                                      light.size,
+                                      SpriteEffects.None,
+                                      0.0f);
+                }
+
+                sprite_batch.End();
+                Fab5_Game.inst().GraphicsDevice.BlendState = BlendState.AlphaBlend;
             }
 
-            sprite_batch.End();
-            Fab5_Game.inst().GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            num_verts = 0;
+            num_indices = 0;
 
-            verts.Clear();
-
-            //sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            x = 0.0f;
             for (int i = left; i <= right; i++) {
-                var y = 0.0f;
-                var sx = x+xfrac;
-
                 for (int j = top; j <= bottom; j++) {
                     if (i < 0 || i > 255 || j < 0 || j > 255) {
-                        y += th;
                         continue;
                     }
 
                     int o = i + (j<<8);
-
                     int k = tiles[o];
                     if (k != 0 && k < 10) {// 10 and up are not visible walls
                         var v = k-1;
-                        var sy = y+yfrac;
-
-                        /*sprite_batch.Draw(tile_tex,
-                                          new Vector2(sx, sy),
-                                          new Rectangle(18*v+1, 0, 16, 16),
-                                          Color.White,
-                                          0.0f,
-                                          Vector2.Zero,
-                                          camera.zoom,
-                                          SpriteEffects.None,
-                                          0.5f);*/
-                        draw_tile_front(camera, i, j, sx, sy, tile_tex, v);
+                        draw_tile_front(i, j, v);
                     }
-
-                    y += th;
                 }
-
-                x += tw;
             }
-            //sprite_batch.End();
 
 
-            if (verts.Count > 0) {
-                var indices = new int[verts.Count];
-                for (int i = 0; i < verts.Count; i++) {
-                    indices[i] = i;
-                }
-
+            if (num_verts > 0) {
+                effect.Texture = tile_tex;
+                var indices = indices_cache;
                 foreach (var pass in effect.CurrentTechnique.Passes) {
                     pass.Apply();
 
-                    Fab5_Game.inst().GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, verts.ToArray(), 0, verts.Count, indices, 0, indices.Length / 3);
+                    Fab5_Game.inst().GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, verts, 0, num_verts, indices, 0, num_indices);
                 }
             }
 
@@ -647,10 +551,9 @@ namespace Fab5.Engine.Subsystems {
             }
 
             prevPlayerNumber = currentPlayerNumber;
-            System.Console.WriteLine("hej");
 
-            backbuffer_target = new RenderTarget2D(Fab5_Game.inst().GraphicsDevice, defaultViewport.Width, defaultViewport.Height, false, SurfaceFormat.Color, DepthFormat.None, 4, RenderTargetUsage.PreserveContents);
-            render_target = new RenderTarget2D(Fab5_Game.inst().GraphicsDevice, viewports[0].Width, viewports[0].Height, false, SurfaceFormat.Color, DepthFormat.None, 4, RenderTargetUsage.PreserveContents);
+            backbuffer_target = new RenderTarget2D(Fab5_Game.inst().GraphicsDevice, defaultViewport.Width, defaultViewport.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            render_target = new RenderTarget2D(Fab5_Game.inst().GraphicsDevice, viewports[0].Width, viewports[0].Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
         }
 
         public override void update(float t, float dt) {
