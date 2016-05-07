@@ -124,7 +124,7 @@ namespace Fab5.Engine.Subsystems {
 
         BasicEffect effect;
         VertexPositionColorTexture[] verts = new VertexPositionColorTexture[3];
-        Texture2D wp_tex;
+
         private void draw_tile_sides(Camera cam, int tx, int ty, float x, float y, Texture2D tex, int v) {
             var one_pixel_x = 2.0f/1920.0f;
             var one_pixel_y = 2.0f/1080.0f;
@@ -151,17 +151,12 @@ namespace Fab5.Engine.Subsystems {
 
             if (effect == null) {
                 effect = new BasicEffect(Fab5_Game.inst().GraphicsDevice);
+                effect.Texture = tex;
+                effect.LightingEnabled = false;
+                effect.TextureEnabled = true;
+                effect.VertexColorEnabled = true;
             }
 
-            if (wp_tex == null) {
-                wp_tex = new Texture2D(Fab5_Game.inst().GraphicsDevice, 1, 1);
-                wp_tex.SetData(new Color[] { Color.Red });
-            }
-
-            effect.Texture = tex;
-            effect.LightingEnabled = false;
-            effect.TextureEnabled = true;
-            effect.VertexColorEnabled = true;
 
 
             var u1 = ((v*18.0f)+1.0f)/tex.Width;//+((v*18.0f)+1.0f)/tex.Width;
