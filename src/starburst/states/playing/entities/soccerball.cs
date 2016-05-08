@@ -58,6 +58,7 @@ public static class Soccer_Ball {
             },
             new Bounding_Circle() { radius = 17.0f },
             new Mass() { mass = 15.0f, restitution_coeff = 0.92f, drag_coeff = 0.1f },
+            new Light_Source() { color = new Color(1.0f, 0.8f, 0.3f), intensity = 0.5f },
 
             new Brain {
                 think_interval = 1.0f/2.0f, // @To-do: Is this enough?

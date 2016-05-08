@@ -137,7 +137,8 @@
                 new Mass() { mass = 15.0f, restitution_coeff = 0.6f, friction = 0.1f },
                 new Primary_Weapon(),
                 new Secondary_Weapon(),
-                new Score()
+                new Score(),
+                /*new Light_Source { color = new Color(1.0f, 0.9f, 0.8f), intensity = 0.6f }*/
             };
         }
     }

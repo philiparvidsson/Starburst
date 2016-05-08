@@ -222,7 +222,7 @@ public class Collision_Solver : Subsystem {
         if (y > 255) return false;
 
         var k = tile_map.tiles[x+y*256];
-        return k >  0 && k < 6; // 6 and up are specials
+        return k >  0 && k < 7; // 7 and up are specials
     }
 
     private bool check_left_right(Entity e1, int x, int y) {

@@ -226,13 +226,41 @@ namespace Fab5.Engine.Subsystems {
         public static int tri_counter;
         public static int tri_frame_counter;
 
-        readonly VertexPositionNormalTexture[] verts = new VertexPositionNormalTexture[30000];
+        readonly VertexPositionNormalTexture[] verts = new VertexPositionNormalTexture[50000];
 
         private int num_verts;
         private int num_tris;
 
+        private void draw_lights(SpriteBatch sprite_batch, Camera camera, float fac) {
+            var lights = Fab5_Game.inst().get_entities_fast(typeof (Light_Source));
+            if (lights.Count > 0) {
+                sprite_batch.Begin(SpriteSortMode.Deferred, light_blend);
+
+                foreach (var e in lights) {
+                    var light = e.get_component<Light_Source>();
+                    var pos   = e.get_component<Position>();
+
+                    var sx = 0.99f*(pos.x - camera.position.x)*camera.zoom + camera.viewport.Width * 0.5f;
+                    var sy = 0.99f*(pos.y - camera.position.y)*camera.zoom + camera.viewport.Height * 0.5f;
+
+                    sprite_batch.Draw(light_tex,
+                                      new Vector2(sx, sy),
+                                      null,
+                                      light.color*light.intensity*fac,
+                                      0.0f,
+                                      new Vector2(light_tex.Width*0.5f, light_tex.Height*0.5f),
+                                      light.size,
+                                      SpriteEffects.None,
+                                      0.0f);
+                }
+
+                sprite_batch.End();
+                Fab5_Game.inst().GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            }
+        }
+
         //Texture2D grid_tex;
-        private void draw_tile_map(SpriteBatch sprite_batch, Camera camera) {
+        private void draw_tile_map(SpriteBatch sprite_batch, Camera camera, int num_entities, List<Entity> entities) {
             float tw        = 16.0f;
             float th        = 16.0f;
             float w         = camera.viewport.Width  / camera.zoom;
@@ -282,7 +310,7 @@ namespace Fab5.Engine.Subsystems {
                 yy = 1.0f-yy;
 
                 v_y[j] = yy;
-                bg_v_y[j] = yy+yy*depth;
+                bg_v_y[j] = yy-yy*depth;
 
                 y += th;
             }
@@ -342,31 +370,9 @@ namespace Fab5.Engine.Subsystems {
                 }
             }
 
-            var lights = Fab5_Game.inst().get_entities_fast(typeof (Light_Source));
-            if (lights.Count > 0) {
-                sprite_batch.Begin(SpriteSortMode.Deferred, light_blend);
+                drawSprites(sprite_batch, camera, num_entities, entities, 0.0f);
 
-                foreach (var e in lights) {
-                    var light = e.get_component<Light_Source>();
-                    var pos   = e.get_component<Position>();
-
-                    var sx = 0.99f*(pos.x - camera.position.x)*camera.zoom + camera.viewport.Width * 0.5f;
-                    var sy = 0.99f*(pos.y - camera.position.y)*camera.zoom + camera.viewport.Height * 0.5f;
-
-                    sprite_batch.Draw(light_tex,
-                                      new Vector2(sx, sy),
-                                      null,
-                                      light.color,
-                                      0.0f,
-                                      new Vector2(light_tex.Width*0.5f, light_tex.Height*0.5f),
-                                      light.size,
-                                      SpriteEffects.None,
-                                      0.0f);
-                }
-
-                sprite_batch.End();
-                Fab5_Game.inst().GraphicsDevice.BlendState = BlendState.AlphaBlend;
-            }
+            draw_lights(sprite_batch, camera, 1.0f);
 
             num_verts = 0;
             num_tris  = 0;
@@ -680,7 +686,7 @@ namespace Fab5.Engine.Subsystems {
 
             var hooks = Fab5_Game.inst().get_entities_fast(typeof (Post_Render_Hook));
             for (int p = 0; p < currentPlayerNumber; p++) {
-                draw_tile_map(sprite_batch, cameras[p]);
+                draw_tile_map(sprite_batch, cameras[p], num_entities, entities);
             }
             tri_frame_counter++;
 
@@ -712,7 +718,7 @@ namespace Fab5.Engine.Subsystems {
                 sprite_batch.Draw((Texture2D)current.render_target, Vector2.Zero);
                 sprite_batch.End();
 
-                drawSprites(sprite_batch, current, num_entities, entities, 0.0f);
+                draw_lights(sprite_batch, current, 0.55f);
 
                 sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
