@@ -33,6 +33,7 @@ namespace Fab5.Engine.Components {
         public Viewport viewport;
         public int index;
         public Velocity velocity;
+        public RenderTarget2D render_target;
 
         float moving_fast_time = 0.0f;
         float moving_slow_time = 999.0f;

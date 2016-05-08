@@ -227,7 +227,7 @@ namespace Fab5.Engine.Subsystems {
         //Texture2D grid_tex;
         private void draw_tile_map(SpriteBatch sprite_batch, Camera camera) {
 
-            Fab5_Game.inst().GraphicsDevice.SetRenderTarget(render_target);
+            Fab5_Game.inst().GraphicsDevice.SetRenderTarget(camera.render_target);
 
             Fab5_Game.inst().GraphicsDevice.BlendState = BlendState.AlphaBlend;
             float tw     = 16.0f;
@@ -458,7 +458,6 @@ namespace Fab5.Engine.Subsystems {
             System.Console.WriteLine(effect.DirectionalLight0.Direction);
         }
 
-        private RenderTarget2D render_target;
         private RenderTarget2D backbuffer_target;
 
         private void updatePlayers() {
@@ -548,12 +547,13 @@ namespace Fab5.Engine.Subsystems {
             for (int i = 0; i < currentPlayerNumber; i++) {
                 cameras[i] = new Camera(viewports[i]) { zoom = zoom };
                 cameras[i].index = i+1;
+                cameras[i].render_target = new RenderTarget2D(Fab5_Game.inst().GraphicsDevice, viewports[0].Width, viewports[0].Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
             }
 
             prevPlayerNumber = currentPlayerNumber;
 
             backbuffer_target = new RenderTarget2D(Fab5_Game.inst().GraphicsDevice, defaultViewport.Width, defaultViewport.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-            render_target = new RenderTarget2D(Fab5_Game.inst().GraphicsDevice, viewports[0].Width, viewports[0].Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+
         }
 
         public override void update(float t, float dt) {
@@ -599,12 +599,12 @@ namespace Fab5.Engine.Subsystems {
                 var d_x = player2_pos.x - current.position.x;
                 var d_y = player2_pos.y - current.position.y;
 
-                var d = (float)Math.Sqrt(d_x*d_x + d_y*d_y);
-
                 if (Math.Abs(d_x) < current.viewport.Width*0.5f/current.zoom && Math.Abs(d_y) < current.viewport.Height*0.5f/current.zoom) {
                     // other player is on same screen
                     continue;
                 }
+
+                var d = (float)Math.Sqrt(d_x*d_x + d_y*d_y);
 
                 d_x /= d;
                 d_y /= d;
@@ -634,10 +634,6 @@ namespace Fab5.Engine.Subsystems {
         List<Entity> temp_ = new List<Entity>(256);
         public override void draw(float t, float dt)
         {
-            sprite_batch.GraphicsDevice.SetRenderTarget(backbuffer_target);
-            sprite_batch.GraphicsDevice.Clear(Color.Black);
-
-
             players              = Fab5_Game.inst().get_entities_fast(typeof(Input));
             currentPlayerNumber = players.Count;
 
@@ -699,12 +695,15 @@ namespace Fab5.Engine.Subsystems {
             }
 
             var hooks = Fab5_Game.inst().get_entities_fast(typeof (Post_Render_Hook));
+            for (int p = 0; p < currentPlayerNumber; p++) {
+                draw_tile_map(sprite_batch, cameras[p]);
+            }
 
+            sprite_batch.GraphicsDevice.SetRenderTarget(backbuffer_target);
+            sprite_batch.GraphicsDevice.Clear(Color.Black);
             for (int p = 0; p < currentPlayerNumber; p++) {
                 Camera current = cameras[p];
 
-
-                sprite_batch.GraphicsDevice.SetRenderTarget(backbuffer_target);
                 sprite_batch.GraphicsDevice.Viewport = current.viewport;
 
                 var currentPlayer         = players[p];
@@ -722,15 +721,10 @@ namespace Fab5.Engine.Subsystems {
                 if (current.position.y + 0.5f*current.viewport.Height*inv_zoom >  2048.0f) current.position.y = 2048.0f - 0.5f*current.viewport.Height/current.zoom;
                 if (current.position.y - 0.5f*current.viewport.Height*inv_zoom < -2048.0f) current.position.y = -2048.0f + 0.5f*current.viewport.Height*inv_zoom;
 
-
-                draw_tile_map(sprite_batch, current);
-                sprite_batch.GraphicsDevice.SetRenderTarget(backbuffer_target);
-                sprite_batch.GraphicsDevice.Viewport = current.viewport;
-
                 draw_backdrop(sprite_batch, current);
 
                 sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-                sprite_batch.Draw((Texture2D)render_target, Vector2.Zero);
+                sprite_batch.Draw((Texture2D)current.render_target, Vector2.Zero);
                 sprite_batch.End();
 
                 drawSprites(sprite_batch, current, num_entities, entities, 0.0f);
@@ -748,9 +742,8 @@ namespace Fab5.Engine.Subsystems {
                 sprite_batch.End();
             }
 
-
             sprite_batch.GraphicsDevice.SetRenderTarget(null);
-            sprite_batch.GraphicsDevice.Viewport = defaultViewport;
+//            sprite_batch.GraphicsDevice.Viewport = defaultViewport;
 
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
             sprite_batch.Draw((Texture2D)backbuffer_target, Vector2.Zero);
