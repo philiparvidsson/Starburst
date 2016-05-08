@@ -176,9 +176,7 @@ namespace Fab5.Engine.Subsystems {
                 }
             }
 
-
             // sides
-
             for (int i = 0; i < 256; i++) {
                 for (int j = 0; j < 256; j++) {
                     int key = ((i>>5)<<8)|(j>>5);
@@ -278,9 +276,6 @@ namespace Fab5.Engine.Subsystems {
                     }
                 }
             }
-
-            //vb_tiles_sides = new VertexBuffer(Fab5_Game.inst().GraphicsDevice, typeof (VertexPositionNormalTexture), verts.Count, BufferUsage.WriteOnly);
-            //vb_tiles_sides.SetData(verts.ToArray());
         }
 
         private void draw_backdrop(SpriteBatch sprite_batch, Camera camera) {
@@ -340,7 +335,6 @@ namespace Fab5.Engine.Subsystems {
 
         BasicEffect effect;
 
-
         private bool has_tile(int x, int y) {
             if (x < 0 || x > 255 || y < 0 || y > 255) return false;
             var k = tile_map.tiles[x+(y<<8)];
@@ -368,6 +362,10 @@ namespace Fab5.Engine.Subsystems {
                     var sprite = e.get_component<Sprite>();
 
                     var pos = e.get_component<Position>();
+
+                    if (sprite == null || pos == null) {
+                        continue;
+                    }
 
                     var r = 0.0f;
                     var a = e.get_component<Angle>();
@@ -435,6 +433,10 @@ namespace Fab5.Engine.Subsystems {
                     var light = e.get_component<Light_Source>();
                     var pos   = e.get_component<Position>();
 
+                    if (pos == null) {
+                        continue;
+                    }
+
                     var sx = 0.99f*(pos.x - camera.position.x)*camera.zoom + hw;
                     var sy = 0.99f*(pos.y - camera.position.y)*camera.zoom + hh;
 
@@ -444,7 +446,7 @@ namespace Fab5.Engine.Subsystems {
                                       light.color*light.intensity*fac,
                                       0.0f,
                                       origin,
-                                      light.size,
+                                      light.size*camera.zoom,
                                       SpriteEffects.None,
                                       0.0f);
                 }
@@ -515,6 +517,7 @@ namespace Fab5.Engine.Subsystems {
             drawSprites(sprite_batch, camera, num_entities, entities, 0.0f);
 
             draw_lights(sprite_batch, camera, 1.0f);
+            Fab5_Game.inst().GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             effect.Texture = tile_map.tex;
             for (int i = left; i <= right; i++) {
@@ -566,12 +569,11 @@ namespace Fab5.Engine.Subsystems {
             updatePlayers();
             this.hudsystem_instance = new Hudsystem(sprite_batch, tile_map);
 
-
             effect = new BasicEffect(Fab5_Game.inst().GraphicsDevice);
-            effect.LightingEnabled = true;
-            effect.TextureEnabled = true;
-            effect.VertexColorEnabled = false;
+            effect.LightingEnabled        = true;
             effect.PreferPerPixelLighting = true;
+            effect.TextureEnabled         = true;
+            effect.VertexColorEnabled     = false;
 
             effect.AmbientLightColor = new Vector3(0.33f, 0.3f, 0.6f);
 
@@ -581,6 +583,7 @@ namespace Fab5.Engine.Subsystems {
             var dir = new Vector3(-1.0f, -1.0f, 7.0f);
             dir.Normalize();
             effect.DirectionalLight0.Direction = dir;
+
             generate_3d_map();
         }
 
