@@ -223,6 +223,9 @@ namespace Fab5.Engine.Subsystems {
 
         BlendState light_blend;
 
+        public static int tri_counter;
+        public static int tri_frame_counter;
+
         readonly VertexPositionNormalTexture[] verts = new VertexPositionNormalTexture[30000];
 
         private int num_verts;
@@ -306,6 +309,7 @@ namespace Fab5.Engine.Subsystems {
             }
 
             if (num_tris > 0) {
+                tri_counter += num_tris;
                 effect.Texture = bg_tile_tex;
                 foreach (var pass in effect.CurrentTechnique.Passes) {
                     pass.Apply();
@@ -330,6 +334,7 @@ namespace Fab5.Engine.Subsystems {
             }
 
             if (num_tris > 0) {
+                tri_counter += num_tris;
                 effect.Texture = tile_tex;
                 foreach (var pass in effect.CurrentTechnique.Passes) {
                     pass.Apply();
@@ -381,6 +386,7 @@ namespace Fab5.Engine.Subsystems {
 
 
             if (num_tris > 0) {
+                tri_counter += num_tris;
                 effect.Texture = tile_tex;
                 foreach (var pass in effect.CurrentTechnique.Passes) {
                     pass.Apply();
@@ -676,6 +682,7 @@ namespace Fab5.Engine.Subsystems {
             for (int p = 0; p < currentPlayerNumber; p++) {
                 draw_tile_map(sprite_batch, cameras[p]);
             }
+            tri_frame_counter++;
 
             sprite_batch.GraphicsDevice.SetRenderTarget(backbuffer_target);
             sprite_batch.GraphicsDevice.Clear(Color.Black);
