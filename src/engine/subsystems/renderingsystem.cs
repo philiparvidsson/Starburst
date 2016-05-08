@@ -363,6 +363,10 @@ namespace Fab5.Engine.Subsystems {
 
                     var pos = e.get_component<Position>();
 
+                    if (sprite == null || pos == null) {
+                        continue;
+                    }
+
                     var r = 0.0f;
                     var a = e.get_component<Angle>();
                     if (a != null) {
@@ -429,6 +433,10 @@ namespace Fab5.Engine.Subsystems {
                     var light = e.get_component<Light_Source>();
                     var pos   = e.get_component<Position>();
 
+                    if (pos == null) {
+                        continue;
+                    }
+
                     var sx = 0.99f*(pos.x - camera.position.x)*camera.zoom + hw;
                     var sy = 0.99f*(pos.y - camera.position.y)*camera.zoom + hh;
 
@@ -438,7 +446,7 @@ namespace Fab5.Engine.Subsystems {
                                       light.color*light.intensity*fac,
                                       0.0f,
                                       origin,
-                                      light.size,
+                                      light.size*camera.zoom,
                                       SpriteEffects.None,
                                       0.0f);
                 }
