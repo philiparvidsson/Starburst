@@ -13,7 +13,6 @@ namespace Fab5.Engine.Subsystems {
 
         float display_begins;
         int display_num_entities;
-        float  display_tris;
 
         public override void on_message(string msg, dynamic data) {
             if (msg == "set_w_title" && Fab5_Game.inst().Window != null) {
@@ -46,13 +45,9 @@ namespace Fab5.Engine.Subsystems {
 
                     display_fps = (int)fps.frameRate;
                     display_begins = (float)Rendering_System.num_begins / (float)Rendering_System.num_draws;
-                    display_tris = (float)Rendering_System.tri_counter / (float)Rendering_System.tri_frame_counter;
 
                     Rendering_System.num_begins = 0;
                     Rendering_System.num_draws = 0;
-
-                    Rendering_System.tri_counter = 0;
-                    Rendering_System.tri_frame_counter = 0;
 
                     Fab5_Game.inst().message("set_w_title", new { str = " * Starburst * " + fps.frameRate });
                     display_num_entities = state.get_num_entities();
@@ -63,7 +58,6 @@ namespace Fab5.Engine.Subsystems {
             GFX_Util.draw_def_text(sprite_batch, "fps: " + display_fps, 10, 90);
             GFX_Util.draw_def_text(sprite_batch, "begins: " + string.Format("{0:0.00}", display_begins), 10, 126);
             GFX_Util.draw_def_text(sprite_batch, "entities: " + display_num_entities, 10, 162);
-            GFX_Util.draw_def_text(sprite_batch, "triangles: " + display_tris, 10, 202);
             sprite_batch.End();
         }
 

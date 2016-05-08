@@ -18,13 +18,14 @@ public static class Blue_Fountain {
         var tex  = Starburst.inst().get_content<Texture2D>("particle");
 
         return new Component[] {
+            new Light_Source { color = Color.Blue, intensity = 0.1f, size = 1.0f },
             pos,
             new Particle_Emitter() {
                 emit_fn = () => {
                     var theta1 = 2.0f * 3.1415f * (float)rand.NextDouble();
                     var theta2 = 2.0f * 3.1415f * (float)rand.NextDouble();
                     var radius = 13.0f          * (float)rand.NextDouble();
-                    var speed  = 200.0f         * (float)(rand.NextDouble()+0.05);
+                    var speed  = 50.0f          * (float)(rand.NextDouble()+0.05);
 
                     return new Component[] {
                         new Sprite {
@@ -34,7 +35,6 @@ public static class Blue_Fountain {
                             scale       = 2.5f,
                             texture     = tex
                         },
-                        mass,
                         new Position { x = pos.x + (float)Math.Cos(theta1) * radius,
                                        y = pos.y + (float)Math.Sin(theta1) * radius },
                         new Velocity { x = (float)Math.Cos(theta2) * speed,
