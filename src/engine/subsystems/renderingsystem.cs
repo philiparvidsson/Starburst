@@ -366,26 +366,25 @@ namespace Fab5.Engine.Subsystems {
 
                     var sy = 0.96f*(pos.y - camera.position.y)*camera.zoom + hh;
 
-            int frame_width  = sprite.frame_width;
-            int frame_height = sprite.frame_height;
+                    int frame_width  = sprite.frame_width;
+                    int frame_height = sprite.frame_height;
 
-            int frame_x = sprite.frame_x;
-            int frame_y = sprite.frame_y;
+                    int frame_x = sprite.frame_x;
+                    int frame_y = sprite.frame_y;
 
-            if (frame_width == 0.0f) {
-                frame_width  = sprite.texture.Width;
-                frame_height = sprite.texture.Height;
-            }
+                    if (frame_width == 0.0f) {
+                        frame_width  = sprite.texture.Width;
+                        frame_height = sprite.texture.Height;
+                    }
 
-            Rectangle source_rect;
+                    Rectangle source_rect;
 
-            if (sprite.num_frames > 1) {
-                source_rect = new Rectangle(sprite.frame_x, sprite.frame_y, frame_width, frame_height);
-            }
-            else {
-                source_rect = e.get_component<DrawArea>()?.rectangle ?? new Rectangle(0, 0, frame_width, frame_height);
-            }
-
+                    if (sprite.num_frames > 1) {
+                        source_rect = new Rectangle(sprite.frame_x, sprite.frame_y, frame_width, frame_height);
+                    }
+                    else {
+                        source_rect = e.get_component<DrawArea>()?.rectangle ?? new Rectangle(0, 0, frame_width, frame_height);
+                    }
 
                     sprite_batch.Draw(sprite.texture,
                                       new Vector2(sx, sy),
