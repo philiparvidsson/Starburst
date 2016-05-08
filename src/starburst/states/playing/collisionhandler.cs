@@ -551,7 +551,10 @@ namespace Fab5.Starburst.States.Playing {
                             var s    = new [] { "one", "two", "three", "four" };
                             var text = string.Format("Killed player {0}!", s[playerShip.pindex-1]);
                             var ts    = GFX_Util.measure_string(text);
+                            String points = "+250";
+                            var ps    = GFX_Util.measure_string(points);
                             GFX_Util.draw_def_text(sprite_batch, text, (camera.viewport.Width-ts.X)*0.5f, 90.0f, a);
+                            GFX_Util.draw_def_text(sprite_batch, points, (camera.viewport.Width-ps.X)*0.5f, 90.0f + ts.Y + 10, a);
                         }
                     },
 

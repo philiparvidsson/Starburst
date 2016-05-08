@@ -64,32 +64,36 @@
         }
 
         private void draw_powerup_inv(Camera cam, Entity player) {
-            int size = 64;
+            int size = Math.Min((int)(cam.viewport.Width / 15), 92);
+            //int size = 64;
+            int smallSize = (int)(size * .75);
             int spacing = 8;
             var si = player.get_component<Ship_Info>();
             int num_inv = si.max_powerups_inv;
 
-            int x = (int)(cam.viewport.Width * 0.5f - 0.5f*(num_inv*size+(num_inv-1)*spacing));
+            int x = (int)(cam.viewport.Width * 0.5f - 0.5f*((num_inv-1)*smallSize+size+(num_inv-1)*spacing));
             int y = 40;
 
             for (int i = 0; i < num_inv; i++) {
-                GFX_Util.fill_rect(sprite_batch, new Rectangle(x, y, size, size), Color.Black * 0.5f);
+                int mySize = (i == si.powerup_inv_index ? size : smallSize);
+                int myY = (int)(i == si.powerup_inv_index ? y - (size - smallSize) * .5f : y);
+                GFX_Util.fill_rect(sprite_batch, new Rectangle(x, myY, mySize, mySize), Color.Black * 0.5f);
 
                 if (si.powerup_inv[i] != null) {
-                    sprite_batch.Draw(si.powerup_inv[i].icon, new Vector2(x, y), Color.White);
+                    sprite_batch.Draw(si.powerup_inv[i].icon, new Rectangle(x, myY, mySize, mySize), Color.White);
                     //GFX_Util.fill_rect(sprite_batch, new Rectangle(x, y, 15, 15), Color.White);
                 }
 
-                if (i == si.powerup_inv_index) {
-                    var col = Color.White;
+                //if (i == si.powerup_inv_index) {
+                    var col = (i == si.powerup_inv_index ? Color.White : Color.Gray);
                     var border = 2;
-                    GFX_Util.fill_rect(sprite_batch, new Rectangle(x, y, border, size), col);
-                    GFX_Util.fill_rect(sprite_batch, new Rectangle(x+size-border, y, border, size), col);
-                    GFX_Util.fill_rect(sprite_batch, new Rectangle(x, y, size, border), col);
-                    GFX_Util.fill_rect(sprite_batch, new Rectangle(x, y+size-border, size, border), col);
-                }
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(x, myY, border, mySize), col);
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(x+ mySize - border, myY, border, mySize), col);
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(x, myY, mySize, border), col);
+                    GFX_Util.fill_rect(sprite_batch, new Rectangle(x, myY + mySize - border, mySize, border), col);
+                //}
 
-                x += size + spacing;
+                x += mySize + spacing;
             }
 
 
