@@ -24,6 +24,7 @@ namespace Fab5.Starburst {
                 GraphicsMgr.PreferredBackBufferHeight = 1080;
             }
 
+            GraphicsMgr.GraphicsProfile = GraphicsProfile.HiDef;
             GraphicsMgr.PreferMultiSampling = true;
             GraphicsMgr.GraphicsDevice.RasterizerState = new RasterizerState { MultiSampleAntiAlias = true };
 
