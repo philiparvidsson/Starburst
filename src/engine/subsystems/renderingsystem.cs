@@ -405,7 +405,7 @@ namespace Fab5.Engine.Subsystems {
                                       Color.Black * 0.4f,
                                       r,
                                       new Vector2(source_rect.Width * 0.5f, source_rect.Height * 0.5f),
-                                      new Vector2(sprite.scale_x, sprite.scale_y)*1.2f*camera.zoom,
+                                      new Vector2(sprite.scale_x, sprite.scale_y)*0.92f*camera.zoom,
                                       SpriteEffects.None,
                                       0.0f);
 
