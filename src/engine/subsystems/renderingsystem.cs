@@ -57,7 +57,7 @@ namespace Fab5.Engine.Subsystems {
 
         private void generate_3d_map() {
             var znear = 4.0f;
-            var zfar = 4.12f;
+            var zfar = 4.15f;
 
             Dictionary<int, List<VertexPositionNormalTexture>> verts_back = new Dictionary<int, List<VertexPositionNormalTexture>>();
             Dictionary<int, List<VertexPositionNormalTexture>> verts_front = new Dictionary<int, List<VertexPositionNormalTexture>>();
@@ -210,7 +210,7 @@ namespace Fab5.Engine.Subsystems {
 
                             verts.Add(new VertexPositionNormalTexture { Position = new Vector3(left, top, z), TextureCoordinate = new Vector2(u1, v1), Normal = norm });
                             verts.Add(new VertexPositionNormalTexture { Position = new Vector3(left, bottom, z), TextureCoordinate = new Vector2(u2, v2), Normal = norm });
-                            verts.Add(new VertexPositionNormalTexture { Position = new Vector3(left, bottom, zf), TextureCoordinate = new Vector2(u4, v4), Normal = norm });
+                            verts.Add(new VertexPositionNormalTexture { Position = new Vector3(left, bottom, zf), TextureCoordinate = new Vector2(u3, v3), Normal = norm });
 
                             verts.Add(new VertexPositionNormalTexture { Position = new Vector3(left, bottom, zf), TextureCoordinate = new Vector2(u3, v3), Normal = norm });
                             verts.Add(new VertexPositionNormalTexture { Position = new Vector3(left, top, zf), TextureCoordinate = new Vector2(u4, v4), Normal = norm });
