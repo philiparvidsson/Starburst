@@ -45,7 +45,8 @@ public static class Asteroid {
                 color = col
             },
             new Bounding_Circle() { radius = 50.0f * ascale },
-            new Mass() { mass = (30.0f * (ascale+1.0f)*(ascale+1.0f))*10.0f }
+            new Mass() { mass = (30.0f * (ascale+1.0f)*(ascale+1.0f))*10.0f },
+            new Shadow()
         };
     }
 

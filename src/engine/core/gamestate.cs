@@ -226,7 +226,7 @@ public abstract class Game_State {
             //sprites.Sort(sort_on_texture);
             //sprites.Sort(sort_on_blend_mode);
             int n = sprites.Count-1;
-            for (int i = (n-1); i >= 0; i--) {
+            for (int i = 0; i > n; i++) {
                 var j = (i+1);
                 var a = sprites[i].get_component<Sprite>();
                 var b = sprites[j].get_component<Sprite>();

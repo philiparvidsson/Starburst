@@ -12,7 +12,7 @@ using System;
 
 public class Bouncy_Bullets_Powerup : Powerup_Impl {
     public override Texture2D icon {
-        get { return Starburst.inst().get_content<Texture2D>("powerups/turbo"); }
+        get { return Starburst.inst().get_content<Texture2D>("powerups/bouncybullets"); }
     }
 
     public override void end() {

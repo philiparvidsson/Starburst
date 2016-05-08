@@ -13,12 +13,11 @@ public static class Red_Fountain {
     private static System.Random rand = new System.Random();
 
     public static Component[] create_components() {
-        var mass = new Mass { drag_coeff = 7.0f };
         var pos  = new Position { x = 0.0f, y = 0.0f };
         var tex  = Starburst.inst().get_content<Texture2D>("particle");
 
         return new Component[] {
-            new Light_Source { color = Color.Red, intensity = 0.1f, size = 1.0f },
+            new Light_Source { color = Color.Red, intensity = 0.1f, size = 2.0f },
             pos,
             new Particle_Emitter() {
                 emit_fn = () => {
@@ -43,7 +42,7 @@ public static class Red_Fountain {
                                   max_time = 0.35f + (float)(rand.NextDouble() * 0.7f) }
                     };
                 },
-                interval               = 0.05f,
+                interval               = 0.1f,
                 num_particles_per_emit = 1
             }
         };

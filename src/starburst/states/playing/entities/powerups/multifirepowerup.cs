@@ -16,7 +16,7 @@ public class Multifire_Powerup : Powerup_Impl {
     private static System.Random rand = new System.Random();
 
     public override Texture2D icon {
-        get { return Starburst.inst().get_content<Texture2D>("powerups/turbo"); }
+        get { return Starburst.inst().get_content<Texture2D>("powerups/multifire"); }
     }
 
     public override void end() {

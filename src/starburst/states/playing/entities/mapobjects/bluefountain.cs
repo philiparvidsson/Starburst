@@ -13,12 +13,11 @@ public static class Blue_Fountain {
     private static System.Random rand = new System.Random();
 
     public static Component[] create_components() {
-        var mass = new Mass { drag_coeff = 7.0f };
         var pos  = new Position { x = 0.0f, y = 0.0f };
         var tex  = Starburst.inst().get_content<Texture2D>("particle");
 
         return new Component[] {
-            new Light_Source { color = Color.Blue, intensity = 0.1f, size = 1.0f },
+            new Light_Source { color = Color.Blue, intensity = 0.1f, size = 2.0f },
             pos,
             new Particle_Emitter() {
                 emit_fn = () => {

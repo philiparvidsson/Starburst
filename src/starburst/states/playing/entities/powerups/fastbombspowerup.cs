@@ -11,7 +11,7 @@ using System;
 
 public class Fast_Bombs_Powerup : Powerup_Impl {
     public override Texture2D icon {
-        get { return Starburst.inst().get_content<Texture2D>("powerups/shield"); }
+        get { return Starburst.inst().get_content<Texture2D>("powerups/fastbombs"); }
     }
 
     public override void end() {

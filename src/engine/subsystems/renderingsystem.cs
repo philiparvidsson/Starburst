@@ -92,7 +92,7 @@ namespace Fab5.Engine.Subsystems {
 
                         var z = znear;
 
-                        var norm = new Vector3(0.0f, 0.0f, 1.0f);
+                        var norm = new Vector3(0.0f, 0.0f, -1.0f);
 
                         verts.Add(new VertexPositionNormalTexture { Position = new Vector3(left, top, z), TextureCoordinate = new Vector2(u1, v1), Normal = norm });
                         verts.Add(new VertexPositionNormalTexture { Position = new Vector3(right, top, z), TextureCoordinate = new Vector2(u4, v4), Normal = norm });
@@ -146,7 +146,7 @@ namespace Fab5.Engine.Subsystems {
 
                         var z = zfar;
 
-                        var norm = new Vector3(0.0f, 0.0f, 1.0f);
+                        var norm = new Vector3(0.0f, 0.0f, -1.0f);
 
                         verts.Add(new VertexPositionNormalTexture { Position = new Vector3(left, top, z), TextureCoordinate = new Vector2(u1, v1), Normal = norm });
                         verts.Add(new VertexPositionNormalTexture { Position = new Vector3(right, top, z), TextureCoordinate = new Vector2(u4, v4), Normal = norm });
@@ -341,25 +341,93 @@ namespace Fab5.Engine.Subsystems {
         Texture2D light_tex;
 
         BlendState light_blend;
+        BlendState shadow_blend;
+
+        private void draw_shadows(SpriteBatch sprite_batch, Camera camera) {
+            var shadows = Fab5_Game.inst().get_entities_fast(typeof (Shadow));
+            if (shadows.Count > 0) {
+                sprite_batch.Begin(SpriteSortMode.Deferred, shadow_blend);
+
+                var hw = camera.viewport.Width * 0.5f;
+                var hh = camera.viewport.Height * 0.5f;
+
+                foreach (var e in shadows) {
+                    var sprite = e.get_component<Sprite>();
+
+                    var pos = e.get_component<Position>();
+
+                    var r = 0.0f;
+                    var a = e.get_component<Angle>();
+                    if (a != null) {
+                        r = a.angle;
+                    }
+
+                    var sx = 0.96f*(pos.x - camera.position.x)*camera.zoom + hw;
+
+                    var sy = 0.96f*(pos.y - camera.position.y)*camera.zoom + hh;
+
+            int frame_width  = sprite.frame_width;
+            int frame_height = sprite.frame_height;
+
+            int frame_x = sprite.frame_x;
+            int frame_y = sprite.frame_y;
+
+            if (frame_width == 0.0f) {
+                frame_width  = sprite.texture.Width;
+                frame_height = sprite.texture.Height;
+            }
+
+            Rectangle source_rect;
+
+            if (sprite.num_frames > 1) {
+                source_rect = new Rectangle(sprite.frame_x, sprite.frame_y, frame_width, frame_height);
+            }
+            else {
+                source_rect = e.get_component<DrawArea>()?.rectangle ?? new Rectangle(0, 0, frame_width, frame_height);
+            }
+
+
+                    sprite_batch.Draw(sprite.texture,
+                                      new Vector2(sx, sy),
+                                      source_rect,
+                                      Color.Black * 0.4f,
+                                      r,
+                                      new Vector2(source_rect.Width * 0.5f, source_rect.Height * 0.5f),
+                                      new Vector2(sprite.scale_x, sprite.scale_y)*1.2f*camera.zoom,
+                                      SpriteEffects.None,
+                                      0.0f);
+
+                }
+
+                sprite_batch.End();
+                Fab5_Game.inst().GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            }
+        }
 
         private void draw_lights(SpriteBatch sprite_batch, Camera camera, float fac) {
             var lights = Fab5_Game.inst().get_entities_fast(typeof (Light_Source));
             if (lights.Count > 0) {
                 sprite_batch.Begin(SpriteSortMode.Deferred, light_blend);
 
+                var hw = camera.viewport.Width * 0.5f;
+                var hh = camera.viewport.Height * 0.5f;
+                var hwt = light_tex.Width * 0.5f;
+                var hht = light_tex.Height * 0.5f;
+                var origin = new Vector2(hwt, hht);
+
                 foreach (var e in lights) {
                     var light = e.get_component<Light_Source>();
                     var pos   = e.get_component<Position>();
 
-                    var sx = 0.99f*(pos.x - camera.position.x)*camera.zoom + camera.viewport.Width * 0.5f;
-                    var sy = 0.99f*(pos.y - camera.position.y)*camera.zoom + camera.viewport.Height * 0.5f;
+                    var sx = 0.99f*(pos.x - camera.position.x)*camera.zoom + hw;
+                    var sy = 0.99f*(pos.y - camera.position.y)*camera.zoom + hh;
 
                     sprite_batch.Draw(light_tex,
                                       new Vector2(sx, sy),
                                       null,
                                       light.color*light.intensity*fac,
                                       0.0f,
-                                      new Vector2(light_tex.Width*0.5f, light_tex.Height*0.5f),
+                                      origin,
                                       light.size,
                                       SpriteEffects.None,
                                       0.0f);
@@ -408,6 +476,8 @@ namespace Fab5.Engine.Subsystems {
                 }
             }
 
+            draw_shadows(sprite_batch, camera);
+
             effect.Texture = tile_map.tex;
             for (int i = left; i <= right; i++) {
                 for (int j = top; j <= bottom; j++) {
@@ -445,11 +515,17 @@ namespace Fab5.Engine.Subsystems {
         {
  	        base.init();
 
+            shadow_blend = new BlendState();
+            shadow_blend.AlphaDestinationBlend = Blend.One;
+            shadow_blend.AlphaSourceBlend      = Blend.DestinationAlpha;
+            shadow_blend.ColorDestinationBlend = Blend.InverseSourceAlpha;
+            shadow_blend.ColorSourceBlend      = Blend.Zero;
+
             light_blend = new BlendState();
-            light_blend.AlphaSourceBlend = Blend.DestinationAlpha;
-            light_blend.AlphaDestinationBlend = Blend.DestinationAlpha;
-            light_blend.ColorSourceBlend = Blend.DestinationAlpha;
-            light_blend.ColorDestinationBlend = Blend.DestinationAlpha;
+            light_blend.AlphaDestinationBlend = Blend.One;
+            light_blend.AlphaSourceBlend      = Blend.DestinationAlpha;
+            light_blend.ColorDestinationBlend = Blend.One;
+            light_blend.ColorSourceBlend      = Blend.DestinationAlpha;
 
             light_tex = Fab5_Game.inst().get_content<Texture2D>("light");
 
@@ -482,7 +558,7 @@ namespace Fab5.Engine.Subsystems {
             effect.DirectionalLight0.Enabled = true;
             effect.DirectionalLight0.DiffuseColor = new Vector3(0.65f, 0.6f, 0.98f);
             //effect.DirectionalLight0.SpecularColor = new Vector3(1.0f, 1.0f, 1.0f);
-            var dir = new Vector3(-1.0f, -1.0f, -7.0f);
+            var dir = new Vector3(-1.0f, -1.0f, 7.0f);
             dir.Normalize();
             effect.DirectionalLight0.Direction = dir;
             generate_3d_map();
@@ -586,20 +662,6 @@ namespace Fab5.Engine.Subsystems {
 
         }
 
-        public override void update(float t, float dt) {
-            base.update(t, dt);
-
-            /**
-             * uppdatera kameran för att centreras på kopplade spelarens position
-             * (görs nu i draw för att onödigt att ändra kamera när det ändå inte renderas)
-             **/
-            /*
-            for (int i = 0; i < currentPlayerNumber; i++)
-            {
-                cameras[i].position = players[i].get_component<Position>();
-            }*/
-        }
-
         private void draw_match_time() {
             sprite_batch.Draw(timer_tex, new Vector2(760.0f, 40.0f), null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.5f);
             GFX_Util.draw_def_text(sprite_batch, "0.00", 800.0f, 40.0f);
@@ -663,7 +725,7 @@ namespace Fab5.Engine.Subsystems {
         List<Entity> temp_ = new List<Entity>(256);
         public override void draw(float t, float dt)
         {
-            players              = Fab5_Game.inst().get_entities_fast(typeof(Input));
+            players             = Fab5_Game.inst().get_entities_fast(typeof(Input));
             currentPlayerNumber = players.Count;
 
             // är det inte samma antal spelare som förut, räkna om antalet och gör om viewports o kameror (viewports, cameras)
@@ -756,7 +818,7 @@ namespace Fab5.Engine.Subsystems {
                 sprite_batch.Draw((Texture2D)current.render_target, Vector2.Zero);
                 sprite_batch.End();
 
-                draw_lights(sprite_batch, current, 0.55f);
+                draw_lights(sprite_batch, current, 0.6f);
 
                 sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 
