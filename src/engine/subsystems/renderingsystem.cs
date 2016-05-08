@@ -47,6 +47,11 @@ namespace Fab5.Engine.Subsystems {
         private bool team_play;
         private GraphicsDevice graphicsDevice;
 
+        public bool enable_3d = true;
+        public bool enable_lighting = true;
+        public bool enable_shadows = true;
+        public bool enable_backdrop = true;
+
         public Rendering_System(GraphicsDevice graphicsDevice) {
             this.graphicsDevice = graphicsDevice;
         }
@@ -279,6 +284,10 @@ namespace Fab5.Engine.Subsystems {
         }
 
         private void draw_backdrop(SpriteBatch sprite_batch, Camera camera) {
+            if (!enable_backdrop) {
+                return;
+            }
+
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
 
             var hw = camera.viewport.Width  * 0.5f;
@@ -344,6 +353,10 @@ namespace Fab5.Engine.Subsystems {
         BlendState shadow_blend;
 
         private void draw_shadows(SpriteBatch sprite_batch, Camera camera) {
+            if (!enable_shadows) {
+                return;
+            }
+
             var shadows = Fab5_Game.inst().get_entities_fast(typeof (Shadow));
             if (shadows.Count > 0) {
                 sprite_batch.Begin(SpriteSortMode.Deferred, shadow_blend);
@@ -404,6 +417,10 @@ namespace Fab5.Engine.Subsystems {
         }
 
         private void draw_lights(SpriteBatch sprite_batch, Camera camera, float fac) {
+            if (!enable_lighting) {
+                return;
+            }
+
             var lights = Fab5_Game.inst().get_entities_fast(typeof (Light_Source));
             if (lights.Count > 0) {
                 sprite_batch.Begin(SpriteSortMode.Deferred, light_blend);
@@ -461,15 +478,17 @@ namespace Fab5.Engine.Subsystems {
             var fov = 2.0f*(float)Math.Atan(1.0f/(4.0f*camera.viewport.AspectRatio*camera.zoom)) / (1920.0f/camera.viewport.Width);
             effect.Projection = Matrix.CreatePerspectiveFieldOfView(fov, camera.viewport.AspectRatio, 1.0f, 10.0f);
 
-            effect.Texture = tile_map.bg_tex;
-            for (int i = left; i <= right; i++) {
-                for (int j = top; j <= bottom; j++) {
-                    var verts = vb_tiles_back[(i<<8)|j];
-                    if (verts != null) {
-                        Fab5_Game.inst().GraphicsDevice.SetVertexBuffer(verts);
-                        foreach (var pass in effect.CurrentTechnique.Passes) {
-                            pass.Apply();
-                            Fab5_Game.inst().GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, verts.VertexCount / 3);
+            if (enable_3d) {
+                effect.Texture = tile_map.bg_tex;
+                for (int i = left; i <= right; i++) {
+                    for (int j = top; j <= bottom; j++) {
+                        var verts = vb_tiles_back[(i<<8)|j];
+                        if (verts != null) {
+                            Fab5_Game.inst().GraphicsDevice.SetVertexBuffer(verts);
+                            foreach (var pass in effect.CurrentTechnique.Passes) {
+                                pass.Apply();
+                                Fab5_Game.inst().GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, verts.VertexCount / 3);
+                            }
                         }
                     }
                 }
@@ -477,15 +496,17 @@ namespace Fab5.Engine.Subsystems {
 
             draw_shadows(sprite_batch, camera);
 
-            effect.Texture = tile_map.tex;
-            for (int i = left; i <= right; i++) {
-                for (int j = top; j <= bottom; j++) {
-                    var verts = vb_tiles_sides[(i<<8)|j];
-                    if (verts != null) {
-                        Fab5_Game.inst().GraphicsDevice.SetVertexBuffer(verts);
-                        foreach (var pass in effect.CurrentTechnique.Passes) {
-                            pass.Apply();
-                            Fab5_Game.inst().GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, verts.VertexCount / 3);
+            if (enable_3d) {
+                effect.Texture = tile_map.tex;
+                for (int i = left; i <= right; i++) {
+                    for (int j = top; j <= bottom; j++) {
+                        var verts = vb_tiles_sides[(i<<8)|j];
+                        if (verts != null) {
+                            Fab5_Game.inst().GraphicsDevice.SetVertexBuffer(verts);
+                            foreach (var pass in effect.CurrentTechnique.Passes) {
+                                pass.Apply();
+                                Fab5_Game.inst().GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, verts.VertexCount / 3);
+                            }
                         }
                     }
                 }
