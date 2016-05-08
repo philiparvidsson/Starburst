@@ -242,7 +242,7 @@ namespace Fab5.Engine.Subsystems {
             float yfrac     = top *th - (camera.position.y+2048.0f-h*0.5f);
             var one_pixel_x = 2.0f/camera.viewport.Width;
             var one_pixel_y = 2.0f/camera.viewport.Height;
-            var depth       = 0.036f/camera.zoom;
+            var depth       = 0.036f;
             var tile_tex    = tile_map.tex;
             var bg_tile_tex = tile_map.bg_tex;
             var tiles       = tile_map.tiles;
@@ -268,12 +268,8 @@ namespace Fab5.Engine.Subsystems {
                 var xx = (x);
                 xx -= 1.0f;
 
-                var dx1 =  -xx*depth*camera.zoom;
-                var vleft = xx;
-                var vleftz = vleft+dx1;
-
-                v_x[i]      = vleft;
-                bg_v_x[i]   = vleftz;
+                v_x[i] = xx;
+                bg_v_x[i] = xx-xx*depth;
                 x += tw;
             }
 
@@ -282,12 +278,8 @@ namespace Fab5.Engine.Subsystems {
                 var yy = y;
                 yy = 1.0f-yy;
 
-                var dy1 = -yy*depth*camera.zoom;
-                var vtop = yy;
-                var vtopz = vtop+dy1;
-
-                v_y[j]      = vtop;
-                bg_v_y[j]   = vtopz;
+                v_y[j] = yy;
+                bg_v_y[j] = yy+yy*depth;
 
                 y += th;
             }
@@ -297,8 +289,8 @@ namespace Fab5.Engine.Subsystems {
             //Fab5_Game.inst().GraphicsDevice.BlendState = BlendState.AlphaBlend;
             Fab5_Game.inst().GraphicsDevice.Clear(Color.Transparent);
 
-            num_verts   = 0;
-            num_tris = 0;
+            num_verts = 0;
+            num_tris  = 0;
 
             for (int i = left; i <= right; i++) {
                 for (int j = top; j <= bottom; j++) {
@@ -313,17 +305,16 @@ namespace Fab5.Engine.Subsystems {
                 }
             }
 
-            if (num_verts > 0) {
+            if (num_tris > 0) {
                 effect.Texture = bg_tile_tex;
                 foreach (var pass in effect.CurrentTechnique.Passes) {
                     pass.Apply();
-
                     Fab5_Game.inst().GraphicsDevice.DrawUserPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, verts, 0, num_tris);
                 }
             }
 
             num_verts = 0;
-            num_tris = 0;
+            num_tris  = 0;
 
             for (int i = left; i <= right; i++) {
                 for (int j = top; j <= bottom; j++) {
@@ -331,20 +322,17 @@ namespace Fab5.Engine.Subsystems {
                         continue;
                     }
 
-                    int o = i + (j<<8);
-                    int k = tiles[o];
+                    int k = tiles[i + (j<<8)];
                     if (k != 0 && k < 10) {// 10 and up are not visible walls
-                        var v  = k-1;
-                        draw_tile_sides(i, j, v);
+                        draw_tile_sides(i, j, k-1);
                     }
                 }
             }
 
-            if (num_verts > 0) {
+            if (num_tris > 0) {
                 effect.Texture = tile_tex;
                 foreach (var pass in effect.CurrentTechnique.Passes) {
                     pass.Apply();
-
                     Fab5_Game.inst().GraphicsDevice.DrawUserPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, verts, 0, num_tris);
                 }
             }
@@ -376,7 +364,7 @@ namespace Fab5.Engine.Subsystems {
             }
 
             num_verts = 0;
-            num_tris = 0;
+            num_tris  = 0;
 
             for (int i = left; i <= right; i++) {
                 for (int j = top; j <= bottom; j++) {
@@ -384,25 +372,21 @@ namespace Fab5.Engine.Subsystems {
                         continue;
                     }
 
-                    int o = i + (j<<8);
-                    int k = tiles[o];
+                    int k = tiles[i + (j<<8)];
                     if (k != 0 && k < 10) {// 10 and up are not visible walls
-                        var v = k-1;
-                        draw_tile_front(i, j, v);
+                        draw_tile_front(i, j, k-1);
                     }
                 }
             }
 
 
-            if (num_verts > 0) {
+            if (num_tris > 0) {
                 effect.Texture = tile_tex;
                 foreach (var pass in effect.CurrentTechnique.Passes) {
                     pass.Apply();
-
                     Fab5_Game.inst().GraphicsDevice.DrawUserPrimitives<VertexPositionNormalTexture>(PrimitiveType.TriangleList, verts, 0, num_tris);
                 }
             }
-
         }
 
         public override void init()
