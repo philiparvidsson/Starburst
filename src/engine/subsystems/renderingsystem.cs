@@ -112,9 +112,10 @@ namespace Fab5.Engine.Subsystems {
 
             verts[num_verts++] = new VertexPositionNormalTexture { Position = new Vector3(x3, y3, 0.0f), TextureCoordinate = new Vector2(u3, v3), Normal = norm };
 
-            indices_cache[3*num_indices] = 3*num_indices;
-            indices_cache[3*num_indices+1] = 3*num_indices+1;
-            indices_cache[3*num_indices+2] = 3*num_indices+2;
+            var n = 3*num_indices;
+            indices_cache[n] = n;
+            indices_cache[n+1] = n+1;
+            indices_cache[n+2] = n+2;
             num_indices++;
         }
 
@@ -218,8 +219,8 @@ namespace Fab5.Engine.Subsystems {
 
         BlendState light_blend;
 
-        int[] indices_cache = new int[30000];
-        readonly VertexPositionNormalTexture[] verts = new VertexPositionNormalTexture[30000];
+        int[] indices_cache = new int[40000];
+        readonly VertexPositionNormalTexture[] verts = new VertexPositionNormalTexture[40000];
 
         private int num_verts;
         private int num_indices;
@@ -241,13 +242,8 @@ namespace Fab5.Engine.Subsystems {
 
             float xfrac = left*tw - (camera.position.x+2048.0f-w*0.5f);
             float yfrac = top *th - (camera.position.y+2048.0f-h*0.5f);
-//            System.Console.WriteLine(yfrac);
-
-
 
             Fab5_Game.inst().GraphicsDevice.Clear(Color.Transparent);
-
-            //Fab5_Game.inst().GraphicsMgr.GraphicsDevice.RasterizerState = new RasterizerState { MultiSampleAntiAlias = true };
 
             xfrac *= camera.zoom;
             yfrac *= camera.zoom;
@@ -270,7 +266,7 @@ namespace Fab5.Engine.Subsystems {
 
             var one_pixel_x = 2.0f/camera.viewport.Width;
             var one_pixel_y = 2.0f/camera.viewport.Height;
-                var fac = 0.036f/camera.zoom;// depth factor
+            var fac = 0.036f/camera.zoom;// depth factor
 
             for (int i = left; i <= right+2; i++) {
                 var xx = (x+xfrac) * one_pixel_x;

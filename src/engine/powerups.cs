@@ -37,6 +37,8 @@ public class Powerup : Component {
             new Powerup         { impl = impl },
       vel = new Velocity        { x = 0.0f, y = 0.0f },
       ang = new Angle           { ang_vel = 3.14f*0.7f, drag = 0.0f },
+            new Light_Source    { color = new Color(1.0f, 0.6f, 0.8f, 0.7f) },
+            new TTL             { max_time = 60.0f }, // auto-respawn lingering powerups
 
             new Particle_Emitter {
                 emit_fn = () => {
@@ -70,8 +72,6 @@ public class Powerup : Component {
                 interval               = 0.3f,
                 num_particles_per_emit = 2
             },
-
-            new Light_Source { color = new Color(1.0f, 0.6f, 0.8f) }
         };
 
         return powerup;
