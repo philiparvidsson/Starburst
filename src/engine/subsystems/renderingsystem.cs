@@ -98,7 +98,7 @@ namespace Fab5.Engine.Subsystems {
         {
             return (float)random.NextDouble() * 2f - 1f;
         }
-        
+
         public bool enable_3d = true;
         public bool enable_lighting = true;
         public bool enable_shadows = true;
@@ -394,6 +394,7 @@ namespace Fab5.Engine.Subsystems {
         }
 
         Texture2D light_tex;
+        Texture2D lightcone_tex;
 
         BlendState light_blend;
         BlendState shadow_blend;
@@ -491,12 +492,28 @@ namespace Fab5.Engine.Subsystems {
 
                     var sx = 0.99f*(pos.x - camera.position.x)*camera.zoom + hw;
                     var sy = 0.99f*(pos.y - camera.position.y)*camera.zoom + hh;
+                    var tex = light.lightcone ? lightcone_tex : light_tex;
+                    var r = 0.0f;
+                    if (light.lightcone) {
+                        r = e.get_component<Angle>().angle;
+                        hwt = lightcone_tex.Width * 0.5f;
+                        hht = lightcone_tex.Height * 0.5f;
+                        origin = new Vector2(hwt, hht);
+                        sx = (pos.x - camera.position.x)*camera.zoom + hw;
+                        sy = (pos.y - camera.position.y)*camera.zoom + hh;
+                    }
+                    else {
+                        r = 0.0f;
+                        hwt = light_tex.Width * 0.5f;
+                        hht = light_tex.Height * 0.5f;
+                        origin = new Vector2(hwt, hht);
+                    }
 
-                    sprite_batch.Draw(light_tex,
+                    sprite_batch.Draw(tex,
                                       new Vector2(sx, sy),
                                       null,
                                       light.color*light.intensity*fac,
-                                      0.0f,
+                                      r,
                                       origin,
                                       light.size*camera.zoom,
                                       SpriteEffects.None,
@@ -603,6 +620,7 @@ namespace Fab5.Engine.Subsystems {
             light_blend.ColorSourceBlend      = Blend.DestinationAlpha;
 
             light_tex = Fab5_Game.inst().get_content<Texture2D>("light");
+            lightcone_tex = Fab5_Game.inst().get_content<Texture2D>("lightcone");
 
             timer_tex = Fab5_Game.inst().get_content<Texture2D>("clock");
 

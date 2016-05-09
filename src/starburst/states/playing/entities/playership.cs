@@ -139,6 +139,7 @@
                 new Secondary_Weapon(),
                 new Score(),
                 new Shadow(),
+                new Light_Source { lightcone = true, intensity = 0.35f }
                 /*new Light_Source { color = new Color(1.0f, 0.9f, 0.8f), intensity = 0.6f }*/
             };
         }
