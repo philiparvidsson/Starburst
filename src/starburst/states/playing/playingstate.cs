@@ -49,7 +49,7 @@ public class Playing_State : Game_State {
         private void tryPause() {
             if (can_pause) {
                 can_pause = false;
-                Starburst.inst().enter_state(new Pause_State());
+                Starburst.inst().enter_state(new Pause_State(this));
             }
         }
 
