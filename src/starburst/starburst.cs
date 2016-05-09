@@ -40,7 +40,7 @@ namespace Fab5.Starburst {
 
 
             GraphicsMgr.ApplyChanges();
-            //GraphicsMgr.ToggleFullScreen();
+            GraphicsMgr.ToggleFullScreen();
             Microsoft.Xna.Framework.Media.MediaPlayer.Volume = 0.7f;
 
             var form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(this.Window.Handle);

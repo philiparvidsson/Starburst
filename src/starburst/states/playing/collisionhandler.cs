@@ -62,6 +62,14 @@ namespace Fab5.Starburst.States.Playing {
         reg("beams2", "ships/ship14", bullet2_player);
         reg("beams2", "soccerball"  , bullet2_soccerball);
 
+        reg("wbeam", "asteroid"    , bullet1_asteroid);
+        reg("wbeam", "asteroid2"   , bullet1_asteroid);
+        reg("wbeam", "ships/ship11", bullet1_player);
+        reg("wbeam", "ships/ship12", bullet1_player);
+        reg("wbeam", "ships/ship13", bullet1_player);
+        reg("wbeam", "ships/ship14", bullet1_player);
+        reg("wbeam", "soccerball"  , bullet1_soccerball);
+
         reg("soccerball", "ships/ship11", soccerball_player);
         reg("soccerball", "ships/ship12", soccerball_player);
         reg("soccerball", "ships/ship13", soccerball_player);
@@ -516,8 +524,8 @@ namespace Fab5.Starburst.States.Playing {
                             var text1 = string.Format("Respawning in {0:0.00}", t);
 
                             // @To-do: not gonna fly with NPCs
-                            var s     = new [] { "one", "two", "three", "four" };
-                            var text2 = string.Format("Killed by player {0}!", s[bulletInfo.sender.get_component<Ship_Info>().pindex-1]);
+                            var s     = new [] { "player one", "player two", "player three", "player four", "turret" };
+                            var text2 = string.Format("Killed by {0}!", s[bulletInfo.sender.get_component<Ship_Info>().pindex-1]);
                             var ts1   = GFX_Util.measure_string("Respawning in 0.00");
                             var ts2   = GFX_Util.measure_string(text2);
 

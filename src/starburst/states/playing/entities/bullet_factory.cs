@@ -26,7 +26,7 @@
             float lifeTime = 1.5f; // skottets livstid (i sekunder? iaf baserad på dt)
 
             Position position = origin.get_component<Position>();
-            Velocity shipVel = origin.get_component<Velocity>();
+            Velocity shipVel = origin.get_component<Velocity>() ?? new Velocity();
 
             double dAngle = (double)shipAngle.angle + ((float)rand.NextDouble()-0.5f)*0.08f;
             float sfa = (float)Math.Sin(dAngle);

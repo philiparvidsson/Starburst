@@ -117,7 +117,9 @@ public class Playing_State : Game_State {
                 else if (c.G == 63 && c.B == 63) {
                     var types = new Type[] {
                         typeof (Red_Fountain),
-                        typeof (Blue_Fountain)
+                        typeof (Blue_Fountain),
+                        typeof (Red_Turret),
+                        typeof (Blue_Turret)
                     };
 
                     int k = c.R % types.Length;
