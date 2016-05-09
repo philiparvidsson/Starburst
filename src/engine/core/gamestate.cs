@@ -24,6 +24,9 @@ using System.Threading;
 // state). Entities are contained in states.
 public abstract class Game_State {
 
+        public float update_t = 0.0f;
+        public float draw_t = 0.0f;
+
     // The subsystems that the game state is using.
     private readonly List<Subsystem> subsystems = new List<Subsystem>();
 

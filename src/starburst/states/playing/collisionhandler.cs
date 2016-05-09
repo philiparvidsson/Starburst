@@ -509,8 +509,10 @@ namespace Fab5.Starburst.States.Playing {
                             if (camera.index != playerShip.pindex) {
                                 return;
                             }
+                            var t = 5.0f;
 
-                            var t     = 5.0f - (Fab5_Game.inst().get_time() - time_of_death);
+                            t     -= Fab5_Game.inst().get_time() - time_of_death;
+
                             var text1 = string.Format("Respawning in {0:0.00}", t);
 
                             // @To-do: not gonna fly with NPCs
