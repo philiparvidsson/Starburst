@@ -32,8 +32,13 @@ namespace Fab5.Engine.Components {
         public Vector2 origin;
         public Viewport viewport;
         public int index;
+
+        public bool shaking;
+        public float shakeMagnitude = 5;
+
         public Velocity velocity;
         public RenderTarget2D render_target;
+
 
         float moving_fast_time = 0.0f;
         float moving_slow_time = 999.0f;
@@ -88,6 +93,7 @@ namespace Fab5.Engine.Components {
             this.origin = new Vector2(vp.Width*.5f, vp.Height*.5f);
             this.zoom = 1.0f;
             this.position = new Position();
+            this.shakeMagnitude = 5f;
         }
 
         public void Move(Vector2 amount) {

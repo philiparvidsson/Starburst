@@ -18,10 +18,10 @@ public class Pause_State : Game_State {
     private float restore_vol;
 
     public override void init() {
-        Gamepad_Util.vibrate(0, 0.0f, 0.0f);
+        /*Gamepad_Util.vibrate(0, 0.0f, 0.0f);
         Gamepad_Util.vibrate(1, 0.0f, 0.0f);
         Gamepad_Util.vibrate(2, 0.0f, 0.0f);
-        Gamepad_Util.vibrate(3, 0.0f, 0.0f);
+        Gamepad_Util.vibrate(3, 0.0f, 0.0f);*/
 
         var sprite_batch = new SpriteBatch(Starburst.inst().GraphicsDevice);
 

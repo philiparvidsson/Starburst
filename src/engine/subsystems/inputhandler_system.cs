@@ -87,9 +87,9 @@
 
                 if (input.left_vib != input.old_left_vib || input.right_vib != input.old_right_vib) {
                     //System.Console.WriteLine("vib " + input.left_vib + ", " + input.right_vib);
-                    if (input.device == Input.InputType.Controller) {
+                    /*if (input.device == Input.InputType.Controller) {
                         Gamepad_Util.vibrate((int)input.gp_index, input.left_vib, input.right_vib);
-                    }
+                    }*/
 
                     input.old_left_vib = input.left_vib;
                     input.old_right_vib = input.right_vib;

@@ -47,6 +47,58 @@ namespace Fab5.Engine.Subsystems {
         private bool team_play;
         private GraphicsDevice graphicsDevice;
 
+        //
+        private static readonly Random random = new Random();
+        private float shakeDuration = 1f;
+        private int shakes = 2;
+        private Vector2 shakeOffset;
+        private Vector2 org;
+        private float start_time;
+        //
+        public override void on_message(string msg, dynamic data)
+        {
+            if (msg == "camera_shake")
+            {
+                int current = (int)(data.pindex - 1);
+                if (!cameras[current].shaking)
+                {
+                    cameras[current].shaking = true;
+                    org = cameras[current].origin;
+                    start_time = Fab5_Game.inst().get_time();
+                    shakeOffset = new Vector2(NextFloat(), NextFloat()) * cameras[current].shakeMagnitude;
+                }
+                else if (cameras[current].shaking)
+                    cameras[current].shakeMagnitude += 1;
+            }
+        }
+        public void camera_shaker(Camera camera, float current_time)
+        {
+            float shakeTime = shakeDuration / shakes;
+
+            if (current_time < shakeDuration / 2) //growing shakes for half shakeduration
+            {
+                camera.origin = (shakeOffset * current_time / shakeTime) + org;
+            }
+
+            if (current_time > shakeDuration / 2 && current_time < shakeDuration) //shrinking shakes for half shakeduration
+            {
+                camera.origin = (org) - (shakeOffset * current_time / shakeTime);
+            }
+            if (current_time > shakeTime)
+                shakeOffset = new Vector2(NextFloat(), NextFloat()) * camera.shakeMagnitude;
+
+            if (current_time > shakeDuration)
+            {
+                camera.shaking = false;
+                camera.origin = org;
+                camera.shakeMagnitude = 5f;
+            }
+        }
+        private float NextFloat()
+        {
+            return (float)random.NextDouble() * 2f - 1f;
+        }
+        
         public bool enable_3d = true;
         public bool enable_lighting = true;
         public bool enable_shadows = true;
@@ -813,8 +865,18 @@ namespace Fab5.Engine.Subsystems {
                 draw_tile_map(sprite_batch, cameras[p], num_entities, entities);
             }
 
+            //kameraskak
+            for (int i = 0; i < cameras.Count(); i++)
+            {
+                if (cameras[i].shaking)
+                {
+                    camera_shaker(cameras[i], t - start_time);
+                }
+            }
+
             sprite_batch.GraphicsDevice.SetRenderTarget(backbuffer_target);
             sprite_batch.GraphicsDevice.Clear(Color.Black);
+
             for (int p = 0; p < currentPlayerNumber; p++) {
                 Camera current = cameras[p];
 

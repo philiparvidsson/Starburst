@@ -424,8 +424,8 @@ namespace Fab5.Starburst.States.Playing {
         if (player == bulletInfo.sender) {
             return;
         }
-
-        if(player != bulletInfo.sender)
+        Fab5_Game.inst().message("camera_shake", new { playerShip.pindex });
+        if (player != bulletInfo.sender)
             shooterScore.score += 10;
         // kolla sköld, om sköld nere, ta skada
         if(playerShip.energy_value > bulletDamage) {
