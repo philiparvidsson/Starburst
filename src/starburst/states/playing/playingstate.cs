@@ -165,7 +165,7 @@ public class Playing_State : Game_State {
                     new Position_Integrator(),
                     new Collision_Solver(tile_map)
                 ),
-                new Async_Multi_Subsystem(
+                new /*Async_*/Multi_Subsystem(
                     new Inputhandler_System(),
                     new Sound(),
                     new Particle_System(),
