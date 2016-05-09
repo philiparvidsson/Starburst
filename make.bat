@@ -65,13 +65,6 @@ set Self="%~dp0%~nx0"
 set Target=%1
 if "%Target%"=="" set Target=all
 
-:: Find content and build it with MGCB.
-rem set Content=
-
-:: Find source code files.
-set Sources=
-for /R %SourcesDir% %%Q in (*.cs) do call set "Sources=%%Sources%% "%%Q""
-
 if "%Target%"=="all" (
     call %Self% program
     call %Self% content
@@ -110,7 +103,25 @@ if "%Target%"=="all" (
     echo Building program...
     if not exist "%OutputDir%" mkdir %OutputDir%
     if not exist "%IntermDir%" mkdir %IntermDir%
-    %Csc% /out:"%OutputDir%\%Exe%" %CscFlags% %Libs% %Sources%
+
+    echo #csc temp file>program.rsp
+
+    echo /out:"%OutputDir%\%Exe%">>program.rsp
+
+    for %%Q in (%CscFlags%) do (
+        echo %%Q>>program.rsp
+    )
+
+    for %%Q in (%Libs%) do (
+        echo %%Q>>program.rsp
+    )
+
+    for /R %SourcesDir% %%Q in (*.cs) do (
+        echo %%Q>>program.rsp
+    )
+
+    %Csc% @program.rsp
+    del program.rsp
 ) else if "%Target%"=="run" (
     if not exist "%OutputDir%\%Exe%" call %Self%
     echo Running program...

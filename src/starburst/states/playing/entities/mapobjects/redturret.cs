@@ -15,15 +15,15 @@ using Fab5.Starburst.Components;
 public static class Red_Turret {
         private static Texture2D bulletTexture1 = Fab5_Game.inst().get_content<Texture2D>("beams1");
     private static Texture2D bulletTexture2 = Fab5_Game.inst().get_content<Texture2D>("beams2");
-        private static Rectangle mediumGreen = new Rectangle(4, 4, 20, 28); // rektangel för beskärning av ett visst skott i beams-texturen
+        private static Rectangle mediumGreen = new Rectangle(4, 4, 20, 28); // rektangel fÃ¶r beskÃ¤rning av ett visst skott i beams-texturen
         private static Rectangle smallDotGreen = new Rectangle(36, 0, 20, 20);
         private static Rectangle mediumRed = new Rectangle(4, 180, 20, 28);
-        private static float rotationOffset = MathHelper.ToRadians(-90f); // rotationsoffset för skott-texturen
+        private static float rotationOffset = MathHelper.ToRadians(-90f); // rotationsoffset fÃ¶r skott-texturen
 
-    private const float THINK_INTERVAL = 1.0f/2.0f; // think 5 times per sec
+    private const float THINK_INTERVAL = 1.0f/10.0f; // think 5 times per sec
         public const int IG_BULLET = 179;// random id to make bullets not collide with each other
 
-    public static float awareness_dist = 1000.0f*1000.0f;
+    public static float awareness_dist = 700.0f*700.0f;
 
     private static Random rand = new Random();
 
@@ -82,7 +82,15 @@ public static class Red_Turret {
         self.get_component<Angle>().angle = r;
 
         //Fab5.Starburst.States.Playing.Entities.Bullet_Factory.fire_weapon(self, new Primary_Weapon());
-        Fab5_Game.inst().create_entity(weapon1(self, new Primary_Weapon(), self.get_component<Angle>()));
+
+        var last_shot = (float)(self.get_component<Data>().get_data("last_shot", 0.0f));
+        if (Fab5_Game.inst().get_time() - last_shot < 1.0f/2.0f) {
+            return;
+        }
+
+        Fab5_Game.inst().create_entity(shoot(self, self.get_component<Angle>()));
+
+        self.get_component<Data>().data["last_shot"] = (float)Fab5_Game.inst().get_time();
     }
 
     public static Component[] create_components() {
@@ -95,27 +103,30 @@ public static class Red_Turret {
             new Sprite          { texture = Fab5_Game.inst().get_content<Texture2D>("redturret") },
             new Brain           { think_fn = think, think_interval = THINK_INTERVAL },
             new Ship_Info(100, 100, 100, 100)        { pindex = 5, team = 1 },
-            new Score {}
+            new Score {},
+            new Data {}
         };
     }
 
-        private static Component[] weapon1(Entity origin, Weapon weapon, Angle shipAngle) {
-            float shipRadian = 21f; // offset från skeppets mitt där skottet utgår ifrån
-            float speed = 900f; // skottets hastighet (kanske ska vara vapenberoende?)
-            float lifeTime = 1.5f; // skottets livstid (i sekunder? iaf baserad på dt)
+        private static Component[] shoot(Entity self, Angle shipAngle) {
+            Fab5_Game.inst().message("play_sound_asset", new { name = "sound/effects/turret" });
 
-            Position position = origin.get_component<Position>();
-            Velocity shipVel = origin.get_component<Velocity>() ?? new Velocity();
+            float shipRadian = 21f; // offset frÃ¥n skeppets mitt dÃ¤r skottet utgÃ¥r ifrÃ¥n
+            float speed      = 900f; // skottets hastighet (kanske ska vara vapenberoende?)
+            float lifeTime   = 1.5f; // skottets livstid (i sekunder? iaf baserad pÃ¥ dt)
+
+            Position position = self.get_component<Position>();
+            Velocity shipVel  = self.get_component<Velocity>() ?? new Velocity();
 
             double dAngle = (double)shipAngle.angle + ((float)rand.NextDouble()-0.5f)*0.08f;
-            float sfa = (float)Math.Sin(dAngle);
-            float cfa = (float)Math.Cos(dAngle);
+            float sfa     = (float)Math.Sin(dAngle);
+            float cfa     = (float)Math.Cos(dAngle);
 
-            var pos   = new Position() { x = position.x + shipRadian * cfa, y =  position.y + shipRadian * sfa };
-            var angle = new Angle() { angle = shipAngle.angle + rotationOffset, ang_vel = 0.0f };
+            var pos      = new Position() { x = position.x + shipRadian * cfa, y =  position.y + shipRadian * sfa };
+            var angle    = new Angle() { angle = shipAngle.angle + rotationOffset, ang_vel = 0.0f };
             var velocity = new Velocity() { x = cfa*speed+shipVel.x, y = sfa*speed+shipVel.y };
 
-            Sprite bulletSprite = new Sprite() { texture = Fab5_Game.inst().get_content<Texture2D>("wbeam"), layer_depth = 1, blend_mode = Sprite.BM_ADD, scale = 1.0f, color = new Color(1.0f, 0.5f, 0.5f) };
+            Sprite bulletSprite = new Sprite() { texture = Fab5_Game.inst().get_content<Texture2D>("wbeam"), blend_mode = Sprite.BM_ADD, scale = 1.0f, color = new Color(0.5f, 0.5f, 1.0f) };
 
             var particle_tex = Fab5_Game.inst().get_content<Texture2D>("particle");
 
@@ -128,21 +139,17 @@ public static class Red_Turret {
                         var speed2  = 20.0f * (float)(rand.NextDouble()+0.5f);
 
                         return new Component[] {
-                            new Position() { x = pos.x + (float)Math.Cos(theta1) * radius,
-                                             y = pos.y + (float)Math.Sin(theta1) * radius },
-                            new Velocity() { x = velocity.x * 0.2f + (float)Math.Cos(theta2) * speed2,
-                                             y = velocity.y * 0.2f + (float)Math.Sin(theta2) * speed2 },
-                            new Sprite() {
-                                texture = particle_tex,
-                                color = new Color(1.0f, 0.2f, 0.2f, 1.0f),
-                                scale = 0.2f + (float)rand.NextDouble() * 0.6f,
-                                blend_mode = Sprite.BM_ADD,
-                                layer_depth = 0.3f
-                            },
-                            new TTL() { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max), max_time = 0.05f + (float)(rand.NextDouble() * 0.05f) }
-    //                        new Bounding_Circle() { radius = 1.0f },
-    //                        new Mass() { mass = 0.0f }
-
+                            new Position { x = pos.x + (float)Math.Cos(theta1) * radius,
+                                           y = pos.y + (float)Math.Sin(theta1) * radius },
+                            new Velocity { x = velocity.x * 0.2f + (float)Math.Cos(theta2) * speed2,
+                                           y = velocity.y * 0.2f + (float)Math.Sin(theta2) * speed2 },
+                            new Sprite { texture     = particle_tex,
+                                         color       = new Color(1.0f, 0.2f, 0.2f, 1.0f),
+                                         scale       = 0.2f + (float)rand.NextDouble() * 0.6f,
+                                         blend_mode  = Sprite.BM_ADD,
+                                         layer_depth = 0.3f },
+                            new TTL { alpha_fn = (x, max) => 1.0f - (x/max)*(x/max),
+                                      max_time = 0.05f + (float)(rand.NextDouble() * 0.05f) }
                         };
                     },
                     interval = 0.03f,
@@ -152,15 +159,10 @@ public static class Red_Turret {
                 velocity,
                 angle,
                 bulletSprite,
-                //bulletDrawArea,
                 new Bounding_Circle() { radius = 6,
                                         ignore_collisions = IG_BULLET,
-                                        ignore_collisions2 = origin.get_component<Ship_Info>().team,
-                                        collision_cb = (self, other_entity) => {
-                        if (self.get_component<Bullet_Info>().sender.get_component<Ship_Info>().has_powerup(typeof (Bouncy_Bullets_Powerup))) {
-                                                return;
-                                            }
-
+                                        ignore_collisions2 = self.get_component<Ship_Info>().team,
+                                        collision_cb = (bullet, other_entity) => {
                                             Fab5_Game.inst().create_entity(new Component[] {
                                                 new TTL { max_time = 0.05f },
                                                 new Particle_Emitter {
@@ -176,7 +178,7 @@ public static class Red_Turret {
                                                             },
                                                             new Sprite {
                                                                 blend_mode  = Sprite.BM_ADD,
-                                                                color       = new Color(0.2f, 0.6f, 1.0f),
+                                                                color       = new Color(1.0f, 0.5f, 0.5f),
                                                                 layer_depth = 0.3f,
                                                                 scale       = 0.2f + (float)rand.NextDouble() * 0.3f,
                                                                 texture     = Fab5_Game.inst().get_content<Texture2D>("particle")
@@ -191,12 +193,12 @@ public static class Red_Turret {
                                                     num_particles_per_emit = 10 + rand.Next(0, 20)
                                                 }
                                             });
-                                            self.destroy();
+                                            bullet.destroy();
                                         }},
-                new Mass { mass = 1.0f, restitution_coeff = -1.0f, friction = 0.0f },
+                new Mass { mass = .1f, restitution_coeff = -1.0f, friction = 0.0f },
                 new TTL() { alpha_fn = (x, max) => 10.0f-10.0f*x/max, max_time = lifeTime },
-                new Bullet_Info() { damage = 65, sender = origin, max_speed = speed },
-                new Light_Source { color = new Color(1.0f, 0.3f, 0.3f), size = 0.35f, intensity = 0.7f }
+                new Bullet_Info() { damage = 65, sender = self, max_speed = speed },
+                new Light_Source { color = new Color(1.0f, 0.3f, 0.3f), size = 0.35f, intensity = 0.7f },
             };
         }
 

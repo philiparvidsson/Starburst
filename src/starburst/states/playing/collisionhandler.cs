@@ -498,6 +498,8 @@ namespace Fab5.Starburst.States.Playing {
                 var old_particle_emitter = player.remove_component<Particle_Emitter>();
                 var old_bounding_circle  = player.remove_component<Bounding_Circle>();
                 var old_sprite           = player.remove_component<Sprite>();
+                var old_shadow           = player.remove_component<Shadow>();
+                var old_light            = player.remove_component<Light_Source>();
 
                 Starburst.inst().message("play_sound_asset", new { name = "sound/effects/explosion" });
 
@@ -580,18 +582,19 @@ namespace Fab5.Starburst.States.Playing {
 
 
                 Fab5_Game.inst().create_entity(new Component[] {
-                new TTL {
-                    destroy_cb = () => {
-                        player.add_components(old_particle_emitter, old_bounding_circle, old_sprite);
-                        player.get_component<Input>().enabled = true;
+                    new TTL {
+                        destroy_cb = () => {
+                            player.add_components(old_particle_emitter, old_bounding_circle, old_sprite, old_shadow, old_light);
+                            player.get_component<Input>().enabled = true;
 
-                        var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
-                        player.get_component<Position>().x = spawn_pos.x;
-                        player.get_component<Position>().y = spawn_pos.y;
-                    },
+                            var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
+                            player.get_component<Position>().x = spawn_pos.x;
+                            player.get_component<Position>().y = spawn_pos.y;
+                            player.get_component<Angle>().angle = 3.141592f*2.0f * (float)rand.NextDouble();
+                        },
 
-                    max_time = 5.0f,
-                }
+                        max_time = 5.0f,
+                    }
                 });
 
                 /*var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
