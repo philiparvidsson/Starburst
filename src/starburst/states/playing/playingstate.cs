@@ -275,6 +275,9 @@ public class Playing_State : Game_State {
         var multi1 = create_entity(Powerup.create(new Free_Fire_Powerup()));
         multi1.get_component<Position>().x = -1700.0f; multi1.get_component<Position>().y = 1500.0f;
 
+        var nano1 = create_entity(Powerup.create(new Nanobots_Powerup()));
+        nano1.get_component<Position>().x = -1600.0f; multi1.get_component<Position>().y = 1500.0f;
+
         /*var freefire1 = create_entity(Powerup.create(new Free_Fire_Powerup()));
         freefire1.get_component<Position>().x = -1600.0f; freefire1.get_component<Position>().y = 1500.0f;
 
@@ -310,6 +313,7 @@ public class Playing_State : Game_State {
             typeof (Multifire_Powerup),
             typeof (Bouncy_Bullets_Powerup),
             typeof (Fast_Bombs_Powerup),
+            typeof (Nanobots_Powerup)
         };
 
         var i = rand.Next(0, types.Length);
