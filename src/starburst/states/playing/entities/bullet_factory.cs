@@ -37,11 +37,16 @@
             var velocity = new Velocity() { x = cfa*speed+shipVel.x, y = sfa*speed+shipVel.y };
 
             Sprite bulletSprite = new Sprite() { texture = bulletTexture1, layer_depth = 1, blend_mode = Sprite.BM_ADD, scale = 0.35f };
-            if (!origin.get_component<Ship_Info>().has_powerup(typeof (Bouncy_Bullets_Powerup))) {
-                bulletSprite.color = new Color(1.0f, 0.5f, 0.4f);
+            var light_color = new Color(1.0f, 0.6f, 0.2f);
+            var tail_color = new Color(1.0f, 0.6f, 0.2f, 1.0f);
+            if (origin.get_component<Ship_Info>().has_powerup(typeof (Bouncy_Bullets_Powerup))) {
+                bulletSprite.color = new Color(1.0f, 0.2f, 0.2f);
+                light_color = new Color(1.0f, 0.2f, 0.9f);
+                tail_color = new Color(1.0f, 0.2f, 0.9f);
             }
 
             var particle_tex = Starburst.inst().get_content<Texture2D>("particle");
+
 
             return new Component[] {
                 new Particle_Emitter() {
@@ -58,7 +63,7 @@
                                              y = velocity.y * 0.2f + (float)Math.Sin(theta2) * speed2 },
                             new Sprite() {
                                 texture = particle_tex,
-                                color = new Color(1.0f, 0.6f, 0.2f, 1.0f),
+                                color = tail_color,
                                 scale = 0.2f + (float)rand.NextDouble() * 0.6f,
                                 blend_mode = Sprite.BM_ADD,
                                 layer_depth = 0.3f
@@ -120,7 +125,7 @@
                 new Mass { mass = 1.0f, restitution_coeff = -1.0f, friction = 0.0f },
                 new TTL() { alpha_fn = (x, max) => 10.0f-10.0f*x/max, max_time = lifeTime },
                 new Bullet_Info() { damage = weapon.damage, sender = origin, max_speed = speed },
-                new Light_Source { color = new Color(1.0f, 0.6f, 0.2f), size = 0.35f, intensity = 0.7f }
+                new Light_Source { color = light_color, size = 0.35f, intensity = 0.7f }
             };
         }
 
