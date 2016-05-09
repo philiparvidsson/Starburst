@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 public static class Gamepad_Util {
     [System.Diagnostics.Conditional("GAMEPAD_VIBRATION")]
     public static void vibrate(int gp_index, float left_vib, float right_vib) {
+#if GAMEPAD_VIBRATION
         left_vib  = Math.Min(Math.Max(0.0f, left_vib ), 1.0f);
         right_vib = Math.Min(Math.Max(0.0f, right_vib), 1.0f);
 
@@ -24,6 +25,7 @@ public static class Gamepad_Util {
         if (GamePad.GetState((PlayerIndex)gp_index).IsConnected) {
             gamepad.SetVibration(vib);
         }
+#endif
     }
 }
 
