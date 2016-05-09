@@ -128,13 +128,10 @@
 
                 // Keyboard device
                 if (input.device == Input.InputType.Keyboard) {
-                    // @To-do: keys for managing powerups
-
                     if (currentKeyboardState.IsKeyDown(input.left))
                         turn -= 1.0f;
                     if (currentKeyboardState.IsKeyDown(input.right))
                         turn += 1.0f;
-
 
                     input.throttle = 0.0f;
 
@@ -144,12 +141,18 @@
                     else if (currentKeyboardState.IsKeyDown(input.down)) {
                         input.throttle = -1.0f;
                     }
-
-
+                    
                     if (currentKeyboardState.IsKeyDown(input.primary_fire))
                         fire(entity, ship, primaryWeapon);
                     if (currentKeyboardState.IsKeyDown(input.secondary_fire))
                         fire(entity, ship, secondaryWeapon);
+                    
+                    if (is_key_clicked(input.powerup_next, currentKeyboardState, input.keyboardState)) {
+                        ship.powerup_inv_index = ship.powerup_inv_index >= ship.max_powerups_inv-1 ? 0 : ship.powerup_inv_index+1;
+                    }
+                    if (is_key_clicked(input.powerup_use, currentKeyboardState, input.keyboardState)) {
+                        ship.use_powerup(ship.powerup_inv_index);
+                    }
                 }
                 // Gamepad device
                 else {
@@ -170,19 +173,13 @@
                     {
                         input.can_switch_powerups = true;
                     }
-                    if (input.can_switch_powerups && state.Buttons.LeftShoulder == ButtonState.Pressed) {
-                        input.can_switch_powerups = false;
-                        ship.powerup_inv_index -= 1;
-                        if (ship.powerup_inv_index < 0) ship.powerup_inv_index = ship.max_powerups_inv-1;
+                    if (is_gamepad_clicked(Buttons.LeftShoulder, state, input.gamepadState)) { 
+                        ship.powerup_inv_index = ship.powerup_inv_index > 0 ? ship.powerup_inv_index-1 : ship.max_powerups_inv-1;
                     }
-                    if (input.can_switch_powerups && state.Buttons.RightShoulder == ButtonState.Pressed) {
-                        input.can_switch_powerups = false;
-                        ship.powerup_inv_index += 1;
-                        if (ship.powerup_inv_index >= ship.max_powerups_inv) ship.powerup_inv_index = 0;
+                    if (is_gamepad_clicked(Buttons.RightShoulder, state, input.gamepadState)) {
+                        ship.powerup_inv_index = ship.powerup_inv_index >= ship.max_powerups_inv-1 ? 0 : ship.powerup_inv_index + 1;
                     }
-                    if (state.Buttons.Y == ButtonState.Released) input.can_use_powerup = true;
-                    if (input.can_use_powerup && state.Buttons.Y == ButtonState.Pressed && ship.powerup_inv_index < ship.powerup_inv.Length) {
-                        input.can_use_powerup = false;
+                    if (is_gamepad_clicked(Buttons.Y, state, input.gamepadState) && ship.powerup_inv_index < ship.powerup_inv.Length) { 
                         ship.use_powerup(ship.powerup_inv_index);
                     }
 

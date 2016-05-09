@@ -300,7 +300,9 @@ namespace Fab5.Starburst.States {
                 down = Keys.S,
                 gp_index = PlayerIndex.Two,
                 primary_fire = Keys.F,
-                secondary_fire = Keys.G
+                secondary_fire = Keys.G,
+                powerup_next = Keys.T,
+                powerup_use = Keys.R
             };
             var keyboardPlayer1 = create_entity(Player.create_components(wasd));
             var keyboardPlayer2 = create_entity(Player.create_components());
