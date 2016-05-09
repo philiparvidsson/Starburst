@@ -585,7 +585,7 @@ namespace Fab5.Engine.Subsystems {
 
             drawSprites(sprite_batch, camera, num_entities, entities, 0.0f);
 
-            draw_lights(sprite_batch, camera, 1.0f);
+            draw_lights(sprite_batch, camera, 0.85f);
             Fab5_Game.inst().GraphicsDevice.BlendState = BlendState.AlphaBlend;
 
             effect.Texture = tile_map.tex;
@@ -921,7 +921,7 @@ namespace Fab5.Engine.Subsystems {
                 sprite_batch.Draw((Texture2D)current.render_target, Vector2.Zero);
                 sprite_batch.End();
 
-                draw_lights(sprite_batch, current, 0.6f);
+                draw_lights(sprite_batch, current, 0.45f);
 
                 sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
 

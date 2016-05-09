@@ -125,7 +125,7 @@
                 new Mass { mass = 1.0f, restitution_coeff = -1.0f, friction = 0.0f },
                 new TTL() { alpha_fn = (x, max) => 10.0f-10.0f*x/max, max_time = lifeTime },
                 new Bullet_Info() { damage = weapon.damage, sender = origin, max_speed = speed },
-                new Light_Source { color = light_color, size = 0.35f, intensity = 0.7f }
+                new Light_Source { color = light_color, size = 0.45f, intensity = 0.7f }
             };
         }
 
