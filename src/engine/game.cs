@@ -137,10 +137,12 @@ public abstract class Fab5_Game : Game {
         time = t;
 
         if (top_state != null) {
-            top_state.update(t, dt);
-        }
+                top_state.update_t += dt;
+                time = top_state.update_t;
 
-        update(t, dt);
+                top_state.update(top_state.update_t, dt);
+            }
+        update(top_state.update_t, dt);
     }
 
     protected  override void Draw(GameTime game_time) {
@@ -150,10 +152,13 @@ public abstract class Fab5_Game : Game {
         time = t;
 
         if (top_state != null) {
-            top_state.draw(t, dt);
+                top_state.draw_t += dt;
+                time = top_state.draw_t;
+
+                top_state.draw(top_state.draw_t, dt);
         }
 
-        draw(t, dt);
+        draw(top_state.draw_t, dt);
 
         if (top_state != null) {
             top_state.dispatch_messages();
@@ -212,9 +217,11 @@ public abstract class Fab5_Game : Game {
     }*/
 
     float time;
+
     public float get_time() {
         return time;
     }
+        
 
     private static Fab5_Game s_inst;
 
@@ -224,11 +231,13 @@ public abstract class Fab5_Game : Game {
         states.Push(state);
         top_state = state;
         state.init();
+
     }
+       
 
     public void leave_state() {
         states.Pop().cleanup();
-
+            
         top_state = null;
         if (states.Count > 0) {
             top_state = states.Peek();
