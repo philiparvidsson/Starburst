@@ -220,6 +220,7 @@
             float energyScale = (ship_info.energy_value / ship_info.top_energy)*camera.zoom;
             
             //var source_rect = new Rectangle(enball.frame_x, enball.frame_y, enball.frame_width, enball.frame_height);
+
             
             sprite_batch.Draw(enball.texture,
                 new Vector2((shipPos.x - camera.position.x) * camera.zoom + camera.viewport.Width * 0.5f, (shipPos.y - camera.position.y) * camera.zoom + camera.viewport.Height * 0.5f),
