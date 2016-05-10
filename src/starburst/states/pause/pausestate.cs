@@ -87,7 +87,7 @@ namespace Fab5.Starburst.States {
             var tx = (w - text_size.X) * 0.5f;
             var ty = (h - text_size.Y) * 0.5f;
 
-            var pl = last_state.get_entities_fast(typeof(Ship_Info));
+            var pl = last_state.get_entities_fast(typeof(Score));
             List<Entity> pList = new List<Entity>();
             for (int i = 0; i < pl.Count; i++) {
                 if (pl[i].get_component<Score>() != null)
@@ -221,7 +221,15 @@ namespace Fab5.Starburst.States {
             }
             else if (cursorPosition.y == (int)options.quit) {
                 Starburst.inst().leave_state();
-                Starburst.inst().leave_state();
+                // gå till resultat-sida istället för att avsluta
+                Playing_State gameState = (Playing_State)last_state;
+                var scoreEntities = gameState.get_entities_fast(typeof(Score));
+                List<Score> scores = new List<Score>();
+                for(int i=0; i < scoreEntities.Count; i++) {
+                    scores.Add(scoreEntities[i].get_component<Score>());
+                }
+                Starburst.inst().enter_state(new Results_State(scores, gameState.game_conf));
+                //Starburst.inst().leave_state();
             }
         }
         private void resume() {

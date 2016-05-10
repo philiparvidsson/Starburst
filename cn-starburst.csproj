@@ -88,6 +88,7 @@
     <Compile Include="src\starburst\components\bulletinfo.cs" />
     <Compile Include="src\starburst\gfxutil.cs" />
     <Compile Include="src\starburst\states\menus\entities\player.cs" />
+    <Compile Include="src\starburst\states\menus\resultsstate.cs" />
     <Compile Include="src\starburst\states\menus\playerselectionmenu.cs" />
     <Compile Include="src\starburst\states\menus\mainmenustate.cs" />
     <Compile Include="src\starburst\states\menus\subsystems\backgroundrenderer.cs" />
