@@ -55,7 +55,7 @@ namespace Fab5.Engine.Subsystems {
         private Vector2 org;
         private float start_time;
         //
-        private void apply_shake(Entity e_, Entity e2_, Vector2 norm) {
+        public void apply_shake(Entity e_, Entity e2_, Vector2 norm) {
             if (e_ == null) {
                 return;
             }
@@ -98,7 +98,11 @@ namespace Fab5.Engine.Subsystems {
         }
         public override void on_message(string msg, dynamic data)
         {
-            if (msg == "collision") {
+            if (msg == "shake_camera") {
+                var i = data.player.get_component<Ship_Info>().pindex-1;
+                cameras[i].shake(data.disp_x, data.disp_y);
+            }
+            else if (msg == "collision") {
                 var norm = new Vector2(data.n_x, data.n_y);
                 norm.Normalize();
                 apply_shake(data.entity1, data.entity2, norm);

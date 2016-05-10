@@ -223,7 +223,7 @@
 
             
             sprite_batch.Draw(enball.texture,
-                new Vector2((shipPos.x - camera.position.x) * camera.zoom + camera.viewport.Width * 0.5f, (shipPos.y - camera.position.y) * camera.zoom + camera.viewport.Height * 0.5f),
+                new Vector2((shipPos.x - camera.position.x - camera.displacement.X) * camera.zoom + camera.viewport.Width * 0.5f, (shipPos.y - camera.position.y - camera.displacement.Y) * camera.zoom + camera.viewport.Height * 0.5f),
                 scale: new Vector2(energyScale, energyScale),
                 sourceRectangle: null,
                 origin: new Vector2(enball.texture.Width * 0.5f, enball.texture.Height * 0.5f),
@@ -285,7 +285,7 @@
 
             if(score.score != score.display_score)
                 score.current_time_span += dt;
-            
+
             if (score.current_time_span > time || score.display_score >= score.score) // Otherwise shit will go high
             {
                 score.display_score = score.score;
