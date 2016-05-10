@@ -10,6 +10,7 @@ namespace Fab5.Engine.Subsystems
 {
     public class Sound : Subsystem
     {
+        private static Random rand = new Random();
         public override void draw(float t, float dt)
         {
 
@@ -107,7 +108,7 @@ namespace Fab5.Engine.Subsystems
         public override void on_message(string msg, dynamic data)
         {
             if (msg == "play_sound_asset") {
-                var asset = data.name;
+                string asset = data.name;
 
                 if (soundlib.ContainsKey(asset)) {
                     // map name to asset file
@@ -116,8 +117,18 @@ namespace Fab5.Engine.Subsystems
 
                 Console.WriteLine("playing " + asset);
 
+                float pitchval = 0.0f;
+                bool varying_pitch = false;
+                try {
+                    varying_pitch = data.varying_pitch;
+                }
+                catch (Exception) {}
+
+
                 var sound_effect = Fab5_Game.inst().get_content<SoundEffect>(asset);
-                sound_effect.Play();
+                if (varying_pitch)
+                    pitchval = 0.2f * (float)Math.Sign((float)rand.NextDouble() - 0.5f) * (float)Math.Pow(rand.NextDouble(), 3.0f);
+                sound_effect.Play(volume: 1,pitch: (float)(pitchval), pan:0);
                 return;
             }
             else if (msg == "play_song_asset") {
@@ -216,10 +227,13 @@ namespace Fab5.Engine.Subsystems
                             }
                         }
                         else {
-                            if (data.name == "LaserBlaster")
-                                effect.SoundEffect.Play(volume: 1,pitch: (float)(-0.4f + (0.8f * new Random().NextDouble())), pan:0);
-                            else if (data.name == "LaserBlaster2")
-                                effect.SoundEffect.Play();
+                            var pitchval = 0.2f * (float)Math.Sign((float)rand.NextDouble() - 0.5f) * (float)Math.Pow(rand.NextDouble(), 3.0f);
+                            if (data.name == "LaserBlaster") {
+                                effect.SoundEffect.Play(volume: 1,pitch: (float)(pitchval), pan:0);
+                            }
+                            else if (data.name == "LaserBlaster2") {
+                                effect.SoundEffect.Play(volume: 1,pitch: (float)(pitchval), pan:0);
+                            }
                             else if (lib.ActiveSoundIns.ContainsKey(data.name))
                             {
                                 var active = lib.ActiveSoundIns[data.name] as ActiveSound;

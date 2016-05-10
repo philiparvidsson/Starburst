@@ -940,9 +940,9 @@ namespace Fab5.Engine.Subsystems {
 
 //            sprite_batch.GraphicsDevice.Viewport = defaultViewport;
 
-            /*sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
             draw_match_time();
-            sprite_batch.End();*/
+            sprite_batch.End();
 
             sprite_batch.GraphicsDevice.SetRenderTarget(null);
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Opaque);
