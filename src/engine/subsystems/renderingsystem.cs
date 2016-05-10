@@ -78,6 +78,10 @@ namespace Fab5.Engine.Subsystems {
                 fac = 0.7f + damage/70.0f;
                 force = 100.0f*fac;
             }
+            else if (e2 != null && e2.get_component<Powerup>() != null) {
+                fac = 0.0f;
+                force = 0.0f;
+            }
             else {
                 fac = 0.1f;
                 force = (float)Math.Sqrt(vel.x*vel.x+vel.y*vel.y)*fac;
