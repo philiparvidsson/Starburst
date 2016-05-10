@@ -49,7 +49,7 @@ public class Playing_State : Game_State {
         private void tryPause() {
             if (can_pause) {
                 can_pause = false;
-                Starburst.inst().enter_state(new Pause_State(this));
+                Starburst.inst().enter_state(new Pause_State(renderer.backbuffer_target, this));
             }
         }
 
@@ -141,6 +141,8 @@ public class Playing_State : Game_State {
         }
     }
 
+    private Rendering_System renderer;
+
     public override void init() {
         MediaPlayer.Volume = game_conf.music_vol;
 //        Starburst.inst().IsMouseVisible = true;        // @To-do: Load map here.
@@ -176,7 +178,7 @@ public class Playing_State : Game_State {
                     new AI()
                 ),
                 new Multi_Subsystem(
-                    new Rendering_System(Starburst.inst().GraphicsDevice) {
+                    renderer = new Rendering_System(Starburst.inst().GraphicsDevice) {
                         tile_map = tile_map
                     },
                     new Window_Title_Writer()

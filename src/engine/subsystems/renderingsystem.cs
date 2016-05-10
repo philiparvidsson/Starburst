@@ -657,7 +657,7 @@ namespace Fab5.Engine.Subsystems {
             generate_3d_map();
         }
 
-        private RenderTarget2D backbuffer_target;
+        public RenderTarget2D backbuffer_target;
 
         private void updatePlayers() {
             // ev hantering för om inga spelare hittas?

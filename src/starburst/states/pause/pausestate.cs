@@ -16,13 +16,13 @@ namespace Fab5.Starburst.States {
     using System.Threading;
 
     public class Pause_State : Game_State {
-    private bool can_unpause = false;
     private float restore_vol;
         private Game_State last_state;
         private SpriteBatch sprite_batch;
         private SpriteFont font;
         private GraphicsDevice graphicsDevice;
         private float btnDelay = .5f;
+        private Texture2D bg_tex;
 
         enum options {
             resume,
@@ -30,8 +30,9 @@ namespace Fab5.Starburst.States {
         };
 
 
-        public Pause_State(Game_State last_state)
+        public Pause_State(Texture2D bg_tex, Game_State last_state)
         {
+            this.bg_tex = bg_tex;
             this.last_state = last_state;
         }
         public override void init() {
@@ -75,6 +76,8 @@ namespace Fab5.Starburst.States {
             var h = Starburst.inst().GraphicsMgr.PreferredBackBufferHeight;
 
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+
+            sprite_batch.Draw(bg_tex, Vector2.Zero);
 
             GFX_Util.fill_rect(sprite_batch, new Rectangle(0, 0, w, h), Color.Black * 0.5f);
 
@@ -129,7 +132,6 @@ namespace Fab5.Starburst.States {
 
                 if (player_score == null || player_shipinfo.pindex >= 5) continue;
 
-                int pad_size = 6;
                 int rowY = startY + rowHeight * p + vertSpacing * p;
 
                 GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_shipinfo.pindex - 1], nameX, rowY);
