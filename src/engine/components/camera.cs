@@ -39,6 +39,37 @@ namespace Fab5.Engine.Components {
         public Velocity velocity;
         public RenderTarget2D render_target;
 
+        // modelling camera shaking through Hooke's law
+        public float springCoeff = 50.0f;
+        public float dragCoeff = 3.0f;
+        public Vector2 displacement;
+        public Vector2 springs;
+
+        public void shake(float x, float y) {
+            springs += new Vector2(x, y);
+        }
+
+        private void update_springs(float dt) {
+            if (springs.Length() <= 0.01f) {
+                return;
+            }
+
+            var r = displacement.Length();
+
+            // 0 is the length we want
+            var d = 0.0f - r;
+
+
+            if (d < -0.01f) {
+                var dir = displacement;
+                dir.Normalize();
+
+                springs += d*dir * springCoeff * dt;
+            }
+            springs -= springs * dragCoeff * dt;
+            displacement += springs * dt;
+        }
+
 
         float moving_fast_time = 0.0f;
         float moving_slow_time = 999.0f;
@@ -47,6 +78,9 @@ namespace Fab5.Engine.Components {
         bool zooming_out = false;
 
         public void update(float dt) {
+            for (int i = 0; i < 5; i++) {
+                update_springs(dt);
+            }
             if (velocity == null) {
                 zoom2 = 0.0f;
             }
@@ -106,7 +140,7 @@ namespace Fab5.Engine.Components {
 
         public Matrix getViewMatrix(Viewport vp) {
             transformMatrix = Matrix.CreateTranslation(
-                new Vector3(-position.x, -position.y, 0)) *
+                                                       new Vector3(-(position.x+displacement.X), -(position.y+displacement.Y), 0)) *
                 Matrix.CreateScale(new Vector3(zoom, zoom, 1)) *
                 Matrix.CreateTranslation(new Vector3(origin, 0));
             /*

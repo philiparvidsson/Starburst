@@ -276,7 +276,7 @@ public class Collision_Solver : Subsystem {
                 //Console.WriteLine("left " + x + "," + y + " normal " + -dx + ", " + -dy);
                 p.x = c_x-dx-eps;
                 collide(e1, c_x, c_y, -dx, -dy);
-                Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
+                Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y, n_x = -dx, n_y = -dy });
 
 
                 return true;
@@ -301,7 +301,7 @@ public class Collision_Solver : Subsystem {
                 //Console.WriteLine("right " + x + "," + y + " normal " + dx + ", " + -dy + " | " + " bottom: " + bottom + "  top: " + top + "  h=" + h);
                 p.x = c_x+dx+eps;
                 collide(e1, c_x, c_y, dx, -dy);
-                Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
+                Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y, n_x = dx, n_y = -dy });
                 return true;
             }
         }
@@ -360,7 +360,7 @@ public class Collision_Solver : Subsystem {
                 //Console.WriteLine("top " + x + "," + y + " normal " + -dx + ", " + -dy);
                 p.y = c_y-dy-eps;
                 collide(e1, c_x, c_y, -dx, -dy);
-                Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
+                Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y, n_x = -dx, n_y = -dy });
                 return true;
             }
         }
@@ -382,7 +382,7 @@ public class Collision_Solver : Subsystem {
                 //Console.WriteLine("bottom " + x + "," + y + " normal " + -dx + ", " + dy);
                 p.y = c_y+dy+eps;
                 collide(e1, c_x, c_y, -dx, dy);
-                Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y });
+                Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = (Entity)null, c_x = c_x, c_y = c_y, n_x = -dx, n_y = dy });
                 return true;
             }
         }
@@ -535,7 +535,7 @@ public class Collision_Solver : Subsystem {
         var c_x  = p2.x + n_x * c2.radius;
         var c_y  = p2.y + n_y * c2.radius;
 
-        Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = e2, c_x = c_x, c_y = c_y });
+        Fab5_Game.inst().message("collision", new { entity1 = e1, entity2 = e2, c_x = c_x, c_y = c_y, n_x = n_x, n_y = n_y });
 
         if (c1.collision_cb != null) {
             c1.collision_cb(e1, e2);

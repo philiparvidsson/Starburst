@@ -55,9 +55,52 @@ namespace Fab5.Engine.Subsystems {
         private Vector2 org;
         private float start_time;
         //
+        private void apply_shake(Entity e_, Entity e2_, Vector2 norm) {
+            if (e_ == null) {
+                return;
+            }
+
+            var e = e_;
+            var e2 = e2_;
+            bool is_player = (e.get_component<Input>() != null);
+
+            if (!is_player) {
+                return;
+            }
+
+            Velocity vel = e.get_component<Velocity>();
+            var fac = 0.0f;
+            var force = 0.0f;
+
+            if (e2 != null && e2.get_component<Fab5.Starburst.Components.Bullet_Info>() != null) {
+                // weapons do lots of shaky shaky
+                var damage = e2.get_component<Fab5.Starburst.Components.Bullet_Info>().damage;
+                fac = 0.7f + damage/70.0f;
+                force = 100.0f*fac;
+            }
+            else {
+                fac = 0.1f;
+                force = (float)Math.Sqrt(vel.x*vel.x+vel.y*vel.y)*fac;
+            }
+
+            var nv = new Vector2(vel.x, vel.y);
+            nv.Normalize();
+            nv = Vector2.Reflect(nv, norm);
+            var disp_x = (float)nv.X * force;
+            var disp_y = (float)nv.Y * force;
+
+            var i = e.get_component<Ship_Info>().pindex-1;
+            cameras[i].shake(disp_x, disp_y);
+        }
         public override void on_message(string msg, dynamic data)
         {
-            if (msg == "camera_shake")
+            if (msg == "collision") {
+                var norm = new Vector2(data.n_x, data.n_y);
+                norm.Normalize();
+                apply_shake(data.entity1, data.entity2, norm);
+                apply_shake(data.entity2, data.entity1, norm);
+            }
+            else if (false && msg == "camera_shake")
             {
                 int current = (int)(data.pindex - 1);
                 if (!cameras[current].shaking)
@@ -406,6 +449,10 @@ namespace Fab5.Engine.Subsystems {
 
             var shadows = Fab5_Game.inst().get_entities_fast(typeof (Shadow));
             if (shadows.Count > 0) {
+                var cam_pos = camera.position;
+                cam_pos.x += camera.displacement.X;
+                cam_pos.y += camera.displacement.Y;
+
                 sprite_batch.Begin(SpriteSortMode.Deferred, shadow_blend);
 
                 var hw = camera.viewport.Width * 0.5f;
@@ -426,9 +473,9 @@ namespace Fab5.Engine.Subsystems {
                         r = a.angle;
                     }
 
-                    var sx = 0.96f*(pos.x - camera.position.x)*camera.zoom + hw;
+                    var sx = 0.96f*(pos.x - cam_pos.x)*camera.zoom + hw;
 
-                    var sy = 0.96f*(pos.y - camera.position.y)*camera.zoom + hh;
+                    var sy = 0.96f*(pos.y - cam_pos.y)*camera.zoom + hh;
 
                     int frame_width  = sprite.frame_width;
                     int frame_height = sprite.frame_height;
@@ -482,6 +529,10 @@ namespace Fab5.Engine.Subsystems {
                 var hht = light_tex.Height * 0.5f;
                 var origin = new Vector2(hwt, hht);
 
+                var cam_pos = camera.position;
+                cam_pos.x += camera.displacement.X;
+                cam_pos.y += camera.displacement.Y;
+
                 foreach (var e in lights) {
                     var light = e.get_component<Light_Source>();
                     var pos   = e.get_component<Position>();
@@ -499,8 +550,8 @@ namespace Fab5.Engine.Subsystems {
                         hwt = lightcone_tex.Width * 0.5f;
                         hht = lightcone_tex.Height * 0.5f;
                         origin = new Vector2(hwt, hht);
-                        sx = (pos.x - camera.position.x)*camera.zoom + hw;
-                        sy = (pos.y - camera.position.y)*camera.zoom + hh;
+                        sx = (pos.x - cam_pos.x)*camera.zoom + hw;
+                        sy = (pos.y - cam_pos.y)*camera.zoom + hh;
                     }
                     else {
                         r = 0.0f;
@@ -530,19 +581,23 @@ namespace Fab5.Engine.Subsystems {
             Fab5_Game.inst().GraphicsDevice.SetRenderTarget(camera.render_target);
             Fab5_Game.inst().GraphicsDevice.Clear(Color.Transparent);
 
+            var cam_pos = camera.position;
+            cam_pos.x += camera.displacement.X;
+            cam_pos.y += camera.displacement.Y;
+
             var inv_zoom = 1.0f / camera.zoom;
-            int left   = -1+(int)((camera.position.x + 2048.0f - camera.viewport.Width * 0.5f * inv_zoom) / 16.0f) / 32;
-            int right  = 1+(int)((camera.position.x + 2048.0f + camera.viewport.Width * 0.5f * inv_zoom) / 16.0f) / 32;
-            int top    = -1+(int)((camera.position.y + 2048.0f - camera.viewport.Height * 0.5f * inv_zoom) / 16.0f) / 32;
-            int bottom = 1+(int)((camera.position.y + 2048.0f + camera.viewport.Height * 0.5f * inv_zoom) / 16.0f) / 32;
+            int left   = -1+(int)((cam_pos.x + 2048.0f - camera.viewport.Width * 0.5f * inv_zoom) / 16.0f) / 32;
+            int right  = 1+(int)((cam_pos.x + 2048.0f + camera.viewport.Width * 0.5f * inv_zoom) / 16.0f) / 32;
+            int top    = -1+(int)((cam_pos.y + 2048.0f - camera.viewport.Height * 0.5f * inv_zoom) / 16.0f) / 32;
+            int bottom = 1+(int)((cam_pos.y + 2048.0f + camera.viewport.Height * 0.5f * inv_zoom) / 16.0f) / 32;
 
             if (left < 0) left = 0;
             if (right > 7) right = 7;
             if (top < 0) top = 0;
             if (bottom > 7) bottom = 7;
 
-            var cx = -camera.position.x * (2.0f/120.0f)/16.0f;
-            var cy = -camera.position.y * (2.0f/120.0f)/16.0f;
+            var cx = -cam_pos.x * (2.0f/120.0f)/16.0f;
+            var cy = -cam_pos.y * (2.0f/120.0f)/16.0f;
 
             effect.View  = Matrix.CreateLookAt(new Vector3(cx, cy, 0.0f), new Vector3(cx, cy, 1.0f), Vector3.Up);
 
