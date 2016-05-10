@@ -25,10 +25,7 @@
             enball = new Sprite()
             {
                 texture = Fab5_Game.inst().get_content<Texture2D>("EnergiAtlas"),
-                frame_width = 150,
-                frame_height = 150,
-                num_frames = 4,
-                color = new Color(0.70f, 0.70f, 0.70f)
+                //color = new Color(0.70f, 0.70f, 0.70f)
             };
 
             minimap_tex = new Texture2D(Fab5_Game.inst().GraphicsDevice, 256, 256);
@@ -222,54 +219,54 @@
         {
             float energyScale = (ship_info.energy_value / ship_info.top_energy)*camera.zoom;
             
-            var source_rect = new Rectangle(enball.frame_x, enball.frame_y, enball.frame_width, enball.frame_height);
+            //var source_rect = new Rectangle(enball.frame_x, enball.frame_y, enball.frame_width, enball.frame_height);
             
             sprite_batch.Draw(enball.texture,
                 new Vector2((shipPos.x - camera.position.x) * camera.zoom + camera.viewport.Width * 0.5f, (shipPos.y - camera.position.y) * camera.zoom + camera.viewport.Height * 0.5f),
                 scale: new Vector2(energyScale, energyScale),
-                sourceRectangle: source_rect,
-                origin: new Vector2(enball.frame_width * 0.5f, enball.frame_height * 0.5f),
-                color: Color.White * energyScale * 0.5f
+                sourceRectangle: null,
+                origin: new Vector2(enball.texture.Width * 0.5f, enball.texture.Height * 0.5f),
+                color: Color.White * energyScale
                 );
 
-            updateEnergySprite(dt);
+            //updateEnergySprite(dt);
         }
 
-        private void updateEnergySprite(float dt)
-        {
-            var players = Fab5_Game.inst().get_entities_fast(typeof(Input));
-
-
-            this.number_of_players = 0;
-
-            foreach(Entity p in players)
-            {
-                if(p.get_component<Input>().enabled)
-                    this.number_of_players++;
-            }
-            
-
-            enball.fps = 20.0f / this.number_of_players;
-
-            enball.frame_timer += dt;
-            if (enball.frame_timer > (1.0f / enball.fps))
-            {
-                enball.frame_counter++;
-                enball.frame_timer -= (1.0f / enball.fps);
-
-                enball.frame_x += enball.frame_width;
-                if (enball.frame_x >= enball.texture.Width || enball.frame_counter >= enball.num_frames)
-                {
-                    enball.frame_x = 0;
-
-                    if (enball.frame_counter >= enball.num_frames)
-                    {
-                        enball.frame_counter = 0;
-                        enball.frame_y = 0;
-                    }
-                }
-            }
-        }
+        // private void updateEnergySprite(float dt)
+//         {
+//             var players = Fab5_Game.inst().get_entities_fast(typeof(Input));
+// 
+// 
+//             this.number_of_players = 0;
+// 
+//             foreach(Entity p in players)
+//             {
+//                 if(p.get_component<Input>().enabled)
+//                     this.number_of_players++;
+//             }
+//             
+// 
+//             enball.fps = 20.0f / this.number_of_players;
+// 
+//             enball.frame_timer += dt;
+//             if (enball.frame_timer > (1.0f / enball.fps))
+//             {
+//                 enball.frame_counter++;
+//                 enball.frame_timer -= (1.0f / enball.fps);
+// 
+//                 enball.frame_x += enball.frame_width;
+//                 if (enball.frame_x >= enball.texture.Width || enball.frame_counter >= enball.num_frames)
+//                 {
+//                     enball.frame_x = 0;
+// 
+//                     if (enball.frame_counter >= enball.num_frames)
+//                     {
+//                         enball.frame_counter = 0;
+//                         enball.frame_y = 0;
+//                     }
+//                 }
+//             }
+//         }
 
         private void drawScore(Score score, float dt)
         {

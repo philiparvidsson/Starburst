@@ -23,7 +23,7 @@ public static class Red_Turret {
     private const float THINK_INTERVAL = 1.0f/10.0f; // think 5 times per sec
         public const int IG_BULLET = 179;// random id to make bullets not collide with each other
 
-    public static float awareness_dist = 700.0f*700.0f;
+    public static float awareness_dist = 850.0f*850.0f;
 
     private static Random rand = new Random();
 

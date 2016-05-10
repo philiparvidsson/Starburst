@@ -50,20 +50,20 @@ public class Nanobots_Powerup : Powerup_Impl {
     }
 
     private Component[] nanobot() {
-        var light_source = new Light_Source { size = 0.5f, color = new Color(0.5f, 0.6f, 1.0f) };
+        var light_source = new Light_Source { lightcone = false, size = 0.5f, color = new Color(0.5f, 0.6f, 1.0f) };
         return new Component[] {
             light_source,
             new Sprite { texture = Starburst.inst().get_content<Texture2D>("nanobot") },
-            new Mass { mass = 9.0f, drag_coeff = 3.4f, restitution_coeff = 1.0f },
+            new Mass { mass = 10.0f, drag_coeff = 3.4f, restitution_coeff = 1.0f, friction = 0.0f },
             new Bounding_Circle { radius = 7.0f },
             new Position {},
             new Velocity {},
             new Brain {
-                time_since_think = (float)rand.NextDouble()*0.5f,
-                think_interval = 1.0f / 2.0f,
+                time_since_think = (float)rand.NextDouble()*0.33f,
+                think_interval = 1.0f / 3.0f,
                 think_fn = (self) => {
                     if ((int)self.get_component<Data>().get_data("state", 0) == 0) {
-                        self.get_component<Light_Source>().color = new Color(1.0f, 0.5f, 0.0f);
+                        self.get_component<Light_Source>().color = new Color(1.0f, 0.7f, 0.7f);
                         self.get_component<Data>().data["state"] = 1;
                     }
                     else {
