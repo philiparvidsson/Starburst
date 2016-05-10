@@ -52,6 +52,8 @@ public class Pause_State : Game_State {
                 Score player_score = player.get_component<Score>();
                 Ship_Info player_shipinfo = player.get_component<Ship_Info>();
 
+                if (player_score == null || player_shipinfo.pindex >= 5) continue;
+
                 var scoretext = string.Format("Player {0} stats;    Kills: {1}  Death: {2}  Score: {3}", s[player_shipinfo.pindex - 1], player_score.num_kills, player_score.num_deaths, player_score.display_score);
 
                 var scoretext_size = GFX_Util.measure_string(scoretext);
