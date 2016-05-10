@@ -66,8 +66,8 @@ namespace Fab5.Starburst.States {
         }
 
         public override void draw(float t, float dt) {
-        
             graphicsDevice.Clear(Color.Black);
+            Viewport vp = sprite_batch.GraphicsDevice.Viewport;
             // gamla init-saker
 
             //draw-grejer
@@ -87,11 +87,40 @@ namespace Fab5.Starburst.States {
             var pl = last_state.get_entities_fast(typeof(Ship_Info));
             List<Entity> pList = new List<Entity>();
             for (int i = 0; i < pl.Count; i++) {
-                if (pl[i].get_component<Score>() == null)
+                if (pl[i].get_component<Score>() != null)
                     pList.Add(pl[i]);
             }
 
-            int y = 50;
+            int rowHeight = 50;
+            int vertSpacing = 10;
+            int totalScoreHeight = rowHeight * pList.Count+1 + vertSpacing*(pList.Count-1+1);
+            int startY = (int)(vp.Height*.25f-totalScoreHeight*.5f);
+
+            int horSpacing = 20;
+            int nameWidth = 300;
+
+            String killsHeader = "Kills";
+            String deathsHeader = "Deaths";
+            String scoreHeader = "Score";
+            Vector2 killsSize = font.MeasureString(killsHeader);
+            Vector2 deathsSize = font.MeasureString(deathsHeader);
+            Vector2 scoreSize = font.MeasureString("999999");
+
+            int totalScoreWidth = (int)(nameWidth + horSpacing + killsSize.X + horSpacing + deathsSize.X + horSpacing + scoreSize.X);
+            int nameX = (int)(vp.Width * .5f - totalScoreWidth * .5f);
+            int killsX = nameX + nameWidth + horSpacing;
+            int deathsX = (int)(killsX + killsSize.X + horSpacing);
+            int scoreX = (int)(deathsX + deathsSize.X + horSpacing);
+            
+            // header row
+            // TODO: måla en rektangel bakom
+
+            //GFX_Util.draw_def_text(sprite_batch, "Player", nameX, startY);
+            GFX_Util.draw_def_text(sprite_batch, killsHeader, killsX, startY);
+            GFX_Util.draw_def_text(sprite_batch, deathsHeader, deathsX, startY);
+            GFX_Util.draw_def_text(sprite_batch, scoreHeader, scoreX, startY);
+
+            startY += rowHeight + vertSpacing;
 
             for (int p = 0; p < pList.Count; p++) {
                 var player = pList[p];
@@ -100,15 +129,15 @@ namespace Fab5.Starburst.States {
 
                 if (player_score == null || player_shipinfo.pindex >= 5) continue;
 
-                var scoretext = string.Format("Player {0} stats;    Kills: {1}  Death: {2}  Score: {3}", s[player_shipinfo.pindex - 1], player_score.num_kills, player_score.num_deaths, player_score.display_score);
-
-                var scoretext_size = GFX_Util.measure_string(scoretext);
-                var xx = (w - scoretext_size.X) * 0.5f;
-                GFX_Util.draw_def_text(sprite_batch, scoretext, xx, y * (p + 1));
-
                 int pad_size = 6;
+                int rowY = startY + rowHeight * p + vertSpacing * p;
 
-                GFX_Util.fill_rect(sprite_batch, new Rectangle((int)xx - pad_size, y * (p + 1) - pad_size, (int)scoretext_size.X + (pad_size * 2), (int)scoretext_size.Y + (pad_size * 2)), Color.AliceBlue * 0.2f);
+                GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_shipinfo.pindex - 1], nameX, rowY);
+                GFX_Util.draw_def_text(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
+                GFX_Util.draw_def_text(sprite_batch, player_score.num_deaths.ToString(), deathsX, rowY);
+                GFX_Util.draw_def_text(sprite_batch, player_score.display_score.ToString(), scoreX, rowY);
+
+                //GFX_Util.fill_rect(sprite_batch, new Rectangle((int)xx - pad_size, rowY, (int)scoretext_size.X + (pad_size * 2), (int)scoretext_size.Y + (pad_size * 2)), Color.AliceBlue * 0.2f);
 
 
             }
@@ -120,8 +149,6 @@ namespace Fab5.Starburst.States {
 
 
 
-            //Viewport
-            Viewport vp = sprite_batch.GraphicsDevice.Viewport;
 
             //hämta position från första input-entiteten
             var players = get_entities_fast(typeof(Position));
@@ -129,29 +156,23 @@ namespace Fab5.Starburst.States {
 
             //spritebatch
             sprite_batch.Begin();
-
+            
             // resume
             String menuText = "Resume";
             Vector2 menuTextSize = font.MeasureString(menuText);
-            sprite_batch.DrawString(font, menuText, new Vector2(vp.Width * .5f - menuTextSize.X * .5f, vp.Height * .5f + 30), (cursorPosition.y == (int)options.resume ? Color.Gold : Color.White));
+            int totalMenuHeight = (int)(menuTextSize.Y * 2 + vertSpacing * 1);
+            startY = (int)(vp.Height * .75f - totalMenuHeight * .5f);
+
+            sprite_batch.DrawString(font, menuText, new Vector2(vp.Width * .5f - menuTextSize.X * .5f, startY), (cursorPosition.y == (int)options.resume ? Color.Gold : Color.White));
 
             // quit
             menuText = "Quit";
             menuTextSize = font.MeasureString(menuText);
-            sprite_batch.DrawString(font, menuText, new Vector2(vp.Width * .5f - menuTextSize.X * .5f, vp.Height * .5f + 30 + 50), (cursorPosition.y == (int)options.quit ? Color.Gold : Color.White));
+            sprite_batch.DrawString(font, menuText, new Vector2(vp.Width * .5f - menuTextSize.X * .5f, startY+menuTextSize.Y+vertSpacing), (cursorPosition.y == (int)options.quit ? Color.Gold : Color.White));
 
             sprite_batch.End();
 
         Thread.Sleep(10);
-    }
-    private void moveDown() {
-        var entities = Starburst.inst().get_entities_fast(typeof(Position));
-        Entity entity = entities[0];
-        var position = entity.get_component<Position>();
-        if (position.y < (int)options.quit) {
-            position.y += 1;
-            Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
-        }
     }
         public override void on_message(string msg, dynamic data) {
 
@@ -171,7 +192,13 @@ namespace Fab5.Starburst.States {
                     }
                 }
                 else if (msg.Equals("down")) {
-                    moveDown();
+                    var entities = Starburst.inst().get_entities_fast(typeof(Position));
+                    Entity entity = entities[0];
+                    var position = entity.get_component<Position>();
+                    if (position.y < (int)options.quit) {
+                        position.y += 1;
+                        Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
+                    }
                 }
                 else if (msg.Equals("select")) {
                     var entities = Starburst.inst().get_entities_fast(typeof(Input));
