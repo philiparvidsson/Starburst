@@ -16,7 +16,7 @@
 
         private Texture2D minimap_tex;
         private Texture2D white_pixel_tex;
-        private int number_of_players;
+        //private int number_of_players;
 
         public Hudsystem(SpriteBatch sprite_batch, Tile_Map tile_map)
         {

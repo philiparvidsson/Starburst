@@ -671,7 +671,7 @@ namespace Fab5.Engine.Subsystems {
                 currentPlayerNumber = 1;
                 zoom *= 1.2f;
             }
-            else if(currentPlayerNumber <= 2) {
+            else if(currentPlayerNumber == 2) {
                 // 1/2 screen, handle heights and y position
                 viewports = new Viewport[2];
                 cameras = new Camera[2];
@@ -703,6 +703,7 @@ namespace Fab5.Engine.Subsystems {
                 bottom.Width = (int)(defaultViewport.Width * .5);
                 bottom.Height = (int)(defaultViewport.Height * .5);
                 bottom.Y = topLeft.Height;
+                bottom.X = (int)((defaultViewport.Width - bottom.Width) * 0.5f);
 
                 viewports[0] = topLeft;
                 viewports[1] = topRight;
