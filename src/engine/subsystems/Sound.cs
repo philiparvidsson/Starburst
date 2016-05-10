@@ -216,7 +216,9 @@ namespace Fab5.Engine.Subsystems
                             }
                         }
                         else {
-                            if (data.name == "LaserBlaster2" || data.name == "LaserBlaster")
+                            if (data.name == "LaserBlaster")
+                                effect.SoundEffect.Play(volume: 1,pitch: (float)(-0.4f + (0.8f * new Random().NextDouble())), pan:0);
+                            else if (data.name == "LaserBlaster2")
                                 effect.SoundEffect.Play();
                             else if (lib.ActiveSoundIns.ContainsKey(data.name))
                             {
