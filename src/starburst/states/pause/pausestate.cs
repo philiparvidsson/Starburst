@@ -175,7 +175,6 @@ namespace Fab5.Starburst.States {
         Thread.Sleep(10);
     }
         public override void on_message(string msg, dynamic data) {
-
             if (btnDelay <= 0) {
                 if (msg.Equals("fullscreen")) {
                     btnDelay = .5f;
@@ -201,22 +200,26 @@ namespace Fab5.Starburst.States {
                     }
                 }
                 else if (msg.Equals("select")) {
-                    var entities = Starburst.inst().get_entities_fast(typeof(Input));
-                    Entity cursor = entities[0];
-                    Position cursorPosition = cursor.get_component<Position>();
-                    if (cursorPosition.y == (int)options.resume) {
-                        resume();
-                    }
-                    else if(cursorPosition.y == (int)options.quit) {
-                        Starburst.inst().Quit();
-                    }
+                    select();
                 }
                 else if (msg.Equals("start")) {
-                    resume();
+                    select();
                 }
                 else if (msg.Equals("escape")) {
                     resume();
                 }
+            }
+        }
+        private void select() {
+            var entities = Starburst.inst().get_entities_fast(typeof(Input));
+            Entity cursor = entities[0];
+            Position cursorPosition = cursor.get_component<Position>();
+            if (cursorPosition.y == (int)options.resume) {
+                resume();
+            }
+            else if (cursorPosition.y == (int)options.quit) {
+                Starburst.inst().leave_state();
+                Starburst.inst().leave_state();
             }
         }
         private void resume() {

@@ -86,6 +86,7 @@ namespace Fab5.Starburst.States {
                 */
                 btnDelay = BTN_DELAY;
                 Starburst.inst().message("play_sound_asset", new { name = "menu_positive" });
+                Starburst.inst().leave_state(); // ta bort nuvarande state för att man ska gå till "huvudmeny" från spelläge
                 Starburst.inst().enter_state(new Playing_State(inputs, parent.gameConfig));
             }
         }
