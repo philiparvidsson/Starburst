@@ -44,7 +44,8 @@ namespace Fab5.Starburst.States {
             sprite_batch = new SpriteBatch(graphicsDevice);
 
             add_subsystems(
-                new Menu_Input_Handler()
+                new Menu_Input_Handler(),
+                new Sound()
             );
 
             font = Starburst.inst().get_content<SpriteFont>("sector034");
