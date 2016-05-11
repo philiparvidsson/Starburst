@@ -73,16 +73,14 @@ namespace Fab5.Starburst.States {
                     btnDelay = .5f;
                     Starburst.inst().GraphicsMgr.ToggleFullScreen();
                 }
-                else if (msg.Equals("select")) {
-                    proceed();
-                }
-                else if (msg.Equals("start")) {
+                else if (msg.Equals("select") || msg.Equals("start")) {
                     proceed();
                 }
             }
         }
 
         private void proceed() {
+            Starburst.inst().leave_state();
         }
 
         public override void init() {
@@ -121,6 +119,9 @@ namespace Fab5.Starburst.States {
             heightDiff = (int)(controllerBtnSize - okSize.Y);
             yPos = (int)(vp.Height - controllerBtnSize - 15);
             
+            for(int i = 0; i < players.Count; i++) {
+                create_entity(Player.create_components(players[i].get_component<Input>()));
+            }
         }
 
         public override void update(float t, float dt) {
@@ -150,18 +151,11 @@ namespace Fab5.Starburst.States {
             Viewport vp = sprite_batch.GraphicsDevice.Viewport;
             var s = new[] { "one", "two", "three", "four" };
 
-            sprite_batch.Begin();
+            sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 
-            var text_size = GFX_Util.measure_string("Paused");
-            var tx = (vp.Width - text_size.X) * 0.5f;
-            var ty = (vp.Height - text_size.Y) * 0.5f;
-            
-
+            int startY = 150;
             int rowHeight = 50;
             int vertSpacing = 10;
-            int totalScoreHeight = rowHeight * players.Count + 1 + vertSpacing * (players.Count - 1 + 1);
-            int startY = (int)(vp.Height * .25f - totalScoreHeight * .5f);
-
             int horSpacing = 20;
             int nameWidth = 300;
 
@@ -178,106 +172,124 @@ namespace Fab5.Starburst.States {
             int deathsX = (int)(killsX + killsSize.X + horSpacing);
             int scoreX = (int)(deathsX + deathsSize.X + horSpacing);
 
-            // header row
-            // TODO: måla en rektangel bakom
-
+            int textOffset = (int)((rowHeight - killsSize.Y)*.5f);
+            int vertPadding = 10;
+            int horPadding = 20;
+            
             //GFX_Util.draw_def_text(sprite_batch, "Player", nameX, startY);
             GFX_Util.draw_def_text(sprite_batch, killsHeader, killsX, startY);
             GFX_Util.draw_def_text(sprite_batch, deathsHeader, deathsX, startY);
             GFX_Util.draw_def_text(sprite_batch, scoreHeader, scoreX, startY);
-
             startY += rowHeight + vertSpacing;
 
             if (gameConfig.mode == Game_Config.GM_TEAM_DEATHMATCH) {
                 List<Entity> redTeam = new List<Entity>();
                 List<Entity> blueTeam = new List<Entity>();
                 float redScore = 0, blueScore = 0;
+
+                // lägg spelare i rätt lag
                 for (int p = 0; p < players.Count; p++) {
                     Ship_Info player_info = players[p].get_component<Ship_Info>();
-                    if (player_info.team == 1)
-                        redTeam.Add(players[p]);
-                    else
-                        blueTeam.Add(players[p]);
+                    if (player_info.team == 1) redTeam.Add(players[p]);
+                    else blueTeam.Add(players[p]);
                 }
                 // måla ut lagruta inkl lag-header
-                
-                GFX_Util.fill_rect(sprite_batch, new Rectangle(nameX, startY, totalScoreWidth, totalScoreHeight), new Color(1.0f, 0.2f, 0.2f, 0.3f));
+                int redTeamHeight = rowHeight * (redTeam.Count+0) + vertSpacing * (redTeam.Count - 1);
+                Rectangle destRect = new Rectangle(nameX- horPadding, startY- vertPadding, totalScoreWidth + horPadding * 2, redTeamHeight + vertPadding * 2);
+                Color col = new Color(1.0f, 0.2f, 0.2f, 0.3f);
+                GFX_Util.fill_rect(sprite_batch, destRect, col);
+                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
+                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Right - 4, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
+                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Top, destRect.Width - 8, 4), new Color(col.R, col.G, col.B, 255));
+                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Bottom - 4, destRect.Width - 8, 4), new Color(col.R, col.G, col.B, 255));
                 for (int i=0; i < redTeam.Count; i++) {
                     Score player_score = redTeam[i].get_component<Score>();
                     Ship_Info player_info = redTeam[i].get_component<Ship_Info>();
-                    redScore += player_score.score;
 
-                    // måla ut spelarscore
-                    int rowY = startY + rowHeight * i + vertSpacing * i;
+                    redScore += player_score.score;
+                    int rowY = startY + rowHeight * i + textOffset + vertSpacing * i;
 
                     GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_deaths.ToString(), deathsX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.display_score.ToString(), scoreX, rowY);
-                    GFX_Util.draw_def_text(sprite_batch, player_info.team == 1 ? "Red" : "Blue", scoreX + scoreSize.X + horSpacing, rowY);
                 }
-                startY += rowHeight*redTeam.Count+vertSpacing*(redTeam.Count-1);
+                startY += redTeamHeight + vertSpacing + textOffset;
                 // måla ut lagpoäng
+                GFX_Util.draw_def_text(sprite_batch, "Red team: " + redScore, nameX, startY);
 
+                // avstånd mellan rutorna
+                startY += 100;
                 // måla ut lagruta inkl lag-header
-                GFX_Util.fill_rect(sprite_batch, new Rectangle(), new Color(0.0f, 0.5f, 1.0f, 0.3f));
+                int blueTeamHeight = rowHeight * (blueTeam.Count + 0) + vertSpacing * (blueTeam.Count - 1);
+                destRect = new Rectangle(nameX - horPadding, startY-vertPadding, totalScoreWidth+ horPadding * 2, blueTeamHeight+ vertPadding * 2);
+                col = new Color(0.0f, 0.5f, 1.0f, 0.3f);
+                GFX_Util.fill_rect(sprite_batch, destRect, col);
+                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
+                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Right - 4, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
+                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Top, destRect.Width - 8, 4), new Color(col.R, col.G, col.B, 255));
+                GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Bottom - 4, destRect.Width - 8, 4), new Color(col.R, col.G, col.B, 255));
+
+
                 for (int i = 0; i < blueTeam.Count; i++) {
                     Score player_score = blueTeam[i].get_component<Score>();
                     Ship_Info player_info = blueTeam[i].get_component<Ship_Info>();
-                    blueScore += player_score.score;
 
-                    // måla ut spelarscore
-                    int rowY = startY + rowHeight * i + vertSpacing * i;
+                    blueScore += player_score.score;
+                    int rowY = startY + rowHeight * i + textOffset + vertSpacing * i;
 
                     GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_deaths.ToString(), deathsX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.display_score.ToString(), scoreX, rowY);
-                    GFX_Util.draw_def_text(sprite_batch, player_info.team == 1 ? "Red" : "Blue", scoreX + scoreSize.X + horSpacing, rowY);
 
                 }
                 // måla ut lagpoäng
-
+                startY += blueTeamHeight + vertSpacing + textOffset;
+                GFX_Util.draw_def_text(sprite_batch, "Blue team: " + blueScore, nameX, startY);
+                
                 // skriv ut vem som vann
-                String tieText = "Match ended in a tie";
-                String winText = (redScore > blueScore ? "Red":"Blue") + " team won!";
-
-                GFX_Util.draw_def_text(sprite_batch, (redScore == blueScore ? tieText : winText), 0, 0);
-                GFX_Util.draw_def_text(sprite_batch, "Red team: " + redScore, 0, 30);
-                GFX_Util.draw_def_text(sprite_batch, "Blue team: " + blueScore, 0, 60);
-                /*
-                for (int p = 0; p < players.Count; p++) {
-                    Score player_score = players[p].get_component<Score>();
-                    Ship_Info player_info = players[p].get_component<Ship_Info>();
-
-                    int rowY = startY + rowHeight * p + vertSpacing * p;
-
-                    GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
-                    GFX_Util.draw_def_text(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
-                    GFX_Util.draw_def_text(sprite_batch, player_score.num_deaths.ToString(), deathsX, rowY);
-                    GFX_Util.draw_def_text(sprite_batch, player_score.display_score.ToString(), scoreX, rowY);
-                    GFX_Util.draw_def_text(sprite_batch, player_info.team == 1 ? "Red" : "Blue", scoreX + scoreSize.X + horSpacing, rowY);
-
-                    //GFX_Util.fill_rect(sprite_batch, new Rectangle((int)xx - pad_size, rowY, (int)scoretext_size.X + (pad_size * 2), (int)scoretext_size.Y + (pad_size * 2)), Color.AliceBlue * 0.2f);
+                startY += 100;
+                if (redScore == blueScore) {
+                    String tieText = "Match ended in a tie";
+                    Vector2 tieSize = GFX_Util.measure_string(tieText);
+                    GFX_Util.draw_def_text(sprite_batch, tieText, (int)(vp.Width*.5f-tieSize.X*.5f), startY);
                 }
-                */
+                else {
+                    String winText = (redScore > blueScore ? "Red" : "Blue") + " team won!";
+                    Vector2 winSize = GFX_Util.measure_string(winText);
+                    GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), startY);
+                }
             }
             else {
-                for (int p = 0; p < players.Count; p++) {
-                    Score player_score = players[p].get_component<Score>();
-                    Ship_Info player_info = players[p].get_component<Ship_Info>();
-
-                    int rowY = startY + rowHeight * p + vertSpacing * p;
+                for (int i = 0; i < players.Count; i++) {
+                    int rowY = startY + rowHeight * i + textOffset + vertSpacing * i;
+                    Score player_score = players[i].get_component<Score>();
+                    Ship_Info player_info = players[i].get_component<Ship_Info>();
 
                     GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_deaths.ToString(), deathsX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.display_score.ToString(), scoreX, rowY);
-                    GFX_Util.draw_def_text(sprite_batch, player_info.team == 1 ? "Red" : "Blue", scoreX + scoreSize.X + horSpacing, rowY);
-
-                    //GFX_Util.fill_rect(sprite_batch, new Rectangle((int)xx - pad_size, rowY, (int)scoretext_size.X + (pad_size * 2), (int)scoretext_size.Y + (pad_size * 2)), Color.AliceBlue * 0.2f);
                 }
+                /*
+                // skriv ut vilken person som vann
+                startY += totalScoreHeight + vertSpacing + textOffset;
+                String tieText = "Match ended in a tie";
+                String winText = (redScore > blueScore ? "Red" : "Blue") + " team won!";
+                Vector2 tieSize = GFX_Util.measure_string(tieText);
+                Vector2 winSize = GFX_Util.measure_string(winText);
+
+                GFX_Util.draw_def_text(sprite_batch, (redScore == blueScore ? tieText : winText), (redScore == blueScore ? (int)(vp.Width * 5f - tieSize.X * .5f) : (int)(vp.Width * 5f - winSize.X * .5f)), startY);
+            */
             }
+            
+            String text = "Press Enter to continue";
+            Vector2 textSize = font.MeasureString(text);
+            int yPos = (int)(vp.Height - controllerBtnSize - 15);
+            int heightDiff = (int)(controllerBtnSize - textSize.Y);
+            
+            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), yPos + heightDiff * .5f), new Color(Color.Gold, (textOpacity * .8f) + .2f));
 
             sprite_batch.End();
         }

@@ -221,8 +221,6 @@ namespace Fab5.Starburst.States {
                 resume();
             }
             else if (cursorPosition.y == (int)options.quit) {
-                Starburst.inst().leave_state();
-                // gå till resultat-sida istället för att avsluta
                 Playing_State gameState = (Playing_State)last_state;
                 var scoreEntities = gameState.get_entities_fast(typeof(Score));
                 List<Entity> players = new List<Entity>();
@@ -230,8 +228,9 @@ namespace Fab5.Starburst.States {
                     if(scoreEntities[i].get_component<Input>() != null)
                         players.Add(scoreEntities[i]);
                 }
+                Starburst.inst().leave_state();
+                Starburst.inst().leave_state();
                 Starburst.inst().enter_state(new Results_State(players, gameState.game_conf));
-                //Starburst.inst().leave_state();
             }
         }
         private void resume() {

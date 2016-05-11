@@ -49,22 +49,25 @@
             Color teamColor = new Color(1.0f, 0.7f, 0.3f);
             Color teamColor2 = new Color(1.0f, 0.7f, 0.2f);
             Color teamColor3 = new Color(0.4f, 0.6f, 1.0f);
+            Color teamColor4 = new Color(1.0f, 1.0f, 1.0f);
             if (conf.mode == Game_Config.GM_DEATHMATCH) {
                 ig_value = pindex;
             }
             else if (conf.mode == Game_Config.GM_TEAM_DEATHMATCH) {
                 ig_value = team;
-                intensity = 1f;
+                intensity = 0.6f;
 
                 if (team == 1) {
                     teamColor = new Color(1.0f,0.3f,0.3f);
                     teamColor2 = new Color(1.0f, 0.6f, 0.6f);
                     teamColor3 = new Color(1.0f, 0.6f, 0.6f);
+                    teamColor4 = new Color(1.0f, 0.1f, 0.1f);
                 }
                 else {
                     teamColor = new Color(0.3f, 0.4f, 1.0f);
                     teamColor2 = new Color(0.6f, 0.7f, 1.0f);
                     teamColor3 = new Color(0.6f, 0.6f, 1.0f);
+                    teamColor4 = new Color(0.1f, 0.2f, 1.0f);
                 }
             }
             else {
@@ -153,7 +156,7 @@
                 new Secondary_Weapon(),
                 new Score(),
                 new Shadow(),
-                new Light_Source { color = teamColor, lightcone = true, intensity = intensity  }
+                new Light_Source { color = teamColor4, lightcone = true, intensity = intensity  }
                 /*new Light_Source { color = new Color(1.0f, 0.9f, 0.8f), intensity = 0.6f }*/
             };
         }
