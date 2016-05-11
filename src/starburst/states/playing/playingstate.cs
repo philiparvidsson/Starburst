@@ -179,7 +179,8 @@ public class Playing_State : Game_State {
                 ),
                 new Multi_Subsystem(
                     renderer = new Rendering_System(Starburst.inst().GraphicsDevice) {
-                        tile_map = tile_map
+                        tile_map = tile_map,
+                        match_time = game_conf.match_time
                     },
                     new Window_Title_Writer()
                )
@@ -305,6 +306,15 @@ public class Playing_State : Game_State {
         //nme.get_component<Position>().y = 1800.0f;
 
         Starburst.inst().message("play_sound_asset", new { name = "begin_game" });
+
+        create_entity(new Component[] {
+            new TTL { max_time = game_conf.match_time,
+                      destroy_cb = () => {
+                          Fab5_Game.inst().leave_state();
+                          //Fab5_Game.inst().enter_state(new Results_State(Fab5_Game.inst().get_entities_fast(typeof (Input)), game_conf));
+                      }
+            }
+        });
     }
 
     private Entity new_random_powerup() {

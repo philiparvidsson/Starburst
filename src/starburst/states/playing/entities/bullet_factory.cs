@@ -241,7 +241,7 @@
                 Fab5_Game.inst().create_entity(weapon2(origin, weapon));
 
                 var theta = 2.0f*3.141592f*(float)rand.NextDouble();
-                var force = 22.0f;
+                var force = 28.0f;
                 var dx = (float)Math.Cos(theta)*force;
                 var dy = (float)Math.Sin(theta)*force;
                 Fab5_Game.inst().message("shake_camera", new { player = origin, disp_x = dx, disp_y = dy});
@@ -258,7 +258,7 @@
                 Fab5_Game.inst().create_entity(weapon1(origin, weapon, angle3));
 
                 var theta = 2.0f*3.141592f*(float)rand.NextDouble();
-                var force = 10.0f;
+                var force = 16.0f;
                 var dx = (float)Math.Cos(theta)*force;
                 var dy = (float)Math.Sin(theta)*force;
                 Fab5_Game.inst().message("shake_camera", new { player = origin, disp_x = dx, disp_y = dy});
@@ -267,7 +267,7 @@
                 Fab5_Game.inst().create_entity(weapon1(origin, weapon, origin.get_component<Angle>()));
 
                 var theta = 2.0f*3.141592f*(float)rand.NextDouble();
-                var force = 5.0f;
+                var force = 8.0f;
                 var dx = (float)Math.Cos(theta)*force;
                 var dy = (float)Math.Sin(theta)*force;
                 Fab5_Game.inst().message("shake_camera", new { player = origin, disp_x = dx, disp_y = dy});

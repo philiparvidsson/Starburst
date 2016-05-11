@@ -20,12 +20,21 @@ public static class GFX_Util {
         return font.MeasureString(text);
     }
 
-    public static void draw_def_text(SpriteBatch sprite_batch, string text, float x, float y, float alpha = 1.0f) {
+    public static void draw_def_text(SpriteBatch sprite_batch, string text, float x, float y, float alpha = 1.0f, bool shadow = true) {
+        if (alpha < 0.0f) alpha = 0.0f;
+        if (alpha > 1.0f) alpha = 1.0f;
+        var font = Starburst.inst().get_content<SpriteFont>("sector034");
+        if (shadow)
+            sprite_batch.DrawString(font, text, new Vector2(x-4.0f, y-4.0f), Color.Black*0.75f*alpha);
+        sprite_batch.DrawString(font, text, new Vector2(x, y), Color.White*alpha);
+    }
+
+    public static void draw_def_text(SpriteBatch sprite_batch, string text, float x, float y, Color color, float alpha = 1.0f, bool shadow = true) {
         if (alpha < 0.0f) alpha = 0.0f;
         if (alpha > 1.0f) alpha = 1.0f;
         var font = Starburst.inst().get_content<SpriteFont>("sector034");
         sprite_batch.DrawString(font, text, new Vector2(x-4.0f, y-4.0f), Color.Black*0.75f*alpha);
-        sprite_batch.DrawString(font, text, new Vector2(x, y), Color.White*alpha);
+        sprite_batch.DrawString(font, text, new Vector2(x, y),color*alpha);
     }
 }
 
