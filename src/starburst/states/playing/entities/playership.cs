@@ -56,7 +56,11 @@
             else {
                 System.Console.WriteLine("unknown game mode!");
             }
-
+            Color teamColor;
+            if (team == 1)
+                teamColor = Color.DarkRed;
+            else
+                teamColor = Color.DarkBlue;
             var playerrot = new  Angle() { angle = 0 };
             var playerpos = new Position() {x = 300, y = 200 };
             var playervel = new Velocity() {x = 0.0f, y = 0.0f };
@@ -139,7 +143,7 @@
                 new Secondary_Weapon(),
                 new Score(),
                 new Shadow(),
-                new Light_Source { lightcone = true, intensity = 0.35f }
+                new Light_Source { color = teamColor, lightcone = true, intensity = 1f  }
                 /*new Light_Source { color = new Color(1.0f, 0.9f, 0.8f), intensity = 0.6f }*/
             };
         }
