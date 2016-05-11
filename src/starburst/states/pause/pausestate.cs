@@ -37,10 +37,10 @@ namespace Fab5.Starburst.States {
             this.last_state = last_state;
         }
         public override void init() {
-            /*Gamepad_Util.vibrate(0, 0.0f, 0.0f);
+            Gamepad_Util.vibrate(0, 0.0f, 0.0f);
             Gamepad_Util.vibrate(1, 0.0f, 0.0f);
             Gamepad_Util.vibrate(2, 0.0f, 0.0f);
-            Gamepad_Util.vibrate(3, 0.0f, 0.0f);*/
+            Gamepad_Util.vibrate(3, 0.0f, 0.0f);
             graphicsDevice = Starburst.inst().GraphicsDevice;
             sprite_batch = new SpriteBatch(graphicsDevice);
 
@@ -225,7 +225,7 @@ namespace Fab5.Starburst.States {
                     if(scoreEntities[i].get_component<Input>() != null)
                         players.Add(scoreEntities[i]);
                 }
-                //Starburst.inst().leave_state();
+                Starburst.inst().leave_state();
                 Starburst.inst().leave_state();
                 Starburst.inst().enter_state(new Results_State(players, gameState.game_conf));
             }
