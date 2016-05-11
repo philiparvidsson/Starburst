@@ -434,7 +434,7 @@ namespace Fab5.Starburst.States.Playing {
         }
         Fab5_Game.inst().message("camera_shake", new { playerShip.pindex });
         if (player != bulletInfo.sender)
-            shooterScore.score += 10;
+            shooterScore.give_points(10);
         // kolla sköld, om sköld nere, ta skada
         if(playerShip.energy_value > bulletDamage) {
             playerShip.energy_value -= bulletDamage;
@@ -450,7 +450,7 @@ namespace Fab5.Starburst.States.Playing {
                 // offret blir dödsmördat
                 if (player != bulletInfo.sender)
                 {
-                    shooterScore.score += 240;
+                    shooterScore.give_points(240);
                     shooterScore.num_kills++;
                 }
 

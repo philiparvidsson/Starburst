@@ -457,9 +457,9 @@ namespace Fab5.Engine.Subsystems {
 
             var shadows = Fab5_Game.inst().get_entities_fast(typeof (Shadow));
             if (shadows.Count > 0) {
-                var cam_pos = camera.position;
-                cam_pos.x += camera.displacement.X;
-                cam_pos.y += camera.displacement.Y;
+                var cam_pos = new Vector2(camera.position.x, camera.position.y);
+                cam_pos.X += camera.displacement.X;
+                cam_pos.Y += camera.displacement.Y;
 
                 sprite_batch.Begin(SpriteSortMode.Deferred, shadow_blend);
 
@@ -481,9 +481,9 @@ namespace Fab5.Engine.Subsystems {
                         r = a.angle;
                     }
 
-                    var sx = 0.96f*(pos.x - cam_pos.x)*camera.zoom + hw;
+                    var sx = 0.96f*(pos.x - cam_pos.X)*camera.zoom + hw;
 
-                    var sy = 0.96f*(pos.y - cam_pos.y)*camera.zoom + hh;
+                    var sy = 0.96f*(pos.y - cam_pos.Y)*camera.zoom + hh;
 
                     int frame_width  = sprite.frame_width;
                     int frame_height = sprite.frame_height;
@@ -537,9 +537,9 @@ namespace Fab5.Engine.Subsystems {
                 var hht = light_tex.Height * 0.5f;
                 var origin = new Vector2(hwt, hht);
 
-                var cam_pos = camera.position;
-                cam_pos.x += camera.displacement.X;
-                cam_pos.y += camera.displacement.Y;
+                var cam_pos = new Vector2(camera.position.x, camera.position.y);
+                cam_pos.X += camera.displacement.X;
+                cam_pos.Y += camera.displacement.Y;
 
                 foreach (var e in lights) {
                     var light = e.get_component<Light_Source>();
@@ -549,8 +549,8 @@ namespace Fab5.Engine.Subsystems {
                         continue;
                     }
 
-                    var sx = 0.99f*(pos.x - camera.position.x)*camera.zoom + hw;
-                    var sy = 0.99f*(pos.y - camera.position.y)*camera.zoom + hh;
+                    var sx = 0.99f*(pos.x - cam_pos.X)*camera.zoom + hw;
+                    var sy = 0.99f*(pos.y - cam_pos.Y)*camera.zoom + hh;
                     var tex = light.lightcone ? lightcone_tex : light_tex;
                     var r = 0.0f;
                     if (light.lightcone) {
@@ -558,8 +558,8 @@ namespace Fab5.Engine.Subsystems {
                         hwt = lightcone_tex.Width * 0.5f;
                         hht = lightcone_tex.Height * 0.5f;
                         origin = new Vector2(hwt, hht);
-                        sx = (pos.x - cam_pos.x)*camera.zoom + hw;
-                        sy = (pos.y - cam_pos.y)*camera.zoom + hh;
+                        sx = (pos.x - cam_pos.X)*camera.zoom + hw;
+                        sy = (pos.y - cam_pos.Y)*camera.zoom + hh;
                     }
                     else {
                         r = 0.0f;
@@ -589,23 +589,23 @@ namespace Fab5.Engine.Subsystems {
             Fab5_Game.inst().GraphicsDevice.SetRenderTarget(camera.render_target);
             Fab5_Game.inst().GraphicsDevice.Clear(Color.Transparent);
 
-            var cam_pos = camera.position;
-            cam_pos.x += camera.displacement.X;
-            cam_pos.y += camera.displacement.Y;
+            var cam_pos = new Vector2(camera.position.x, camera.position.y);
+            cam_pos.X += camera.displacement.X;
+            cam_pos.Y += camera.displacement.Y;
 
             var inv_zoom = 1.0f / camera.zoom;
-            int left   = -1+(int)((cam_pos.x + 2048.0f - camera.viewport.Width * 0.5f * inv_zoom) / 16.0f) / 32;
-            int right  = 1+(int)((cam_pos.x + 2048.0f + camera.viewport.Width * 0.5f * inv_zoom) / 16.0f) / 32;
-            int top    = -1+(int)((cam_pos.y + 2048.0f - camera.viewport.Height * 0.5f * inv_zoom) / 16.0f) / 32;
-            int bottom = 1+(int)((cam_pos.y + 2048.0f + camera.viewport.Height * 0.5f * inv_zoom) / 16.0f) / 32;
+            int left   = -1+(int)((cam_pos.X + 2048.0f - camera.viewport.Width * 0.5f * inv_zoom) / 16.0f) / 32;
+            int right  = 1+(int)((cam_pos.X + 2048.0f + camera.viewport.Width * 0.5f * inv_zoom) / 16.0f) / 32;
+            int top    = -1+(int)((cam_pos.Y + 2048.0f - camera.viewport.Height * 0.5f * inv_zoom) / 16.0f) / 32;
+            int bottom = 1+(int)((cam_pos.Y + 2048.0f + camera.viewport.Height * 0.5f * inv_zoom) / 16.0f) / 32;
 
             if (left < 0) left = 0;
             if (right > 7) right = 7;
             if (top < 0) top = 0;
             if (bottom > 7) bottom = 7;
 
-            var cx = -cam_pos.x * (2.0f/120.0f)/16.0f;
-            var cy = -cam_pos.y * (2.0f/120.0f)/16.0f;
+            var cx = -cam_pos.X * (2.0f/120.0f)/16.0f;
+            var cy = -cam_pos.Y * (2.0f/120.0f)/16.0f;
 
             effect.View  = Matrix.CreateLookAt(new Vector3(cx, cy, 0.0f), new Vector3(cx, cy, 1.0f), Vector3.Up);
 
@@ -879,6 +879,22 @@ namespace Fab5.Engine.Subsystems {
 
         }
 
+        private void draw_texts(SpriteBatch sprite_batch, Camera cam, List<Entity> texts) {
+            var cam_pos = new Vector2(cam.position.x, cam.position.y);
+            var hw = cam.viewport.Width * 0.5f;
+            var hh = cam.viewport.Height * 0.5f;
+
+            foreach (var e in texts) {
+                var pos = e.get_component<Position>();
+                var text = e.get_component<Text>();
+
+                var o = new Vector2(text.origin_x, text.origin_y);
+
+                sprite_batch.DrawString(text.font, text.format, new Vector2((pos.x - cam_pos.X)*cam.zoom + hw, (pos.y - cam_pos.Y)*cam.zoom + hh), text.color, 0.0f, o, cam.zoom, SpriteEffects.None, 0.0f);
+
+            }
+        }
+
         List<Entity> temp_ = new List<Entity>(256);
         public override void draw(float t, float dt)
         {
@@ -934,6 +950,8 @@ namespace Fab5.Engine.Subsystems {
                 }
             }
 
+            var texts = Fab5_Game.inst().get_entities_fast(typeof (Text));
+
 
             entities     = temp;
             num_entities = temp.Count;
@@ -988,6 +1006,8 @@ namespace Fab5.Engine.Subsystems {
                 draw_lights(sprite_batch, current, 0.45f);
 
                 sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+
+                draw_texts(sprite_batch, current, texts);
 
                 hudsystem_instance.drawHUD(currentPlayer, dt, current);
                 draw_indicators(current, currentPlayerNumber, currentPlayer);

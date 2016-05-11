@@ -67,6 +67,13 @@ public class Lifetime_Manager : Subsystem {
                         if (a > 255.0f) a = 255.0f;
                         s.color.A = (byte)a;
                     }
+                    else {
+                        var txt = entity.get_component<Text>();
+                        if (txt != null) {
+                            var a = ttl.alpha_fn(ttl.time, ttl.max_time);
+                            txt.color = txt.original_color * a;;
+                        }
+                    }
                 }
             //});
         }
