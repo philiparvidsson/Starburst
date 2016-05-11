@@ -14,7 +14,7 @@
     public static class Player_Ship
     {
         public static System.Random rand = new System.Random();
-
+        static float intensity = 0.35f;
         static int lol = 1;
         public static Component[] create_components(Input input, Game_Config conf, int team)
         {
@@ -46,21 +46,24 @@
             }
 
             int ig_value = 0;
-
+            Color teamColor = new Color(1.0f, 0.7f, 0.3f);
             if (conf.mode == Game_Config.GM_DEATHMATCH) {
                 ig_value = pindex;
             }
             else if (conf.mode == Game_Config.GM_TEAM_DEATHMATCH) {
                 ig_value = team;
+                intensity = 1f;
+                var aap = Color.DarkRed;
+
+                if (team == 1)
+                    teamColor = new Color(0.25f,0f,0f,0.7f);
+                else
+                    teamColor = new Color(0f, 0f, 0.25f, 0.7f);
             }
             else {
                 System.Console.WriteLine("unknown game mode!");
             }
-            Color teamColor;
-            if (team == 1)
-                teamColor = Color.DarkRed;
-            else
-                teamColor = Color.DarkBlue;
+
             var playerrot = new  Angle() { angle = 0 };
             var playerpos = new Position() {x = 300, y = 200 };
             var playervel = new Velocity() {x = 0.0f, y = 0.0f };
@@ -70,7 +73,7 @@
                 new Particle_Emitter() {
                     emit_fn = () => {
                         if (rand.Next(0, 60) > 0) {
-                            var col = new Color(1.0f, 0.7f, 0.3f);
+                            var col = teamColor;
                             var max_time = 0.05f + (float)(rand.NextDouble() * 0.05f);
 
                             if (ship_info.has_powerup(typeof (Turbo_Powerup))) {
@@ -143,7 +146,7 @@
                 new Secondary_Weapon(),
                 new Score(),
                 new Shadow(),
-                new Light_Source { color = teamColor, lightcone = true, intensity = 1f  }
+                new Light_Source { color = teamColor, lightcone = true, intensity = intensity  }
                 /*new Light_Source { color = new Color(1.0f, 0.9f, 0.8f), intensity = 0.6f }*/
             };
         }
