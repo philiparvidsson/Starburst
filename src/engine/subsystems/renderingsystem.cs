@@ -613,7 +613,7 @@ namespace Fab5.Engine.Subsystems {
 
             effect.View  = Matrix.CreateLookAt(new Vector3(cx, cy, 0.0f), new Vector3(cx, cy, 1.0f), Vector3.Up);
 
-            var fov = 2.0f*(float)Math.Atan(1.0f/(4.0f*camera.viewport.AspectRatio*camera.zoom)) / (1920.0f/camera.viewport.Width);
+            var fov = 2.0f*(float)Math.Atan(1.0f/(4.0f*camera.viewport.AspectRatio*camera.zoom)) / (1080.0f/camera.viewport.Height);
             effect.Projection = Matrix.CreatePerspectiveFieldOfView(fov, camera.viewport.AspectRatio, 1.0f, 10.0f);
 
             if (enable_3d) {
@@ -838,7 +838,25 @@ namespace Fab5.Engine.Subsystems {
             var y = 20.0f;
             GFX_Util.draw_def_text(sprite_batch, str, x, y);
 
+            if (!team_play)
+                return;
 
+            var team1_score = 0.0f;
+            var team2_score = 0.0f;
+
+            foreach (var player in Fab5_Game.inst().get_entities_fast(typeof (Input))) {
+                var si = player.get_component<Ship_Info>();
+
+                if (si.team == 1) {
+                    team1_score += player.get_component<Score>().display_score;
+                }
+                else {
+                    team2_score += player.get_component<Score>().display_score;
+                }
+            }
+
+            GFX_Util.draw_def_text(sprite_batch, ((int)team1_score).ToString(), x-100, 50, new Color(1.0f, 0.2f, 0.2f));
+            GFX_Util.draw_def_text(sprite_batch, ((int)team2_score).ToString(), x+100, 50, new Color(0.2f, 0.2f, 1.0f));
         }
 
 
