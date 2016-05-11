@@ -181,7 +181,7 @@
             this.ship_info = player.get_component<Ship_Info>();
             //drawHP();
             drawEnergy(playerPos, camera, dt);
-            drawScore(player.get_component<Score>(), dt);
+            drawScore(player, dt);
             draw_minimap(player);
             draw_powerup_inv(camera, player);
 
@@ -269,10 +269,21 @@
 //             }
 //         }
 
-        private void drawScore(Score score, float dt)
+        private void drawScore(Entity player, float dt)
         {
+            var score = player.get_component<Score>();
+            var si = player.get_component<Ship_Info>();
+
+            bool left_align = (si.pindex%2)==1;
             Vector2 scoreposition;
-            scoreposition = new Vector2(10, 10);
+
+            if (left_align) {
+                scoreposition = new Vector2(10, 10);
+            }
+            else {
+                //var str_w = GFX_Util.measure_string(score.display_score.ToString()).X + 10;
+                scoreposition = new Vector2(Fab5_Game.inst().GraphicsDevice.Viewport.Width-10, 10);
+            }
 
             SpriteFont spriteFont = Fab5_Game.inst().get_content<SpriteFont>("sector034");
 
@@ -299,9 +310,19 @@
 
 
 
-            var score_str = "P. " + ship_info.pindex + " Score: " + ((int)score.display_score).ToString();
+            var y = GFX_Util.measure_string("0").Y;
+            var score_str = string.Format("{0}", (int)score.display_score);
+            var w1 = GFX_Util.measure_string(score_str).X;
+            var w2 = GFX_Util.measure_string("P. " + si.pindex).X;
 
-            GFX_Util.draw_def_text(sprite_batch, score_str, scoreposition.X, scoreposition.Y);
+            if (left_align) {
+                GFX_Util.draw_def_text(sprite_batch, score_str, scoreposition.X, scoreposition.Y+y,Color.White);
+                GFX_Util.draw_def_text(sprite_batch, "P. " + si.pindex, scoreposition.X, scoreposition.Y);
+            }
+            else {
+                GFX_Util.draw_def_text(sprite_batch, score_str, scoreposition.X-w1, scoreposition.Y+y,Color.White);
+                GFX_Util.draw_def_text(sprite_batch, "P. " + si.pindex, scoreposition.X-w2, scoreposition.Y);
+            }
         }
     }
 }
