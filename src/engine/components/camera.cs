@@ -40,8 +40,10 @@ namespace Fab5.Engine.Components {
         public RenderTarget2D render_target;
 
         // modelling camera shaking through Hooke's law
-        public float springCoeff = 50.0f;
-        public float dragCoeff = 3.0f;
+        public int   shakeSpeed       = 10;
+        public float shakeSpringCoeff = 30.0f;
+        public float shakeDragCoeff   = 1.0f;
+
         public Vector2 displacement;
         public Vector2 springs;
 
@@ -58,15 +60,14 @@ namespace Fab5.Engine.Components {
 
             // 0 is the length we want
             var d = 0.0f - r;
-
-
             if (d < -0.01f) {
                 var dir = displacement;
                 dir.Normalize();
 
-                springs += d*dir * springCoeff * dt;
+                springs += d*dir * shakeSpringCoeff * dt;
             }
-            springs -= springs * dragCoeff * dt;
+
+            springs -= springs * shakeDragCoeff * dt;
             displacement += springs * dt;
         }
 
@@ -78,7 +79,7 @@ namespace Fab5.Engine.Components {
         bool zooming_out = false;
 
         public void update(float dt) {
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < shakeSpeed; i++) {
                 update_springs(dt);
             }
             if (velocity == null) {
