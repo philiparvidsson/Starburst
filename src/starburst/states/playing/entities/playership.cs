@@ -47,18 +47,25 @@
 
             int ig_value = 0;
             Color teamColor = new Color(1.0f, 0.7f, 0.3f);
+            Color teamColor2 = new Color(1.0f, 0.7f, 0.2f);
+            Color teamColor3 = new Color(0.4f, 0.6f, 1.0f);
             if (conf.mode == Game_Config.GM_DEATHMATCH) {
                 ig_value = pindex;
             }
             else if (conf.mode == Game_Config.GM_TEAM_DEATHMATCH) {
                 ig_value = team;
                 intensity = 1f;
-                var aap = Color.DarkRed;
 
-                if (team == 1)
-                    teamColor = new Color(0.25f,0f,0f,0.7f);
-                else
-                    teamColor = new Color(0f, 0f, 0.25f, 0.7f);
+                if (team == 1) {
+                    teamColor = new Color(1.0f,0.3f,0.3f);
+                    teamColor2 = new Color(1.0f, 0.6f, 0.6f);
+                    teamColor3 = new Color(1.0f, 0.6f, 0.6f);
+                }
+                else {
+                    teamColor = new Color(0.3f, 0.4f, 1.0f);
+                    teamColor2 = new Color(0.6f, 0.7f, 1.0f);
+                    teamColor3 = new Color(0.6f, 0.6f, 1.0f);
+                }
             }
             else {
                 System.Console.WriteLine("unknown game mode!");
@@ -78,7 +85,7 @@
 
                             if (ship_info.has_powerup(typeof (Turbo_Powerup))) {
                                 max_time *= 1.7f;
-                                col = new Color(0.4f, 0.6f, 1.0f);
+                                col = teamColor3;
                             }
 
                             return new Component[] {
@@ -99,7 +106,7 @@
                             };
                         }
                         else {
-                            var col = new Color(1.0f, 0.7f, 0.2f) * 0.95f;
+                            var col = teamColor2 * 0.95f;
                             var max_time = 0.35f + (float)(rand.NextDouble() * 0.35f);
 
                             /*if (ship_info.has_powerup("turbo")) {

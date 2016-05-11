@@ -278,7 +278,7 @@ public class Playing_State : Game_State {
         var multi1 = create_entity(Powerup.create(new Free_Fire_Powerup()));
         multi1.get_component<Position>().x = -1700.0f; multi1.get_component<Position>().y = 1500.0f;
 
-        var nano1 = create_entity(Powerup.create(new Shield_Powerup()));
+        var nano1 = create_entity(Powerup.create(new Turbo_Powerup()));
         nano1.get_component<Position>().x = -1600.0f; multi1.get_component<Position>().y = 1500.0f;
 
         /*var freefire1 = create_entity(Powerup.create(new Free_Fire_Powerup()));
