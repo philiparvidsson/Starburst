@@ -49,21 +49,27 @@
             var self_pos = self.get_component<Position>();
             var self_vel = self.get_component<Velocity>();
 
-            var time = (float)Math.Sqrt((p+500)/1000.0f);
+            var time = (float)Math.Sqrt((p+30)/250.0f);
+            if (time > 1.5f) {
+                time = 1.5f;
+            }
 
             var theta = 2.0f*3.141592f*(float)rand.NextDouble();
-            var speed = 140.0f*(0.8f+0.4f*(float)rand.NextDouble());
+            var speed = 280.0f*(0.8f+0.4f*(float)rand.NextDouble());
 
-            var s = GFX_Util.measure_string(p.ToString());
+            var str = "+" + p.ToString();
+            var s = GFX_Util.measure_string(str);
             var o_x = s.X*0.5f;
             var o_y = s.Y*0.5f;
 
             Fab5_Game.inst().create_entity(new Component[] {
                 new Text { original_color  = Color.White,
                            font   = Fab5_Game.inst().get_content<SpriteFont>("sector034"),
-                           format = p.ToString(),
+                           format = str,
                            origin_x = o_x,
                            origin_y = o_y },
+
+                new Mass { drag_coeff = 5.0f },
 
                 new Position { x = self_pos.x,
                                y = self_pos.y },
@@ -72,7 +78,7 @@
                                y = self_vel.y * 0.5f + (float)Math.Sin(theta)*speed },
 
                 new TTL { alpha_fn = (x, max) => 1.0f-(x*x)/(max*max),
-                          max_time = 0.3f + 0.5f * time }
+                          max_time = 0.25f + 0.75f * time }
             });
         }
     }

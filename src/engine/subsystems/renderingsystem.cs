@@ -845,8 +845,8 @@ namespace Fab5.Engine.Subsystems {
                 }
 
                 var player2_pos = player2.get_component<Position>();
-                var d_x = player2_pos.x - current.position.x;
-                var d_y = player2_pos.y - current.position.y;
+                var d_x = player2_pos.x - currentPlayerPosition.x;
+                var d_y = player2_pos.y - currentPlayerPosition.y;
 
                 if (Math.Abs(d_x) < current.viewport.Width*0.5f/current.zoom && Math.Abs(d_y) < current.viewport.Height*0.5f/current.zoom) {
                     // other player is on same screen
@@ -863,8 +863,8 @@ namespace Fab5.Engine.Subsystems {
 
                 var r = (float)Math.Atan2(d_y, d_x);
 
-                var p_x = current.zoom*(currentPlayerPosition.x - current.position.x) + current.viewport.Width  * 0.5f + d_x;
-                var p_y = current.zoom*(currentPlayerPosition.y - current.position.y) + current.viewport.Height * 0.5f + d_y;
+                var p_x = current.zoom*(currentPlayerPosition.x - current.position.x - current.displacement.X) + current.viewport.Width  * 0.5f + d_x;
+                var p_y = current.zoom*(currentPlayerPosition.y - current.position.y - current.displacement.Y) + current.viewport.Height * 0.5f + d_y;
 
                 sprite_batch.Draw(tex,
                                   new Vector2(p_x, p_y),
@@ -880,7 +880,7 @@ namespace Fab5.Engine.Subsystems {
         }
 
         private void draw_texts(SpriteBatch sprite_batch, Camera cam, List<Entity> texts) {
-            var cam_pos = new Vector2(cam.position.x, cam.position.y);
+            var cam_pos = new Vector2(cam.position.x+cam.displacement.X, cam.position.y+cam.displacement.Y);
             var hw = cam.viewport.Width * 0.5f;
             var hh = cam.viewport.Height * 0.5f;
 
