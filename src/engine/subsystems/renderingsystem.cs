@@ -78,7 +78,7 @@ namespace Fab5.Engine.Subsystems {
             if (e2 != null && e2.get_component<Fab5.Starburst.Components.Bullet_Info>() != null) {
                 // weapons do lots of shaky shaky
                 var damage = e2.get_component<Fab5.Starburst.Components.Bullet_Info>().damage;
-                fac = 0.7f + damage/70.0f;
+                fac = 0.9f + damage/60.0f;
                 force = 100.0f*fac;
             }
             else if (e2 != null && e2.get_component<Powerup>() != null) {

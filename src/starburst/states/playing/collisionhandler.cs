@@ -450,8 +450,20 @@ namespace Fab5.Starburst.States.Playing {
                 // offret blir dödsmördat
                 if (player != bulletInfo.sender)
                 {
-                    shooterScore.give_points(240);
+                    shooterScore.give_points(500);
                     shooterScore.num_kills++;
+                }
+
+                foreach (var powerup in playerShip.powerups.Values) {
+                    if (powerup != null) {
+                        powerup.end();
+                    }
+                }
+
+                playerShip.powerups.Clear();
+
+                for (int i = 0; i < playerShip.max_powerups_inv; i++) {
+                    playerShip.powerup_inv[i] = null;
                 }
 
                 state.create_entity(new Component[] {
@@ -502,7 +514,6 @@ namespace Fab5.Starburst.States.Playing {
                 var old_light            = player.remove_component<Light_Source>();
 
                 Starburst.inst().message("play_sound_asset", new { name = "sound/effects/explosion" });
-
 
                 Score player_score = player.get_component<Score>();
                 player_score.num_deaths++;
@@ -563,7 +574,7 @@ namespace Fab5.Starburst.States.Playing {
                             var s    = new [] { "one", "two", "three", "four" };
                             var text = string.Format("Killed player {0}!", s[playerShip.pindex-1]);
                             var ts    = GFX_Util.measure_string(text);
-                            String points = "+250";
+                            String points = "+500";
                             var ps    = GFX_Util.measure_string(points);
                             GFX_Util.draw_def_text(sprite_batch, text, (camera.viewport.Width-ts.X)*0.5f, 90.0f, a);
                             GFX_Util.draw_def_text(sprite_batch, points, (camera.viewport.Width-ps.X)*0.5f, 90.0f + ts.Y + 10, a);
@@ -574,11 +585,6 @@ namespace Fab5.Starburst.States.Playing {
                         max_time = 5.0f,
                     }
                 });
-
-                foreach (var powerup in playerShip.powerups.Values) {
-                    powerup.end();
-                }
-                playerShip.powerups.Clear();
 
 
                 Fab5_Game.inst().create_entity(new Component[] {

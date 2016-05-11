@@ -78,7 +78,7 @@
                                y = self_vel.y * 0.5f + (float)Math.Sin(theta)*speed },
 
                 new TTL { alpha_fn = (x, max) => 1.0f-(x*x)/(max*max),
-                          max_time = 0.25f + 0.75f * time }
+                          max_time = 0.85f + 1.15f * time }
             });
         }
     }

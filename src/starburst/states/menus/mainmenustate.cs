@@ -216,7 +216,7 @@ namespace Fab5.Starburst.States {
 
         private void proceed() {
             int asteroid = 0;
-            if (map != 2) { 
+            if (map != 2) {
                 if (asteroidCount == Amount.few)
                     asteroid = 20;
                 else if (asteroidCount == Amount.medium)
@@ -235,16 +235,16 @@ namespace Fab5.Starburst.States {
             int powerup = 0;
             int powerupTime = 0;
             if (powerupCount == Amount.few) {
-                powerup = 3;
-                powerupTime = 60;
+                powerup = 10;
+                powerupTime = 20;
             }
             else if (powerupCount == Amount.medium) {
-                powerup = 5;
-                powerupTime = 40;
+                powerup = 15;
+                powerupTime = 15;
             }
             else if (powerupCount == Amount.many) {
-                powerup = 7;
-                powerupTime = 20;
+                powerup = 20;
+                powerupTime = 10;
             }
             btnDelay = BTN_DELAY;
             started = false;
@@ -420,7 +420,7 @@ namespace Fab5.Starburst.States {
             Vector2 leftTextSize = font.MeasureString(ctfString);
             int leftTextX = (int)(vp.Width * .5f - leftTextSize.X - middleSpacing);
             int rightTextX = (int)(vp.Width * .5f + middleSpacing);
-            
+
             // settings-animation
             animDistance = -150;
             startY = settingOffset - animDistance;
