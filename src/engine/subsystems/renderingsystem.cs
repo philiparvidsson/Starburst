@@ -825,7 +825,18 @@ namespace Fab5.Engine.Subsystems {
 
         private void draw_match_info() {
             //sprite_batch.Draw(timer_tex, new Vector2(760.0f, 40.0f), null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.5f);
-            GFX_Util.draw_def_text(sprite_batch, string.Format("{0:0.00}", match_time), 800.0f, 40.0f);
+            var min = 0;
+            var sec = match_time;
+
+            while (sec >= 60.0f) {
+                min += 1;
+                sec -= 60.0f;
+            }
+            var str = string.Format("{0:00}:{1:00.00}", min, sec);
+
+            var x = Fab5_Game.inst().GraphicsDevice.Viewport.Width * 0.5f - GFX_Util.measure_string("00:00.00").X*0.5f;
+            var y = 20.0f;
+            GFX_Util.draw_def_text(sprite_batch, str, x, y);
 
 
         }
