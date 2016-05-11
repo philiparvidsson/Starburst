@@ -159,45 +159,7 @@ namespace Fab5.Starburst.States {
                     Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
                 }
                 else if (msg.Equals("right")) {
-                    var entities = Starburst.inst().get_entities_fast(typeof(Input));
-                    Entity cursor = entities[0];
-                    Position cursorPosition = cursor.get_component<Position>();
-
-                    if (cursorPosition.y == (int)options.mode) {
-                        gameMode = (gameMode == 0 ? 1 : 0);
-                        soccerModeEnabled = (gameMode == 0);
-                    }
-                    else if (cursorPosition.y == (int)options.time) {
-                        if (gameTime == GameTime.Ten)
-                            gameTime = GameTime.Three;
-                        else
-                            gameTime++;
-                    }
-                    else if (cursorPosition.y == (int)options.soccer && soccerModeEnabled && soccerMapEnabled)
-                        soccerball = !soccerball;
-                    else if (cursorPosition.y == (int)options.flag && ctfModeEnabled)
-                        captureTheFlag = !captureTheFlag;
-                    else if (cursorPosition.y == (int)options.asteroids) {
-                        if (asteroidCount == Amount.many)
-                            asteroidCount = Amount.off;
-                        else
-                            asteroidCount++;
-                    }
-                    else if (cursorPosition.y == (int)options.powerups) {
-                        if (powerupCount == Amount.many)
-                            powerupCount = Amount.off;
-                        else
-                            powerupCount++;
-                    }
-                    else if (cursorPosition.y == (int)options.map) {
-                        if (map == maps)
-                            map = 1;
-                        else
-                            map++;
-                        soccerMapEnabled = (map != 2);
-                        updateMaps();
-                    }
-                    Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
+                    moveRight();
                 }
                 else if (msg.Equals("select")) {
                     var entities = Starburst.inst().get_entities_fast(typeof(Input));
@@ -207,7 +169,7 @@ namespace Fab5.Starburst.States {
                         proceed();
                     }
                     else
-                        moveDown();
+                        moveRight();
                 }
                 else if (msg.Equals("start")) {
                     proceed();
@@ -226,6 +188,47 @@ namespace Fab5.Starburst.States {
                 position.y += 1;
                 Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
             }
+        }
+        private void moveRight() {
+            var entities = Starburst.inst().get_entities_fast(typeof(Input));
+            Entity cursor = entities[0];
+            Position cursorPosition = cursor.get_component<Position>();
+
+            if (cursorPosition.y == (int)options.mode) {
+                gameMode = (gameMode == 0 ? 1 : 0);
+                soccerModeEnabled = (gameMode == 0);
+            }
+            else if (cursorPosition.y == (int)options.time) {
+                if (gameTime == GameTime.Ten)
+                    gameTime = GameTime.Three;
+                else
+                    gameTime++;
+            }
+            else if (cursorPosition.y == (int)options.soccer && soccerModeEnabled && soccerMapEnabled)
+                soccerball = !soccerball;
+            else if (cursorPosition.y == (int)options.flag && ctfModeEnabled)
+                captureTheFlag = !captureTheFlag;
+            else if (cursorPosition.y == (int)options.asteroids) {
+                if (asteroidCount == Amount.many)
+                    asteroidCount = Amount.off;
+                else
+                    asteroidCount++;
+            }
+            else if (cursorPosition.y == (int)options.powerups) {
+                if (powerupCount == Amount.many)
+                    powerupCount = Amount.off;
+                else
+                    powerupCount++;
+            }
+            else if (cursorPosition.y == (int)options.map) {
+                if (map == maps)
+                    map = 1;
+                else
+                    map++;
+                soccerMapEnabled = (map != 2);
+                updateMaps();
+            }
+            Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
         }
 
         private void updateMaps() {
@@ -358,11 +361,11 @@ namespace Fab5.Starburst.States {
 
             // fade in
             if (elapsedTime > delay && elapsedTime < outDelay) {
-                textOpacity = quadInOut(delay, inDuration, 0, 1);
+                textOpacity = (float)Easing.QuadEaseInOut(elapsedTime - delay, 0, 1, inDuration);
             }
             // fade out
             else if (elapsedTime >= outDelay) {
-                textOpacity = 1 - quadInOut(outDelay, outDuration, 0, 1);
+                textOpacity = 1 - (float)Easing.QuadEaseInOut(elapsedTime - outDelay, 0, 1, outDuration);
             }
         }
         public override void draw(float t, float dt) {
@@ -509,41 +512,6 @@ namespace Fab5.Starburst.States {
             sprite_batch.End();
 
             System.Threading.Thread.Sleep(10); // no need to spam menu
-        }
-        private float quadInOut(float delayVal, float duration, float b, float c) {
-            // b - start value
-            // c - final value
-            float t = elapsedTime - delayVal; // current time in seconds
-            float d = duration; // duration of animation
-
-            if (t == 0) {
-                return b;
-            }
-
-            if (t == d) {
-                return b + c;
-            }
-
-            if ((t /= d / 2) < 1) {
-                return c / 2 * (float)Math.Pow(2, 10 * (t - 1)) + b;
-            }
-
-            return c / 2 * (-(float)Math.Pow(2, -10 * --t) + 2) + b;
-        }
-        private float quadInOut2(float t, float d, float b, float c) {
-            if (t == 0) {
-                return b;
-            }
-
-            if (t == d) {
-                return b + c;
-            }
-
-            if ((t /= d / 2) < 1) {
-                return c / 2 * (float)Math.Pow(2, 10 * (t - 1)) + b;
-            }
-
-            return c / 2 * (-(float)Math.Pow(2, -10 * --t) + 2) + b;
         }
     }
 

@@ -126,10 +126,10 @@ namespace Fab5.Starburst.States {
 
         public override void update(float t, float dt) {
             base.update(t, dt);
-            
+
             // räkna upp tid (dt)
             elapsedTime += dt;
-            if(btnDelay > 0)
+            if (btnDelay > 0)
                 btnDelay -= dt;
 
             if (elapsedTime >= animationTime) {
@@ -138,11 +138,11 @@ namespace Fab5.Starburst.States {
 
             // fade in
             if (elapsedTime > delay && elapsedTime < outDelay) {
-                textOpacity = (float)Easing.QuadEaseInOut(delay, 0, 1, inDuration);
+                textOpacity = (float)Easing.QuadEaseInOut(elapsedTime - delay, 0, 1, inDuration);
             }
             // fade out
             else if (elapsedTime >= outDelay) {
-                textOpacity = 1 - (float)Easing.QuadEaseInOut(outDelay, 0, 1, outDuration);
+                textOpacity = 1 - (float)Easing.QuadEaseInOut(elapsedTime - outDelay, 0, 1, outDuration);
             }
         }
         public override void draw(float t, float dt) {
@@ -153,7 +153,6 @@ namespace Fab5.Starburst.States {
 
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 
-            int startY = 150;
             int rowHeight = 50;
             int vertSpacing = 10;
             int horSpacing = 20;
@@ -175,12 +174,19 @@ namespace Fab5.Starburst.States {
             int textOffset = (int)((rowHeight - killsSize.Y)*.5f);
             int vertPadding = 10;
             int horPadding = 20;
-            
+
+            // animation
+            int currentOffset = 150;
+            int animDistance = 150;
+            int startY = currentOffset-animDistance;
+            if (t - startTime < animateInTime)
+                currentOffset = (int)Easing.CubicEaseOut((t - startTime), startY, animDistance, animateInTime);
+
             //GFX_Util.draw_def_text(sprite_batch, "Player", nameX, startY);
-            GFX_Util.draw_def_text(sprite_batch, killsHeader, killsX, startY);
-            GFX_Util.draw_def_text(sprite_batch, deathsHeader, deathsX, startY);
-            GFX_Util.draw_def_text(sprite_batch, scoreHeader, scoreX, startY);
-            startY += rowHeight + vertSpacing;
+            GFX_Util.draw_def_text(sprite_batch, killsHeader, killsX, currentOffset);
+            GFX_Util.draw_def_text(sprite_batch, deathsHeader, deathsX, currentOffset);
+            GFX_Util.draw_def_text(sprite_batch, scoreHeader, scoreX, currentOffset);
+            currentOffset += rowHeight + vertSpacing;
 
             if (gameConfig.mode == Game_Config.GM_TEAM_DEATHMATCH) {
                 List<Entity> redTeam = new List<Entity>();
@@ -195,7 +201,7 @@ namespace Fab5.Starburst.States {
                 }
                 // måla ut lagruta inkl lag-header
                 int redTeamHeight = rowHeight * (redTeam.Count+0) + vertSpacing * (redTeam.Count - 1);
-                Rectangle destRect = new Rectangle(nameX- horPadding, startY- vertPadding, totalScoreWidth + horPadding * 2, redTeamHeight + vertPadding * 2);
+                Rectangle destRect = new Rectangle(nameX- horPadding, currentOffset - vertPadding, totalScoreWidth + horPadding * 2, redTeamHeight + vertPadding * 2);
                 Color col = new Color(1.0f, 0.2f, 0.2f, 0.3f);
                 GFX_Util.fill_rect(sprite_batch, destRect, col);
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
@@ -207,22 +213,22 @@ namespace Fab5.Starburst.States {
                     Ship_Info player_info = redTeam[i].get_component<Ship_Info>();
 
                     redScore += player_score.score;
-                    int rowY = startY + rowHeight * i + textOffset + vertSpacing * i;
+                    int rowY = currentOffset + rowHeight * i + textOffset + vertSpacing * i;
 
                     GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_deaths.ToString(), deathsX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.display_score.ToString(), scoreX, rowY);
                 }
-                startY += redTeamHeight + vertSpacing + textOffset;
+                currentOffset += redTeamHeight + vertSpacing + textOffset;
                 // måla ut lagpoäng
-                GFX_Util.draw_def_text(sprite_batch, "Red team: " + redScore, nameX, startY);
+                GFX_Util.draw_def_text(sprite_batch, "Red team: " + redScore, nameX, currentOffset);
 
                 // avstånd mellan rutorna
-                startY += 100;
+                currentOffset += 100;
                 // måla ut lagruta inkl lag-header
                 int blueTeamHeight = rowHeight * (blueTeam.Count + 0) + vertSpacing * (blueTeam.Count - 1);
-                destRect = new Rectangle(nameX - horPadding, startY-vertPadding, totalScoreWidth+ horPadding * 2, blueTeamHeight+ vertPadding * 2);
+                destRect = new Rectangle(nameX - horPadding, currentOffset - vertPadding, totalScoreWidth+ horPadding * 2, blueTeamHeight+ vertPadding * 2);
                 col = new Color(0.0f, 0.5f, 1.0f, 0.3f);
                 GFX_Util.fill_rect(sprite_batch, destRect, col);
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
@@ -236,7 +242,7 @@ namespace Fab5.Starburst.States {
                     Ship_Info player_info = blueTeam[i].get_component<Ship_Info>();
 
                     blueScore += player_score.score;
-                    int rowY = startY + rowHeight * i + textOffset + vertSpacing * i;
+                    int rowY = currentOffset + rowHeight * i + textOffset + vertSpacing * i;
 
                     GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
@@ -245,27 +251,27 @@ namespace Fab5.Starburst.States {
 
                 }
                 // måla ut lagpoäng
-                startY += blueTeamHeight + vertSpacing + textOffset;
-                GFX_Util.draw_def_text(sprite_batch, "Blue team: " + blueScore, nameX, startY);
-                
+                currentOffset += blueTeamHeight + vertSpacing + textOffset;
+                GFX_Util.draw_def_text(sprite_batch, "Blue team: " + blueScore, nameX, currentOffset);
+
                 // skriv ut vem som vann
-                startY += 100;
+                currentOffset += 100;
                 if (redScore == blueScore) {
                     String tieText = "Match ended in a tie";
                     Vector2 tieSize = GFX_Util.measure_string(tieText);
-                    GFX_Util.draw_def_text(sprite_batch, tieText, (int)(vp.Width*.5f-tieSize.X*.5f), startY);
+                    GFX_Util.draw_def_text(sprite_batch, tieText, (int)(vp.Width*.5f-tieSize.X*.5f), currentOffset);
                 }
                 else {
                     String winText = (redScore > blueScore ? "Red" : "Blue") + " team won!";
                     Vector2 winSize = GFX_Util.measure_string(winText);
-                    GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), startY);
+                    GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), currentOffset);
                 }
             }
             else {
                 float bestScore = 0;
                 List<int> bestPlayers = new List<int>();
                 for (int i = 0; i < players.Count; i++) {
-                    int rowY = startY + rowHeight * i + textOffset + vertSpacing * i;
+                    int rowY = currentOffset + rowHeight * i + textOffset + vertSpacing * i;
                     Score player_score = players[i].get_component<Score>();
                     Ship_Info player_info = players[i].get_component<Ship_Info>();
 
@@ -286,7 +292,7 @@ namespace Fab5.Starburst.States {
 
                 int totalScoreHeight = rowHeight * players.Count + 1 + vertSpacing * (players.Count - 1 + 1);
                 // skriv ut vilken person som vann
-                startY += totalScoreHeight + vertSpacing + textOffset;
+                currentOffset += totalScoreHeight + vertSpacing + textOffset;
                 String winner = "Player ";
                 for(int i=0; i < bestPlayers.Count; i++) {
                     if (i > 0)
@@ -296,7 +302,7 @@ namespace Fab5.Starburst.States {
                 String winText =  winner + " won!";
                 Vector2 winSize = GFX_Util.measure_string(winText);
 
-                GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), startY);
+                GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), currentOffset);
             
             }
             
@@ -305,7 +311,7 @@ namespace Fab5.Starburst.States {
             int yPos = (int)(vp.Height - controllerBtnSize - 15);
             int heightDiff = (int)(controllerBtnSize - textSize.Y);
             
-            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), yPos + heightDiff * .5f), new Color(Color.Gold, (textOpacity * .8f) + .2f));
+            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), yPos + heightDiff * .5f), new Color(Color.Gold, textOpacity));
 
             sprite_batch.End();
         }

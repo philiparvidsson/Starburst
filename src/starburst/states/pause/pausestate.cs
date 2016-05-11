@@ -21,7 +21,8 @@ namespace Fab5.Starburst.States {
         private SpriteBatch sprite_batch;
         private SpriteFont font;
         private GraphicsDevice graphicsDevice;
-        private float btnDelay = .5f;
+        private const float BTN_DELAY = .25f;
+        private float btnDelay = BTN_DELAY;
         private Texture2D bg_tex;
 
         enum options {
@@ -148,11 +149,7 @@ namespace Fab5.Starburst.States {
             GFX_Util.draw_def_text(sprite_batch, "Paused", tx, ty);
 
             sprite_batch.End();
-
-
-
-
-
+            
             //hämta position från första input-entiteten
             var players = get_entities_fast(typeof(Position));
             Position cursorPosition = players[0].get_component<Position>();
@@ -228,7 +225,7 @@ namespace Fab5.Starburst.States {
                     if(scoreEntities[i].get_component<Input>() != null)
                         players.Add(scoreEntities[i]);
                 }
-                Starburst.inst().leave_state();
+                //Starburst.inst().leave_state();
                 Starburst.inst().leave_state();
                 Starburst.inst().enter_state(new Results_State(players, gameState.game_conf));
             }

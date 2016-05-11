@@ -302,11 +302,11 @@ namespace Fab5.Starburst.States {
 
             // fade in
             if (elapsedTime > delay && elapsedTime < outDelay) {
-                textOpacity = quadInOut(delay, inDuration, 0, 1);
+                textOpacity = (float)Easing.QuadEaseInOut(elapsedTime - delay, 0, 1, inDuration);
             }
             // fade out
             else if (elapsedTime >= outDelay) {
-                textOpacity = 1 - quadInOut(outDelay, outDuration, 0, 1);
+                textOpacity = 1 - (float)Easing.QuadEaseInOut(elapsedTime - outDelay, 0, 1, outDuration);
             }
 
 
@@ -544,26 +544,6 @@ namespace Fab5.Starburst.States {
             sprite_batch.End();
 
             System.Threading.Thread.Sleep(10); // no need to spam menu
-        }
-        private float quadInOut(float delayVal, float duration, float b, float c) {
-            // b - start value
-            // c - final value
-            float t = elapsedTime - delayVal; // current time in seconds
-            float d = duration; // duration of animation
-
-            if (t == 0) {
-                return b;
-            }
-
-            if (t == d) {
-                return b + c;
-            }
-
-            if ((t /= d / 2) < 1) {
-                return c / 2 * (float)Math.Pow(2, 10 * (t - 1)) + b;
-            }
-
-            return c / 2 * (-(float)Math.Pow(2, -10 * --t) + 2) + b;
         }
     }
 
