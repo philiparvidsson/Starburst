@@ -15,7 +15,7 @@ namespace Fab5.Starburst {
             GraphicsMgr.HardwareModeSwitch = false;
         }
         protected override void init() {
-            if (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height < 800 && GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width < 1400) {
+            if (true || GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height < 800 && GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width < 1400) {
                 GraphicsMgr.PreferredBackBufferWidth = 1280;
                 GraphicsMgr.PreferredBackBufferHeight = 720;
             }
@@ -40,7 +40,7 @@ namespace Fab5.Starburst {
 
 
             GraphicsMgr.ApplyChanges();
-            GraphicsMgr.ToggleFullScreen();
+            //GraphicsMgr.ToggleFullScreen();
             Microsoft.Xna.Framework.Media.MediaPlayer.Volume = 0.7f;
 
             var form = (System.Windows.Forms.Form)System.Windows.Forms.Control.FromHandle(this.Window.Handle);

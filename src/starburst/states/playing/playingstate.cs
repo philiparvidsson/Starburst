@@ -144,6 +144,8 @@ public class Playing_State : Game_State {
     private Rendering_System renderer;
 
     public override void init() {
+        Player_Ship.lol = 1; // @To-do: lol
+
         MediaPlayer.Volume = game_conf.music_vol;
 //        Starburst.inst().IsMouseVisible = true;        // @To-do: Load map here.
 

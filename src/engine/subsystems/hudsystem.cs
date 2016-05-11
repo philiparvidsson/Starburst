@@ -222,6 +222,7 @@
             //var source_rect = new Rectangle(enball.frame_x, enball.frame_y, enball.frame_width, enball.frame_height);
 
             
+           // Console.WriteLine(                new Vector2((shipPos.x - camera.position.x - camera.displacement.X) * camera.zoom, (shipPos.y - camera.position.y - camera.displacement.Y) * camera.zoom));
             sprite_batch.Draw(enball.texture,
                 new Vector2((shipPos.x - camera.position.x - camera.displacement.X) * camera.zoom + camera.viewport.Width * 0.5f, (shipPos.y - camera.position.y - camera.displacement.Y) * camera.zoom + camera.viewport.Height * 0.5f),
                 scale: new Vector2(energyScale, energyScale),
@@ -229,6 +230,7 @@
                 origin: new Vector2(enball.texture.Width * 0.5f, enball.texture.Height * 0.5f),
                 color: Color.White * energyScale
                 );
+
 
             //updateEnergySprite(dt);
         }

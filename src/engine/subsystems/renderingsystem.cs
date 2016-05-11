@@ -78,7 +78,7 @@ namespace Fab5.Engine.Subsystems {
             if (e2 != null && e2.get_component<Fab5.Starburst.Components.Bullet_Info>() != null) {
                 // weapons do lots of shaky shaky
                 var damage = e2.get_component<Fab5.Starburst.Components.Bullet_Info>().damage;
-                fac = 0.9f + damage/60.0f;
+                fac = 1.0f + damage/50.0f;
                 force = 100.0f*fac;
             }
             else if (e2 != null && e2.get_component<Powerup>() != null) {
@@ -96,7 +96,7 @@ namespace Fab5.Engine.Subsystems {
             var disp_y = (float)nv.Y * force;
 
             var i = e.get_component<Ship_Info>().pindex-1;
-            if (i >= 0 && i < cameras.Length) {
+            if (i >= 0 && i < cameras.Length) { // no idea why we need this
                 cameras[i].shake(disp_x, disp_y);
             }
         }
@@ -395,8 +395,8 @@ namespace Fab5.Engine.Subsystems {
             var hw = camera.viewport.Width  * 0.5f;
             var hh = camera.viewport.Height * 0.5f;
 
-            var x = camera.position.x;
-            var y = camera.position.y;
+            var x = camera.position.x+camera.displacement.X;
+            var y = camera.position.y+camera.displacement.Y;
 
             var fac1 = 0.05f;
             var scale1 = 1.0f*camera.zoom;
@@ -952,8 +952,8 @@ namespace Fab5.Engine.Subsystems {
                 var in_any_view = false;
 
                 foreach (Camera cam in cameras) {
-                    var cx = cam.position.x;
-                    var cy = cam.position.y;
+                    var cx = cam.position.x+cam.displacement.X;
+                    var cy = cam.position.y+cam.displacement.Y;
                     var hw = cam.viewport.Width/cam.zoom * 0.5f;
                     var hh = cam.viewport.Height/cam.zoom * 0.5f;
 

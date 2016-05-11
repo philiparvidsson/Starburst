@@ -15,7 +15,7 @@
     {
         public static System.Random rand = new System.Random();
         static float intensity = 0.35f;
-        static int lol = 1;
+        public static int lol = 1;
         public static Component[] create_components(Input input, Game_Config conf, int team)
         {
             int pindex = lol;
