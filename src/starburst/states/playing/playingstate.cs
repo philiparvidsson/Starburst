@@ -311,7 +311,7 @@ public class Playing_State : Game_State {
             new TTL { max_time = game_conf.match_time,
                       destroy_cb = () => {
                           Fab5_Game.inst().leave_state();
-                          //Fab5_Game.inst().enter_state(new Results_State(Fab5_Game.inst().get_entities_fast(typeof (Input)), game_conf));
+                          Fab5_Game.inst().enter_state(new Results_State(Fab5_Game.inst().get_entities_fast(typeof(Input)), game_conf));
                       }
             }
         });
