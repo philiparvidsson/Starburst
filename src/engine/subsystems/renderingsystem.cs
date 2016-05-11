@@ -33,6 +33,8 @@ namespace Fab5.Engine.Subsystems {
         SpriteBatch sprite_batch;
         Viewport defaultViewport;
 
+        public float match_time;
+
         public Tile_Map tile_map;
 
         Hudsystem hudsystem_instance;
@@ -54,6 +56,7 @@ namespace Fab5.Engine.Subsystems {
         private Vector2 shakeOffset;
         private Vector2 org;
         private float start_time;
+
         //
         public void apply_shake(Entity e_, Entity e2_, Vector2 norm) {
             if (e_ == null) {
@@ -79,11 +82,10 @@ namespace Fab5.Engine.Subsystems {
                 force = 100.0f*fac;
             }
             else if (e2 != null && e2.get_component<Powerup>() != null) {
-                fac = 0.0f;
-                force = 0.0f;
+                return;
             }
             else {
-                fac = 0.1f;
+                fac = 0.2f;
                 force = (float)Math.Sqrt(vel.x*vel.x+vel.y*vel.y)*fac;
             }
 
@@ -94,7 +96,9 @@ namespace Fab5.Engine.Subsystems {
             var disp_y = (float)nv.Y * force;
 
             var i = e.get_component<Ship_Info>().pindex-1;
-            cameras[i].shake(disp_x, disp_y);
+            if (i >= 0 && i < cameras.Length) {
+                cameras[i].shake(disp_x, disp_y);
+            }
         }
         public override void on_message(string msg, dynamic data)
         {
@@ -819,9 +823,22 @@ namespace Fab5.Engine.Subsystems {
 
         }
 
-        private void draw_match_time() {
-            sprite_batch.Draw(timer_tex, new Vector2(760.0f, 40.0f), null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.5f);
-            GFX_Util.draw_def_text(sprite_batch, "0.00", 800.0f, 40.0f);
+        private void draw_match_info() {
+            //sprite_batch.Draw(timer_tex, new Vector2(760.0f, 40.0f), null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.5f);
+            var min = 0;
+            var sec = match_time;
+
+            while (sec >= 60.0f) {
+                min += 1;
+                sec -= 60.0f;
+            }
+            var str = string.Format("{0:00}:{1:00.00}", min, sec);
+
+            var x = Fab5_Game.inst().GraphicsDevice.Viewport.Width * 0.5f - GFX_Util.measure_string("00:00.00").X*0.5f;
+            var y = 20.0f;
+            GFX_Util.draw_def_text(sprite_batch, str, x, y);
+
+
         }
 
 
@@ -898,6 +915,11 @@ namespace Fab5.Engine.Subsystems {
         List<Entity> temp_ = new List<Entity>(256);
         public override void draw(float t, float dt)
         {
+            match_time -= dt;
+            if (match_time < 0.0f) {
+                match_time = 0.0f;
+            }
+
             players             = Fab5_Game.inst().get_entities_fast(typeof(Input));
             currentPlayerNumber = players.Count;
 
@@ -1021,10 +1043,10 @@ namespace Fab5.Engine.Subsystems {
             }
 
 
-//            sprite_batch.GraphicsDevice.Viewport = defaultViewport;
+            sprite_batch.GraphicsDevice.Viewport = defaultViewport;
 
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
-            draw_match_time();
+            draw_match_info();
             sprite_batch.End();
 
             sprite_batch.GraphicsDevice.SetRenderTarget(null);
