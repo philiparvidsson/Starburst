@@ -262,26 +262,42 @@ namespace Fab5.Starburst.States {
                 }
             }
             else {
+                float bestScore = 0;
+                List<int> bestPlayers = new List<int>();
                 for (int i = 0; i < players.Count; i++) {
                     int rowY = startY + rowHeight * i + textOffset + vertSpacing * i;
                     Score player_score = players[i].get_component<Score>();
                     Ship_Info player_info = players[i].get_component<Ship_Info>();
+
+                    if (player_score.score > bestScore) {
+                        bestPlayers.Clear();
+                        bestScore = player_score.score;
+                        bestPlayers.Add(i);
+                    }
+                    else if(player_score.score == bestScore) { 
+                        bestPlayers.Add(i);
+                    }
 
                     GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_deaths.ToString(), deathsX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.display_score.ToString(), scoreX, rowY);
                 }
-                /*
+
+                int totalScoreHeight = rowHeight * players.Count + 1 + vertSpacing * (players.Count - 1 + 1);
                 // skriv ut vilken person som vann
                 startY += totalScoreHeight + vertSpacing + textOffset;
-                String tieText = "Match ended in a tie";
-                String winText = (redScore > blueScore ? "Red" : "Blue") + " team won!";
-                Vector2 tieSize = GFX_Util.measure_string(tieText);
+                String winner = "Player ";
+                for(int i=0; i < bestPlayers.Count; i++) {
+                    if (i > 0)
+                        winner += " & Player ";
+                    winner += s[bestPlayers[i]];
+                }
+                String winText =  winner + " won!";
                 Vector2 winSize = GFX_Util.measure_string(winText);
 
-                GFX_Util.draw_def_text(sprite_batch, (redScore == blueScore ? tieText : winText), (redScore == blueScore ? (int)(vp.Width * 5f - tieSize.X * .5f) : (int)(vp.Width * 5f - winSize.X * .5f)), startY);
-            */
+                GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), startY);
+            
             }
             
             String text = "Press Enter to continue";
