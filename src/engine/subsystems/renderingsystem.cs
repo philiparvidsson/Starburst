@@ -82,8 +82,7 @@ namespace Fab5.Engine.Subsystems {
                 force = 100.0f*fac;
             }
             else if (e2 != null && e2.get_component<Powerup>() != null) {
-                fac = 0.0f;
-                force = 0.0f;
+                return;
             }
             else {
                 fac = 0.2f;
@@ -97,7 +96,9 @@ namespace Fab5.Engine.Subsystems {
             var disp_y = (float)nv.Y * force;
 
             var i = e.get_component<Ship_Info>().pindex-1;
-            cameras[i].shake(disp_x, disp_y);
+            if (i >= 0 && i < cameras.Length) {
+                cameras[i].shake(disp_x, disp_y);
+            }
         }
         public override void on_message(string msg, dynamic data)
         {
