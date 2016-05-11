@@ -91,7 +91,7 @@ namespace Fab5.Starburst.States {
             var pl = last_state.get_entities_fast(typeof(Score));
             List<Entity> pList = new List<Entity>();
             for (int i = 0; i < pl.Count; i++) {
-                if (pl[i].get_component<Score>() != null)
+                if (pl[i].get_component<Input>() != null)
                     pList.Add(pl[i]);
             }
 
@@ -214,7 +214,7 @@ namespace Fab5.Starburst.States {
             }
         }
         private void select() {
-            var entities = Starburst.inst().get_entities_fast(typeof(Input));
+            var entities = get_entities_fast(typeof(Input));
             Entity cursor = entities[0];
             Position cursorPosition = cursor.get_component<Position>();
             if (cursorPosition.y == (int)options.resume) {
@@ -225,11 +225,12 @@ namespace Fab5.Starburst.States {
                 // gå till resultat-sida istället för att avsluta
                 Playing_State gameState = (Playing_State)last_state;
                 var scoreEntities = gameState.get_entities_fast(typeof(Score));
-                List<Score> scores = new List<Score>();
+                List<Entity> players = new List<Entity>();
                 for(int i=0; i < scoreEntities.Count; i++) {
-                    scores.Add(scoreEntities[i].get_component<Score>());
+                    if(scoreEntities[i].get_component<Input>() != null)
+                        players.Add(scoreEntities[i]);
                 }
-                Starburst.inst().enter_state(new Results_State(scores, gameState.game_conf));
+                Starburst.inst().enter_state(new Results_State(players, gameState.game_conf));
                 //Starburst.inst().leave_state();
             }
         }
