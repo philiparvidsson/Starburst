@@ -32,6 +32,8 @@
         public int team;
         public int pindex;
 
+        public float spawn_time;
+
         public System.Collections.Generic.Dictionary<Type, Powerup_Impl> powerups = new System.Collections.Generic.Dictionary<Type, Powerup_Impl>();
 
         public bool use_powerup(int index) {
