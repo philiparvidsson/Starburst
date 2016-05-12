@@ -607,6 +607,37 @@ namespace Fab5.Starburst.States.Playing {
                             player.get_component<Position>().x = spawn_pos.x;
                             player.get_component<Position>().y = spawn_pos.y;
                             player.get_component<Angle>().angle = 3.141592f*2.0f * (float)rand.NextDouble();
+
+                            for (int i = 0; i < 20; i++) {
+                                Fab5_Game.inst().create_entity(new Component[] {
+                                    new TTL {
+                                        max_time = i*0.05f,
+                                        destroy_cb = () => {
+                                            var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
+                                            var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
+                                            var radius = 13.0f * (float)rand.NextDouble();
+                                            var speed  = (30.0f + 110.0f * (float)Math.Pow(rand.NextDouble(), 2.0f));
+
+                                            Fab5_Game.inst().create_entity(new Component[] {
+                                                new Sprite   { blend_mode = Sprite.BM_ADD,
+                                                               scale      = 1.5f + (float)rand.NextDouble(),
+                                                               texture    = Fab5_Game.inst().get_content<Texture2D>("particle") },
+
+                                                new Position { x = spawn_pos.x + (float)Math.Cos(theta1) * radius,
+                                                               y = spawn_pos.y + (float)Math.Sin(theta1) * radius },
+
+                                                new Velocity { x = (float)Math.Cos(theta2) * speed,
+                                                               y = (float)Math.Sin(theta2) * speed },
+
+                                                new Mass     { drag_coeff = 2.0f },
+
+                                                new TTL      { alpha_fn = (x, max) => 1.0f-(x*x)/(max*max),
+                                                               max_time = 1.5f + (float)rand.NextDouble() }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
                         },
 
                         max_time = 5.0f,
