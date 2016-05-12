@@ -432,6 +432,12 @@ namespace Fab5.Starburst.States.Playing {
         if (player == bulletInfo.sender) {
             return;
         }
+
+        if(Fab5_Game.inst().get_time() - player.get_component<Ship_Info>().spawn_time <  3.0f)
+            {
+                return;
+            }
+
         Fab5_Game.inst().message("camera_shake", new { playerShip.pindex });
         var shooter_score_mult = shooterScore.score_mult;
         if (player != bulletInfo.sender)
@@ -606,6 +612,7 @@ namespace Fab5.Starburst.States.Playing {
                             var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
                             player.get_component<Position>().x = spawn_pos.x;
                             player.get_component<Position>().y = spawn_pos.y;
+                            player.get_component<Ship_Info>().spawn_time = Fab5_Game.inst().get_time();
                             player.get_component<Angle>().angle = 3.141592f*2.0f * (float)rand.NextDouble();
                         },
 
