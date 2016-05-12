@@ -613,7 +613,9 @@ namespace Fab5.Engine.Subsystems {
 
             effect.View  = Matrix.CreateLookAt(new Vector3(cx, cy, 0.0f), new Vector3(cx, cy, 1.0f), Vector3.Up);
 
-            var fov = 2.0f*(float)Math.Atan(1.0f/(4.0f*camera.viewport.AspectRatio*camera.zoom)) / (1080.0f/camera.viewport.Height);
+            var n = 0.5f * camera.viewport.Height / 16.0f;
+            var edge = (2.0f/120.0f)*(n/camera.zoom);//1.0f/(screen_aspect*camera.zoom)
+            var fov = 2.0f*(float)Math.Atan(edge/4.0f);
             effect.Projection = Matrix.CreatePerspectiveFieldOfView(fov, camera.viewport.AspectRatio, 1.0f, 10.0f);
 
             if (enable_3d) {
