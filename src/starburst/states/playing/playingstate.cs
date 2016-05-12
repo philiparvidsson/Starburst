@@ -183,8 +183,8 @@ public class Playing_State : Game_State {
                     renderer = new Rendering_System(Starburst.inst().GraphicsDevice) {
                         tile_map = tile_map,
                         match_time = game_conf.match_time
-                    }
-                    //new Window_Title_Writer()
+                    },
+                    new Window_Title_Writer()
                )
             )
         );
@@ -210,8 +210,6 @@ public class Playing_State : Game_State {
 
         create_entity(SoundManager.create_backmusic_component());
         create_entity(SoundManager.create_soundeffects_component());
-
-
 
         for (int i = 0; i < game_conf.num_asteroids; i++) {
             var asteroid = create_entity(Asteroid.create_components());
@@ -274,14 +272,14 @@ public class Playing_State : Game_State {
         //create_entity(Turbo_Powerup.create_components());
 
 
-        var shield1 = create_entity(Powerup.create(new Fast_Bombs_Powerup()));
+        /*var shield1 = create_entity(Powerup.create(new Fast_Bombs_Powerup()));
         shield1.get_component<Position>().x = -1800.0f; shield1.get_component<Position>().y = 1500.0f;
 
         var multi1 = create_entity(Powerup.create(new Free_Fire_Powerup()));
         multi1.get_component<Position>().x = -1700.0f; multi1.get_component<Position>().y = 1500.0f;
 
         var nano1 = create_entity(Powerup.create(new Bouncy_Bullets_Powerup()));
-        nano1.get_component<Position>().x = -1600.0f; multi1.get_component<Position>().y = 1500.0f;
+        nano1.get_component<Position>().x = -1600.0f; multi1.get_component<Position>().y = 1500.0f;*/
 
         /*var freefire1 = create_entity(Powerup.create(new Free_Fire_Powerup()));
         freefire1.get_component<Position>().x = -1600.0f; freefire1.get_component<Position>().y = 1500.0f;

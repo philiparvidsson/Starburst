@@ -215,21 +215,37 @@
 
         }
 
+        float energy_blink_timer;
         private void drawEnergy(Position shipPos, Camera camera, float dt)
         {
-            float energyScale = (ship_info.energy_value / ship_info.top_energy)*camera.zoom;
+            float energyScale = (ship_info.energy_value / ship_info.top_energy);
+            float energyScaleSqrt = (float)Math.Sqrt(energyScale);
+            Color color = Color.White;
+
+            energy_blink_timer += dt;
+            if (energyScale > 0.5f) {
+                energy_blink_timer = 0.0f;
+            }
+            else {
+                //color = new Color(1.0f, 0.1f, 0.1f);
+            }
+            if (energy_blink_timer > 1.0f/5.0f) {
+                energy_blink_timer -= 1.0f/5.0f;
+            }
             
             //var source_rect = new Rectangle(enball.frame_x, enball.frame_y, enball.frame_width, enball.frame_height);
 
             
            // Console.WriteLine(                new Vector2((shipPos.x - camera.position.x - camera.displacement.X) * camera.zoom, (shipPos.y - camera.position.y - camera.displacement.Y) * camera.zoom));
+            if (energy_blink_timer < 1.0f/10.0f) {
             sprite_batch.Draw(enball.texture,
                 new Vector2((shipPos.x - camera.position.x - camera.displacement.X) * camera.zoom + camera.viewport.Width * 0.5f, (shipPos.y - camera.position.y - camera.displacement.Y) * camera.zoom + camera.viewport.Height * 0.5f),
-                scale: new Vector2(energyScale, energyScale),
+                scale: new Vector2(energyScaleSqrt, energyScaleSqrt)*camera.zoom,
                 sourceRectangle: null,
                 origin: new Vector2(enball.texture.Width * 0.5f, enball.texture.Height * 0.5f),
-                color: Color.White * energyScale
+                              color: color/*new Color(1.0f, energyScale*energyScale, energyScale*energyScale, 1.0f)*/
                 );
+            }
 
             //updateEnergySprite(dt);
         }

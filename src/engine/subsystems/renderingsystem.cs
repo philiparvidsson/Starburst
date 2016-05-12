@@ -37,7 +37,7 @@ namespace Fab5.Engine.Subsystems {
 
         public Tile_Map tile_map;
 
-        Hudsystem hudsystem_instance;
+        Hudsystem[] hudsystem_instances;
 
         private Texture2D backdrop;
         private Texture2D stardrop;
@@ -706,7 +706,6 @@ namespace Fab5.Engine.Subsystems {
 
             // kör uppdatering av viewports och kameror
             updatePlayers();
-            this.hudsystem_instance = new Hudsystem(sprite_batch, tile_map);
 
             effect = new BasicEffect(Fab5_Game.inst().GraphicsDevice);
             effect.LightingEnabled        = true;
@@ -822,6 +821,12 @@ namespace Fab5.Engine.Subsystems {
             prevPlayerNumber = currentPlayerNumber;
 
             backbuffer_target = new RenderTarget2D(Fab5_Game.inst().GraphicsDevice, defaultViewport.Width, defaultViewport.Height, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PlatformContents);
+
+            this.hudsystem_instances = new Hudsystem[currentPlayerNumber];
+
+            for (int i = 0; i < currentPlayerNumber; i++) {
+                hudsystem_instances[i] = new Hudsystem(sprite_batch, tile_map);
+            }
 
         }
 
@@ -1058,7 +1063,7 @@ namespace Fab5.Engine.Subsystems {
 
                 draw_texts(sprite_batch, current, texts);
 
-                hudsystem_instance.drawHUD(currentPlayer, dt, current);
+                hudsystem_instances[p].drawHUD(currentPlayer, dt, current);
                 draw_indicators(current, currentPlayerNumber, currentPlayer);
 
                 for (int i = 0; i < hooks.Count; i++) {
