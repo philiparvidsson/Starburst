@@ -52,12 +52,12 @@ public abstract class Game_State {
         MsgInfo msg;
         while (messages.TryDequeue(out msg)) {
             foreach (var subsystem in subsystems) {
-                try {
+                //try {
                     subsystem.on_message(msg.msg, msg.data);
-                } catch (Exception e) {
-                    Console.WriteLine("message handler crashed in {0}", subsystem);
-                    Console.WriteLine(e);
-                }
+                //} catch (Exception e) {
+                    //Console.WriteLine("message handler crashed in {0}", subsystem);
+                    //Console.WriteLine(e);
+                //}
 
             }
 

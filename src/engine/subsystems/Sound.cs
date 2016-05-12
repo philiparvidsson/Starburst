@@ -169,8 +169,14 @@ namespace Fab5.Engine.Subsystems
         Velocity velo2 = e2.get_component<Velocity>();
         Input input = e1.get_component<Input>();
 
-        var texttureName = data.entity1.get_component<Sprite>().texture.Name;
-        var texttureName2 = data.entity1.get_component<Sprite>().texture.Name;
+        var sprite1 = data.entity1.get_component<Sprite>();
+        var sprite2 = data.entity2.get_component<Sprite>();
+
+        if (sprite1 == null || sprite2 == null)
+            return;
+
+        var texttureName = sprite1.texture.Name;
+        var texttureName2 = sprite2.texture.Name;
         var speed = Math.Sqrt(Math.Pow(velo.x, 2) + Math.Pow(velo.y, 2));
         var speed2 = Math.Sqrt(Math.Pow(velo2.x, 2) + Math.Pow(velo2.y, 2));
         var coolspeed = speed - speed2 * ((velo.x * velo.x + velo.y * velo2.y) / (speed * speed2));
