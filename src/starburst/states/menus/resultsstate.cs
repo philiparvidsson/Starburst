@@ -275,6 +275,9 @@ namespace Fab5.Starburst.States {
                     Score player_score = players[i].get_component<Score>();
                     Ship_Info player_info = players[i].get_component<Ship_Info>();
 
+                    if (player_score == null)
+                        continue;
+
                     if (player_score.score > bestScore) {
                         bestPlayers.Clear();
                         bestScore = player_score.score;
