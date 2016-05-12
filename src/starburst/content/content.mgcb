@@ -541,12 +541,6 @@
 /processorParam:Quality=Best
 /build:sound/effects/bang1.wav
 
-#begin sound/effects/bang2.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/bang2.wav
-
 #begin sound/effects/BatmanPunch.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -924,4 +918,58 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:wbeam.png
+
+#begin sound/effects/bang1m.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/bang1m.wav
+
+#begin sound/effects/bang2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/bang2.wav
+
+#begin sound/effects/knock1m.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/knock1m.wav
+
+#begin sound/effects/knock2m.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/knock2m.wav
+
+#begin sound/effects/knock3m.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/knock3m.wav
+
+#begin sound/effects/laser_impact.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/laser_impact.wav
+
+#begin sound/effects/pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/pickup.wav
+
+#begin sound/effects/thud1m.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/thud1m.wav
+
+#begin sound/effects/small_explosion.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/small_explosion.wav
 
