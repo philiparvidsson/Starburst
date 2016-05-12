@@ -433,6 +433,7 @@ namespace Fab5.Starburst.States.Playing {
             return;
         }
         Fab5_Game.inst().message("camera_shake", new { playerShip.pindex });
+        var shooter_score_mult = shooterScore.score_mult;
         if (player != bulletInfo.sender)
             shooterScore.give_points(10);
         // kolla sköld, om sköld nere, ta skada
@@ -450,8 +451,14 @@ namespace Fab5.Starburst.States.Playing {
                 // offret blir dödsmördat
                 if (player != bulletInfo.sender)
                 {
-                    shooterScore.give_points(500);
+                    shooterScore.give_points(250);
                     shooterScore.num_kills++;
+                    if (shooterScore.num_kills > 2 && ((shooterScore.num_kills) % 3) == 0) {
+                        shooterScore.score_mult++;
+                        if (shooterScore.score_mult > 3) {
+                            shooterScore.score_mult = 3;
+                        }
+                    }
                 }
 
                 foreach (var powerup in playerShip.powerups.Values) {
@@ -517,6 +524,7 @@ namespace Fab5.Starburst.States.Playing {
 
                 Score player_score = player.get_component<Score>();
                 player_score.num_deaths++;
+                player_score.score_mult = 1;
 
                 int player_kills = player_score.num_kills;
                 int player_deaths = player_score.num_deaths;
@@ -562,6 +570,8 @@ namespace Fab5.Starburst.States.Playing {
 
                 var killer = bulletInfo.sender.get_component<Ship_Info>();
 
+
+
                 Fab5_Game.inst().create_entity(new Component[] {
                     new Post_Render_Hook  {
                         render_fn = (camera, sprite_batch) => {
@@ -574,7 +584,7 @@ namespace Fab5.Starburst.States.Playing {
                             var s    = new [] { "one", "two", "three", "four" };
                             var text = string.Format("Killed player {0}!", s[playerShip.pindex-1]);
                             var ts    = GFX_Util.measure_string(text);
-                            String points = "+500";
+                            String points = "+" + (250*shooter_score_mult).ToString();
                             var ps    = GFX_Util.measure_string(points);
                             GFX_Util.draw_def_text(sprite_batch, text, (camera.viewport.Width-ts.X)*0.5f, 90.0f, a);
                             GFX_Util.draw_def_text(sprite_batch, points, (camera.viewport.Width-ps.X)*0.5f, 90.0f + ts.Y + 10, a);

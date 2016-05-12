@@ -27,6 +27,7 @@
         public float current_time_span; // Time since starting the increase of score.
         public int num_kills;
         public int num_deaths;
+        public int score_mult = 1;
 
         public Score()
         {
@@ -37,7 +38,7 @@
 
         public void give_points(int p) {
 
-            score += p;
+            score += p * score_mult;
 
             var self = entity;
 
@@ -57,7 +58,7 @@
             var theta = 2.0f*3.141592f*(float)rand.NextDouble();
             var speed = 280.0f*(0.8f+0.4f*(float)rand.NextDouble());
 
-            var str = "+" + p.ToString();
+            var str = "+" + (p*score_mult).ToString();
             var s = GFX_Util.measure_string(str);
             var o_x = s.X*0.5f;
             var o_y = s.Y*0.5f;

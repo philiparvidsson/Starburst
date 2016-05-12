@@ -107,6 +107,14 @@
                 GFX_Util.draw_def_text(sprite_batch, string.Format("{0:0.0}", e.Value.time), textx, yy+texty);
                 yy -= 36.0f;
             }
+
+            var score = player.get_component<Score>();
+            if (score.score_mult == 3) {
+                sprite_batch.Draw(Fab5_Game.inst().get_content<Texture2D>("powerups/multiplier3"), new Vector2(xx, yy), null, Color.White, 0.0f, Vector2.Zero, new Vector2(0.5f, 0.5f), SpriteEffects.None, 0.5f);
+            }
+            else if (score.score_mult == 2) {
+                sprite_batch.Draw(Fab5_Game.inst().get_content<Texture2D>("powerups/multiplier2"), new Vector2(xx, yy), null, Color.White, 0.0f, Vector2.Zero, new Vector2(0.5f, 0.5f), SpriteEffects.None, 0.5f);
+            }
         }
 
         private void draw_minimap(Entity player) {
