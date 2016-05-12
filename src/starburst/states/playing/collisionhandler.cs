@@ -627,7 +627,7 @@ namespace Fab5.Starburst.States.Playing {
 
                                             Fab5_Game.inst().create_entity(new Component[] {
                                                 new Sprite   { blend_mode = Sprite.BM_ADD,
-                                                               scale      = 1.5f + (float)rand.NextDouble(),
+                                                               scale      = 0.8f + (float)rand.NextDouble(),
                                                                texture    = Fab5_Game.inst().get_content<Texture2D>("particle") },
 
                                                 new Position { x = spawn_pos.x + (float)Math.Cos(theta1) * radius,

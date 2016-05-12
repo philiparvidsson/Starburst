@@ -841,9 +841,10 @@ namespace Fab5.Engine.Subsystems {
             }
             var str = string.Format("{0:00}:{1:00.00}", min, sec);
 
-            var x = Fab5_Game.inst().GraphicsDevice.Viewport.Width * 0.5f - GFX_Util.measure_string("00:00.00").X*0.5f;
+            var strw = GFX_Util.measure_string("00:00.00").X * 0.75f;
+            var x = Fab5_Game.inst().GraphicsDevice.Viewport.Width * 0.5f - strw*0.5f;
             var y = 20.0f;
-            GFX_Util.draw_def_text(sprite_batch, str, x, y);
+
 
             if (!team_play)
                 return;
@@ -862,8 +863,18 @@ namespace Fab5.Engine.Subsystems {
                 }
             }
 
-            GFX_Util.draw_def_text(sprite_batch, ((int)team1_score).ToString(), x-100, 50, new Color(1.0f, 0.2f, 0.2f));
-            GFX_Util.draw_def_text(sprite_batch, ((int)team2_score).ToString(), x+100, 50, new Color(0.2f, 0.2f, 1.0f));
+            var strstr="";
+                 if (team1_score > 999999) strstr="0000000";
+            else if (team1_score > 99999)  strstr="000000";
+            else if (team1_score > 9999)   strstr="00000";
+            else if (team1_score > 999)    strstr="0000";
+            else if (team1_score > 99)     strstr="000";
+            else if (team1_score > 9)      strstr="00";
+            else strstr= "0";
+            var strw2 = GFX_Util.measure_string(strstr).X;
+            GFX_Util.draw_def_text(sprite_batch, str, x, y, new Vector2(0.75f, 0.75f));
+            GFX_Util.draw_def_text(sprite_batch, ((int)team1_score).ToString(), x-strw2-30, y+5, new Color(1.0f, 0.3f, 0.3f));
+            GFX_Util.draw_def_text(sprite_batch, ((int)team2_score).ToString(), x+strw+30, y+5, new Color(0.3f, 0.3f, 1.0f));
         }
 
 
