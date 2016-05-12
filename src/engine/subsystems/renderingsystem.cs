@@ -1002,6 +1002,25 @@ namespace Fab5.Engine.Subsystems {
                 update_sprite(temp[i], dt);
             }
 
+            for (int p = 0; p < currentPlayerNumber; p++) {
+                Camera current = cameras[p];
+
+                var currentPlayer         = players[p];
+                var currentPlayerPosition = currentPlayer.get_component<Position>();
+
+                current.position.x += ((currentPlayerPosition.x-current.position.x) * 10.0f) * dt;
+                current.position.y += ((currentPlayerPosition.y-current.position.y) * 10.0f) * dt;
+                current.velocity = currentPlayer.get_component<Velocity>();
+                current.update(dt);
+
+                var inv_zoom = 1.0f/current.zoom;
+
+                if (current.position.x + 0.5f*current.viewport.Width*inv_zoom  >  2048.0f) current.position.x = 2048.0f - 0.5f*current.viewport.Width*inv_zoom;
+                if (current.position.x - 0.5f*current.viewport.Width*inv_zoom  < -2048.0f) current.position.x = -2048.0f + 0.5f*current.viewport.Width*inv_zoom;
+                if (current.position.y + 0.5f*current.viewport.Height*inv_zoom >  2048.0f) current.position.y = 2048.0f - 0.5f*current.viewport.Height*inv_zoom;
+                if (current.position.y - 0.5f*current.viewport.Height*inv_zoom < -2048.0f) current.position.y = -2048.0f + 0.5f*current.viewport.Height*inv_zoom;
+            }
+
             var hooks = Fab5_Game.inst().get_entities_fast(typeof (Post_Render_Hook));
             for (int p = 0; p < currentPlayerNumber; p++) {
                 draw_tile_map(sprite_batch, cameras[p], num_entities, entities);
@@ -1026,18 +1045,6 @@ namespace Fab5.Engine.Subsystems {
 
                 var currentPlayer         = players[p];
                 var currentPlayerPosition = currentPlayer.get_component<Position>();
-
-                current.position.x += ((currentPlayerPosition.x-current.position.x) * 10.0f) * dt;
-                current.position.y += ((currentPlayerPosition.y-current.position.y) * 10.0f) * dt;
-                current.velocity = currentPlayer.get_component<Velocity>();
-                current.update(dt);
-
-                var inv_zoom = 1.0f/current.zoom;
-
-                if (current.position.x + 0.5f*current.viewport.Width*inv_zoom  >  2048.0f) current.position.x = 2048.0f - 0.5f*current.viewport.Width*inv_zoom;
-                if (current.position.x - 0.5f*current.viewport.Width*inv_zoom  < -2048.0f) current.position.x = -2048.0f + 0.5f*current.viewport.Width*inv_zoom;
-                if (current.position.y + 0.5f*current.viewport.Height*inv_zoom >  2048.0f) current.position.y = 2048.0f - 0.5f*current.viewport.Height*inv_zoom;
-                if (current.position.y - 0.5f*current.viewport.Height*inv_zoom < -2048.0f) current.position.y = -2048.0f + 0.5f*current.viewport.Height*inv_zoom;
 
                 draw_backdrop(sprite_batch, current);
 

@@ -141,7 +141,7 @@ namespace Fab5.Engine.Components {
 
         public Matrix getViewMatrix(Viewport vp) {
             transformMatrix = Matrix.CreateTranslation(
-                                                       new Vector3(-(position.x+displacement.X), -(position.y+displacement.Y), 0)) *
+                new Vector3(-(position.x+displacement.X), -(position.y+displacement.Y), 0.0f)) *
                 Matrix.CreateScale(new Vector3(zoom, zoom, 1)) *
                 Matrix.CreateTranslation(new Vector3(origin, 0));
             /*

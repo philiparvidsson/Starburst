@@ -231,7 +231,6 @@
                 color: Color.White * energyScale
                 );
 
-
             //updateEnergySprite(dt);
         }
 
