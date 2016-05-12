@@ -39,6 +39,15 @@
             effectlib.Library.Add("menu_click", new Fab5SoundEffect("sound/effects/click", "menu_click"));
             effectlib.Library.Add("begin_game", new Fab5SoundEffect("sound/effects/air_horn", "begin_game"));
             effectlib.Library.Add("menu_positive", new Fab5SoundEffect("sound/effects/menu_positive", "menu_positive"));
+
+            effectlib.Library.Add("bang1m", new Fab5SoundEffect("sound/effects/bang1m", "bang1m"));
+            effectlib.Library.Add("knock1m", new Fab5SoundEffect("sound/effects/knock1m", "knock1m"));
+            effectlib.Library.Add("thud1m", new Fab5SoundEffect("sound/effects/thud1m", "thud1m"));
+            effectlib.Library.Add("knock2m", new Fab5SoundEffect("sound/effects/knock2m", "knock2m"));
+            effectlib.Library.Add("knock3m", new Fab5SoundEffect("sound/effects/knock3m", "knock3m"));
+            effectlib.Library.Add("laser_impact", new Fab5SoundEffect("sound/effects/laser_impact", "laser_impact"));
+            effectlib.Library.Add("small_explosion", new Fab5SoundEffect("sound/effects/small_explosion", "small_explosion"));
+            effectlib.Library.Add("pickup", new Fab5SoundEffect("sound/effects/pickup", "pickup"));
             return (Component)effectlib;
         }
     }
