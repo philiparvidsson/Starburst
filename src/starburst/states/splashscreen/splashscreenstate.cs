@@ -92,8 +92,10 @@ namespace Fab5.Starburst.States {
             Starburst.inst().GraphicsDevice.Clear(Color.Black);
             SpriteBatch sprite_batch = new SpriteBatch(Starburst.inst().GraphicsDevice);
             Viewport vp = sprite_batch.GraphicsDevice.Viewport;
+            int tex_h = (int)(vp.Height * 0.75f);
+            int tex_w = tex_h;
             sprite_batch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied);
-            Rectangle destRect = new Rectangle((int)(sprite_batch.GraphicsDevice.Viewport.Width * .5 - splash.Width * .5), (int)(sprite_batch.GraphicsDevice.Viewport.Height * .5 - splash.Height * .5), splash.Width, splash.Height);
+            Rectangle destRect = new Rectangle((int)(vp.Width * .5 - tex_w * .5), (int)(vp.Height * .5 - tex_h * .5), tex_w, tex_h);
             if (elapsedTime > delay && elapsedTime < outDelay) {
                 sprite_batch.Draw(splash, destRect, new Color(255, 255, 255, quadInOut(delay, 0, 1)));
                 //sprite_batch.DrawString(font, "In: " + quadInOut(delay, 0, 1), new Vector2(20, 20), Color.White);
