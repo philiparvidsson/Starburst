@@ -55,6 +55,21 @@
             }
 
             powerup_inv[index] = null;
+
+            powerup_inv_index = index;
+
+            for (int i = 0; i < max_powerups_inv; i++) {
+                powerup_inv_index++;
+
+                if (powerup_inv_index >= max_powerups_inv) {
+                    powerup_inv_index = 0;
+                }
+
+                if (powerup_inv[powerup_inv_index] != null) {
+                    break;
+                }
+            }
+
             return true;
         }
 

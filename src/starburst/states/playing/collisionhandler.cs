@@ -105,6 +105,9 @@ namespace Fab5.Starburst.States.Playing {
 
         if (i >= 0) {
             si.powerup_inv[i] = powerup.get_component<Powerup>().impl;
+            if (si.powerup_inv[si.powerup_inv_index] == null) {
+                si.powerup_inv_index = i;
+            }
 
             state.create_entity(new Component[] {
                 new TTL { max_time = 0.05f },
