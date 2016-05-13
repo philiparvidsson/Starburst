@@ -330,7 +330,7 @@ public class Playing_State : Game_State {
         var turbo2 = create_entity(Powerup.create(new Turbo_Powerup()));
         turbo2.get_component<Position>().x = 1500.0f; turbo2.get_component<Position>().y = -1500.0f;*/
 
-        //create_entity(Dummy_Enemy.create_components());
+        Dummy_Enemy.spawn();
 
         //var nme = create_entity(Dummy_Enemy.create_components());
         //nme.get_component<Position>().x = -1800.0f;

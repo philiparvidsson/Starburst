@@ -13,6 +13,10 @@ using System.Collections.Generic;
  *----------------------------------------------*/
 
 public class Velocity : Component {
+    // accelerations
+    public float ax;
+    public float ay;
+
     public float x;
     public float y;
 }

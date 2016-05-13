@@ -158,10 +158,6 @@ namespace Fab5.Engine.Subsystems
                 var texttureName = data.entity1.get_component<Sprite>().texture.Name;
                 if(texttureName.Contains("ship"))
                     Fab5_Game.inst().message("play_sound", new { pos = p1, name = "bang2", });
-                else if (texttureName.Contains("beams1"))
-                    Fab5_Game.inst().message("play_sound", new { name = "laser_impact", pos = p1});
-                else if (texttureName.Contains("beams2"))
-                    Fab5_Game.inst().message("play_sound", new { name = "knock1m", pos = p1 });
                 }
                 else {
 
@@ -181,23 +177,21 @@ namespace Fab5.Engine.Subsystems
 
         var texttureName = sprite1.texture.Name;
         var texttureName2 = sprite2.texture.Name;
-
         var speed = Math.Sqrt(Math.Pow(velo.x, 2) + Math.Pow(velo.y, 2));
         var speed2 = Math.Sqrt(Math.Pow(velo2.x, 2) + Math.Pow(velo2.y, 2));
-        var coolspeed = speed - speed2 * ((velo.x * velo.x + velo.y * velo2.y) / (speed * speed2));
+        var coolspeed = speed - speed2 * ((velo.x * velo2.x + velo.y * velo2.y) / (speed * speed2));
         Console.WriteLine(texttureName + texttureName2);
-        if ((texttureName.Contains("ship") && texttureName2 == "soccerball") || (texttureName == "soccerball" && texttureName2.Contains("ship")))
-            Fab5_Game.inst().message("play_sound", new { name = "BatmanPunch", pos = p1, gp_index = input.gp_index });
-        else if ((texttureName.Contains("asteroid") && texttureName2.Contains("ship")) || (texttureName2.Contains("asteroid") && texttureName.Contains("ship")))
-            Fab5_Game.inst().message("play_sound", new { name = "rockslide_small" ,pos= p1 , gp_index = input.gp_index });
-        else if (texttureName.Contains("ship") && texttureName2.Contains("ship"))
-            Fab5_Game.inst().message("play_sound", new { name = "bang", pos = p1, gp_index = input.gp_index });
-        else if (texttureName.Contains("beams1") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams1"))
-            Fab5_Game.inst().message("play_sound", new { name = "laser_impact", pos = p1 });
-        else if (texttureName.Contains("beams2") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams2"))
-                Fab5_Game.inst().message("play_sound", new { name = "small_explosion", pos = p1 });
-        else if (texttureName.Contains("powerup") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("powerup"))
-            Fab5_Game.inst().message("play_sound", new { name = "pickup", pos = p1 });
+
+                    if (input != null)
+                    {
+                        if ((texttureName.Contains("ship") && texttureName2 == "soccerball") || (texttureName == "soccerball" && texttureName2.Contains("ship")))
+                            Fab5_Game.inst().message("play_sound", new { name = "BatmanPunch", pos = p1, gp_index = input.gp_index });
+                        else if ((texttureName.Contains("asteroid") && texttureName2.Contains("ship")) || (texttureName2.Contains("asteroid") && texttureName.Contains("ship")))
+                            Fab5_Game.inst().message("play_sound", new { name = "rockslide_small", pos = p1, gp_index = input.gp_index });
+                        else if (texttureName.Contains("ship") && texttureName2.Contains("ship"))
+                            Fab5_Game.inst().message("play_sound", new { name = "bang", pos = p1, gp_index = input.gp_index });
+                    }
+
                 }
 
             }

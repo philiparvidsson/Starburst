@@ -21,6 +21,9 @@ public class Position_Integrator : Subsystem {
                 velocity.y -= velocity.y * dtm;
             }
 
+            velocity.x += velocity.ax * dt;
+            velocity.y += velocity.ay * dt;
+
             position.x += velocity.x * dt;
             position.y += velocity.y * dt;
 
