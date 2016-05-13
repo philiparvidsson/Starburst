@@ -17,11 +17,16 @@ public class Nanobots_Powerup : Powerup_Impl {
         get { return Starburst.inst().get_content<Texture2D>("powerups/nanobots"); }
     }
 
+    public Nanobots_Powerup()
+    {
+        time = 0.0f;
+    }
+
     public override void end() {
     }
 
     public override void begin(Entity holder) {
-        time = 0.0f;
+
 
 
         var holder_pos = holder.get_component<Position>();

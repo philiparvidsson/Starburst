@@ -48,6 +48,7 @@ namespace Fab5.Engine.Components {
         public Vector2 springs;
 
         public void shake(float x, float y) {
+            if (float.IsNaN(x) || float.IsNaN(y)) return;
             springs += new Vector2(x, y);
         }
 
@@ -69,6 +70,10 @@ namespace Fab5.Engine.Components {
 
             springs -= springs * shakeDragCoeff * dt;
             displacement += springs * dt;
+
+            if (float.IsNaN(displacement.X)) displacement.X = 0.0f;
+
+            if (float.IsNaN(displacement.Y)) displacement.Y = 0.0f;
         }
 
 

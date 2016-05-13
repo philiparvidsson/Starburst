@@ -14,11 +14,16 @@ public class Fast_Bombs_Powerup : Powerup_Impl {
         get { return Starburst.inst().get_content<Texture2D>("powerups/fastbombs"); }
     }
 
+    public Fast_Bombs_Powerup()
+    {
+        time = 5.0f;
+    }
+
     public override void end() {
     }
 
     public override void begin(Entity holder) {
-        time = 5.0f;
+
     }
 
 }

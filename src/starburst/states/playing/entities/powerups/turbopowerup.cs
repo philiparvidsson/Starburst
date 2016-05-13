@@ -24,6 +24,11 @@ public class Turbo_Powerup : Powerup_Impl {
         get { return Starburst.inst().get_content<Texture2D>("powerups/turbo"); }
     }
 
+    public Turbo_Powerup()
+    {
+        time = 60.0f;
+    }
+
     public override void end() {
         var e = Fab5_Game.inst().get_entity(effect_id);
         if (e != null) {
@@ -31,19 +36,18 @@ public class Turbo_Powerup : Powerup_Impl {
         }
 
         var holder = Fab5_Game.inst().get_entity(holder_id);
-        if (holder != null) {
+        //if (holder != null) {
             var ship_info = holder.get_component<Ship_Info>();
 
             ship_info.acceleration = old_acc;
             ship_info.top_velocity = old_vel;
-        }
+        //}
     }
 
     private void activate_effect(Entity holder) {
         var pos = holder.get_component<Position>();
         var vel = holder.get_component<Velocity>();
 
-        holder_id = holder.id;
         effect_id = Fab5_Game.inst().create_entity(new Component [] {
             new Particle_Emitter {
                 emit_fn = () => {
@@ -83,9 +87,9 @@ public class Turbo_Powerup : Powerup_Impl {
     }
 
     public override void begin(Entity holder) {
-        time = 60.0f;
 
         var ship_info = holder.get_component<Ship_Info>();
+        holder_id = holder.id;
 
         old_acc = ship_info.acceleration;
         old_vel = ship_info.top_velocity;

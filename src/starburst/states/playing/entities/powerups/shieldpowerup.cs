@@ -11,6 +11,7 @@ using System;
 
 public class Shield_Powerup : Powerup_Impl {
     private Int64 effect_id;
+    private Int64 holder_id;
 
     private static System.Random rand = new System.Random();
 
@@ -21,17 +22,28 @@ public class Shield_Powerup : Powerup_Impl {
         get { return Starburst.inst().get_content<Texture2D>("powerups/shield"); }
     }
 
+    public Shield_Powerup()
+    {
+        time = 60.0f;
+    }
+
     public override void end() {
         var e = Fab5_Game.inst().get_entity(effect_id);
         if (e != null) {
             e.destroy();
         }
+
+        var holder = Fab5_Game.inst().get_entity(holder_id);
+        var si = holder.get_component<Ship_Info>();
+        si.top_energy = old_top_energy;
+        si.recharge_rate = old_recharge_rate;
     }
 
     private void activate_effect(Entity holder) {
         var pos = holder.get_component<Position>();
         var vel = holder.get_component<Velocity>();
 
+        holder_id = holder.id;
         effect_id = Fab5_Game.inst().create_entity(new Component [] {
             new Particle_Emitter {
                 emit_fn = () => {
@@ -67,7 +79,7 @@ public class Shield_Powerup : Powerup_Impl {
     }
 
     public override void begin(Entity holder) {
-        time = 60.0f;
+ 
 
         activate_effect(holder);
 

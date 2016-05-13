@@ -19,6 +19,10 @@ public class Free_Fire_Powerup : Powerup_Impl {
         get { return Starburst.inst().get_content<Texture2D>("powerups/freefire"); }
     }
 
+    public Free_Fire_Powerup() {
+        time = 15.0f;
+    }
+
     public override void end() {
         var e = Fab5_Game.inst().get_entity(effect_id);
         if (e != null) {
@@ -69,7 +73,7 @@ public class Free_Fire_Powerup : Powerup_Impl {
     }
 
     public override void begin(Entity holder) {
-        time = 15.0f;
+
         //activate_effect(holder);
     }
 

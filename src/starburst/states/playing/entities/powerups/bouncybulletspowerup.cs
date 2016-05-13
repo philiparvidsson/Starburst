@@ -15,11 +15,16 @@ public class Bouncy_Bullets_Powerup : Powerup_Impl {
         get { return Starburst.inst().get_content<Texture2D>("powerups/bouncybullets"); }
     }
 
+    public Bouncy_Bullets_Powerup()
+    {
+        time = 60.0f;
+    }
+
     public override void end() {
     }
 
     public override void begin(Entity holder) {
-        time = 60.0f;
+
     }
 
 }

@@ -196,6 +196,7 @@ namespace Fab5.Starburst.States {
                 // lägg spelare i rätt lag
                 for (int p = 0; p < players.Count; p++) {
                     Ship_Info player_info = players[p].get_component<Ship_Info>();
+                    if (player_info == null) continue;
                     if (player_info.team == 1) redTeam.Add(players[p]);
                     else blueTeam.Add(players[p]);
                 }
@@ -218,7 +219,7 @@ namespace Fab5.Starburst.States {
                     GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_deaths.ToString(), deathsX, rowY);
-                    GFX_Util.draw_def_text(sprite_batch, player_score.display_score.ToString(), scoreX, rowY);
+                    GFX_Util.draw_def_text(sprite_batch, player_score.score.ToString(), scoreX, rowY);
                 }
                 currentOffset += redTeamHeight + vertSpacing + textOffset;
                 // måla ut lagpoäng
@@ -247,7 +248,7 @@ namespace Fab5.Starburst.States {
                     GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_deaths.ToString(), deathsX, rowY);
-                    GFX_Util.draw_def_text(sprite_batch, player_score.display_score.ToString(), scoreX, rowY);
+                    GFX_Util.draw_def_text(sprite_batch, player_score.score.ToString(), scoreX, rowY);
 
                 }
                 // måla ut lagpoäng
@@ -290,7 +291,7 @@ namespace Fab5.Starburst.States {
                     GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_deaths.ToString(), deathsX, rowY);
-                    GFX_Util.draw_def_text(sprite_batch, player_score.display_score.ToString(), scoreX, rowY);
+                    GFX_Util.draw_def_text(sprite_batch, player_score.score.ToString(), scoreX, rowY);
                 }
 
                 int totalScoreHeight = rowHeight * players.Count + 1 + vertSpacing * (players.Count - 1 + 1);

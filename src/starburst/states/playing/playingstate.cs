@@ -310,8 +310,16 @@ public class Playing_State : Game_State {
         create_entity(new Component[] {
             new TTL { max_time = game_conf.match_time,
                       destroy_cb = () => {
-                          Fab5_Game.inst().leave_state();
-                          Fab5_Game.inst().enter_state(new Results_State(Fab5_Game.inst().get_entities_fast(typeof(Input)), game_conf));
+                        Playing_State gameState = this;
+                        var scoreEntities = gameState.get_entities_fast(typeof(Score));
+                        List<Entity> players = new List<Entity>();
+                        for(int i=0; i < scoreEntities.Count; i++) {
+                            if(scoreEntities[i].get_component<Input>() != null)
+                                players.Add(scoreEntities[i]);
+                        }
+                        Starburst.inst().leave_state();
+                        Starburst.inst().leave_state();
+                        Starburst.inst().enter_state(new Results_State(players, gameState.game_conf));
                       }
             }
         });
