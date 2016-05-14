@@ -19,6 +19,14 @@ public class AI : Subsystem {
             }
         }
     }
+
+    public override void on_message(string msg, dynamic data) {
+        if (msg == "ai_use_powerup") {
+            Entity self = data.self;
+            int index = data.index;
+            self.get_component<Ship_Info>().use_powerup(index);
+        }
+    }
 }
 
 }

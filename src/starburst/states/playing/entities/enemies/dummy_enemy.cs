@@ -42,10 +42,10 @@ public static class Dummy_Enemy {
     private static Component[] create_waypoint(float x, float y) {
         return new Component[] {
             new Position { x = x,
-                           y = y }
+                           y = y },
 
-            /*new Sprite { color = Color.Yellow,
-                         texture = Fab5_Game.inst().get_content<Texture2D>("particle") }*/
+            new Sprite { color = Color.Yellow,
+                         texture = Fab5_Game.inst().get_content<Texture2D>("particle") }
         };
     }
 
@@ -193,9 +193,9 @@ public static class Dummy_Enemy {
 
         var path = find_path(x, y, tx, ty, tile_map);
         if (path != null) {
-            int counter = -(int)speed+1;
+            int counter = 2;
             foreach (var node in path) {
-                if (counter++ == 4) {
+                if (counter++ == 3) {
                     waypoints.Add(create_waypoint(get_x(node)*16.0f-2048.0f+8.0f, get_y(node)*16.0f-2048.0f+8.0f));
                     counter = 0;
                 }
@@ -204,7 +204,7 @@ public static class Dummy_Enemy {
 
 
         // optimize path
-        while (waypoints.Count > 2) {
+        while (waypoints.Count > -2) {
             bool all_checked = true;
 
             for (int i = 0; i < waypoints.Count-1; i++) {
@@ -212,6 +212,7 @@ public static class Dummy_Enemy {
                 var wp1 = (Position)waypoints[i+1][0];
 
                 var v0 = new Vector2(wp1.x-wp0.x, wp1.y-wp0.y);
+                v0.Normalize();
 
                 var sum_angle = 0.0f;
                 int last_ok = -1;
@@ -221,15 +222,18 @@ public static class Dummy_Enemy {
 
                     var v1 = new Vector2(wp3.x-wp2.x, wp3.y-wp2.y);
                     v1 = new Vector2(-v1.Y, v1.X);
+                    v1.Normalize();
 
                     var dot = Vector2.Dot(v0, v1);
                     sum_angle += (float)Math.Abs(dot);
-                    if (sum_angle < (float)Math.Cos(15.0f*3.141592f/180.0f)) {
+                    if (sum_angle < (float)Math.Cos(65.0f*3.141592f/180.0f)) {
                         last_ok = j;
                     }
                     else {
                         break;
                     }
+
+                    v0 = new Vector2(v1.Y, -v1.X);
                 }
 
                 if (last_ok != -1) {
@@ -280,6 +284,34 @@ public static class Dummy_Enemy {
         return true;
     }
 
+    private static Position closest_pos(Position p, out Entity target, params List<Entity>[] entities) {
+        var min_dist = 99999999.0f;
+        Position closest = null;
+        Entity targ = null;
+
+        foreach (var ents in entities) {
+            foreach (var e in ents) {
+                var p2 = e.get_component<Position>();
+                if (p2 == null) {
+                    continue;
+                }
+
+                var dx = p2.x-p.x;
+                var dy = p2.y-p.y;
+                var dist = dx*dx+dy*dy;
+
+                if (dist < min_dist) {
+                    min_dist = dist;
+                    closest = p2;
+                    targ = e;
+                }
+            }
+        }
+
+        target = targ;
+        return closest;
+    }
+
     private static void think(Entity self) {
         var data = self.get_component<Data>();
 
@@ -302,6 +334,14 @@ public static class Dummy_Enemy {
         v.ay = 0.0f;
         input.throttle = 0.0f;
 
+        var si = self.get_component<Ship_Info>();
+        for (int i = 0; i < si.max_powerups_inv; i++) {
+            if (si.powerup_inv[i] != null) {
+                Fab5_Game.inst().message("ai_use_powerup", new { self = self, index = i });
+                break;
+            }
+        }
+
         float path_recalc_time = (float)data.get_data("path_recalc_time", 0.0f);
         var tile_map = ((Playing_State)self.state).tile_map;
         if (calc_state == 0 && Fab5_Game.inst().get_time() - path_recalc_time > 0.5f) {
@@ -310,12 +350,30 @@ public static class Dummy_Enemy {
             data.data["path_calc"] = 1;
 
 
-            var player = Fab5_Game.inst().get_entities_fast(typeof (Input))[0];
-            var playerpos=player.get_component<Position>();
+            var players = new List<Entity>();
+            var powerups = Fab5_Game.inst().get_entities_fast(typeof (Powerup));
+
+            foreach (var player in Fab5_Game.inst().get_entities_fast(typeof (Ship_Info))) {
+                var other_si = player.get_component<Ship_Info>();
+                if (player == self) {
+                    continue;
+                }
+
+                if (other_si.team == si.team) {
+                    // following team mate behavior
+                }
+                else {
+                    players.Add(player);
+                }
+            }
+
+            Entity etarget;
+            Position targetpos = closest_pos(p, out etarget, players, powerups);
+            data.data["target"] = etarget;
 
 
-            var tx = (int)((playerpos.x + 2048.0f) / 16.0f);
-            var ty = (int)((playerpos.y + 2048.0f) / 16.0f);
+            var tx = (int)((targetpos.x + 2048.0f) / 16.0f);
+            var ty = (int)((targetpos.y + 2048.0f) / 16.0f);
 
             var vx = v.x/16.0f;
             var vy = v.y/16.0f;
@@ -339,6 +397,28 @@ public static class Dummy_Enemy {
 
         if (waypoints.Count == 0) {
             return;
+        }
+
+        bool target_is_friend = true;
+        float fac = 1.0f;
+        Entity target = (Entity)data.get_data("target", null);
+        if (target == null) {
+            fac = 1.0f; // shouldnt really happen much
+        }
+        else if (target.has_component<Ship_Info>()) {
+            // player or other ai, move close but not pin-point
+            fac = 5.0f;
+            var tsi = target.get_component<Ship_Info>();
+            target_is_friend = tsi.team == si.team;
+        }
+        else if (target.has_component<Powerup>()) {
+            // powerup, pin-point
+            if (waypoints.Count > 2) {
+                fac = 5.0f;
+            }
+            else {
+                fac = 0.9f;
+            }
         }
 
 
@@ -380,6 +460,12 @@ public static class Dummy_Enemy {
         b.Normalize();
 
         var dot = Vector2.Dot(a, b);
+        var c = new Vector2(dx, dy);
+        c.Normalize();
+        var dot2 = 0.25 + 0.75f * Vector2.Dot(c, b);
+        if (dot2 < 0.0f) {
+            dot2 = -dot2 * 0.5f;
+        }
 
 
         // 5 degrees off per 1000 pixels distance
@@ -387,19 +473,29 @@ public static class Dummy_Enemy {
         var threshold = (float)Math.Cos((90.0f - 5.0f*angle_error_fac) * 3.141592f / 180.0f);
 
         //Console.WriteLine(dot + ", " + threshold);
+        if (si.energy_value > si.top_energy*0.7f) {
+            data.data["shoot"] = true;
+        }
+        else if (si.energy_value < si.top_energy*0.5f) {
+            data.data["shoot"] = false;
+        }
 
-        if (dot < -threshold) {
-            w.ang_vel = 8.0f * Math.Abs(dot-0.2f);
+        if (waypoints.Count < 3 && !target_is_friend) {
+            var aim_threshold = (float)Math.Cos((90.0f - 3.0f) * 3.141592f / 180.0f);
+            if (dot < -aim_threshold) {
+                w.ang_vel = 5.0f * Math.Abs(dot);
+            }
+            else if (dot > aim_threshold) {
+                w.ang_vel = -5.0f * Math.Abs(dot);
+            }
+            else {
+                //Console.WriteLine("pew");
+                if ((bool)data.get_data("shoot", false)) {
+                    fire(self, si, self.get_component<Primary_Weapon>());
+                }
+            }
         }
-        else if (dot > threshold) {
-            w.ang_vel = -8.0f * Math.Abs(dot+0.2f);
-        }
-        else if (dist > 22.624f * 5.0f) {
-            v.ax = 380.0f * (float)Math.Cos(w.angle) - v.x;
-            v.ay = 380.0f * (float)Math.Sin(w.angle) - v.y;
-            input.throttle = 1.0f;
-        }
-        else {
+        else if (dist < 22.624f * fac*dot2) {
             Entity old_wp;
             do {
                 old_wp = waypoints[0];
@@ -408,8 +504,26 @@ public static class Dummy_Enemy {
             } while (old_wp != wpe && waypoints.Count > 0);
 
             // think again!
+
             think(self);
-                // shoot
+        }
+        else if (dot < -threshold) {
+            w.ang_vel = 8.0f * Math.Abs(dot-0.2f);
+        }
+        else if (dot > threshold) {
+            w.ang_vel = -8.0f * Math.Abs(dot+0.2f);
+        }
+        else {
+            v.ax = si.top_velocity * (float)Math.Cos(w.angle) - v.x;
+            v.ay = si.top_velocity * (float)Math.Sin(w.angle) - v.y;
+            input.throttle = 1.0f;
+        }
+    }
+
+    private static void fire(Entity entity, Ship_Info ship, Weapon weapon) {
+        if (weapon.timeSinceLastShot >= weapon.fire_rate && ship.energy_value >= weapon.energy_cost) {
+            var message = new { Origin = entity, Weapon = weapon, Ship = ship };
+            Fab5_Game.inst().message("fireInput", message);
         }
     }
 

@@ -104,7 +104,9 @@ namespace Fab5.Engine.Subsystems {
         {
             if (msg == "shake_camera") {
                 var i = data.player.get_component<Ship_Info>().pindex-1;
-                cameras[i].shake(data.disp_x, data.disp_y);
+                if (i >= 0 && i < cameras.Length) {
+                    cameras[i].shake(data.disp_x, data.disp_y);
+                }
             }
             else if (msg == "collision") {
                 var norm = new Vector2(data.n_x, data.n_y);
