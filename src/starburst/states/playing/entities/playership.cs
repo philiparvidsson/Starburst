@@ -61,13 +61,13 @@
                     teamColor = new Color(1.0f,0.3f,0.3f);
                     teamColor2 = new Color(1.0f, 0.6f, 0.6f);
                     teamColor3 = new Color(1.0f, 0.6f, 0.6f);
-                    teamColor4 = new Color(1.0f, 0.1f, 0.1f);
+                    teamColor4 = new Color(1.0f, 0.2f, 0.2f);
                 }
                 else {
                     teamColor = new Color(0.3f, 0.4f, 1.0f);
                     teamColor2 = new Color(0.6f, 0.7f, 1.0f);
                     teamColor3 = new Color(0.6f, 0.6f, 1.0f);
-                    teamColor4 = new Color(0.1f, 0.2f, 1.0f);
+                    teamColor4 = new Color(0.2f, 0.3f, 1.0f);
                 }
             }
             else {

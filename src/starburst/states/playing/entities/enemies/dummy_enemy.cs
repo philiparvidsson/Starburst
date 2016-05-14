@@ -52,7 +52,7 @@ public static class Dummy_Enemy {
     }
 
     private static int heuristic(int ax, int ay, int bx, int by) {
-        return dist(ax, ay, bx, by);//*dist(ax, ay, bx, by);
+        return dist(ax, ay, bx, by);
     }
 
     private static int dist(int ax, int ay, int bx, int by) {
@@ -90,12 +90,13 @@ public static class Dummy_Enemy {
         f_score[pos_to_node_index(x, y)] = heuristic(x, y, tx, ty);
 
         int num_its = 0;
+        int k = 3;
         while (open.Count > 0) {
             num_its++;
-            if (num_its > 20000) {
+            /*if (num_its > 20000) {
                 // too slow or something
                 break;
-            }
+            }*/
             var best_node = -1;
             var lowest_cost = 999999999;
             foreach (var node in open) {
@@ -107,7 +108,9 @@ public static class Dummy_Enemy {
             }
 
             var current = best_node;
-            if (current == pos_to_node_index(tx, ty)) {
+            var current_x = get_x(current);
+            var current_y = get_y(current);
+            if (Math.Abs(current_x-tx) <= k && Math.Abs(current_y-ty) <= k) {
                 List<int> path = new List<int>();
                 while (came_from.ContainsKey(current)) {
                     current = came_from[current];
@@ -122,14 +125,12 @@ public static class Dummy_Enemy {
 
             // up
             var upx = get_x(current);
-            var upy = get_y(current)-1;
+            var upy = get_y(current)-k;
             if (upy >= 0 && !has_tile(tile_map, upx, upy)) {
                 var up = pos_to_node_index(upx, upy);
                 if (!closed.Contains(up)) {
                     var score = (g_score.ContainsKey(current) ? g_score[current] : 999999999) + dist(get_x(current), get_y(current), upx, upy);
-                    if (!open.Contains(up)) {
-                        open.Add(up);
-                    }
+                    open.Add(up);
                     if (score < (g_score.ContainsKey(up) ? g_score[up] : 999999999)) {
                         came_from[up] = current;
                         g_score[up] = score;
@@ -139,15 +140,13 @@ public static class Dummy_Enemy {
             }
 
             // right
-            var rightx = get_x(current)+1;
+            var rightx = get_x(current)+k;
             var righty = get_y(current);
             if (righty <= 255 && !has_tile(tile_map, rightx, righty)) {
                 var right = pos_to_node_index(rightx, righty);
                 if (!closed.Contains(right)) {
                     var score = (g_score.ContainsKey(current) ? g_score[current] : 999999999) + dist(get_x(current), get_y(current), rightx, righty);
-                    if (!open.Contains(right)) {
-                        open.Add(right);
-                    }
+                    open.Add(right);
                     if (score < (g_score.ContainsKey(right) ? g_score[right] : 999999999)) {
                         came_from[right] = current;
                         g_score[right] = score;
@@ -158,14 +157,12 @@ public static class Dummy_Enemy {
 
             // down
             var downx = get_x(current);
-            var downy = get_y(current)+1;
+            var downy = get_y(current)+k;
             if (downy <= 255 && !has_tile(tile_map, downx, downy)) {
                 var down = pos_to_node_index(downx, downy);
                 if (!closed.Contains(down)) {
                     var score = (g_score.ContainsKey(current) ? g_score[current] : 999999999) + dist(get_x(current), get_y(current), downx, downy);
-                    if (!open.Contains(down)) {
-                        open.Add(down);
-                    }
+                    open.Add(down);
                     if (score < (g_score.ContainsKey(down) ? g_score[down] : 999999999)) {
                         came_from[down] = current;
                         g_score[down] = score;
@@ -175,15 +172,13 @@ public static class Dummy_Enemy {
             }
 
             // left
-            var leftx = get_x(current)-1;
+            var leftx = get_x(current)-k;
             var lefty = get_y(current);
             if (lefty >= 0 && !has_tile(tile_map, leftx, lefty)) {
                 var left = pos_to_node_index(leftx, lefty);
                 if (!closed.Contains(left)) {
                     var score = (g_score.ContainsKey(current) ? g_score[current] : 999999999) + dist(get_x(current), get_y(current), leftx, lefty);
-                    if (!open.Contains(left)) {
-                        open.Add(left);
-                    }
+                    open.Add(left);
                     if (score < (g_score.ContainsKey(left) ? g_score[left] : 999999999)) {
                         came_from[left] = current;
                         g_score[left] = score;
@@ -210,7 +205,7 @@ public static class Dummy_Enemy {
                     var dy = ((float)rand.NextDouble()-0.5f)*12.0f;
                     waypoints.Add(create_waypoint(get_x(node)*16.0f-2048.0f+8.0f+dx, get_y(node)*16.0f-2048.0f+8.0f+dy));
                 }
-                else if (counter++ == 3) {
+                else if (counter++ == 2) {
                     var dx = ((float)rand.NextDouble()-0.5f)*12.0f;
                     var dy = ((float)rand.NextDouble()-0.5f)*12.0f;
                     waypoints.Add(create_waypoint(get_x(node)*16.0f-2048.0f+8.0f+dx, get_y(node)*16.0f-2048.0f+8.0f+dy));
@@ -220,6 +215,10 @@ public static class Dummy_Enemy {
                     counter = 0;
                 }
             }
+
+            var dxx = ((float)rand.NextDouble()-0.5f)*8.0f;
+            var dyy = ((float)rand.NextDouble()-0.5f)*8.0f;
+            waypoints.Add(create_waypoint(tx*16.0f-2048.0f+8.0f+dxx, ty*16.0f-2048.0f+8.0f+dyy));
         }
         else {
             Console.WriteLine("could not solve path from {0}:{1} to {2}:{3}", x, y, tx, ty);
@@ -429,7 +428,9 @@ public static class Dummy_Enemy {
             var speed = (float)Math.Sqrt(vx*vx+vy*vy);
 
             System.Threading.Tasks.Task.Factory.StartNew(() => {
+                var t = Fab5_Game.inst().get_time();
                 calc_path(data, x, y, tx, ty, tile_map, speed);
+                //Console.WriteLine("calc_path took {0:0.000} s", Fab5_Game.inst().get_time() - t);
             });
         }
         else if (calc_state == 2) {
