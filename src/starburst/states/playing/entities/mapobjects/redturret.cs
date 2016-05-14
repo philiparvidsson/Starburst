@@ -102,7 +102,7 @@ public static class Red_Turret {
             //new Velocity        { x = 0.0f, y = 0.0f },
             new Sprite          { texture = Fab5_Game.inst().get_content<Texture2D>("redturret") },
             new Brain           { think_fn = think, think_interval = THINK_INTERVAL },
-            new Ship_Info(100, 100, 100, 100)        { pindex = 5, team = 1 },
+            new Ship_Info(100, 100, 100, 100)        { pindex = 8, team = 1 },
             new Score {},
             new Data {}
         };

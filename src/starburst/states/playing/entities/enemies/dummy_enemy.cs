@@ -295,9 +295,12 @@ public static class Dummy_Enemy {
         var y = (int)((p.y + 2048.0f) / 16.0f);
         var calc_state = (int)data.get_data("path_calc", 0);
 
+        Input input = (Input)data.get_data("input", null);
+
         w.ang_vel = 0.0f;
         v.ax = 0.0f;
         v.ay = 0.0f;
+        input.throttle = 0.0f;
 
         float path_recalc_time = (float)data.get_data("path_recalc_time", 0.0f);
         var tile_map = ((Playing_State)self.state).tile_map;
@@ -394,6 +397,7 @@ public static class Dummy_Enemy {
         else if (dist > 22.624f * 5.0f) {
             v.ax = 380.0f * (float)Math.Cos(w.angle) - v.x;
             v.ay = 380.0f * (float)Math.Sin(w.angle) - v.y;
+            input.throttle = 1.0f;
         }
         else {
             Entity old_wp;
@@ -409,8 +413,13 @@ public static class Dummy_Enemy {
         }
     }
 
-    public static Component[] create_components() {
-        return new Component[] {
+    public static Component[] create_components(Fab5.Starburst.States.Playing.Game_Config conf, int team) {
+        List<Component> components = new List<Component>(Fab5.Starburst.States.Playing.Entities.Player_Ship.create_components(new Input(), conf, team));
+
+        Input input = (Input)components[0];
+        components.RemoveAt(0);
+
+        /*return new Component[] {
             new Angle           { },
 
             new Bounding_Circle { radius = 16.0f },
@@ -427,21 +436,25 @@ public static class Dummy_Enemy {
 
             new Ship_Info(100.0f, 100.0f, 100.0f, 100.0f) { },
 
-            new Sprite          { texture = Fab5_Game.inst().get_content<Texture2D>("ships/ship14") },
+            new Sprite          { texture = Fab5_Game.inst().get_content<Texture2D>("ships/ship1" + ai_counter) },
 
             new Velocity        { x = 0.0f,
                                   y = 0.0f },
-        };
+        };*/
+
+        components.Add(
+            new Brain { think_fn       = think,
+                        think_interval = THINK_INTERVAL }
+        );
+
+        var data = new Data{};
+        data.data["input"] = input;
+        components.Add(data);
+
+        return components.ToArray();
     }
 
-    public static void spawn() { // @To-do: for testing only!
-        var entity = Fab5_Game.inst().create_entity(create_components());
 
-        var pos = entity.get_component<Position>();
-
-        pos.x = -200.0f;
-        pos.y = 200.0f;
-    }
 
 }
 

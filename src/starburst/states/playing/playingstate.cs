@@ -333,9 +333,11 @@ public class Playing_State : Game_State {
         int num_ai = 4;
         int ai_team = 1;
         for(int i = 0; i < num_ai; i++) {
-            var ai = Starburst.inst().create_entity(Dummy_Enemy.create_components());
+            var ai = Starburst.inst().create_entity(Dummy_Enemy.create_components(game_conf, ai_team));
             var aisi = ai.get_component<Ship_Info>();
             aisi.team = ai_team;
+            Console.WriteLine("created ai for team {0}", ai_team);
+            ai.get_component<Bounding_Circle>().ignore_collisions2 = ai_team;
             var ai_spawn = spawner.get_player_spawn_pos(ai, tile_map);
             ai.get_component<Position>().x = ai_spawn.x;
             ai.get_component<Position>().y = ai_spawn.y;
@@ -371,7 +373,6 @@ public class Playing_State : Game_State {
                     }
                 });*/
 
-            ai_team++;
             if (++ai_team > 2) {
                 ai_team = 1;
             }

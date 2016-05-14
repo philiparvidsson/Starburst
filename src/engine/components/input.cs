@@ -35,7 +35,7 @@
 
         public Keys primary_fire = Keys.K;
         public Keys secondary_fire = Keys.L;
-        
+
         public Keys powerup_next = Keys.O;
         public Keys powerup_use = Keys.I;
 

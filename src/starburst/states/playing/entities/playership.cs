@@ -35,7 +35,7 @@
                 };
             }
             */
-            string ship = "ships/ship1" + lol;
+            string ship = "ships/ship1" + (((lol-1)%4)+1);
 //            if (lol >= 3)
 //                ship = "ships/qship11";
 
@@ -80,6 +80,7 @@
             var particle_tex = Starburst.inst().get_content<Texture2D>("particle");
             var ship_info = new Ship_Info(5,130,100,100) { team = team, pindex = pindex };
             return new Component[] {
+                input,
                 new Particle_Emitter() {
                     emit_fn = () => {
                         if (rand.Next(0, 60) > 0) {
@@ -139,7 +140,6 @@
                     interval = 0.02f,
                     num_particles_per_emit = 10
                 },
-                input,
                 playerrot,
                 playerpos,
                 playervel,

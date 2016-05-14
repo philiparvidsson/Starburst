@@ -521,7 +521,9 @@ namespace Fab5.Starburst.States.Playing {
                 playerShip.hp_value = playerShip.top_hp;
                 playerShip.energy_value = playerShip.top_energy;
 
-                player.get_component<Input>().enabled = false;
+                if (player.has_component<Input>()) {
+                    player.get_component<Input>().enabled = false;
+                }
 
                 var old_particle_emitter = player.remove_component<Particle_Emitter>();
                 var old_bounding_circle  = player.remove_component<Bounding_Circle>();
@@ -554,7 +556,7 @@ namespace Fab5.Starburst.States.Playing {
                             var text1 = string.Format("Respawning in {0:0.00}", t);
 
                             // @To-do: not gonna fly with NPCs
-                            var s     = new [] { "player one", "player two", "player three", "player four", "turret" };
+                            var s     = new [] { "player one", "player two", "player three", "player four", "player five", "player six", "player seven", "player eight", "turret" };
                             var text2 = string.Format("Killed by {0}!", s[bulletInfo.sender.get_component<Ship_Info>().pindex-1]);
                             var ts1   = GFX_Util.measure_string("Respawning in 0.00");
                             var ts2   = GFX_Util.measure_string(text2);
@@ -590,7 +592,7 @@ namespace Fab5.Starburst.States.Playing {
 
                             var t     = 5.0f - (Fab5_Game.inst().get_time() - time_of_death);
                             var a = (float)Math.Min(Math.Max(0.0f, (3.0f*t*(1.0f/5.0f)-1.0f)), 1.0f);
-                            var s    = new [] { "one", "two", "three", "four" };
+                            var s     = new [] { "one", "two", "three", "four", "five", "six", "seven", "eight" };
                             var text = string.Format("Killed player {0}!", s[playerShip.pindex-1]);
                             var ts    = GFX_Util.measure_string(text);
                             String points = "+" + (250*shooter_score_mult).ToString();
@@ -610,7 +612,9 @@ namespace Fab5.Starburst.States.Playing {
                     new TTL {
                         destroy_cb = () => {
                             player.add_components(old_particle_emitter, old_bounding_circle, old_sprite, old_shadow, old_light);
-                            player.get_component<Input>().enabled = true;
+                            if (player.has_component<Input>()) { 
+                                player.get_component<Input>().enabled = true;
+                            }   
 
                             var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
                             player.get_component<Position>().x = spawn_pos.x;
