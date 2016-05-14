@@ -46,8 +46,8 @@ public static class Dummy_Enemy {
             new Position { x = x,
                            y = y }
 
-            /*new Sprite { color = Color.Yellow,
-                         texture = Fab5_Game.inst().get_content<Texture2D>("particle") }*/
+            // new Sprite { color = Color.Yellow,
+            //              texture = Fab5_Game.inst().get_content<Texture2D>("particle") }
         };
     }
 
@@ -89,7 +89,13 @@ public static class Dummy_Enemy {
         g_score[pos_to_node_index(x, y)] = 0;
         f_score[pos_to_node_index(x, y)] = heuristic(x, y, tx, ty);
 
+        int num_its = 0;
         while (open.Count > 0) {
+            num_its++;
+            if (num_its > 20000) {
+                // too slow or something
+                break;
+            }
             var best_node = -1;
             var lowest_cost = 999999999;
             foreach (var node in open) {
@@ -195,15 +201,28 @@ public static class Dummy_Enemy {
 
         var path = find_path(x, y, tx, ty, tile_map);
         if (path != null) {
-            int counter = 2;
+            int counter = (int)(-1*speed*0.25f);
+            bool first = true;
             foreach (var node in path) {
-                if (counter++ == 3) {
+                if (first && path.Count < 3) {
+                    first = false;
                     var dx = ((float)rand.NextDouble()-0.5f)*12.0f;
                     var dy = ((float)rand.NextDouble()-0.5f)*12.0f;
                     waypoints.Add(create_waypoint(get_x(node)*16.0f-2048.0f+8.0f+dx, get_y(node)*16.0f-2048.0f+8.0f+dy));
+                }
+                else if (counter++ == 3) {
+                    var dx = ((float)rand.NextDouble()-0.5f)*12.0f;
+                    var dy = ((float)rand.NextDouble()-0.5f)*12.0f;
+                    waypoints.Add(create_waypoint(get_x(node)*16.0f-2048.0f+8.0f+dx, get_y(node)*16.0f-2048.0f+8.0f+dy));
+                    if (waypoints.Count > 10) {
+                        break;
+                    }
                     counter = 0;
                 }
             }
+        }
+        else {
+            Console.WriteLine("could not solve path from {0}:{1} to {2}:{3}", x, y, tx, ty);
         }
 
 
@@ -296,6 +315,7 @@ public static class Dummy_Enemy {
         foreach (var ents in entities) {
             foreach (var e in ents) {
                 var p2 = e.get_component<Position>();
+
                 if (p2 == null) {
                     continue;
                 }
@@ -303,6 +323,9 @@ public static class Dummy_Enemy {
                 var dx = p2.x-p.x;
                 var dy = p2.y-p.y;
                 var dist = dx*dx+dy*dy;
+                if (e.has_component<Powerup>()) {
+                    dist *= 4; // double distance for powerups
+                }
 
                 if (dist < min_dist) {
                     min_dist = dist;
@@ -343,7 +366,13 @@ public static class Dummy_Enemy {
         var si = self.get_component<Ship_Info>();
 
         if (si.is_dead) {
+            data.data.Remove("escape_point");
             return;
+        }
+        else {
+            if (!data.data.ContainsKey("escape_point")) {
+                data.data["escape_point"] = new Position { x = p.x, y = p.y };
+            }
         }
 
         for (int i = 0; i < si.max_powerups_inv; i++) {
@@ -359,32 +388,37 @@ public static class Dummy_Enemy {
 
 
             data.data["path_calc"] = 1;
+            Position targetpos;
+            if (si.energy_value > si.top_energy * 0.18f) {
+                var players = new List<Entity>();
+                var powerups = Fab5_Game.inst().get_entities_fast(typeof (Powerup));
 
 
-            var players = new List<Entity>();
-            var powerups = Fab5_Game.inst().get_entities_fast(typeof (Powerup));
+                foreach (var player in Fab5_Game.inst().get_entities_fast(typeof (Ship_Info))) {
+                    var other_si = player.get_component<Ship_Info>();
+                    if (player == self) {
+                        continue;
+                    }
 
-            foreach (var player in Fab5_Game.inst().get_entities_fast(typeof (Ship_Info))) {
-                var other_si = player.get_component<Ship_Info>();
-                if (player == self) {
-                    continue;
+                    if (other_si.is_dead) {
+                        continue;
+                    }
+
+                    if (other_si.team == si.team) {
+                        // following team mate behavior
+                    }
+                    else {
+                        players.Add(player);
+                    }
                 }
 
-                if (other_si.is_dead) {
-                    continue;
-                }
-
-                if (other_si.team == si.team) {
-                    // following team mate behavior
-                }
-                else {
-                    players.Add(player);
-                }
+                Entity etarget;
+                targetpos = closest_pos(p, out etarget, players, powerups);
+                data.data["target"] = etarget;
             }
-
-            Entity etarget;
-            Position targetpos = closest_pos(p, out etarget, players, powerups);
-            data.data["target"] = etarget;
+            else {
+                targetpos = (Position)data.data["escape_point"];
+            }
 
 
             var tx = (int)((targetpos.x + 2048.0f) / 16.0f);
@@ -491,7 +525,7 @@ public static class Dummy_Enemy {
         if (si.energy_value > si.top_energy*0.7f) {
             data.data["shoot"] = true;
         }
-        else if (si.energy_value < si.top_energy*0.35f) {
+        else if (si.energy_value < si.top_energy*0.25f) {
             data.data["shoot"] = false;
         }
 
@@ -536,14 +570,15 @@ public static class Dummy_Enemy {
                 }
             }
 
-            if (dist_to_target > 220.0f) {
-                v.ax = si.top_velocity * (float)Math.Cos(w.angle) - v.x;
-                v.ay = si.top_velocity * (float)Math.Sin(w.angle) - v.y;
-                input.throttle = 1.0f;
-            }
-            else if (dist_to_target < 180.0f) {
+            var dist_mult = 1.0f/(si.energy_value/si.top_energy);
+            if (dist_to_target < 180.0f*dist_mult) {
                 v.ax = -si.top_velocity * (float)Math.Cos(w.angle) - v.x;
                 v.ay = -si.top_velocity * (float)Math.Sin(w.angle) - v.y;
+                input.throttle = 1.0f;
+            }
+            else if (dist_to_target > 220.0f) {
+                v.ax = si.top_velocity * (float)Math.Cos(w.angle) - v.x;
+                v.ay = si.top_velocity * (float)Math.Sin(w.angle) - v.y;
                 input.throttle = -1.0f;
             }
         }

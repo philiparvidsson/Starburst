@@ -42,13 +42,17 @@
 
             var self = entity;
 
-            bool is_player = self.get_component<Input>() != null;
-            if (!is_player) {
-                return;
-            }
 
             var self_pos = self.get_component<Position>();
-            var self_vel = self.get_component<Velocity>();
+            var self_vel = self.get_component<Velocity>() ?? new Velocity();
+
+            bool is_player = self.get_component<Input>() != null;
+            if (!is_player)
+            {
+                display_score = score;
+            }
+
+
 
             var time = (float)Math.Sqrt((p+30)/250.0f);
             if (time > 1.5f) {

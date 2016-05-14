@@ -854,7 +854,7 @@ namespace Fab5.Engine.Subsystems {
             var team1_score = 0.0f;
             var team2_score = 0.0f;
 
-            foreach (var player in Fab5_Game.inst().get_entities_fast(typeof (Input))) {
+            foreach (var player in Fab5_Game.inst().get_entities_fast(typeof (Ship_Info))) {
                 var si = player.get_component<Ship_Info>();
 
                 if (si.team == 1) {
