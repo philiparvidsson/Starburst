@@ -330,7 +330,7 @@ public class Playing_State : Game_State {
         var turbo2 = create_entity(Powerup.create(new Turbo_Powerup()));
         turbo2.get_component<Position>().x = 1500.0f; turbo2.get_component<Position>().y = -1500.0f;*/
 
-        int num_ai = 1;
+        int num_ai = 4;
         int ai_team = 1;
         for(int i = 0; i < num_ai; i++) {
             var ai = Starburst.inst().create_entity(Dummy_Enemy.create_components());

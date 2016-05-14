@@ -42,10 +42,10 @@ public static class Dummy_Enemy {
     private static Component[] create_waypoint(float x, float y) {
         return new Component[] {
             new Position { x = x,
-                           y = y },
+                           y = y }
 
-            new Sprite { color = Color.Yellow,
-                         texture = Fab5_Game.inst().get_content<Texture2D>("particle") }
+            /*new Sprite { color = Color.Yellow,
+                         texture = Fab5_Game.inst().get_content<Texture2D>("particle") }*/
         };
     }
 
