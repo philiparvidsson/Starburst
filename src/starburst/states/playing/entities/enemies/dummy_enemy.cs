@@ -15,6 +15,8 @@ using Microsoft.Xna.Framework.Graphics;
 public static class Dummy_Enemy {
     private const float THINK_INTERVAL = 1.0f/30.0f; // think 5 times per sec
 
+    private static Random rand = new Random();
+
     enum Behavior {
         Chase_Player
     }
@@ -196,7 +198,9 @@ public static class Dummy_Enemy {
             int counter = 2;
             foreach (var node in path) {
                 if (counter++ == 3) {
-                    waypoints.Add(create_waypoint(get_x(node)*16.0f-2048.0f+8.0f, get_y(node)*16.0f-2048.0f+8.0f));
+                    var dx = ((float)rand.NextDouble()-0.5f)*12.0f;
+                    var dy = ((float)rand.NextDouble()-0.5f)*12.0f;
+                    waypoints.Add(create_waypoint(get_x(node)*16.0f-2048.0f+8.0f+dx, get_y(node)*16.0f-2048.0f+8.0f+dy));
                     counter = 0;
                 }
             }
