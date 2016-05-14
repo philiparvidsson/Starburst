@@ -525,6 +525,8 @@ namespace Fab5.Starburst.States.Playing {
                     player.get_component<Input>().enabled = false;
                 }
 
+                player.get_component<Ship_Info>().is_dead = true;
+
                 var old_particle_emitter = player.remove_component<Particle_Emitter>();
                 var old_bounding_circle  = player.remove_component<Bounding_Circle>();
                 var old_sprite           = player.remove_component<Sprite>();
@@ -612,14 +614,15 @@ namespace Fab5.Starburst.States.Playing {
                     new TTL {
                         destroy_cb = () => {
                             player.add_components(old_particle_emitter, old_bounding_circle, old_sprite, old_shadow, old_light);
-                            if (player.has_component<Input>()) { 
+                            if (player.has_component<Input>()) {
                                 player.get_component<Input>().enabled = true;
-                            }   
+                            }
 
                             var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
                             player.get_component<Position>().x = spawn_pos.x;
                             player.get_component<Position>().y = spawn_pos.y;
                             player.get_component<Ship_Info>().spawn_time = Fab5_Game.inst().get_time();
+                            player.get_component<Ship_Info>().is_dead = false;
                             player.get_component<Angle>().angle = 3.141592f*2.0f * (float)rand.NextDouble();
 
                             for (int i = 0; i < 20; i++) {

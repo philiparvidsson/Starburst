@@ -44,10 +44,10 @@ public static class Dummy_Enemy {
     private static Component[] create_waypoint(float x, float y) {
         return new Component[] {
             new Position { x = x,
-                           y = y },
+                           y = y }
 
-            new Sprite { color = Color.Yellow,
-                         texture = Fab5_Game.inst().get_content<Texture2D>("particle") }
+            /*new Sprite { color = Color.Yellow,
+                         texture = Fab5_Game.inst().get_content<Texture2D>("particle") }*/
         };
     }
 
@@ -317,6 +317,8 @@ public static class Dummy_Enemy {
     }
 
     private static void think(Entity self) {
+
+
         var data = self.get_component<Data>();
 
         var waypoints = (List<Entity>)data.get_data("waypoints", null);
@@ -339,6 +341,11 @@ public static class Dummy_Enemy {
         input.throttle = 0.0f;
 
         var si = self.get_component<Ship_Info>();
+
+        if (si.is_dead) {
+            return;
+        }
+
         for (int i = 0; i < si.max_powerups_inv; i++) {
             if (si.powerup_inv[i] != null) {
                 Fab5_Game.inst().message("ai_use_powerup", new { self = self, index = i });
@@ -360,6 +367,10 @@ public static class Dummy_Enemy {
             foreach (var player in Fab5_Game.inst().get_entities_fast(typeof (Ship_Info))) {
                 var other_si = player.get_component<Ship_Info>();
                 if (player == self) {
+                    continue;
+                }
+
+                if (other_si.is_dead) {
                     continue;
                 }
 
@@ -441,7 +452,7 @@ public static class Dummy_Enemy {
             var dxwp = waypointpos.x - p.x;
             var dywp = waypointpos.y - p.y;
 
-            var wpdist = new Vector2(dxwp, dywp).Length();
+            var wpdist = dxwp*dxwp+dywp*dywp;
             if (wpdist < min_dist) {
                 min_dist = wpdist;
                 wp = waypointpos;
@@ -480,23 +491,60 @@ public static class Dummy_Enemy {
         if (si.energy_value > si.top_energy*0.7f) {
             data.data["shoot"] = true;
         }
-        else if (si.energy_value < si.top_energy*0.5f) {
+        else if (si.energy_value < si.top_energy*0.35f) {
             data.data["shoot"] = false;
         }
 
         if (waypoints.Count < 3 && !target_is_friend) {
+            var tpos = target.get_component<Position>();
+            var tvel = target.get_component<Velocity>() ?? new Velocity();
+
+            var tx = (int)((tpos.x + 2048.0f) / 16.0f);
+            var ty = (int)((tpos.y + 2048.0f) / 16.0f);
+            var d = new Vector2(-(tpos.y-p.y), tpos.x-p.x);
+            var dist_to_target = d.Length();
+
+            bool shoot_bomb = false;
+            var vfac = 1.0f;
+
+            if (si.energy_value > si.top_energy * 0.8f) {
+                shoot_bomb = true;
+                vfac = 2.0f;
+            }
+
+            var tpos_x = tpos.x+(tvel.x-v.x)*(dist_to_target*0.0015f*vfac);
+            var tpos_y = tpos.y+(tvel.y-v.y)*(dist_to_target*0.0015f*vfac);
+            var e = new Vector2(-(tpos_y-p.y), tpos_x-p.x);
+            e.Normalize();
+            var dot3 = Vector2.Dot(b, e);
             var aim_threshold = (float)Math.Cos((90.0f - 3.0f) * 3.141592f / 180.0f);
-            if (dot < -aim_threshold) {
-                w.ang_vel = 5.0f * Math.Abs(dot);
+            if (dot3 < -aim_threshold) {
+                w.ang_vel = 6.0f * Math.Abs(dot);
             }
-            else if (dot > aim_threshold) {
-                w.ang_vel = -5.0f * Math.Abs(dot);
+            else if (dot3 > aim_threshold) {
+                w.ang_vel = -6.0f * Math.Abs(dot);
             }
-            else {
+            else if(is_open_path(x, y, tx, ty, tile_map)) {
                 //Console.WriteLine("pew");
                 if ((bool)data.get_data("shoot", false)) {
-                    fire(self, si, self.get_component<Primary_Weapon>());
+                    if (shoot_bomb) {
+                        fire(self, si, self.get_component<Secondary_Weapon>());
+                    }
+                    else {
+                        fire(self, si, self.get_component<Primary_Weapon>());
+                    }
                 }
+            }
+
+            if (dist_to_target > 220.0f) {
+                v.ax = si.top_velocity * (float)Math.Cos(w.angle) - v.x;
+                v.ay = si.top_velocity * (float)Math.Sin(w.angle) - v.y;
+                input.throttle = 1.0f;
+            }
+            else if (dist_to_target < 180.0f) {
+                v.ax = -si.top_velocity * (float)Math.Cos(w.angle) - v.x;
+                v.ay = -si.top_velocity * (float)Math.Sin(w.angle) - v.y;
+                input.throttle = -1.0f;
             }
         }
         else if (dist < 22.624f * fac*dot2) {

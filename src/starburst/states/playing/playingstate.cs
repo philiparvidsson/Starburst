@@ -409,8 +409,8 @@ public class Playing_State : Game_State {
             typeof (Shield_Powerup),
             typeof (Multifire_Powerup),
             typeof (Bouncy_Bullets_Powerup),
-            typeof (Fast_Bombs_Powerup),
-            typeof (Nanobots_Powerup)
+            typeof (Fast_Bombs_Powerup)
+            //typeof (Nanobots_Powerup)
         };
 
         var i = rand.Next(0, types.Length);
