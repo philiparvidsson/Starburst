@@ -148,6 +148,10 @@
             var team = player.get_component<Ship_Info>().team;
 
             foreach (var team_mate in Fab5_Game.inst().get_entities_fast(typeof (Ship_Info))) {
+                if (team_mate.get_component<Ship_Info>().is_dead) {
+                    continue;
+                }
+
                 var tm_team = team_mate.get_component<Ship_Info>().team;
                 if (tm_team != team) {
                     continue;

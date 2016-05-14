@@ -387,12 +387,15 @@ public static class Dummy_Enemy {
 
 
             data.data["path_calc"] = 1;
-            Position targetpos;
+            Position targetpos = null;
+            var escape = false;
             if (si.energy_value > si.top_energy * 0.18f) {
                 var players = new List<Entity>();
                 var powerups = Fab5_Game.inst().get_entities_fast(typeof (Powerup));
 
 
+                int num_friends_nearby = 0;
+                int num_enemies_nearby = 0;
                 foreach (var player in Fab5_Game.inst().get_entities_fast(typeof (Ship_Info))) {
                     var other_si = player.get_component<Ship_Info>();
                     if (player == self) {
@@ -404,18 +407,45 @@ public static class Dummy_Enemy {
                     }
 
                     if (other_si.team == si.team) {
-                        // following team mate behavior
+                        // following team mate behavior?
+                        var other_p = player.get_component<Position>();
+                        var distd = new Vector2(p.x-other_p.x, p.y-other_p.y).Length();
+                        if (distd < 600.0f) {
+                            num_friends_nearby++;
+                        }
                     }
                     else {
+
+
+                        var other_p = player.get_component<Position>();
+                        var distd = new Vector2(p.x-other_p.x, p.y-other_p.y).Length();
+                        if (distd < 900.0f) {
+                            num_enemies_nearby++;
+                        }
+
+                        if (!player.has_component<Velocity>()) {
+                            // probably a turret
+                            continue;
+                        }
+
                         players.Add(player);
                     }
                 }
 
-                Entity etarget;
-                targetpos = closest_pos(p, out etarget, players, powerups);
-                data.data["target"] = etarget;
+                if (num_enemies_nearby > 2*num_friends_nearby) {
+                    escape = true;
+                }
+                else {
+                    Entity etarget;
+                    targetpos = closest_pos(p, out etarget, players, powerups);
+                    data.data["target"] = etarget;
+                }
             }
             else {
+                escape = true;
+            }
+
+            if (escape) {
                 targetpos = (Position)data.data["escape_point"];
             }
 
@@ -575,12 +605,12 @@ public static class Dummy_Enemy {
             if (dist_to_target < 180.0f*dist_mult) {
                 v.ax = -si.top_velocity * (float)Math.Cos(w.angle) - v.x;
                 v.ay = -si.top_velocity * (float)Math.Sin(w.angle) - v.y;
-                input.throttle = 1.0f;
+                input.throttle = -1.0f;
             }
             else if (dist_to_target > 220.0f) {
                 v.ax = si.top_velocity * (float)Math.Cos(w.angle) - v.x;
                 v.ay = si.top_velocity * (float)Math.Sin(w.angle) - v.y;
-                input.throttle = -1.0f;
+                input.throttle = 1.0f;
             }
         }
         else if (dist < 22.624f * fac*dot2) {
