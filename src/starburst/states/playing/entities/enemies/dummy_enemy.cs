@@ -27,8 +27,9 @@ public static class Dummy_Enemy {
     }
 
     private static bool has_tile(Tile_Map tile_map, int x, int y) {
-        for (int i = -2; i <= 2; i++) {
-            for (int j = -2; j <= 2; j++) {
+        int n = 2;
+        for (int i = -n; i <= n; i++) {
+            for (int j = -n; j <= n; j++) {
                 if (has_tile2(tile_map, x+i, y+j)) {
                     return true;
                 }
@@ -187,20 +188,68 @@ public static class Dummy_Enemy {
         return null;
     }
 
-    private static void calc_path(Data data, int x, int y, int tx, int ty, Tile_Map tile_map) {
+    private static void calc_path(Data data, int x, int y, int tx, int ty, Tile_Map tile_map, float speed) {
         List<Component[]> waypoints = new List<Component[]>();
 
         var path = find_path(x, y, tx, ty, tile_map);
         if (path != null) {
-            int counter = 0;
+            int counter = -(int)speed+1;
             foreach (var node in path) {
-                counter++;
-                if (counter == 6) {
+                if (counter++ == 4) {
                     waypoints.Add(create_waypoint(get_x(node)*16.0f-2048.0f+8.0f, get_y(node)*16.0f-2048.0f+8.0f));
                     counter = 0;
                 }
             }
         }
+
+
+        // optimize path
+        while (waypoints.Count > 2) {
+            bool all_checked = true;
+
+            for (int i = 0; i < waypoints.Count-1; i++) {
+                var wp0 = (Position)waypoints[i][0];
+                var wp1 = (Position)waypoints[i+1][0];
+
+                var v0 = new Vector2(wp1.x-wp0.x, wp1.y-wp0.y);
+
+                var sum_angle = 0.0f;
+                int last_ok = -1;
+                for (int j = (i+1); j < waypoints.Count-1; j++) {
+                    var wp2 = (Position)waypoints[j][0];
+                    var wp3 = (Position)waypoints[j+1][0];
+
+                    var v1 = new Vector2(wp3.x-wp2.x, wp3.y-wp2.y);
+                    v1 = new Vector2(-v1.Y, v1.X);
+
+                    var dot = Vector2.Dot(v0, v1);
+                    sum_angle += (float)Math.Abs(dot);
+                    if (sum_angle < (float)Math.Cos(15.0f*3.141592f/180.0f)) {
+                        last_ok = j;
+                    }
+                    else {
+                        break;
+                    }
+                }
+
+                if (last_ok != -1) {
+                    all_checked = false;
+
+                    int num = last_ok - (i+1) + 1;
+                    for (int n = 0; n < num; n++) {
+                        waypoints.RemoveAt(i+1);
+                    }
+
+                    break;
+
+                }
+            }
+
+            if (all_checked) {
+                break;
+            }
+        }
+
 
         data.data["path_recalc_time"] = Fab5_Game.inst().get_time();
         data.data["path_calc"] = 2;
@@ -246,6 +295,10 @@ public static class Dummy_Enemy {
         var y = (int)((p.y + 2048.0f) / 16.0f);
         var calc_state = (int)data.get_data("path_calc", 0);
 
+        w.ang_vel = 0.0f;
+        v.ax = 0.0f;
+        v.ay = 0.0f;
+
         float path_recalc_time = (float)data.get_data("path_recalc_time", 0.0f);
         var tile_map = ((Playing_State)self.state).tile_map;
         if (calc_state == 0 && Fab5_Game.inst().get_time() - path_recalc_time > 0.5f) {
@@ -261,8 +314,12 @@ public static class Dummy_Enemy {
             var tx = (int)((playerpos.x + 2048.0f) / 16.0f);
             var ty = (int)((playerpos.y + 2048.0f) / 16.0f);
 
+            var vx = v.x/16.0f;
+            var vy = v.y/16.0f;
+            var speed = (float)Math.Sqrt(vx*vx+vy*vy);
+
             System.Threading.Tasks.Task.Factory.StartNew(() => {
-                calc_path(data, x, y, tx, ty, tile_map);
+                calc_path(data, x, y, tx, ty, tile_map, speed);
             });
         }
         else if (calc_state == 2) {
@@ -328,9 +385,6 @@ public static class Dummy_Enemy {
 
         //Console.WriteLine(dot + ", " + threshold);
 
-        w.ang_vel = 0.0f;
-        v.ax = 0.0f;
-        v.ay = 0.0f;
         if (dot < -threshold) {
             w.ang_vel = 8.0f * Math.Abs(dot-0.2f);
         }
@@ -349,6 +403,8 @@ public static class Dummy_Enemy {
                 waypoints.RemoveAt(0);
             } while (old_wp != wpe && waypoints.Count > 0);
 
+            // think again!
+            think(self);
                 // shoot
         }
     }
@@ -364,10 +420,12 @@ public static class Dummy_Enemy {
 
             new Data            { },
 
-            new Mass            { mass = 15.0f, friction = 0.0f, restitution_coeff = 0.2f },
+            new Mass            { mass = 15.0f, friction = 0.0f, restitution_coeff = 0.4f },
 
             new Position        { x = -1700.0f,
                                   y = 1700.0f },
+
+            new Ship_Info(100.0f, 100.0f, 100.0f, 100.0f) { },
 
             new Sprite          { texture = Fab5_Game.inst().get_content<Texture2D>("ships/ship14") },
 
