@@ -26,7 +26,7 @@ namespace Fab5.Starburst.States {
 
         private const float BTN_DELAY = .25f;
         float animateInTime = 1.4f;
-        float startTime;
+        //float startTime;
 
         float elapsedTime;
         float delay = .1f; // tid innan första animation startar
@@ -41,7 +41,7 @@ namespace Fab5.Starburst.States {
         enum options {
             proceed
         };
-        
+
         private Texture2D controller_a_button;
         private Texture2D keyboard_key;
         private Texture2D controller_l_stick;
@@ -51,12 +51,12 @@ namespace Fab5.Starburst.States {
         private bool lowRes;
 
         String text_ok;
-        String text_select;
+        //String text_select;
         Vector2 okSize;
         int controllerBtnSize;
         int heightDiff;
         int yPos;
-        private bool started;
+        //private bool started;
 
         private List<Entity> players;
         private Game_Config gameConfig;
@@ -113,12 +113,12 @@ namespace Fab5.Starburst.States {
             controller_l_stick = Starburst.inst().get_content<Texture2D>("menu/Xbox_L_white");
 
             text_ok = "Ok";
-            text_select = "Select";
+            //text_select = "Select";
             okSize = font.MeasureString(text_ok);
             controllerBtnSize = 50; // ikon för knapp
             heightDiff = (int)(controllerBtnSize - okSize.Y);
             yPos = (int)(vp.Height - controllerBtnSize - 15);
-            
+
             for(int i = 0; i < players.Count; i++) {
                 create_entity(Player.create_components(players[i].get_component<Input>()));
             }
@@ -179,8 +179,8 @@ namespace Fab5.Starburst.States {
             int currentOffset = 150;
             int animDistance = 150;
             int startY = currentOffset-animDistance;
-            if (t - startTime < animateInTime)
-                currentOffset = (int)Easing.CubicEaseOut((t - startTime), startY, animDistance, animateInTime);
+            if (t < animateInTime)
+                currentOffset = (int)Easing.CubicEaseOut((t), startY, animDistance, animateInTime);
 
             //GFX_Util.draw_def_text(sprite_batch, "Player", nameX, startY);
             GFX_Util.draw_def_text(sprite_batch, killsHeader, killsX, currentOffset);
@@ -284,7 +284,7 @@ namespace Fab5.Starburst.States {
                         bestScore = player_score.score;
                         bestPlayers.Add(i);
                     }
-                    else if(player_score.score == bestScore) { 
+                    else if(player_score.score == bestScore) {
                         bestPlayers.Add(i);
                     }
 
@@ -307,14 +307,14 @@ namespace Fab5.Starburst.States {
                 Vector2 winSize = GFX_Util.measure_string(winText);
 
                 GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), currentOffset);
-            
+
             }
-            
+
             String text = "Press Enter to continue";
             Vector2 textSize = font.MeasureString(text);
             int yPos = (int)(vp.Height - controllerBtnSize - 15);
             int heightDiff = (int)(controllerBtnSize - textSize.Y);
-            
+
             sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), yPos + heightDiff * .5f), new Color(Color.Gold, textOpacity));
 
             sprite_batch.End();

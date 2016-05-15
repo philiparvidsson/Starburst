@@ -183,8 +183,8 @@ public class Playing_State : Game_State {
                     renderer = new Rendering_System(Starburst.inst().GraphicsDevice) {
                         tile_map = tile_map,
                         match_time = game_conf.match_time
-                    },
-                    new Window_Title_Writer()
+                    }
+                    //new Window_Title_Writer()
                )
             )
         );
@@ -330,7 +330,7 @@ public class Playing_State : Game_State {
         var turbo2 = create_entity(Powerup.create(new Turbo_Powerup()));
         turbo2.get_component<Position>().x = 1500.0f; turbo2.get_component<Position>().y = -1500.0f;*/
 
-        int num_ai = 7;
+        int num_ai = 2;
         int ai_team = 2;
         for(int i = 0; i < num_ai; i++) {
             var ai = Starburst.inst().create_entity(Dummy_Enemy.create_components(game_conf, ai_team));
@@ -404,12 +404,12 @@ public class Playing_State : Game_State {
 
     private Entity new_random_powerup() {
         var types = new Type[] {
-            typeof (Turbo_Powerup),
-            typeof (Free_Fire_Powerup),
+            typeof (Turbo_Powerup)
+            /*typeof (Free_Fire_Powerup),
             typeof (Shield_Powerup),
             typeof (Multifire_Powerup),
             typeof (Bouncy_Bullets_Powerup),
-            typeof (Fast_Bombs_Powerup)
+            typeof (Fast_Bombs_Powerup)*/
             //typeof (Nanobots_Powerup)
         };
 
