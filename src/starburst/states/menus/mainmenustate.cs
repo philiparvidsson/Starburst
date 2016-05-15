@@ -44,7 +44,7 @@ namespace Fab5.Starburst.States {
             time,
             mode,
             soccer,
-            flag,
+            //flag,
             asteroids,
             powerups,
             proceed
@@ -56,7 +56,7 @@ namespace Fab5.Starburst.States {
             many
         }
         bool soccerModeEnabled = true; // game modes inställning för fotboll
-        bool ctfModeEnabled = false;
+        //bool ctfModeEnabled = false;
         bool soccerMapEnabled = true; // kartans inställning för fotboll (ska hämtas från mapconfig när det läggs till)
 
         enum GameTime {
@@ -68,7 +68,7 @@ namespace Fab5.Starburst.States {
 
         int gameMode = 0; // 0 för team, 1 för free for all
         bool soccerball = true; // fotboll
-        bool captureTheFlag = false;
+        //bool captureTheFlag = false;
         Amount asteroidCount = Amount.medium;
         Amount powerupCount = Amount.medium;
         int map = 1;
@@ -127,8 +127,10 @@ namespace Fab5.Starburst.States {
                     }
                     else if (cursorPosition.y == (int)options.soccer && soccerModeEnabled && soccerMapEnabled)
                         soccerball = !soccerball;
+                    /*
                     else if (cursorPosition.y == (int)options.flag && ctfModeEnabled)
                         captureTheFlag = !captureTheFlag;
+                    */
                     else if (cursorPosition.y == (int)options.time) {
                         if (gameTime == GameTime.Three)
                             gameTime = GameTime.Ten;
@@ -206,8 +208,10 @@ namespace Fab5.Starburst.States {
             }
             else if (cursorPosition.y == (int)options.soccer && soccerModeEnabled && soccerMapEnabled)
                 soccerball = !soccerball;
+            /*
             else if (cursorPosition.y == (int)options.flag && ctfModeEnabled)
                 captureTheFlag = !captureTheFlag;
+            */
             else if (cursorPosition.y == (int)options.asteroids) {
                 if (asteroidCount == Amount.many)
                     asteroidCount = Amount.off;
@@ -307,7 +311,7 @@ namespace Fab5.Starburst.States {
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
             rectBg = new Texture2D(Fab5_Game.inst().GraphicsDevice, 1, 1);
             rectBg.SetData(new Color[]{Color.Black},1,1);//Starburst.inst().get_content<Texture2D>("controller_rectangle");
-            font = Starburst.inst().get_content<SpriteFont>("sector034");
+            font = Starburst.inst().get_content<SpriteFont>(!lowRes?"sector034":"small");
             largeFont = Starburst.inst().get_content<SpriteFont>("large");
             updateMaps();
             controller_a_button = Starburst.inst().get_content<Texture2D>("menu/Xbox_A_white");
@@ -317,7 +321,7 @@ namespace Fab5.Starburst.States {
             text_ok = "Ok";
             text_select = "Select";
             okSize = font.MeasureString(text_ok);
-            controllerBtnSize = 50; // ikon för knapp
+            controllerBtnSize = !lowRes ? 50 : 37; // ikon för knapp
             heightDiff = (int)(controllerBtnSize - okSize.Y);
             yPos = (int)(vp.Height - controllerBtnSize - 15);
 
@@ -449,6 +453,8 @@ namespace Fab5.Starburst.States {
             int leftTextX = (int)(vp.Width * .5f - leftTextSize.X - middleSpacing);
             int rightTextX = (int)(vp.Width * .5f + middleSpacing);
 
+            int rowHeight = !lowRes ? 40 : 30;
+
             // settings-animation
             animDistance = -150;
             startY = settingOffset - animDistance;
@@ -459,22 +465,22 @@ namespace Fab5.Starburst.States {
             String timeString = "< " + (gameTime == GameTime.Three ? 3 : gameTime == GameTime.Five ? 5 : 10) + " minutes >";
             sprite_batch.DrawString(font, timeString, new Vector2(rightTextX, settingOffset), (position.y == (int)options.time ? new Color(Color.Gold, textOpacity) : Color.White));
 
-            sprite_batch.DrawString(font, "Game mode", new Vector2(leftTextX, settingOffset+40), Color.White);
-            sprite_batch.DrawString(font, (gameMode == 0 ? "< Team Play >" : "< Deathmatch >"), new Vector2(rightTextX, settingOffset+40), (position.y == (int)options.mode ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, "Game mode", new Vector2(leftTextX, settingOffset+ rowHeight*1), Color.White);
+            sprite_batch.DrawString(font, (gameMode == 0 ? "< Team Play >" : "< Deathmatch >"), new Vector2(rightTextX, settingOffset+ rowHeight*1), (position.y == (int)options.mode ? new Color(Color.Gold, textOpacity) : Color.White));
 
-            sprite_batch.DrawString(font, "Soccer ball", new Vector2(leftTextX, settingOffset+80), Color.White);
+            sprite_batch.DrawString(font, "Soccer ball", new Vector2(leftTextX, settingOffset+ rowHeight*2), Color.White);
             if(soccerModeEnabled && soccerMapEnabled)
-                sprite_batch.DrawString(font, (soccerball ? "< on >" : "< off >"), new Vector2(rightTextX, settingOffset+80), (position.y == (int)options.soccer ? new Color(Color.Gold, textOpacity) : Color.White));
+                sprite_batch.DrawString(font, (soccerball ? "< on >" : "< off >"), new Vector2(rightTextX, settingOffset+ rowHeight*2), (position.y == (int)options.soccer ? new Color(Color.Gold, textOpacity) : Color.White));
             else
-                sprite_batch.DrawString(font, "< off >", new Vector2(rightTextX, settingOffset + 80), (position.y == (int)options.soccer ? new Color(Color.Gray, textOpacity) : Color.Gray));
-
-            sprite_batch.DrawString(font, ctfString, new Vector2(leftTextX, settingOffset+120), Color.White);
+                sprite_batch.DrawString(font, "< off >", new Vector2(rightTextX, settingOffset + rowHeight*2), (position.y == (int)options.soccer ? new Color(Color.Gray, textOpacity) : Color.Gray));
+            /*
+            sprite_batch.DrawString(font, ctfString, new Vector2(leftTextX, settingOffset+ rowHeight*3), Color.White);
             if(ctfModeEnabled)
-                sprite_batch.DrawString(font, (captureTheFlag ? "< on >" : "< off >"), new Vector2(rightTextX, settingOffset+120), (position.y == (int)options.flag ? new Color(Color.Gold, textOpacity) : Color.White));
+                sprite_batch.DrawString(font, (captureTheFlag ? "< on >" : "< off >"), new Vector2(rightTextX, settingOffset+ rowHeight*3), (position.y == (int)options.flag ? new Color(Color.Gold, textOpacity) : Color.White));
             else
-                sprite_batch.DrawString(font, "< off >", new Vector2(rightTextX, settingOffset + 120), (position.y == (int)options.flag ? new Color(Color.Gray, textOpacity) : Color.Gray));
-
-            sprite_batch.DrawString(font, "Asteroids", new Vector2(leftTextX, settingOffset+160), Color.White);
+                sprite_batch.DrawString(font, "< off >", new Vector2(rightTextX, settingOffset + rowHeight*3), (position.y == (int)options.flag ? new Color(Color.Gray, textOpacity) : Color.Gray));
+                */
+            sprite_batch.DrawString(font, "Asteroids", new Vector2(leftTextX, settingOffset+ rowHeight*4), Color.White);
             String asteroidString = "Off";
             if (asteroidCount == Amount.few)
                 asteroidString = "Few";
@@ -482,10 +488,10 @@ namespace Fab5.Starburst.States {
                 asteroidString = "Medium";
             else if (asteroidCount == Amount.many)
                 asteroidString = "Many";
-            sprite_batch.DrawString(font, "< " + asteroidString + " >", new Vector2(rightTextX, settingOffset+160), (position.y == (int)options.asteroids ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, "< " + asteroidString + " >", new Vector2(rightTextX, settingOffset+ rowHeight*4), (position.y == (int)options.asteroids ? new Color(Color.Gold, textOpacity) : Color.White));
 
             // powerup-inställningar
-            sprite_batch.DrawString(font, "Powerups", new Vector2(leftTextX, settingOffset+200), Color.White);
+            sprite_batch.DrawString(font, "Powerups", new Vector2(leftTextX, settingOffset+ rowHeight*5), Color.White);
             String powerupString = "Off";
             if (powerupCount == Amount.few)
                 powerupString = "Few";
@@ -493,7 +499,7 @@ namespace Fab5.Starburst.States {
                 powerupString = "Medium";
             else if (powerupCount == Amount.many)
                 powerupString = "Many";
-            sprite_batch.DrawString(font, "< " + powerupString + " >", new Vector2(rightTextX, settingOffset+200), (position.y == (int)options.powerups ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, "< " + powerupString + " >", new Vector2(rightTextX, settingOffset+ rowHeight*5), (position.y == (int)options.powerups ? new Color(Color.Gold, textOpacity) : Color.White));
 
             // kontroll-"tutorial"
 

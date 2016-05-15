@@ -26,7 +26,7 @@ namespace Fab5.Starburst.States {
 
         private const float BTN_DELAY = .25f;
         float animateInTime = 1.4f;
-        float startTime;
+        float startTime = 0;
 
         float elapsedTime;
         float delay = .1f; // tid innan första animation startar
@@ -49,14 +49,12 @@ namespace Fab5.Starburst.States {
         public float vol = 0.0f;
         public float fade = 0.0f;
         private bool lowRes;
-
-        String text_ok;
-        String text_select;
+        
         Vector2 okSize;
         int controllerBtnSize;
         int heightDiff;
         int yPos;
-        private bool started;
+        //private bool started;
 
         private List<Entity> players;
         private Game_Config gameConfig;
@@ -111,10 +109,8 @@ namespace Fab5.Starburst.States {
             controller_a_button = Starburst.inst().get_content<Texture2D>("menu/Xbox_A_white");
             keyboard_key = Starburst.inst().get_content<Texture2D>("menu/Key");
             controller_l_stick = Starburst.inst().get_content<Texture2D>("menu/Xbox_L_white");
-
-            text_ok = "Ok";
-            text_select = "Select";
-            okSize = font.MeasureString(text_ok);
+            
+            okSize = font.MeasureString(" ");
             controllerBtnSize = 50; // ikon för knapp
             heightDiff = (int)(controllerBtnSize - okSize.Y);
             yPos = (int)(vp.Height - controllerBtnSize - 15);

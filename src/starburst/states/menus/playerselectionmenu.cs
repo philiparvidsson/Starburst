@@ -46,11 +46,12 @@ namespace Fab5.Starburst.States {
 
         private const float BTN_DELAY = .25f;
         float btnDelay = BTN_DELAY;
-        private SpriteFont smallFont;
+        private SpriteFont largeFont;
         private Texture2D downArrow;
         private bool canStartGame = true;
         private bool goingBack = false;
         private bool started;
+        private bool lowRes;
 
         private enum SlotStatus {
             Empty,
@@ -240,6 +241,9 @@ namespace Fab5.Starburst.States {
             for (int i = 0; i < 30; i++)
                 randoms.Add(rn.NextDouble());
 
+            Viewport vp = Starburst.inst().GraphicsDevice.Viewport;
+            lowRes = (vp.Height < 800 && vp.Width < 1600);
+
             //create_entity(SoundManager.create_backmusic_component()).get_component<SoundLibrary>().song_index = 1;
 
             // load textures
@@ -247,8 +251,8 @@ namespace Fab5.Starburst.States {
             //rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
             rectBg = new Texture2D(Fab5_Game.inst().GraphicsDevice, 1, 1);
             rectBg.SetData(new Color[]{Color.Black},1,1);//Starburst.inst().get_content<Texture2D>("controller_rectangle");
-            font = Starburst.inst().get_content<SpriteFont>("sector034");
-            smallFont = Starburst.inst().get_content<SpriteFont>("small");
+            font = Starburst.inst().get_content<SpriteFont>(!lowRes ? "sector034" : "small");
+            largeFont = Starburst.inst().get_content<SpriteFont>("sector034");
             controller_a_button = Starburst.inst().get_content<Texture2D>("menu/Xbox_A_white");
             keyboard_key = Starburst.inst().get_content<Texture2D>("menu/Key");
             controller_l_stick = Starburst.inst().get_content<Texture2D>("menu/Xbox_L_white");
@@ -339,6 +343,7 @@ namespace Fab5.Starburst.States {
         public override void draw(float t, float dt) {
             Starburst.inst().GraphicsDevice.Clear(Color.Black);
             base.draw(t, dt);
+
             Viewport vp = sprite_batch.GraphicsDevice.Viewport;
 
             var entities = Starburst.inst().get_entities_fast(typeof(Input));
@@ -356,8 +361,8 @@ namespace Fab5.Starburst.States {
             float headerY = (t - startTime < animateInTime) ? (float)Easing.BounceEaseOut((t - startTime), -50, animationDistance, animateInTime) : 100;
 
             String text = "Choose players";
-            Vector2 textSize = font.MeasureString(text);
-            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), headerY), Color.White);
+            Vector2 textSize = largeFont.MeasureString(text);
+            sprite_batch.DrawString(largeFont, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), headerY), Color.White);
             //GFX_Util.draw_def_text(sprite_batch, text, (int)((vp.Width * .5f) - (textSize.X * .5f)), 100);
 
             // rita ut kontrollrutor (4 st)
@@ -422,8 +427,10 @@ namespace Fab5.Starburst.States {
              * Rita ut kontroller
              **/
             Vector2 controllerIconSize = new Vector2(84, 60); //ikon för kontroll
-            int controllerBtnSize = 50; // ikon för knapp
-            int keyboardBtnSize = 40; // ikon för knapp
+            if (lowRes)
+                controllerIconSize *= .75f;
+            int controllerBtnSize = !lowRes ? 50 : 38; // ikon för knapp
+            int keyboardBtnSize = !lowRes ? 40 : 30; // ikon för knapp
             int arrowSize = 30; // nedåtpil
 
             int totalControllerWidth = (int)(entities.Count * controllerIconSize.X);
