@@ -30,6 +30,14 @@ public class Position_Integrator : Subsystem {
             if (angle != null) {
                 angle.angle += angle.ang_vel * dt;
 
+                while (angle.angle <= 0.0f) {
+                    angle.angle += 2.0f*3.141592653f;
+                }
+
+                while (angle.angle >= 2.0f*3.141592653f) {
+                    angle.angle -= 2.0f*3.141592653f;
+                }
+
                 angle.ang_vel -= angle.drag * angle.ang_vel * dt;
             }
         }

@@ -432,7 +432,10 @@ public static class Dummy_Enemy {
                     }
                 }
 
-                if (num_enemies_nearby > 2*num_friends_nearby) {
+                data.data["num_enemies"] = num_enemies_nearby;
+                data.data["num_friends"] = num_friends_nearby;
+
+                if (num_enemies_nearby > 1+2*num_friends_nearby) {
                     escape = true;
                 }
                 else {
@@ -553,14 +556,19 @@ public static class Dummy_Enemy {
         var threshold = (float)Math.Cos((90.0f - 5.0f*angle_error_fac) * 3.141592f / 180.0f);
 
         //Console.WriteLine(dot + ", " + threshold);
-        if (si.energy_value > si.top_energy*0.7f) {
+
+        var target_energy = target.get_component<Ship_Info>()?.energy_value ?? 1.0f;
+        var target_max_energy = target.get_component<Ship_Info>()?.top_energy ?? 1.0f;
+        var inv_aggression = 0.1f + (target_energy/target_max_energy)*(float)((int)data.get_data("num_enemies", 0));
+        if (inv_aggression > 1.0f) inv_aggression = 1.0f;
+        if (si.energy_value > si.top_energy*0.7f*inv_aggression) {
             data.data["shoot"] = true;
         }
         else if (si.energy_value < si.top_energy*0.25f) {
             data.data["shoot"] = false;
         }
 
-        if (waypoints.Count < 3 && !target_is_friend) {
+        if (waypoints.Count < 4 && !target_is_friend) {
             var tpos = target.get_component<Position>();
             var tvel = target.get_component<Velocity>() ?? new Velocity();
 
@@ -582,14 +590,15 @@ public static class Dummy_Enemy {
             var e = new Vector2(-(tpos_y-p.y), tpos_x-p.x);
             e.Normalize();
             var dot3 = Vector2.Dot(b, e);
-            var aim_threshold = (float)Math.Cos((90.0f - 3.0f) * 3.141592f / 180.0f);
+            var aim_threshold = (float)Math.Cos((90.0f - 1.5f) * 3.141592f / 180.0f);
+            var shoot_threshold = (float)Math.Cos((90.0f - 5f) * 3.141592f / 180.0f);
             if (dot3 < -aim_threshold) {
-                w.ang_vel = 6.0f * Math.Abs(dot);
+                w.ang_vel = 6.0f * Math.Abs(dot3);
             }
             else if (dot3 > aim_threshold) {
-                w.ang_vel = -6.0f * Math.Abs(dot);
+                w.ang_vel = -6.0f * Math.Abs(dot3);
             }
-            else if(is_open_path(x, y, tx, ty, tile_map)) {
+            if(dot3 > -shoot_threshold && dot3 < shoot_threshold && is_open_path(x, y, tx, ty, tile_map)) {
                 //Console.WriteLine("pew");
                 if ((bool)data.get_data("shoot", false)) {
                     if (shoot_bomb) {

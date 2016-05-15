@@ -82,7 +82,7 @@
         public Ship_Info(float top_hp, float top_energy, float top_velocity, float acceleration)
         {
             this.top_hp = 1;//;
-            this.hp_value = top_hp;
+            this.hp_value = 1;
             this.top_energy = top_energy;
             this.energy_value = top_energy;
             this.top_velocity = top_velocity*3.50f;
