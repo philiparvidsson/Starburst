@@ -191,13 +191,17 @@ namespace Fab5.Engine.Subsystems
                         var e1 = data.entity1;
                         Velocity velo = e1.get_component<Velocity>();
                         var speed = Math.Sqrt(Math.Pow(velo.x, 2) + Math.Pow(velo.y, 2));
-                        var texttureName = data.entity1.get_component<Sprite>().texture.Name;
-                        if (texttureName.Contains("ship") && speed > 27)
-                            Fab5_Game.inst().message("play_sound", new { pos = p1, name = "bang2", volume = vol });
-                        else if (texttureName.Contains("beams1"))
-                            Fab5_Game.inst().message("play_sound", new { name = "laser_impact", pos = p1, volume = vol });
-                        else if (texttureName.Contains("beams2"))
-                            Fab5_Game.inst().message("play_sound", new { name = "knock1m", pos = p1, volume = vol });
+                        var sprite1 = data.entity1.get_component<Sprite>();
+                        if (sprite1 != null)
+                        {
+                            var texttureName = sprite1.texture.Name;
+                            if (texttureName.Contains("ship") && speed > 27)
+                                Fab5_Game.inst().message("play_sound", new { pos = p1, name = "bang2", volume = vol });
+                            else if (texttureName.Contains("beams1"))
+                                Fab5_Game.inst().message("play_sound", new { name = "laser_impact", pos = p1, volume = vol });
+                            else if (texttureName.Contains("beams2"))
+                                Fab5_Game.inst().message("play_sound", new { name = "knock1m", pos = p1, volume = vol });
+                        }
                     }
                     else
                     {
