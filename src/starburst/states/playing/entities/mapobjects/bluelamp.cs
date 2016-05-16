@@ -16,7 +16,7 @@ public static class Blue_Lamp {
         var pos  = new Position { x = 0.0f, y = 0.0f };
 
         return new Component[] {
-            new Light_Source { color = new Color(0.1f, 0.1f, 1.0f), intensity = 0.55f, size = 4.0f },
+            new Light_Source { color = new Color(0.1f, 0.1f, 1.0f), intensity = 0.55f, size = 3.0f },
             pos,
         };
     }
