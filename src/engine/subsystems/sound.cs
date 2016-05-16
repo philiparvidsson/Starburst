@@ -230,13 +230,14 @@ namespace Fab5.Engine.Subsystems
                                 Fab5_Game.inst().message("play_sound", new { name = "rockslide_small", pos = p1, volume = vol });
                             else if (texttureName.Contains("ship") && texttureName2.Contains("ship"))
                                 Fab5_Game.inst().message("play_sound", new { name = "bang", pos = p1, volume = vol });
-                            else if (texttureName.Contains("beams1") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams1"))
-                                Fab5_Game.inst().message("play_sound", new { name = "laser_impact", pos = p1, volume = vol });
-                            else if (texttureName.Contains("beams2") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams2"))
-                                Fab5_Game.inst().message("play_sound", new { name = "small_explosion", pos = p1, volume = vol });
-                            else if (texttureName.Contains("powerup") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("powerup"))
-                                Fab5_Game.inst().message("play_sound", new { name = "pickup", pos = p1, volume = vol });
                         }
+
+                        if (texttureName.Contains("beams1") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams1"))
+                            Fab5_Game.inst().message("play_sound", new { name = "laser_impact", pos = p1, volume = vol });
+                        else if (texttureName.Contains("beams2") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams2"))
+                            Fab5_Game.inst().message("play_sound", new { name = "small_explosion", pos = p1, volume = vol });
+                        else if (texttureName.Contains("powerup") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("powerup"))
+                            Fab5_Game.inst().message("play_sound", new { name = "pickup", pos = p1, volume = vol });
                     }
                 }
             }

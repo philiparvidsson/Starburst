@@ -18,13 +18,13 @@ public class AI : Subsystem {
             if (brain.time_since_think > brain.think_interval) {
                 brain.time_since_think = 0.0f;
 
-                try {
+                //try {
                     brain.think_fn(entity);
-                }
-                catch (Exception e) {
-                    Console.WriteLine("think function failed!");
-                    Console.WriteLine(e);
-                }
+                //}
+                //catch (Exception e) {
+                //    Console.WriteLine("think function failed!");
+                //    Console.WriteLine(e);
+                //}
             }
         }
     }
