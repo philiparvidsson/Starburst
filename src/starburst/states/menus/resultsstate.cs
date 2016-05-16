@@ -1,4 +1,5 @@
-namespace Fab5.Starburst.States {
+namespace Fab5.Starburst.States
+{
 
     using Fab5.Engine;
     using Fab5.Engine.Components;
@@ -17,7 +18,8 @@ namespace Fab5.Starburst.States {
     using System;
     using System.Collections.Generic;
     using Playing;
-    public class Results_State : Game_State {
+    public class Results_State : Game_State
+    {
         Texture2D background;
         Texture2D rectBg;
         SpriteFont font;
@@ -38,7 +40,8 @@ namespace Fab5.Starburst.States {
         float textOpacity;
 
         float btnDelay = BTN_DELAY;
-        enum options {
+        enum options
+        {
             proceed
         };
 
@@ -60,28 +63,35 @@ namespace Fab5.Starburst.States {
         private Game_Config gameConfig;
         private Entity soundMgr;
 
-        public Results_State(List<Entity> players, Game_Config config) {
+        public Results_State(List<Entity> players, Game_Config config)
+        {
             this.players = players;
             this.gameConfig = config;
         }
-        public override void on_message(string msg, dynamic data) {
+        public override void on_message(string msg, dynamic data)
+        {
 
-            if (btnDelay <= 0) {
-                if (msg.Equals("fullscreen")) {
+            if (btnDelay <= 0)
+            {
+                if (msg.Equals("fullscreen"))
+                {
                     btnDelay = .5f;
                     Starburst.inst().GraphicsMgr.ToggleFullScreen();
                 }
-                else if (msg.Equals("select") || msg.Equals("start")) {
+                else if (msg.Equals("select") || msg.Equals("start"))
+                {
                     proceed();
                 }
             }
         }
 
-        private void proceed() {
+        private void proceed()
+        {
             Starburst.inst().leave_state();
         }
 
-        public override void init() {
+        public override void init()
+        {
             sprite_batch = new SpriteBatch(Starburst.inst().GraphicsDevice);
 
             add_subsystems(
@@ -103,7 +113,7 @@ namespace Fab5.Starburst.States {
             // load textures
             background = Starburst.inst().get_content<Texture2D>("backdrops/backdrop4");
             rectBg = new Texture2D(Fab5_Game.inst().GraphicsDevice, 1, 1);
-            rectBg.SetData(new Color[]{Color.Black},1,1);//Starburst.inst().get_content<Texture2D>("controller_rectangle");
+            rectBg.SetData(new Color[] { Color.Black }, 1, 1);//Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>("sector034");
             largeFont = Starburst.inst().get_content<SpriteFont>("large");
             controller_a_button = Starburst.inst().get_content<Texture2D>("menu/Xbox_A_white");
@@ -116,12 +126,14 @@ namespace Fab5.Starburst.States {
             heightDiff = (int)(controllerBtnSize - okSize.Y);
             yPos = (int)(vp.Height - controllerBtnSize - 15);
 
-            for(int i = 0; i < players.Count; i++) {
+            for (int i = 0; i < players.Count; i++)
+            {
                 create_entity(Player.create_components(players[i].get_component<Input>()));
             }
         }
 
-        public override void update(float t, float dt) {
+        public override void update(float t, float dt)
+        {
             base.update(t, dt);
 
             // räkna upp tid (dt)
@@ -129,20 +141,24 @@ namespace Fab5.Starburst.States {
             if (btnDelay > 0)
                 btnDelay -= dt;
 
-            if (elapsedTime >= animationTime) {
+            if (elapsedTime >= animationTime)
+            {
                 elapsedTime = 0;
             }
 
             // fade in
-            if (elapsedTime > delay && elapsedTime < outDelay) {
+            if (elapsedTime > delay && elapsedTime < outDelay)
+            {
                 textOpacity = (float)Easing.QuadEaseInOut(elapsedTime - delay, 0, 1, inDuration);
             }
             // fade out
-            else if (elapsedTime >= outDelay) {
+            else if (elapsedTime >= outDelay)
+            {
                 textOpacity = 1 - (float)Easing.QuadEaseInOut(elapsedTime - outDelay, 0, 1, outDuration);
             }
         }
-        public override void draw(float t, float dt) {
+        public override void draw(float t, float dt)
+        {
             Starburst.inst().GraphicsDevice.Clear(Color.Black);
             base.draw(t, dt);
             Viewport vp = sprite_batch.GraphicsDevice.Viewport;
@@ -154,7 +170,7 @@ namespace Fab5.Starburst.States {
             int vertSpacing = 10;
             int horSpacing = 20;
             int nameWidth = 300;
-            
+
             String killsHeader = "Kills";
             String deathsHeader = "Deaths";
             String scoreHeader = "Score";
@@ -169,14 +185,14 @@ namespace Fab5.Starburst.States {
             int deathsX = (int)(killsX + killsSize.X + horSpacing);
             int scoreX = (int)(deathsX + deathsSize.X + horSpacing);
 
-            int textOffset = (int)((rowHeight - killsSize.Y)*.5f);
+            int textOffset = (int)((rowHeight - killsSize.Y) * .5f);
             int vertPadding = 10;
             int horPadding = 20;
 
             // animation
             int currentOffset = 150;
             int animDistance = 150;
-            int startY = currentOffset-animDistance;
+            int startY = currentOffset - animDistance;
             if (t < animateInTime)
                 currentOffset = (int)Easing.CubicEaseOut((t), startY, animDistance, animateInTime);
 
@@ -187,7 +203,8 @@ namespace Fab5.Starburst.States {
             GFX_Util.draw_def_text(sprite_batch, scoreHeader, scoreX, currentOffset);
             currentOffset += rowHeight + vertSpacing;
 
-            if (gameConfig.mode == Game_Config.GM_TEAM_DEATHMATCH) {
+            if (gameConfig.mode == Game_Config.GM_TEAM_DEATHMATCH)
+            {
                 List<Entity> redTeam = new List<Entity>();
                 List<Entity> blueTeam = new List<Entity>();
                 float redScore = 0, blueScore = 0;
@@ -195,28 +212,27 @@ namespace Fab5.Starburst.States {
 
 
                 // lägg spelare i rätt lag
-                for (int p = 0; p < players.Count; p++) {
+                for (int p = 0; p < players.Count; p++)
+                {
                     Ship_Info player_info = players[p].get_component<Ship_Info>();
                     if (player_info == null) continue;
                     if (player_info.team == 1) redTeam.Add(players[p]);
                     else blueTeam.Add(players[p]);
                 }
                 // måla ut lagruta inkl lag-header
-                int redTeamHeight = rowHeight * (redTeam.Count+0) + vertSpacing * (redTeam.Count - 1);
-                Rectangle destRect = new Rectangle(nameX- horPadding, currentOffset - vertPadding, totalScoreWidth + horPadding * 2, redTeamHeight + vertPadding * 2);
+                int redTeamHeight = rowHeight * (redTeam.Count + 0) + vertSpacing * (redTeam.Count - 1);
+                Rectangle destRect = new Rectangle(nameX - horPadding, currentOffset - vertPadding, totalScoreWidth + horPadding * 2, redTeamHeight + vertPadding * 2);
                 Color col = new Color(1.0f, 0.2f, 0.2f, 0.3f);
                 GFX_Util.fill_rect(sprite_batch, destRect, col);
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Right - 4, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Top, destRect.Width - 8, 4), new Color(col.R, col.G, col.B, 255));
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Bottom - 4, destRect.Width - 8, 4), new Color(col.R, col.G, col.B, 255));
-                
-                for (int i=0; i < redTeam.Count; i++) {
+
+                for (int i = 0; i < redTeam.Count; i++)
+                {
                     Score player_score = redTeam[i].get_component<Score>();
                     Ship_Info player_info = redTeam[i].get_component<Ship_Info>();
-                    
-                    
-                    
                     
                     redGoals = player_score.num_goals;
                     redScore += player_score.score;
@@ -225,13 +241,14 @@ namespace Fab5.Starburst.States {
                     {
                         Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/bot");
                         sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 90, rowY, 42, 30));
-                        GFX_Util.draw_def_text(sprite_batch, "AI  " + (player_info.pindex - 1), nameX, rowY);
+                        GFX_Util.draw_def_text(sprite_batch, "Bot  " + (player_info.pindex - 1), nameX, rowY);
                     }
-                    else {
+                    else
+                    {
                         var player_input = redTeam[i].get_component<Input>();
                         if (player_input != null && player_input.device == Input.InputType.Controller)
                         {
-                            Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" +player_input.gp_index);
+                            Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + (int)(player_input.gp_index + 1));
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 100, rowY, 63, 45));
                             GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
                         }
@@ -245,20 +262,20 @@ namespace Fab5.Starburst.States {
                             GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
                         }
                     }
-                    
+
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.num_deaths.ToString(), deathsX, rowY);
                     GFX_Util.draw_def_text(sprite_batch, player_score.score.ToString(), scoreX, rowY);
                 }
                 currentOffset += redTeamHeight + vertSpacing + textOffset;
                 // måla ut lagpoäng
-                GFX_Util.draw_def_text(sprite_batch, "Red team: " + redScore + "        Goals: " + redGoals, nameX, currentOffset);
+                GFX_Util.draw_def_text(sprite_batch, "Red team score: " + redScore + "        Goals: " + redGoals, nameX, currentOffset);
 
                 // avstånd mellan rutorna
                 currentOffset += 100;
                 // måla ut lagruta inkl lag-header
                 int blueTeamHeight = rowHeight * (blueTeam.Count + 0) + vertSpacing * (blueTeam.Count - 1);
-                destRect = new Rectangle(nameX - horPadding, currentOffset - vertPadding, totalScoreWidth+ horPadding * 2, blueTeamHeight+ vertPadding * 2);
+                destRect = new Rectangle(nameX - horPadding, currentOffset - vertPadding, totalScoreWidth + horPadding * 2, blueTeamHeight + vertPadding * 2);
                 col = new Color(0.0f, 0.5f, 1.0f, 0.3f);
                 GFX_Util.fill_rect(sprite_batch, destRect, col);
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
@@ -266,7 +283,8 @@ namespace Fab5.Starburst.States {
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Top, destRect.Width - 8, 4), new Color(col.R, col.G, col.B, 255));
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Bottom - 4, destRect.Width - 8, 4), new Color(col.R, col.G, col.B, 255));
 
-                for (int i = 0; i < blueTeam.Count; i++) {
+                for (int i = 0; i < blueTeam.Count; i++)
+                {
                     Score player_score = blueTeam[i].get_component<Score>();
                     Ship_Info player_info = blueTeam[i].get_component<Ship_Info>();
 
@@ -277,7 +295,7 @@ namespace Fab5.Starburst.States {
                     {
                         Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/bot");
                         sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 90, rowY, 42, 30));
-                        GFX_Util.draw_def_text(sprite_batch, "AI  " + (player_info.pindex - 1), nameX, rowY);
+                        GFX_Util.draw_def_text(sprite_batch, "Bot  " + (player_info.pindex - 1), nameX, rowY);
                     }
                     else
                     {
@@ -310,21 +328,25 @@ namespace Fab5.Starburst.States {
 
                 // skriv ut vem som vann
                 currentOffset += 100;
-                if (redScore == blueScore) {
+                if (redScore == blueScore)
+                {
                     String tieText = "Match ended in a tie";
                     Vector2 tieSize = GFX_Util.measure_string(tieText);
-                    GFX_Util.draw_def_text(sprite_batch, tieText, (int)(vp.Width*.5f-tieSize.X*.5f), currentOffset);
+                    GFX_Util.draw_def_text(sprite_batch, tieText, (int)(vp.Width * .5f - tieSize.X * .5f), currentOffset);
                 }
-                else {
+                else
+                {
                     String winText = (redScore > blueScore ? "Red" : "Blue") + " team won!";
                     Vector2 winSize = GFX_Util.measure_string(winText);
                     GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), currentOffset);
                 }
             }
-            else {
+            else
+            {
                 float bestScore = 0;
                 List<int> bestPlayers = new List<int>();
-                for (int i = 0; i < players.Count; i++) {
+                for (int i = 0; i < players.Count; i++)
+                {
                     int rowY = currentOffset + rowHeight * i + textOffset + vertSpacing * i;
                     Score player_score = players[i].get_component<Score>();
                     Ship_Info player_info = players[i].get_component<Ship_Info>();
@@ -332,19 +354,21 @@ namespace Fab5.Starburst.States {
                     if (player_score == null)
                         continue;
 
-                    if (player_score.score > bestScore) {
+                    if (player_score.score > bestScore)
+                    {
                         bestPlayers.Clear();
                         bestScore = player_score.score;
                         bestPlayers.Add(i);
                     }
-                    else if(player_score.score == bestScore) {
+                    else if (player_score.score == bestScore)
+                    {
                         bestPlayers.Add(i);
                     }
                     if (players[i].get_component<Input>() == null)
                     {
                         Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/bot");
                         sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 90, rowY, 42, 30));
-                        GFX_Util.draw_def_text(sprite_batch, "AI  " + (player_info.pindex - 1), nameX, rowY);
+                        GFX_Util.draw_def_text(sprite_batch, "Bot  " + (player_info.pindex - 1), nameX, rowY);
                     }
                     else
                     {
@@ -374,12 +398,13 @@ namespace Fab5.Starburst.States {
                 // skriv ut vilken person som vann
                 currentOffset += totalScoreHeight + vertSpacing + textOffset;
                 String winner = "Player ";
-                for(int i=0; i < bestPlayers.Count; i++) {
+                for (int i = 0; i < bestPlayers.Count; i++)
+                {
                     if (i > 0)
                         winner += " & Player ";
                     winner += s[bestPlayers[i]];
                 }
-                String winText =  winner + " won!";
+                String winText = winner + " won!";
                 Vector2 winSize = GFX_Util.measure_string(winText);
 
                 GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), currentOffset);
@@ -395,6 +420,6 @@ namespace Fab5.Starburst.States {
 
             sprite_batch.End();
         }
-    }
 
+    }
 }

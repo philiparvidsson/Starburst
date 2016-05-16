@@ -14,10 +14,9 @@ public static class Lamp {
 
     public static Component[] create_components() {
         var pos  = new Position { x = 0.0f, y = 0.0f };
-        var tex  = Starburst.inst().get_content<Texture2D>("particle2");
 
         return new Component[] {
-            new Light_Source { color = Color.White, intensity = 0.45f, size = 6.0f },
+            new Light_Source { color = Color.White, intensity = 0.45f, size = 4.0f },
             pos,
         };
     }

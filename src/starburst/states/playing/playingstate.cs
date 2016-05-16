@@ -186,8 +186,8 @@ public class Playing_State : Game_State {
                     renderer = new Rendering_System(Starburst.inst().GraphicsDevice) {
                         tile_map = tile_map,
                         match_time = game_conf.match_time
-                    }
-                    //new Window_Title_Writer()
+                    },
+                    new Window_Title_Writer()
                )
             )
         );
@@ -332,6 +332,8 @@ public class Playing_State : Game_State {
 
         var turbo2 = create_entity(Powerup.create(new Turbo_Powerup()));
         turbo2.get_component<Position>().x = 1500.0f; turbo2.get_component<Position>().y = -1500.0f;*/
+
+        Dummy_Enemy.ai_index = 1;
 
         for(int i = 0; i < game_conf.red_bots; i++) {
             var ai = Starburst.inst().create_entity(Dummy_Enemy.create_components(game_conf, 1 /* red team */));

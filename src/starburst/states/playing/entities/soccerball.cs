@@ -19,6 +19,7 @@ public static class Soccer_Ball {
         var pos = new Position() {x=600, y = 200};
         var vel = new Velocity();
         return new Component[] {
+            new Shadow{},
             new Particle_Emitter() {
                 emit_fn = () => {
                     //var speed = vel.x * vel.x + vel.y*vel.y;

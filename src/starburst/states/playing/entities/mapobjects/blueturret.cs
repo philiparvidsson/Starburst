@@ -109,7 +109,7 @@ public static class Blue_Turret {
     }
 
         private static Component[] shoot(Entity self, Angle shipAngle) {
-            Fab5_Game.inst().message("play_sound_asset", new { name = "sound/effects/turret", varying_pitch = true });
+            Fab5_Game.inst().message("turretsound", new { name = "turret", varying_pitch = true, entity1 = self});
 
             float shipRadian = 21f; // offset från skeppets mitt där skottet utgår ifrån
             float speed      = 900f; // skottets hastighet (kanske ska vara vapenberoende?)

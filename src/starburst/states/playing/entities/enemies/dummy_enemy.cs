@@ -15,6 +15,8 @@ using Microsoft.Xna.Framework.Graphics;
     using Fab5.Starburst.States.Playing;
 
 public static class Dummy_Enemy {
+    public static int ai_index = 1;
+
     private const float THINK_INTERVAL = 1.0f/30.0f; // think 5 times per sec
 
     private static Random rand = new Random();
@@ -685,12 +687,15 @@ public static class Dummy_Enemy {
         };*/
 
         components.Add(
-            new Brain { think_fn       = think,
-                        think_interval = THINK_INTERVAL }
+            new Brain { think_fn         = think,
+                        think_interval   = THINK_INTERVAL,
+                        time_since_think = (float)rand.NextDouble() * THINK_INTERVAL }
         );
 
         var data = new Data{};
         data.data["input"] = input;
+        data.data["ai_index"] = ai_index++;
+        data.data["path_recalc_time"] = Fab5_Game.inst().get_time() + 0.5f - (float)rand.NextDouble() * 2.0f;
         components.Add(data);
 
         return components.ToArray();

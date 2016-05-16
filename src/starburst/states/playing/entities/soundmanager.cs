@@ -32,7 +32,7 @@
             effectlib.Library.Add("bang2", new Fab5SoundEffect("sound/effects/bang2", "bang2"));
             effectlib.Library.Add("minigun", new Fab5SoundEffect("sound/effects/Minigun", "minigun"));
             effectlib.Library.Add("SharpPunch", new Fab5SoundEffect("sound/effects/SharpPunch", "SharpPunch"));
-            effectlib.Library.Add("punch", new Fab5SoundEffect("sound/effects/BatmanPunch", "punch"));
+            effectlib.Library.Add("BatmanPunch", new Fab5SoundEffect("sound/effects/BatmanPunch", "BatmanPunch"));
             effectlib.Library.Add("throw_knife", new Fab5SoundEffect("sound/effects/throw_knife", "throw_knife"));
             effectlib.Library.Add("LaserBlaster", new Fab5SoundEffect("sound/effects/LaserBlaster", "LaserBlaster"));
             effectlib.Library.Add("LaserBlaster2", new Fab5SoundEffect("sound/effects/LaserBlaster2", "LaserBlaster2"));
@@ -48,6 +48,8 @@
             effectlib.Library.Add("laser_impact", new Fab5SoundEffect("sound/effects/laser_impact", "laser_impact"));
             effectlib.Library.Add("small_explosion", new Fab5SoundEffect("sound/effects/small_explosion", "small_explosion"));
             effectlib.Library.Add("pickup", new Fab5SoundEffect("sound/effects/pickup", "pickup"));
+            effectlib.Library.Add("turret", new Fab5SoundEffect("sound /effects/turret", "turret"));
+            
             return (Component)effectlib;
         }
     }

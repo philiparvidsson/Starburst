@@ -134,6 +134,7 @@ public abstract class Fab5_Game : Game {
         float t  = (float)game_time.TotalGameTime.TotalSeconds;
         float dt = (float)game_time.ElapsedGameTime.TotalSeconds;
 
+        global_time = t;
         time = t;
 
         if (top_state != null) {
@@ -217,11 +218,16 @@ public abstract class Fab5_Game : Game {
     }*/
 
     float time;
+    float global_time;
 
     public float get_time() {
         return time;
     }
-        
+
+    public float get_global_time() {
+        return global_time;
+    }
+
 
     private static Fab5_Game s_inst;
 
@@ -233,11 +239,11 @@ public abstract class Fab5_Game : Game {
         state.init();
 
     }
-       
+
 
     public void leave_state() {
         states.Pop().cleanup();
-            
+
         top_state = null;
         if (states.Count > 0) {
             top_state = states.Peek();
