@@ -100,6 +100,10 @@ namespace Fab5.Starburst.States {
         private Texture2D map1;
         private Texture2D map2;
 
+        private bool animateMap = false;
+        private float mapAnimationDuration = .25f;
+        private float mapAnimationStartTime;
+
         public override void on_message(string msg, dynamic data) {
 
             if (btnDelay <= 0) {
@@ -146,6 +150,7 @@ namespace Fab5.Starburst.States {
                 cursorPosition.y = (int)options.proceed;
             else if (cursorPosition.y < (int)options.proceed)
                 cursorPosition.y++;
+            Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
         }
 
         private void moveUp() {
@@ -225,6 +230,10 @@ namespace Fab5.Starburst.States {
             map2 = maps[currentMapIndex < maps.Count-1 ? currentMapIndex+1 : 0].preview;
 
             gameMode = currentMap.gameMode;
+            if (btnDelay <= 0) {
+                animateMap = true;
+                mapAnimationStartTime = Starburst.inst().get_time();
+            }
         }
 
         private void proceed() {
@@ -403,6 +412,10 @@ namespace Fab5.Starburst.States {
                 elapsedTime = 0;
             }
 
+            if (animateMap && t - mapAnimationStartTime >= mapAnimationDuration) {
+                animateMap = false;
+            }
+
             // fade in
             if (elapsedTime > delay && elapsedTime < outDelay) {
                 textOpacity = (float)Easing.QuadEaseInOut(elapsedTime - delay, 0, 1, inDuration);
@@ -473,6 +486,12 @@ namespace Fab5.Starburst.States {
             if (t - startTime < animateInTime)
                 currentTopY = (int)Easing.CubicEaseOut((t - startTime), startY, animDistance, animateInTime);
 
+            //map-switch-animation
+            float mapAnimationSize = smallMapSize;
+            float currentMapSize = largeMapSize;
+            if(animateMap)
+                currentMapSize = (float)Easing.BackEaseOut((t-mapAnimationStartTime), largeMapSize - mapAnimationSize, mapAnimationSize, mapAnimationDuration);
+
             String map = "Map";
             Vector2 mapTextSize = font.MeasureString(map);
             sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, currentTopY), Color.White);
@@ -480,7 +499,7 @@ namespace Fab5.Starburst.States {
             int mapY = currentTopY+50;
             sprite_batch.Draw(map0, new Rectangle((int)(vp.Width*.5f - largeMapSize*.5f - smallMapSize - 20), (int)(mapY + (largeMapSize - smallMapSize) * .5f), smallMapSize, smallMapSize), Color.White*0.5f);
             sprite_batch.Draw(map2, new Rectangle((int)(vp.Width*.5f + largeMapSize * .5f + 20), (int)(mapY + (largeMapSize-smallMapSize)*.5f), smallMapSize, smallMapSize), Color.White*0.5f);
-            sprite_batch.Draw(map1, new Rectangle((int)(vp.Width*.5f - largeMapSize * .5f), mapY, largeMapSize, largeMapSize), Color.White);
+            sprite_batch.Draw(map1, new Rectangle((int)(vp.Width*.5f - currentMapSize * .5f), (int)(mapY + (largeMapSize-currentMapSize)*.5f), (int)currentMapSize, (int)currentMapSize), Color.White);
 
             String arrow = "<";
             Vector2 arrowSize = font.MeasureString(arrow);
@@ -501,8 +520,10 @@ namespace Fab5.Starburst.States {
             if (t - startTime < animateInTime)
                 settingOffset = (int)Easing.CubicEaseOut((t - startTime), startY, animDistance, animateInTime);
 
-            sprite_batch.DrawString(font, "Map mode", new Vector2(leftTextX, settingOffset - rowHeight/2), Color.White);
-            sprite_batch.DrawString(font, maps[currentMapIndex].mapName, new Vector2(rightTextX, settingOffset - rowHeight/2), Color.White);
+            sprite_batch.DrawString(font, "Map mode", new Vector2(leftTextX, settingOffset), Color.White);
+            sprite_batch.DrawString(font, maps[currentMapIndex].mapName, new Vector2(rightTextX, settingOffset), Color.White);
+
+            settingOffset += (int)(rowHeight * .5f);
 
             sprite_batch.DrawString(font, "Game time", new Vector2(leftTextX, settingOffset+rowHeight*1), Color.White);
             int time = 5;
