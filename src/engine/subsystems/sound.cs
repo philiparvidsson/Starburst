@@ -335,7 +335,7 @@ namespace Fab5.Engine.Subsystems
         }
         public static float ShouldBePlayed(Position p1)
         {
-            float[] volume = new float[4];
+            /*float[] volume = new float[4];
             var entities = Fab5_Game.inst().get_entities_fast(typeof(Input));
             var num_entites = entities.Count;
             for (int i = 0; i < num_entites; i++)
@@ -350,9 +350,30 @@ namespace Fab5.Engine.Subsystems
                     volume[i] = 1f;
                 else
                     volume[i] = 0;
-                
+
             }
-            return volume.Max();
+            return volume.Max();*/
+
+            var min_dist = 99999999.0f;
+            foreach (var e in Fab5_Game.inst().get_entities_fast(typeof (Input))) {
+                var p = e.get_component<Position>();
+                var dx = p.x-p1.x;
+                var dy = p.y-p1.y;
+                var dist = dx*dx+dy*dy;
+                if (dist < min_dist) {
+                    min_dist = dist;
+                }
+            }
+
+            if (min_dist < 0.1f) {
+                // probably player making the sound
+                return 1.0f;
+            }
+
+            var r = (float)Math.Sqrt(min_dist);
+            r *= 2.0f/(float)Fab5_Game.inst().GraphicsMgr.PreferredBackBufferWidth;
+            return (float)Math.Min(1.0f, 1.0f/(r*r));
         }
+
     }
 }
