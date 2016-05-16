@@ -214,7 +214,7 @@ namespace Fab5.Engine.Subsystems
 
                         var speed = Math.Sqrt(Math.Pow(velo.x, 2) + Math.Pow(velo.y, 2));
                         var speed2 = Math.Sqrt(Math.Pow(velo2.x, 2) + Math.Pow(velo2.y, 2));
-                        var colspeed = speed - speed2 * ((velo.x * velo2.x + velo.y * velo2.y) / (speed * speed2));
+                        var colspeed = (float)Math.Abs(speed - speed2 * ((velo.x * velo2.x + velo.y * velo2.y) / (speed * speed2)));
 
                         if (colspeed > 27)
                         {
