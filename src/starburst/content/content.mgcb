@@ -1009,3 +1009,9 @@
 /processorParam:TextureFormat=Color
 /build:maps/preview3_soccer.png
 
+#begin tiny.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:tiny.spritefont
+
