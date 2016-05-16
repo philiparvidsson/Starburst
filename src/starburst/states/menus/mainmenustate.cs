@@ -63,7 +63,7 @@ namespace Fab5.Starburst.States {
         }
 
         List<MapConfig> maps; // lista för maps
-        
+
         // meny-inställningar med default-värden
         GameTime gameTime = GameTime.Five;
         Amount asteroidCount = Amount.medium;
@@ -75,7 +75,7 @@ namespace Fab5.Starburst.States {
         private const int MaxNumBots = 10;
 
         public Playing.Game_Config gameConfig; //configen som ska skickas till playingstate
-        
+
         // gui-saker
         private int largeMapSize = 256;
         private int smallMapSize = 192;
@@ -376,6 +376,16 @@ namespace Fab5.Starburst.States {
                 preview = Fab5_Game.inst().get_content<Texture2D>("maps/preview2"),
                 asteroidAmounts = new int[]{ 5, 10, 20 }
             });
+            maps.Add(new MapConfig() {
+                fileName = "map3_soccer.png",
+                mapName = "Soccer",
+                bots = false,
+                soccerBall = true,
+                soccerMode = true,
+                gameMode = Playing.Game_Config.GM_TEAM_DEATHMATCH,
+                preview = Fab5_Game.inst().get_content<Texture2D>("maps/preview2"),
+                asteroidAmounts = new int[]{ 5, 10, 20 }
+            });
             updateMapSettings();
         }
 
@@ -514,7 +524,7 @@ namespace Fab5.Starburst.States {
             else if (asteroidCount == Amount.many)
                 asteroidString = "Many";
             sprite_batch.DrawString(font, "< " + asteroidString + " >", new Vector2(rightTextX, settingOffset+ rowHeight*2), (position.y == (int)options.asteroids ? new Color(Color.Gold, textOpacity) : Color.White));
-            
+
             sprite_batch.DrawString(font, "Powerups", new Vector2(leftTextX, settingOffset+ rowHeight*3), Color.White);
             String powerupString = "Off";
             if (powerupCount == Amount.few)

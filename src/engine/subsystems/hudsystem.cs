@@ -8,6 +8,8 @@
     using Engine;
     using System;
     using Fab5.Starburst;
+    using Fab5.Starburst.States.Playing;
+    using Fab5.Starburst.States;
     public class Hudsystem
     {
         SpriteBatch sprite_batch;
@@ -158,7 +160,7 @@
                 }*/
 
                 var color = Color.White;
-                if (team_mate != player) {
+                if (((Playing_State)team_mate.state).game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH && team_mate != player) {
                     color = (tm_team == 1) ? Color.Red : Color.Blue;
                 }
 
