@@ -14,7 +14,6 @@ namespace Fab5.Starburst.States {
         public bool bots { get; set; } = false;
         public Texture2D preview { get; set; }
         public bool soccerMode { get; set; } = false;
-        public List<int> menuOptions { get; set; }
         public int[] asteroidAmounts { get; set; } = new int[] { 20, 40, 60 };
     }
 }
