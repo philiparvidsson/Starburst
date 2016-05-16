@@ -245,7 +245,7 @@ namespace Fab5.Starburst.States {
             else if (gameTime == GameTime.Thirty)
                 time = 30;
 
-            int asteroid = (asteroidCount == 0) ? 0 : maps[currentMapIndex].asteroidAmounts[(int)asteroidCount];
+            int asteroid = (asteroidCount == 0) ? 0 : maps[currentMapIndex].asteroidAmounts[(int)asteroidCount-1];
             if (currentMapIndex != 2) {
                 if (asteroidCount == Amount.few)
                     asteroid = 20;
