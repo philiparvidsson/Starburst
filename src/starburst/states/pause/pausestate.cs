@@ -92,7 +92,7 @@ namespace Fab5.Starburst.States {
             var pl = last_state.get_entities_fast(typeof(Score));
             List<Entity> pList = new List<Entity>();
             for (int i = 0; i < pl.Count; i++) {
-                if (pl[i].get_component<Input>() != null)
+                //if (pl[i].get_component<Input>() != null)
                     pList.Add(pl[i]);
             }
 
@@ -135,8 +135,31 @@ namespace Fab5.Starburst.States {
                 if (player_score == null || player_shipinfo.pindex >= 5) continue;
 
                 int rowY = startY + rowHeight * p + vertSpacing * p;
-
-                GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_shipinfo.pindex - 1], nameX, rowY);
+                if (player.get_component<Input>() == null)
+                {
+                    Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/bot");
+                    sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 90, rowY, 42, 30));
+                    GFX_Util.draw_def_text(sprite_batch, "AI  " + (player_shipinfo.pindex - 1), nameX, rowY);
+                }
+                else
+                {
+                    var player_input = player.get_component<Input>();
+                    if (player_input != null && player_input.device == Input.InputType.Controller)
+                    {
+                        Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + player_input.gp_index);
+                        sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 100, rowY, 63, 45));
+                        GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_shipinfo.pindex - 1], nameX, rowY);
+                    }
+                    else
+                    {
+                        int key_index;
+                        if (player_input.up == Keys.W) key_index = 1;
+                        else key_index = 2;
+                        Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/keys" + key_index);
+                        sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 100, rowY, 63, 45));
+                        GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_shipinfo.pindex - 1], nameX, rowY);
+                    }
+                }
                 GFX_Util.draw_def_text(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
                 GFX_Util.draw_def_text(sprite_batch, player_score.num_deaths.ToString(), deathsX, rowY);
                 GFX_Util.draw_def_text(sprite_batch, player_score.display_score.ToString(), scoreX, rowY);
@@ -222,7 +245,7 @@ namespace Fab5.Starburst.States {
                 var scoreEntities = gameState.get_entities_fast(typeof(Score));
                 List<Entity> players = new List<Entity>();
                 for(int i=0; i < scoreEntities.Count; i++) {
-                    if(scoreEntities[i].get_component<Input>() != null)
+                    if ((scoreEntities[i].get_component<Ship_Info>() != null) && (scoreEntities[i].get_component<Velocity>() != null))
                         players.Add(scoreEntities[i]);
                 }
                 Starburst.inst().leave_state();
