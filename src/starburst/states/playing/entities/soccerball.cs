@@ -108,6 +108,7 @@ public static class Soccer_Ball {
                                 if (score != null) {
                                     score.score += 1500;
                                 }
+                                score.num_goals++;
                             }
                         }
 

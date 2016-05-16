@@ -189,6 +189,8 @@ namespace Fab5.Starburst.States {
                 List<Entity> redTeam = new List<Entity>();
                 List<Entity> blueTeam = new List<Entity>();
                 float redScore = 0, blueScore = 0;
+                int redGoals = 0, blueGoals = 0;
+
 
                 // lägg spelare i rätt lag
                 for (int p = 0; p < players.Count; p++) {
@@ -206,10 +208,12 @@ namespace Fab5.Starburst.States {
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Right - 4, destRect.Top, 4, destRect.Height), new Color(col.R, col.G, col.B, 255));
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Top, destRect.Width - 8, 4), new Color(col.R, col.G, col.B, 255));
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Bottom - 4, destRect.Width - 8, 4), new Color(col.R, col.G, col.B, 255));
+                
                 for (int i=0; i < redTeam.Count; i++) {
                     Score player_score = redTeam[i].get_component<Score>();
                     Ship_Info player_info = redTeam[i].get_component<Ship_Info>();
 
+                    redGoals = player_score.num_goals;
                     redScore += player_score.score;
                     int rowY = currentOffset + rowHeight * i + textOffset + vertSpacing * i;
 
@@ -220,7 +224,7 @@ namespace Fab5.Starburst.States {
                 }
                 currentOffset += redTeamHeight + vertSpacing + textOffset;
                 // måla ut lagpoäng
-                GFX_Util.draw_def_text(sprite_batch, "Red team: " + redScore, nameX, currentOffset);
+                GFX_Util.draw_def_text(sprite_batch, "Red team: " + redScore + "        Goals: " + redGoals, nameX, currentOffset);
 
                 // avstånd mellan rutorna
                 currentOffset += 100;
@@ -234,11 +238,11 @@ namespace Fab5.Starburst.States {
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Top, destRect.Width - 8, 4), new Color(col.R, col.G, col.B, 255));
                 GFX_Util.fill_rect(sprite_batch, new Rectangle(destRect.Left + 4, destRect.Bottom - 4, destRect.Width - 8, 4), new Color(col.R, col.G, col.B, 255));
 
-
                 for (int i = 0; i < blueTeam.Count; i++) {
                     Score player_score = blueTeam[i].get_component<Score>();
                     Ship_Info player_info = blueTeam[i].get_component<Ship_Info>();
 
+                    blueGoals = player_score.num_goals;
                     blueScore += player_score.score;
                     int rowY = currentOffset + rowHeight * i + textOffset + vertSpacing * i;
 
@@ -250,7 +254,7 @@ namespace Fab5.Starburst.States {
                 }
                 // måla ut lagpoäng
                 currentOffset += blueTeamHeight + vertSpacing + textOffset;
-                GFX_Util.draw_def_text(sprite_batch, "Blue team: " + blueScore, nameX, currentOffset);
+                GFX_Util.draw_def_text(sprite_batch, "Blue team score: " + blueScore + "        Goals: " + blueGoals, nameX, currentOffset);
 
                 // skriv ut vem som vann
                 currentOffset += 100;

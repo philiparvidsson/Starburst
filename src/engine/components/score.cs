@@ -27,6 +27,7 @@
         public float current_time_span; // Time since starting the increase of score.
         public int num_kills;
         public int num_deaths;
+        public int num_goals = 0;
         public int score_mult = 1;
 
         public Score()
