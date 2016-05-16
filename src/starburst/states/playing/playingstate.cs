@@ -39,7 +39,7 @@ public class Playing_State : Game_State {
             return;
         }
         else if (msg.Equals("start")) {
-            tryPause();
+turbo            tryPause();
         }
         else if(msg.Equals("fullscreen")) {
             Starburst.inst().GraphicsMgr.ToggleFullScreen();
@@ -446,15 +446,20 @@ public class Playing_State : Game_State {
     private Entity new_random_powerup() {
         var types = new Type[] {
             typeof (Turbo_Powerup)
-            /*typeof (Free_Fire_Powerup),
+            typeof (Free_Fire_Powerup),
             typeof (Shield_Powerup),
             typeof (Multifire_Powerup),
             typeof (Bouncy_Bullets_Powerup),
-            typeof (Fast_Bombs_Powerup)*/
+            typeof (Fast_Bombs_Powerup)
             //typeof (Nanobots_Powerup)
         };
 
         var i = rand.Next(0, types.Length);
+
+        if (game_conf.soccer_mode) {
+            i = 0; // only turbo in soccer mode
+        }
+
         object impl = Activator.CreateInstance(types[i]);
 
         return create_entity(Powerup.create((Powerup_Impl)impl));
