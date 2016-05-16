@@ -886,11 +886,18 @@ namespace Fab5.Engine.Subsystems {
             if (ih != null && !ih.enabled) {
                 return;
             }
-            for (int p2 = 0; p2 < currentPlayerNumber; p2++) {
-                var player2 = players[p2];
+            //for (int p2 = 0; p2 < currentPlayerNumber; p2++) {
+            foreach (var player2 in Fab5_Game.inst().get_entities_fast(typeof (Ship_Info))) {
 
-                ih = player2.get_component<Input>();
-                if (ih != null && !ih.enabled) {
+                //var player2 = players[p2];
+
+                var si = player2.get_component<Ship_Info>();
+                if (si != null && si.is_dead) {
+                    continue;
+                }
+
+                if (!player2.has_component<Velocity>()) {
+                    // probably a turret
                     continue;
                 }
 
