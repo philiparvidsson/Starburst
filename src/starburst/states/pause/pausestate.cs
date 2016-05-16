@@ -259,18 +259,6 @@ namespace Fab5.Starburst.States {
             MediaPlayer.Volume = restore_vol;
             Starburst.inst().leave_state();
         }
-
-    
-    private static string player_string(Entity e)
-    {
-        var s = new[] { "one", "two", "three", "four" };
-
-        if (e.has_component<Input>())
-        {
-            return "player " + s[(int)e.get_component<Input>().gp_index - 1];
-        }
-
-        return "bot " + (int)e.get_component<Data>().get_data("ai_index", 0);
-    }
+        
 }
 }
