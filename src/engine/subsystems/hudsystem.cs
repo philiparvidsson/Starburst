@@ -177,7 +177,7 @@
                                   color,
                                   0.0f,
                                   new Vector2(0.5f, 0.5f),
-                                  new Vector2(4.0f, 4.0f),
+                                  new Vector2(6.0f, 6.0f),
                                   SpriteEffects.None,
                                   1.0f);
             }
