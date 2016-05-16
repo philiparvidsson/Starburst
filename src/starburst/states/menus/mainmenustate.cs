@@ -376,6 +376,15 @@ namespace Fab5.Starburst.States {
                 preview = Fab5_Game.inst().get_content<Texture2D>("maps/preview2"),
                 asteroidAmounts = new int[]{ 5, 10, 20 }
             });
+            maps.Add(new MapConfig() {
+                fileName = "map3_soccer.png",
+                mapName = "Soccer",
+                bots = false,
+                soccerBall = true,
+                gameMode = Playing.Game_Config.GM_TEAM_DEATHMATCH,
+                preview = Fab5_Game.inst().get_content<Texture2D>("maps/preview2"),
+                asteroidAmounts = new int[]{ 5, 10, 20 }
+            });
             updateMapSettings();
         }
 
