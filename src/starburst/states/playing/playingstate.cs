@@ -333,6 +333,8 @@ public class Playing_State : Game_State {
         var turbo2 = create_entity(Powerup.create(new Turbo_Powerup()));
         turbo2.get_component<Position>().x = 1500.0f; turbo2.get_component<Position>().y = -1500.0f;*/
 
+        Dummy_Enemy.ai_index = 1;
+
         for(int i = 0; i < game_conf.red_bots; i++) {
             var ai = Starburst.inst().create_entity(Dummy_Enemy.create_components(game_conf, 1 /* red team */));
             var aisi = ai.get_component<Ship_Info>();
