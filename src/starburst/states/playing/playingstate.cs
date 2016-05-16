@@ -119,7 +119,10 @@ public class Playing_State : Game_State {
                         typeof (Red_Fountain),
                         typeof (Blue_Fountain),
                         typeof (Red_Turret),
-                        typeof (Blue_Turret)
+                        typeof (Blue_Turret),
+                        typeof (Lamp),
+                        typeof (Red_Lamp),
+                        typeof (Blue_Lamp),
                     };
 
                     int k = c.R % types.Length;
@@ -333,9 +336,9 @@ public class Playing_State : Game_State {
         for(int i = 0; i < game_conf.red_bots; i++) {
             var ai = Starburst.inst().create_entity(Dummy_Enemy.create_components(game_conf, 1 /* red team */));
             var aisi = ai.get_component<Ship_Info>();
-            aisi.team = 1;
-            Console.WriteLine("created ai for team {0}", 1);
-            ai.get_component<Bounding_Circle>().ignore_collisions2 = 1;
+            if (game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH) aisi.team = 1;
+            Console.WriteLine("created ai for team {0}", aisi.team);
+            ai.get_component<Bounding_Circle>().ignore_collisions2 = aisi.team;
             var ai_spawn = spawner.get_player_spawn_pos(ai, tile_map);
             ai.get_component<Position>().x = ai_spawn.x;
             ai.get_component<Position>().y = ai_spawn.y;
@@ -376,9 +379,9 @@ public class Playing_State : Game_State {
         for(int i = 0; i < game_conf.blue_bots; i++) {
             var ai = Starburst.inst().create_entity(Dummy_Enemy.create_components(game_conf, 2 /* blue team */));
             var aisi = ai.get_component<Ship_Info>();
-            aisi.team = 2;
-            Console.WriteLine("created ai for team {0}", 2);
-            ai.get_component<Bounding_Circle>().ignore_collisions2 = 2;
+            if (game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH) aisi.team = 2;
+            Console.WriteLine("created ai for team {0}", aisi.team);
+            ai.get_component<Bounding_Circle>().ignore_collisions2 = aisi.team;
             var ai_spawn = spawner.get_player_spawn_pos(ai, tile_map);
             ai.get_component<Position>().x = ai_spawn.x;
             ai.get_component<Position>().y = ai_spawn.y;
