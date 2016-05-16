@@ -161,7 +161,7 @@
 
                 var color = Color.White;
                 if (((Playing_State)team_mate.state).game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH && team_mate != player) {
-                    color = (tm_team == 1) ? Color.Red : Color.Blue;
+                    color = (tm_team == 1) ? Color.Red : new Color(0.1f, 0.5f, 1.0f);
                 }
 
                 var position = team_mate.get_component<Position>();

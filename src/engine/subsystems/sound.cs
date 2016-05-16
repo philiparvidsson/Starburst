@@ -107,7 +107,7 @@ namespace Fab5.Engine.Subsystems
 
         public override void on_message(string msg, dynamic data)
         {
-            var volume = 1.0;
+            //var volume = 1.0;
             if (msg == "play_sound_asset")
             {
                 string asset = data.name;
@@ -118,7 +118,7 @@ namespace Fab5.Engine.Subsystems
                     asset = soundlib[asset];
                 }
 
-                //Console.WriteLine("playing " + asset);
+                Console.WriteLine("playing " + asset);
 
                 var varying_pitchprop = data.GetType().GetProperty("varying_pitch");
                 float pitchval = 0.0f;
@@ -129,7 +129,13 @@ namespace Fab5.Engine.Subsystems
                 var sound_effect = Fab5_Game.inst().get_content<SoundEffect>(asset);
                 if (varying_pitch)
                     pitchval = 0.2f * (float)Math.Sign((float)rand.NextDouble() - 0.5f) * (float)Math.Pow(rand.NextDouble(), 3.0f);
-                sound_effect.Play(volume: 1, pitch: (float)(pitchval), pan: 0);
+                var vol = 1.0f;
+
+                if (data.GetType().GetProperty("pos") != null) {
+                    vol = ShouldBePlayed((Position)data.pos);
+                }
+
+                sound_effect.Play(volume: vol, pitch: (float)(pitchval), pan: 0);
                 return;
             }
             else if (msg == "play_song_asset")
@@ -371,7 +377,7 @@ namespace Fab5.Engine.Subsystems
             }
 
             var r = (float)Math.Sqrt(min_dist);
-            r *= 2.0f/(float)Fab5_Game.inst().GraphicsMgr.PreferredBackBufferWidth;
+            r *= 3.0f/(float)Fab5_Game.inst().GraphicsMgr.PreferredBackBufferWidth;
             return (float)Math.Min(1.0f, 1.0f/(r*r));
         }
 
