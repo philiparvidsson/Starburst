@@ -29,7 +29,7 @@ public static class Red_Fountain {
                     return new Component[] {
                         new Sprite {
                             blend_mode  = Sprite.BM_ADD,
-                            color       = new Color(1.0f, 0.05f, 0.05f, 0.7f),
+                            color       = new Color(1.0f, 0.1f, 0.1f, 0.7f),
                             layer_depth = 0.3f,
                             scale       = 2.5f,
                             texture     = tex

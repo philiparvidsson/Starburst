@@ -63,7 +63,7 @@
             }
             else if (conf.mode == Game_Config.GM_TEAM_DEATHMATCH) {
                 ig_value = team;
-                intensity = 0.6f;
+                intensity = 0.5f;
 
                 if (team == 1) {
                     teamColor = new Color(1.0f,0.3f,0.3f);
