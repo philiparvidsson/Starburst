@@ -424,8 +424,14 @@ namespace Fab5.Starburst.States.Playing {
         Score shooterScore = bulletInfo.sender.get_component<Score>();
         var vx = bullet.get_component<Velocity>().x;
         var vy = bullet.get_component<Velocity>().y;
+        var velo = player.get_component<Velocity>();
+        var velo2 = bullet.get_component<Velocity>();
+        var cspeed = Math.Sqrt(Math.Pow(velo.x, 2) + Math.Pow(velo.y, 2));
+        var cspeed2 = Math.Sqrt(Math.Pow(velo2.x, 2) + Math.Pow(velo2.y, 2));
+        var colspeed = (float)Math.Abs(cspeed - cspeed2 * ((velo.x * velo2.x + velo.y * velo2.y) / (cspeed * cspeed2)));
+
         float bulletSpeed = (float)Math.Sqrt(vx*vx+vy*vy);
-        var fac = (float)Math.Max(0.7f, Math.Min(1.2f, bulletSpeed/bulletInfo.max_speed));
+        var fac = (float)Math.Max(0.7f, Math.Min(1.2f, colspeed/bulletInfo.max_speed));
         float bulletDamage = bulletInfo.damage * fac;
 
         /*if (playerShip.team == bulletInfo.sender.get_component<Ship_Info>().team) {
