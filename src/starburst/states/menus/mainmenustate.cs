@@ -225,7 +225,7 @@ namespace Fab5.Starburst.States {
 
         private void updateMapSettings() {
             MapConfig currentMap = maps[currentMapIndex];
-            map0 = maps[currentMapIndex > 1 ? currentMapIndex-1 : maps.Count-1].preview;
+            map0 = maps[currentMapIndex > 0 ? currentMapIndex-1 : maps.Count-1].preview;
             map1 = currentMap.preview;
             map2 = maps[currentMapIndex < maps.Count-1 ? currentMapIndex+1 : 0].preview;
 
@@ -480,13 +480,13 @@ namespace Fab5.Starburst.States {
                 smallMapSize = (int)(largeMapSize * .75f);
             }
 
-            // map-animation
+            // map-animation vid navigation
             int animDistance = 150;
             int startY = currentTopY - animDistance;
             if (t - startTime < animateInTime)
                 currentTopY = (int)Easing.CubicEaseOut((t - startTime), startY, animDistance, animateInTime);
 
-            //map-switch-animation
+            // map-switch-animation
             float mapAnimationSize = smallMapSize;
             float currentMapSize = largeMapSize;
             if(animateMap)
@@ -497,8 +497,8 @@ namespace Fab5.Starburst.States {
             sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, currentTopY), Color.White);
 
             int mapY = currentTopY+50;
-            sprite_batch.Draw(map0, new Rectangle((int)(vp.Width*.5f - largeMapSize*.5f - smallMapSize - 20), (int)(mapY + (largeMapSize - smallMapSize) * .5f), smallMapSize, smallMapSize), Color.White*0.5f);
-            sprite_batch.Draw(map2, new Rectangle((int)(vp.Width*.5f + largeMapSize * .5f + 20), (int)(mapY + (largeMapSize-smallMapSize)*.5f), smallMapSize, smallMapSize), Color.White*0.5f);
+            sprite_batch.Draw(map0, new Rectangle((int)(vp.Width*.5f - (currentMapSize* .85f + currentMapSize * .15f) * .5f - smallMapSize - 20), (int)(mapY + (largeMapSize - smallMapSize) * .5f), smallMapSize, smallMapSize), Color.White*0.5f);
+            sprite_batch.Draw(map2, new Rectangle((int)(vp.Width*.5f + (currentMapSize*.85f + currentMapSize*.15f) * .5f + 20), (int)(mapY + (largeMapSize-smallMapSize)*.5f), smallMapSize, smallMapSize), Color.White*0.5f);
             sprite_batch.Draw(map1, new Rectangle((int)(vp.Width*.5f - currentMapSize * .5f), (int)(mapY + (largeMapSize-currentMapSize)*.5f), (int)currentMapSize, (int)currentMapSize), Color.White);
 
             String arrow = "<";
@@ -558,12 +558,12 @@ namespace Fab5.Starburst.States {
 
             MapConfig currentMap = maps[currentMapIndex];
             if (currentMap.bots) {
-                sprite_batch.DrawString(font, (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH) ? "AI Player" : "Red AI Players", new Vector2(leftTextX, settingOffset + rowHeight * 4), Color.White);
-                sprite_batch.DrawString(font, "< " + (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH ? (redBots == 0 ? "off" : (redBots * 2).ToString()) : redBots == 0 ? "off" : redBots.ToString()) + " >", new Vector2(rightTextX, settingOffset + rowHeight * 4), (position.y == (int)options.redBots ? new Color(Color.Gold, textOpacity) : Color.White));
+                sprite_batch.DrawString(font, (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH) ? "AI Players" : "Red AI Players", new Vector2(leftTextX, settingOffset + rowHeight * 4), Color.White);
+                sprite_batch.DrawString(font, "< " + (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH ? (redBots == 0 ? "off" : (redBots * 2).ToString() + " players") : redBots == 0 ? "off" : redBots.ToString() + " players") + " >", new Vector2(rightTextX, settingOffset + rowHeight * 4), (position.y == (int)options.redBots ? new Color(Color.Gold, textOpacity) : Color.White));
 
                 if(currentMap.gameMode == Playing.Game_Config.GM_TEAM_DEATHMATCH) {
                     sprite_batch.DrawString(font, "Blue AI Players", new Vector2(leftTextX, settingOffset + rowHeight * 5), Color.White);
-                    sprite_batch.DrawString(font, "< " + (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH ? (blueBots == 0 ? "off" : (blueBots * 2).ToString()) : blueBots == 0 ? "off" : blueBots.ToString()) + " >", new Vector2(rightTextX, settingOffset + rowHeight * 5), (position.y == (int)options.blueBots ? new Color(Color.Gold, textOpacity) : Color.White));
+                    sprite_batch.DrawString(font, "< " + (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH ? (blueBots == 0 ? "off" : (blueBots * 2).ToString() + " players") : blueBots == 0 ? "off" : blueBots.ToString() + " players") + " >", new Vector2(rightTextX, settingOffset + rowHeight * 5), (position.y == (int)options.blueBots ? new Color(Color.Gold, textOpacity) : Color.White));
                 }
             }
 
