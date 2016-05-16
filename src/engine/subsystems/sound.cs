@@ -107,6 +107,7 @@ namespace Fab5.Engine.Subsystems
 
         public override void on_message(string msg, dynamic data)
         {
+            var volume = 1.0;
             if (msg == "play_sound_asset")
             {
                 string asset = data.name;
@@ -117,16 +118,13 @@ namespace Fab5.Engine.Subsystems
                     asset = soundlib[asset];
                 }
 
-                Console.WriteLine("playing " + asset);
+                //Console.WriteLine("playing " + asset);
 
+                var varying_pitchprop = data.GetType().GetProperty("varying_pitch");
                 float pitchval = 0.0f;
                 bool varying_pitch = false;
-                try
-                {
-                    varying_pitch = data.varying_pitch;
-                }
-                catch (Exception) { }
-
+                if (varying_pitchprop != null)
+                    varying_pitch = varying_pitchprop;
 
                 var sound_effect = Fab5_Game.inst().get_content<SoundEffect>(asset);
                 if (varying_pitch)
@@ -156,71 +154,95 @@ namespace Fab5.Engine.Subsystems
                     }
                 });
             }
+            else if (msg == "weapon_fired")
+            {
+                var p1 = data.entity1.get_component<Position>();
+                var vol = ShouldBePlayed(p1);
+                if (vol > 0)
+                    Fab5_Game.inst().message("play_sound", new { name = data.name, volume = vol, varying_pitch = true });
+                else
+                    return;
+            }
+            else if (msg == "turretsound")
+            {
+                var p1 = data.entity1.get_component<Position>();
+                var vol = ShouldBePlayed(p1);
+                if (vol > 0)
+                    Fab5_Game.inst().message("play_sound", new { name = "turret", volume = vol, varying_pitch = true });
+                else
+                    return;
+            }
             // ifsatserna ovanför är temporära tills tobbe implementerar något så vi kan spela upp ljud när vi vill :-)
             else if (msg == "collision")
             {
-                var p1 = new Position() { x = data.c_x, y = data.c_y };
-                if (data.entity2 == null)
-                {
-                    var texttureName = data.entity1.get_component<Sprite>().texture.Name;
-                    if (texttureName.Contains("ship"))
-                        Fab5_Game.inst().message("play_sound", new { pos = p1, name = "bang2", });
-                    else if (texttureName.Contains("beams1"))
-                        Fab5_Game.inst().message("play_sound", new { name = "laser_impact", pos = p1 });
-                    else if (texttureName.Contains("beams2"))
-                        Fab5_Game.inst().message("play_sound", new { name = "knock1m", pos = p1 });
-                }
-                else
+                var p1 = data.entity1.get_component<Position>();
+                var vol = ShouldBePlayed(p1);
+                if (vol != 0)
                 {
 
-                    var e1 = data.entity1;
-                    var e2 = data.entity2;
+                    if (data.entity2 == null)
+                    {
+                        var e1 = data.entity1;
+                        Velocity velo = e1.get_component<Velocity>();
+                        var speed = Math.Sqrt(Math.Pow(velo.x, 2) + Math.Pow(velo.y, 2));
+                        var texttureName = data.entity1.get_component<Sprite>().texture.Name;
+                        if (texttureName.Contains("ship") && speed > 27)
+                            Fab5_Game.inst().message("play_sound", new { pos = p1, name = "bang2", volume = volume });
+                        else if (texttureName.Contains("beams1"))
+                            Fab5_Game.inst().message("play_sound", new { name = "laser_impact", pos = p1, volume = volume });
+                        else if (texttureName.Contains("beams2"))
+                            Fab5_Game.inst().message("play_sound", new { name = "knock1m", pos = p1, volume = volume });
+                    }
+                    else
+                    {
 
-                    //Decide which soound to play based on speeed
-                    Velocity velo = e1.get_component<Velocity>();
-                    Velocity velo2 = e2.get_component<Velocity>();
-                    Input input = e1.get_component<Input>();
+                        var e1 = data.entity1;
+                        var e2 = data.entity2;
 
-                    var sprite1 = data.entity1.get_component<Sprite>();
-                    var sprite2 = data.entity2.get_component<Sprite>();
+                        //Decide which soound to play based on speeed
+                        Velocity velo = e1.get_component<Velocity>();
+                        Velocity velo2 = e2.get_component<Velocity>();
 
-                    if (sprite1 == null || sprite2 == null)
-                        return;
+                        var sprite1 = data.entity1.get_component<Sprite>();
+                        var sprite2 = data.entity2.get_component<Sprite>();
 
-                    var texttureName = sprite1.texture.Name;
-                    var texttureName2 = sprite2.texture.Name;
+                        if (sprite1 == null || sprite2 == null)
+                            return;
 
-                    var speed = Math.Sqrt(Math.Pow(velo.x, 2) + Math.Pow(velo.y, 2));
-                    var speed2 = Math.Sqrt(Math.Pow(velo2.x, 2) + Math.Pow(velo2.y, 2));
-                    var coolspeed = speed - speed2 * ((velo.x * velo2.x + velo.y * velo2.y) / (speed * speed2));
-                    Console.WriteLine(texttureName + texttureName2);
+                        var texttureName = sprite1.texture.Name;
+                        var texttureName2 = sprite2.texture.Name;
 
-                    if (input == null) input = new Input();
+                        var speed = Math.Sqrt(Math.Pow(velo.x, 2) + Math.Pow(velo.y, 2));
+                        var speed2 = Math.Sqrt(Math.Pow(velo2.x, 2) + Math.Pow(velo2.y, 2));
+                        var colspeed = speed - speed2 * ((velo.x * velo2.x + velo.y * velo2.y) / (speed * speed2));
 
-
-                    if ((texttureName.Contains("ship") && texttureName2 == "soccerball") || (texttureName == "soccerball" && texttureName2.Contains("ship")))
-                        Fab5_Game.inst().message("play_sound", new { name = "BatmanPunch", pos = p1, gp_index = input.gp_index });
-                    else if ((texttureName.Contains("asteroid") && texttureName2.Contains("ship")) || (texttureName2.Contains("asteroid") && texttureName.Contains("ship")))
-                        Fab5_Game.inst().message("play_sound", new { name = "rockslide_small", pos = p1, gp_index = input.gp_index });
-                    else if (texttureName.Contains("ship") && texttureName2.Contains("ship"))
-                        Fab5_Game.inst().message("play_sound", new { name = "bang", pos = p1, gp_index = input.gp_index });
-                    else if (texttureName.Contains("beams1") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams1"))
-                        Fab5_Game.inst().message("play_sound", new { name = "laser_impact", pos = p1 });
-                    else if (texttureName.Contains("beams2") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams2"))
-                        Fab5_Game.inst().message("play_sound", new { name = "small_explosion", pos = p1 });
-                    else if (texttureName.Contains("powerup") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("powerup"))
-                        Fab5_Game.inst().message("play_sound", new { name = "pickup", pos = p1 });
+                        if (colspeed > 27)
+                        {
+                            if ((texttureName.Contains("ship") && texttureName2 == "soccerball") || (texttureName == "soccerball" && texttureName2.Contains("ship")))
+                                Fab5_Game.inst().message("play_sound", new { name = "BatmanPunch", pos = p1, volume = volume });
+                            else if ((texttureName.Contains("asteroid") && texttureName2.Contains("ship")) || (texttureName2.Contains("asteroid") && texttureName.Contains("ship")))
+                                Fab5_Game.inst().message("play_sound", new { name = "rockslide_small", pos = p1, volume = volume });
+                            else if (texttureName.Contains("ship") && texttureName2.Contains("ship"))
+                                Fab5_Game.inst().message("play_sound", new { name = "bang", pos = p1, volume = volume });
+                            else if (texttureName.Contains("beams1") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams1"))
+                                Fab5_Game.inst().message("play_sound", new { name = "laser_impact", pos = p1, volume = volume });
+                            else if (texttureName.Contains("beams2") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams2"))
+                                Fab5_Game.inst().message("play_sound", new { name = "small_explosion", pos = p1, volume = volume });
+                            else if (texttureName.Contains("powerup") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("powerup"))
+                                Fab5_Game.inst().message("play_sound", new { name = "pickup", pos = p1, volume = volume });
+                        }
+                    }
                 }
-
             }
             else if (msg == "play_sound")
             {
-                //var property = data.GetType().GetProperty("pos");
-                //Position pos;
-                //if (property == null)
-                //    pos = new Position() { x = 1, y = 2 };
-                //else
-                //    pos = data.pos;
+                var varying_pitchprop = data.GetType().GetProperty("varying_pitch");
+                float pitchval = 0.0f;
+                bool varying_pitch = false;
+                if (varying_pitchprop != null)
+                    varying_pitch = true;
+
+
                 var entities = Fab5_Game.inst().get_entities_fast(typeof(SoundLibrary));
                 int num_components = entities.Count;
                 for (int i = 0; i < num_components; i++)
@@ -233,7 +255,7 @@ namespace Fab5.Engine.Subsystems
                     {
                         var gp_index = data.GetType().GetProperty("gp_index");
                         effect = lib.Library[data.name] as Fab5SoundEffect;
-
+                        //thrust uses this
                         if (gp_index != null)
                         {
                             if (!lib.ActiveSoundIns.ContainsKey(data.name + data.gp_index))
@@ -244,7 +266,7 @@ namespace Fab5.Engine.Subsystems
                             }
                             else
                             {
-                                if ((DateTime.Now - effect.LastPlayed).Seconds > 0.01)
+                                if ((DateTime.Now - effect.LastPlayed).Seconds > 0.5)
                                 {
                                     var active = lib.ActiveSoundIns[data.name + data.gp_index] as ActiveSound;
                                     if (active.SoundEffectIns.State == SoundState.Stopped)
@@ -257,28 +279,9 @@ namespace Fab5.Engine.Subsystems
                         }
                         else
                         {
-                            var pitchval = 0.2f * (float)Math.Sign((float)rand.NextDouble() - 0.5f) * (float)Math.Pow(rand.NextDouble(), 3.0f);
-                            if (data.name == "LaserBlaster")
-                            {
-                                effect.SoundEffect.Play(volume: 1, pitch: (float)(pitchval), pan: 0);
-                            }
-                            else if (data.name == "LaserBlaster2")
-                            {
-                                effect.SoundEffect.Play(volume: 1, pitch: (float)(pitchval), pan: 0);
-                            }
-                            else if (lib.ActiveSoundIns.ContainsKey(data.name))
-                            {
-                                var active = lib.ActiveSoundIns[data.name] as ActiveSound;
-                                //if (active.SoundEffectIns.State == SoundState.Stopped)
-                                active.SoundEffectIns.Stop();
-                                active.SoundEffectIns.Play();
-                            }
-                            else
-                            {
-                                var ins = effect.SoundEffect.CreateInstance();
-                                ins.Play();
-                                lib.ActiveSoundIns.Add(data.name, new ActiveSound() { SoundEffectIns = ins });
-                            }
+                            if (varying_pitch)
+                                pitchval = 0.2f * (float)Math.Sign((float)rand.NextDouble() - 0.5f) * (float)Math.Pow(rand.NextDouble(), 3.0f);
+                            effect.SoundEffect.Play(volume: (float)data.volume,pan:0,pitch:pitchval);
                         }
                     }
                     else if (music != null)
@@ -310,12 +313,6 @@ namespace Fab5.Engine.Subsystems
             }
             else if (msg == "stop_sound")
             {
-                //var property = data.GetType().GetProperty("pos");
-                //Position pos;
-                //if (property == null)
-                //    pos = new Position() { x = 1, y = 2 };
-                //else
-                //    pos = data.pos;
                 var entities = Fab5_Game.inst().get_entities_fast(typeof(SoundLibrary));
                 int num_components = entities.Count;
                 for (int i = 0; i < num_components; i++)
@@ -335,6 +332,27 @@ namespace Fab5.Engine.Subsystems
                     }
                 }
             }
+        }
+        public static float ShouldBePlayed(Position p1)
+        {
+            float[] volume = new float[4];
+            var entities = Fab5_Game.inst().get_entities_fast(typeof(Input));
+            var num_entites = entities.Count;
+            for (int i = 0; i < num_entites; i++)
+            {
+                var entity = entities[i];
+                var playerpos = entity.get_component<Position>();
+                var r = Math.Sqrt((Math.Pow((playerpos.y - p1.y), 2) + Math.Pow((playerpos.x - p1.x), 2)));
+                var playerscreensizeWidth = Fab5_Game.inst().GraphicsMgr.PreferredBackBufferWidth / num_entites;
+                var playerscreensizeHeight = Fab5_Game.inst().GraphicsMgr.PreferredBackBufferHeight / num_entites;
+
+                if (r <= playerscreensizeWidth || r <= playerscreensizeWidth)
+                    volume[i] = 1f;
+                else
+                    volume[i] = 0;
+                
+            }
+            return volume.Max();
         }
     }
 }
