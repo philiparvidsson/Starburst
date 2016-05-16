@@ -88,6 +88,7 @@
     <Compile Include="src\starburst\components\bulletinfo.cs" />
     <Compile Include="src\starburst\gfxutil.cs" />
     <Compile Include="src\starburst\states\menus\entities\player.cs" />
+    <Compile Include="src\starburst\states\menus\mapconfig.cs" />
     <Compile Include="src\starburst\states\menus\resultsstate.cs" />
     <Compile Include="src\starburst\states\menus\playerselectionmenu.cs" />
     <Compile Include="src\starburst\states\menus\mainmenustate.cs" />
@@ -153,10 +154,6 @@
     <Content Include="src\starburst\content\light.png" />
     <Content Include="src\starburst\content\lightcone.png" />
     <Content Include="src\starburst\content\map.png" />
-    <Content Include="src\starburst\content\maps\map1.png" />
-    <Content Include="src\starburst\content\maps\map2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="src\starburst\content\maps\preview1.png" />
     <Content Include="src\starburst\content\maps\preview2.png" />
     <Content Include="src\starburst\content\map\bgtiles.png" />

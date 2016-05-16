@@ -1,14 +1,13 @@
 namespace Fab5.Starburst.States {
 
-    using Fab5.Engine;
-    using Fab5.Engine.Components;
-    using Fab5.Engine.Core;
-    using Fab5.Engine.Subsystems;
+    using Engine;
+    using Engine.Components;
+    using Engine.Core;
+    using Engine.Subsystems;
 
-    using Fab5.Starburst.States.Playing.Entities;
+    using Playing.Entities;
     using Main_Menu.Entities;
     using Main_Menu.Subsystems;
-    using Menus.Subsystems;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Media;
@@ -16,6 +15,7 @@ namespace Fab5.Starburst.States {
 
     using System;
     using System.Collections.Generic;
+    using Menus.Subsystems;
     public class Main_Menu_State : Game_State {
         Texture2D background;
         Texture2D rectBg;
@@ -25,6 +25,7 @@ namespace Fab5.Starburst.States {
         List<bool> gamepads;
         public Entity soundMgr;
 
+        // animation
         private const float BTN_DELAY = .25f;
         float animateInTime = 1.4f;
         float startTime;
@@ -42,11 +43,10 @@ namespace Fab5.Starburst.States {
         enum options {
             map,
             time,
-            mode,
-            soccer,
-            //flag,
             asteroids,
             powerups,
+            redBots,
+            blueBots,
             proceed
         };
         enum Amount {
@@ -55,28 +55,28 @@ namespace Fab5.Starburst.States {
             medium,
             many
         }
-        bool soccerModeEnabled = true; // game modes inställning för fotboll
-        //bool ctfModeEnabled = false;
-        bool soccerMapEnabled = true; // kartans inställning för fotboll (ska hämtas från mapconfig när det läggs till)
-
         enum GameTime {
-            Three,
             Five,
-            Ten
+            Ten,
+            Twenty,
+            Thirty
         }
-        GameTime gameTime = GameTime.Three;
 
-        int gameMode = 0; // 0 för team, 1 för free for all
-        bool soccerball = true; // fotboll
-        //bool captureTheFlag = false;
+        List<MapConfig> maps; // lista för maps
+        
+        // meny-inställningar med default-värden
+        GameTime gameTime = GameTime.Five;
         Amount asteroidCount = Amount.medium;
         Amount powerupCount = Amount.medium;
-        int map = 1;
-        int maps = 2;
-        public Playing.Game_Config gameConfig;
-        private Texture2D map1;
-        private Texture2D map0;
-        private Texture2D map2;
+
+        int currentMapIndex;
+        int gameMode;
+        int redBots, blueBots;
+        private const int MaxNumBots = 10;
+
+        public Playing.Game_Config gameConfig; //configen som ska skickas till playingstate
+        
+        // gui-saker
         private int largeMapSize = 256;
         private int smallMapSize = 192;
 
@@ -96,6 +96,10 @@ namespace Fab5.Starburst.States {
         int yPos;
         private bool started;
 
+        private Texture2D map0;
+        private Texture2D map1;
+        private Texture2D map2;
+
         public override void on_message(string msg, dynamic data) {
 
             if (btnDelay <= 0) {
@@ -104,61 +108,13 @@ namespace Fab5.Starburst.States {
                     Starburst.inst().GraphicsMgr.ToggleFullScreen();
                 }
                 else if (msg.Equals("up")) {
-                    var entities = Starburst.inst().get_entities_fast(typeof(Position));
-                    Entity entity = entities[0];
-                    var position = entity.get_component<Position>();
-                    if (position.y > 0) {
-                        position.y -= 1;
-                        position.x = 0;
-                        Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
-                    }
+                    moveUp();
                 }
                 else if (msg.Equals("down")) {
                     moveDown();
                 }
                 else if (msg.Equals("left")) {
-                    var entities = Starburst.inst().get_entities_fast(typeof(Input));
-                    Entity cursor = entities[0];
-                    Position cursorPosition = cursor.get_component<Position>();
-
-                    if (cursorPosition.y == (int)options.mode) {
-                        gameMode = (gameMode == 0 ? 1 : 0);
-                        soccerModeEnabled = (gameMode == 0);
-                    }
-                    else if (cursorPosition.y == (int)options.soccer && soccerModeEnabled && soccerMapEnabled)
-                        soccerball = !soccerball;
-                    /*
-                    else if (cursorPosition.y == (int)options.flag && ctfModeEnabled)
-                        captureTheFlag = !captureTheFlag;
-                    */
-                    else if (cursorPosition.y == (int)options.time) {
-                        if (gameTime == GameTime.Three)
-                            gameTime = GameTime.Ten;
-                        else
-                            gameTime--;
-                    }
-                    else if (cursorPosition.y == (int)options.asteroids) {
-                        if (asteroidCount == Amount.off)
-                            asteroidCount = Amount.many;
-                        else
-                            asteroidCount--;
-                    }
-                    else if (cursorPosition.y == (int)options.powerups) {
-                        if (powerupCount == Amount.off)
-                            powerupCount = Amount.many;
-                        else
-                            powerupCount--;
-                    }
-                    else if (cursorPosition.y == (int)options.map) {
-                        if (map <= 1) {
-                            map = maps;
-                        }
-                        else
-                            map--;
-                        soccerMapEnabled = (map != 2);
-                        updateMaps();
-                    }
-                    Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
+                    moveLeft();
                 }
                 else if (msg.Equals("right")) {
                     moveRight();
@@ -167,11 +123,8 @@ namespace Fab5.Starburst.States {
                     var entities = Starburst.inst().get_entities_fast(typeof(Input));
                     Entity cursor = entities[0];
                     Position cursorPosition = cursor.get_component<Position>();
-                    if (cursorPosition.y == (int)options.proceed) {
-                        proceed();
-                    }
-                    else
-                        moveRight();
+                    if (cursorPosition.y == (int)options.proceed) proceed();
+                    else moveRight();
                 }
                 else if (msg.Equals("start")) {
                     proceed();
@@ -185,65 +138,106 @@ namespace Fab5.Starburst.States {
         private void moveDown() {
             var entities = Starburst.inst().get_entities_fast(typeof(Position));
             Entity entity = entities[0];
+            Position cursorPosition = entity.get_component<Position>();
+
+            if (cursorPosition.y == (int)options.powerups)
+                cursorPosition.y = (!maps[currentMapIndex].bots) ? (int)options.proceed : cursorPosition.y + 1;
+            else if (cursorPosition.y == (int)options.redBots && maps[currentMapIndex].gameMode == Playing.Game_Config.GM_DEATHMATCH)
+                cursorPosition.y = (int)options.proceed;
+            else if (cursorPosition.y < (int)options.proceed)
+                cursorPosition.y++;
+        }
+
+        private void moveUp() {
+            var entities = Starburst.inst().get_entities_fast(typeof(Position));
+            Entity entity = entities[0];
             var position = entity.get_component<Position>();
-            if (position.y < (int)options.proceed) {
-                position.y += 1;
+
+            if (position.y == (int)options.proceed) {
+                if (maps[currentMapIndex].bots)
+                    position.y = (maps[currentMapIndex].gameMode == Playing.Game_Config.GM_DEATHMATCH) ? (int)options.redBots : position.y-1;
+                else
+                    position.y = (int)options.powerups;
+            }
+            else if (position.y > 0) {
+                position.y--;
                 Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
             }
+        }
+
+        private void moveLeft() {
+            var entities = Starburst.inst().get_entities_fast(typeof(Position));
+            Entity entity = entities[0];
+            var cursorPosition = entity.get_component<Position>();
+
+            if (cursorPosition.y == (int)options.map) {
+                currentMapIndex = (currentMapIndex == 0) ? maps.Count-1 : currentMapIndex - 1;
+                updateMapSettings();
+            }
+            else if (cursorPosition.y == (int)options.time) {
+                gameTime = gameTime == 0 ? GameTime.Thirty : gameTime - 1;
+            }
+            else if (cursorPosition.y == (int)options.asteroids) {
+                asteroidCount = asteroidCount == 0 ? Amount.many : asteroidCount - 1;
+            }
+            else if (cursorPosition.y == (int)options.powerups) {
+                powerupCount = powerupCount == 0 ? Amount.many : powerupCount - 1;
+            }
+            else if (cursorPosition.y == (int)options.redBots) {
+                redBots = redBots == 0 ? MaxNumBots : redBots - 1;
+            }
+            else if (cursorPosition.y == (int)options.blueBots) {
+                blueBots = blueBots == 0 ? MaxNumBots : blueBots - 1;
+            }
+            Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
         }
         private void moveRight() {
             var entities = Starburst.inst().get_entities_fast(typeof(Input));
             Entity cursor = entities[0];
             Position cursorPosition = cursor.get_component<Position>();
 
-            if (cursorPosition.y == (int)options.mode) {
-                gameMode = (gameMode == 0 ? 1 : 0);
-                soccerModeEnabled = (gameMode == 0);
+            if (cursorPosition.y == (int)options.map) {
+                currentMapIndex = (currentMapIndex == maps.Count - 1) ? 0 : currentMapIndex + 1;
+                updateMapSettings();
             }
             else if (cursorPosition.y == (int)options.time) {
-                if (gameTime == GameTime.Ten)
-                    gameTime = GameTime.Three;
-                else
-                    gameTime++;
+                gameTime = gameTime == GameTime.Thirty ? 0 : gameTime+1;
             }
-            else if (cursorPosition.y == (int)options.soccer && soccerModeEnabled && soccerMapEnabled)
-                soccerball = !soccerball;
-            /*
-            else if (cursorPosition.y == (int)options.flag && ctfModeEnabled)
-                captureTheFlag = !captureTheFlag;
-            */
             else if (cursorPosition.y == (int)options.asteroids) {
-                if (asteroidCount == Amount.many)
-                    asteroidCount = Amount.off;
-                else
-                    asteroidCount++;
+                asteroidCount = asteroidCount == Amount.many ? 0 : asteroidCount+1;
             }
             else if (cursorPosition.y == (int)options.powerups) {
-                if (powerupCount == Amount.many)
-                    powerupCount = Amount.off;
-                else
-                    powerupCount++;
+                powerupCount = powerupCount == Amount.many ? 0 : powerupCount + 1;
             }
-            else if (cursorPosition.y == (int)options.map) {
-                if (map == maps)
-                    map = 1;
-                else
-                    map++;
-                soccerMapEnabled = (map != 2);
-                updateMaps();
+            else if(cursorPosition.y == (int)options.redBots) {
+                redBots = redBots == MaxNumBots ? 0 : redBots + 1;
+            }
+            else if (cursorPosition.y == (int)options.blueBots) {
+                blueBots = blueBots == MaxNumBots ? 0 : blueBots + 1;
             }
             Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
         }
 
-        private void updateMaps() {
-            map0 = Starburst.inst().get_content<Texture2D>("maps/preview" + (map > 1 ? map-1 : maps));
-            map1 = Starburst.inst().get_content<Texture2D>("maps/preview" + map);
-            map2 = Starburst.inst().get_content<Texture2D>("maps/preview" + (map < maps ? map+1 : 1));
+        private void updateMapSettings() {
+            MapConfig currentMap = maps[currentMapIndex];
+            map0 = maps[currentMapIndex > 1 ? currentMapIndex-1 : maps.Count-1].preview;
+            map1 = currentMap.preview;
+            map2 = maps[currentMapIndex < maps.Count-1 ? currentMapIndex+1 : 0].preview;
+
+            gameMode = currentMap.gameMode;
         }
 
         private void proceed() {
-            int asteroid = 0;
-            if (map != 2) {
+            int time = 5;
+            if (gameTime == GameTime.Ten)
+                time = 10;
+            else if (gameTime == GameTime.Twenty)
+                time = 20;
+            else if (gameTime == GameTime.Thirty)
+                time = 30;
+
+            int asteroid = (asteroidCount == 0) ? 0 : maps[currentMapIndex].asteroidAmounts[(int)asteroidCount];
+            if (currentMapIndex != 2) {
                 if (asteroidCount == Amount.few)
                     asteroid = 20;
                 else if (asteroidCount == Amount.medium)
@@ -259,6 +253,7 @@ namespace Fab5.Starburst.States {
                 else if (asteroidCount == Amount.many)
                     asteroid = 25;
             }
+
             int powerup = 0;
             int powerupTime = 0;
             if (powerupCount == Amount.few) {
@@ -273,15 +268,25 @@ namespace Fab5.Starburst.States {
                 powerup = 20;
                 powerupTime = 10;
             }
-            int time = 180;
-            if (gameTime == GameTime.Five)
-                time = 300;
-            else if (gameTime == GameTime.Ten)
-                time = 600;
+
             btnDelay = BTN_DELAY;
             started = false;
             Starburst.inst().message("play_sound", new { name = "menu_positive" });
-            this.gameConfig = new Playing.Game_Config() { map_name = "map"+map+".png", match_time = time, mode = this.gameMode, enable_soccer = (soccerMapEnabled && soccerModeEnabled && soccerball), num_asteroids = asteroid, num_powerups = powerup, powerup_spawn_time = powerupTime };
+
+            MapConfig selectedMap = maps[currentMapIndex];
+
+            gameConfig = new Playing.Game_Config() {
+                match_time = time*60,
+                num_asteroids = asteroid,
+                num_powerups = powerup,
+                powerup_spawn_time = powerupTime,
+                map_name = selectedMap.fileName,
+                mode = selectedMap.gameMode,
+                enable_soccer = selectedMap.soccerBall,
+                soccer_mode = selectedMap.soccerMode,
+                red_bots = (selectedMap.bots ? (selectedMap.gameMode == Playing.Game_Config.GM_TEAM_DEATHMATCH ? redBots : redBots) : 0),
+                blue_bots = (selectedMap.bots ? (selectedMap.gameMode == Playing.Game_Config.GM_TEAM_DEATHMATCH ? blueBots : redBots) : 0)
+            };
             MediaPlayer.Volume = 0.7f;
             vol = 0.7f;
             fade = 1.0f;
@@ -313,7 +318,6 @@ namespace Fab5.Starburst.States {
             rectBg.SetData(new Color[]{Color.Black},1,1);//Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>(!lowRes?"sector034":"small");
             largeFont = Starburst.inst().get_content<SpriteFont>("large");
-            updateMaps();
             controller_a_button = Starburst.inst().get_content<Texture2D>("menu/Xbox_A_white");
             keyboard_key = Starburst.inst().get_content<Texture2D>("menu/Key");
             controller_l_stick = Starburst.inst().get_content<Texture2D>("menu/Xbox_L_white");
@@ -347,6 +351,32 @@ namespace Fab5.Starburst.States {
                 }
             }
 
+            // Map-configs
+            maps = new List<MapConfig>();
+            maps.Add(new MapConfig() {
+                fileName = "map0.png",
+                mapName = "Deathmatch",
+                bots = true,
+                gameMode = Playing.Game_Config.GM_DEATHMATCH,
+                preview = Fab5_Game.inst().get_content<Texture2D>("maps/preview0")
+            });
+            maps.Add(new MapConfig() {
+                fileName = "map1.png",
+                mapName = "Team Deathmatch",
+                bots = true,
+                gameMode = Playing.Game_Config.GM_TEAM_DEATHMATCH,
+                preview = Fab5_Game.inst().get_content<Texture2D>("maps/preview1"),
+                soccerBall = true
+            });
+            maps.Add(new MapConfig() {
+                fileName = "map2.png",
+                mapName = "Deathmatch",
+                bots = true,
+                gameMode = Playing.Game_Config.GM_DEATHMATCH,
+                preview = Fab5_Game.inst().get_content<Texture2D>("maps/preview2"),
+                asteroidAmounts = new int[]{ 5, 10, 20 }
+            });
+            updateMapSettings();
         }
 
         public override void update(float t, float dt) {
@@ -461,26 +491,21 @@ namespace Fab5.Starburst.States {
             if (t - startTime < animateInTime)
                 settingOffset = (int)Easing.CubicEaseOut((t - startTime), startY, animDistance, animateInTime);
 
-            sprite_batch.DrawString(font, "Game time", new Vector2(leftTextX, settingOffset), Color.White);
-            String timeString = "< " + (gameTime == GameTime.Three ? 3 : gameTime == GameTime.Five ? 5 : 10) + " minutes >";
-            sprite_batch.DrawString(font, timeString, new Vector2(rightTextX, settingOffset), (position.y == (int)options.time ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, "Map mode", new Vector2(leftTextX, settingOffset - rowHeight/2), Color.White);
+            sprite_batch.DrawString(font, maps[currentMapIndex].mapName, new Vector2(rightTextX, settingOffset - rowHeight/2), Color.White);
 
-            sprite_batch.DrawString(font, "Game mode", new Vector2(leftTextX, settingOffset+ rowHeight*1), Color.White);
-            sprite_batch.DrawString(font, (gameMode == 0 ? "< Team Play >" : "< Deathmatch >"), new Vector2(rightTextX, settingOffset+ rowHeight*1), (position.y == (int)options.mode ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, "Game time", new Vector2(leftTextX, settingOffset+rowHeight*1), Color.White);
+            int time = 5;
+            if (gameTime == GameTime.Ten)
+                time = 10;
+            else if (gameTime == GameTime.Twenty)
+                time = 20;
+            else if (gameTime == GameTime.Thirty)
+                time = 30;
+            String timeString = "< " + time + " minutes >";
+            sprite_batch.DrawString(font, timeString, new Vector2(rightTextX, settingOffset+rowHeight*1), (position.y == (int)options.time ? new Color(Color.Gold, textOpacity) : Color.White));
 
-            sprite_batch.DrawString(font, "Soccer ball", new Vector2(leftTextX, settingOffset+ rowHeight*2), Color.White);
-            if(soccerModeEnabled && soccerMapEnabled)
-                sprite_batch.DrawString(font, (soccerball ? "< on >" : "< off >"), new Vector2(rightTextX, settingOffset+ rowHeight*2), (position.y == (int)options.soccer ? new Color(Color.Gold, textOpacity) : Color.White));
-            else
-                sprite_batch.DrawString(font, "< off >", new Vector2(rightTextX, settingOffset + rowHeight*2), (position.y == (int)options.soccer ? new Color(Color.Gray, textOpacity) : Color.Gray));
-            /*
-            sprite_batch.DrawString(font, ctfString, new Vector2(leftTextX, settingOffset+ rowHeight*3), Color.White);
-            if(ctfModeEnabled)
-                sprite_batch.DrawString(font, (captureTheFlag ? "< on >" : "< off >"), new Vector2(rightTextX, settingOffset+ rowHeight*3), (position.y == (int)options.flag ? new Color(Color.Gold, textOpacity) : Color.White));
-            else
-                sprite_batch.DrawString(font, "< off >", new Vector2(rightTextX, settingOffset + rowHeight*3), (position.y == (int)options.flag ? new Color(Color.Gray, textOpacity) : Color.Gray));
-                */
-            sprite_batch.DrawString(font, "Asteroids", new Vector2(leftTextX, settingOffset+ rowHeight*4), Color.White);
+            sprite_batch.DrawString(font, "Asteroids", new Vector2(leftTextX, settingOffset+ rowHeight*2), Color.White);
             String asteroidString = "Off";
             if (asteroidCount == Amount.few)
                 asteroidString = "Few";
@@ -488,10 +513,9 @@ namespace Fab5.Starburst.States {
                 asteroidString = "Medium";
             else if (asteroidCount == Amount.many)
                 asteroidString = "Many";
-            sprite_batch.DrawString(font, "< " + asteroidString + " >", new Vector2(rightTextX, settingOffset+ rowHeight*4), (position.y == (int)options.asteroids ? new Color(Color.Gold, textOpacity) : Color.White));
-
-            // powerup-inställningar
-            sprite_batch.DrawString(font, "Powerups", new Vector2(leftTextX, settingOffset+ rowHeight*5), Color.White);
+            sprite_batch.DrawString(font, "< " + asteroidString + " >", new Vector2(rightTextX, settingOffset+ rowHeight*2), (position.y == (int)options.asteroids ? new Color(Color.Gold, textOpacity) : Color.White));
+            
+            sprite_batch.DrawString(font, "Powerups", new Vector2(leftTextX, settingOffset+ rowHeight*3), Color.White);
             String powerupString = "Off";
             if (powerupCount == Amount.few)
                 powerupString = "Few";
@@ -499,8 +523,25 @@ namespace Fab5.Starburst.States {
                 powerupString = "Medium";
             else if (powerupCount == Amount.many)
                 powerupString = "Many";
-            sprite_batch.DrawString(font, "< " + powerupString + " >", new Vector2(rightTextX, settingOffset+ rowHeight*5), (position.y == (int)options.powerups ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, "< " + powerupString + " >", new Vector2(rightTextX, settingOffset+ rowHeight*3), (position.y == (int)options.powerups ? new Color(Color.Gold, textOpacity) : Color.White));
 
+            MapConfig currentMap = maps[currentMapIndex];
+            if (currentMap.bots) {
+                sprite_batch.DrawString(font, (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH) ? "Bots" : "Red bots", new Vector2(leftTextX, settingOffset + rowHeight * 4), Color.White);
+                sprite_batch.DrawString(font, "< " + (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH ? (redBots * 2) : redBots) + " >", new Vector2(rightTextX, settingOffset + rowHeight * 4), (position.y == (int)options.redBots ? new Color(Color.Gold, textOpacity) : Color.White));
+
+                if(currentMap.gameMode == Playing.Game_Config.GM_TEAM_DEATHMATCH) {
+                    sprite_batch.DrawString(font, "Blue bots", new Vector2(leftTextX, settingOffset + rowHeight * 5), Color.White);
+                    sprite_batch.DrawString(font, "< " + (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH ? (blueBots * 2) : blueBots) + " >", new Vector2(rightTextX, settingOffset + rowHeight * 5), (position.y == (int)options.blueBots ? new Color(Color.Gold, textOpacity) : Color.White));
+                }
+            }
+             /*
+            sprite_batch.DrawString(font, ctfString, new Vector2(leftTextX, settingOffset+ rowHeight*3), Color.White);
+            if(ctfModeEnabled)
+                sprite_batch.DrawString(font, (captureTheFlag ? "< on >" : "< off >"), new Vector2(rightTextX, settingOffset+ rowHeight*3), (position.y == (int)options.flag ? new Color(Color.Gold, textOpacity) : Color.White));
+            else
+                sprite_batch.DrawString(font, "< off >", new Vector2(rightTextX, settingOffset + rowHeight*3), (position.y == (int)options.flag ? new Color(Color.Gray, textOpacity) : Color.Gray));
+                */
             // kontroll-"tutorial"
 
             if (gamepads.Contains(true)) {
