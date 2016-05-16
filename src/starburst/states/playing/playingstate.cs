@@ -39,7 +39,7 @@ public class Playing_State : Game_State {
             return;
         }
         else if (msg.Equals("start")) {
-turbo            tryPause();
+            tryPause();
         }
         else if(msg.Equals("fullscreen")) {
             Starburst.inst().GraphicsMgr.ToggleFullScreen();
@@ -445,7 +445,7 @@ turbo            tryPause();
 
     private Entity new_random_powerup() {
         var types = new Type[] {
-            typeof (Turbo_Powerup)
+            typeof (Turbo_Powerup),
             typeof (Free_Fire_Powerup),
             typeof (Shield_Powerup),
             typeof (Multifire_Powerup),

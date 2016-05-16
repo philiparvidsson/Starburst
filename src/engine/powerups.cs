@@ -31,7 +31,7 @@ public class Powerup : Component {
         Angle ang;
 
         var powerup = new Component[] {
-            new Bounding_Circle { radius = 14.0f, ignore_collisions = Bullet_Factory.IG_BULLET },
+            new Bounding_Circle { radius = 16.0f, ignore_collisions = Bullet_Factory.IG_BULLET },
       pos = new Position        { x = -1800.0f, y = 1600.0f },
             new Sprite          { texture = Fab5_Game.inst().get_content<Texture2D>("powerup") },
             new Powerup         { impl = impl },
