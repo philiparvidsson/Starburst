@@ -30,7 +30,7 @@ public static class Red_Turret {
     private static void think(Entity self) {
         var self_pos = self.get_component<Position>();
 
-        var entities = Fab5_Game.inst().get_entities_fast(typeof (Input));
+        var entities = Fab5_Game.inst().get_entities_fast(typeof (Ship_Info));
 
         if (entities.Count == 0) {
             return;
@@ -39,8 +39,8 @@ public static class Red_Turret {
         var enemies = new List<Entity>();
 
         foreach (var player in entities) {
-            var input = player.get_component<Input>();
-            if (!input.enabled) {
+            var si = player.get_component<Ship_Info>();
+            if (si.is_dead) {
                 continue;
             }
 
