@@ -22,6 +22,8 @@ namespace Fab5.Starburst.States {
         List<bool> gamepads;
         List<SlotStatus> playerSlots;
         int playerCount = 0;
+        int redPlayerCount = 0;
+        int bluePlayerCount = 0;
         int minPlayers = 1;
 
         // animation mellan states
@@ -64,7 +66,7 @@ namespace Fab5.Starburst.States {
 
         private void tryStartGame() {
             // om minsta antal spelare är klara, starta spel
-            if (playerCount >= minPlayers && canStartGame) {
+            if (haveEnoughPlayers() && canStartGame) {
                 canStartGame = false;
                 // hämta inputhandlers, lägg dem i en lista för att vidarebefordra till spel-statet
                 // (sorterade efter position)
@@ -161,6 +163,10 @@ namespace Fab5.Starburst.States {
                         position.y += 1;
                         playerSlots[(int)position.x] = SlotStatus.Selected;
                         playerCount++;
+                        if (position.x < 2)
+                            redPlayerCount++;
+                        else
+                            bluePlayerCount++;
                         Starburst.inst().message("play_sound_asset", new { name = "menu_positive" });
                     }
                 }
@@ -169,6 +175,10 @@ namespace Fab5.Starburst.States {
                     var position = entity.get_component<Position>();
                     if (position.y == 2) {
                         playerCount--;
+                        if (position.x < 2)
+                            redPlayerCount--;
+                        else
+                            bluePlayerCount--;
                     }
                     if (position.y > 0) {
                         position.y -= 1;
@@ -415,11 +425,23 @@ namespace Fab5.Starburst.States {
                 String teamText = "Red Team";
                 Vector2 teamTextSize = font.MeasureString(teamText);
                 sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f, rectangleY - 50), new Color(1.0f, 0.2f, 0.2f));
+                String botText = parent.gameConfig.red_bots + " AI Players";
+                Vector2 botTextSize = font.MeasureString(botText);
+                sprite_batch.DrawString(font, botText, new Vector2(startPos + rectSize + spacing * .5f - botTextSize.X * .5f, rectangleY - 30), new Color(Color.White, .5f));
+
 
                 teamText = "Blue Team";
                 teamTextSize = font.MeasureString(teamText);
                 teamTextSize = font.MeasureString(teamText);
                 sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f + (vp.Width * .5f), rectangleY - 50), new Color(0.0f, 0.5f, 1.0f));
+                botText = parent.gameConfig.blue_bots + " AI Players";
+                botTextSize = font.MeasureString(botText);
+                sprite_batch.DrawString(font, botText, new Vector2(startPos + rectSize + spacing * .5f - botTextSize.X * .5f + (vp.Width * .5f), rectangleY - 30), new Color(Color.White, .5f));
+            }
+            else {
+                String botText = parent.gameConfig.red_bots+parent.gameConfig.blue_bots + " AI Players";
+                Vector2 botTextSize = font.MeasureString(botText);
+                sprite_batch.DrawString(font, botText, new Vector2((vp.Width * .5f) - botTextSize.X * .5f, rectangleY - 30), new Color(Color.White, .5f));
             }
 
             /**
@@ -544,12 +566,26 @@ namespace Fab5.Starburst.States {
 
             text = "Press Enter to start game";
             textSize = font.MeasureString(text);
-            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), yPos + heightDiff * .5f), playerCount >= minPlayers ? new Color(Color.Gold, (textOpacity*.8f)+.2f) : Color.Gray);
+            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), yPos + heightDiff * .5f), haveEnoughPlayers() ? new Color(Color.Gold, (textOpacity*.8f)+.2f) : Color.Gray);
             //sprite_batch.DrawString(font, "Number of players: " + playerCount, new Vector2(0, 4 * selectTextSize.Y), Color.White);
 
             sprite_batch.End();
 
             System.Threading.Thread.Sleep(10); // no need to spam menu
+        }
+
+        private bool haveEnoughPlayers() {
+            if (playerCount < minPlayers)
+                return false;
+            if (parent.gameConfig.mode == Playing.Game_Config.GM_DEATHMATCH) {
+                int totalPlayers = playerCount + parent.gameConfig.red_bots;
+                return totalPlayers >= minPlayers;
+            }
+            else {
+                int redPlayers = redPlayerCount + parent.gameConfig.red_bots;
+                int bluePlayers = bluePlayerCount + parent.gameConfig.blue_bots;
+                return redPlayers > 0 && bluePlayers > 0 && redPlayers + bluePlayers >= minPlayers;
+            }
         }
     }
 
