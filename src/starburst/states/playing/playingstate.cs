@@ -203,6 +203,8 @@ public class Playing_State : Game_State {
             player.get_component<Position>().y = player_spawn.y;
             player.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
 
+            var player_pos = player.get_component<Position>();
+
             for (int j = 0; j < 20; j++) {
                 Fab5_Game.inst().create_entity(new Component[] {
                     new TTL {
@@ -218,8 +220,8 @@ public class Playing_State : Game_State {
                                                  scale      = 0.8f + (float)rand.NextDouble(),
                                                  texture    = Fab5_Game.inst().get_content<Texture2D>("particle") },
 
-                                    new Position { x = player_spawn.x + (float)Math.Cos(theta1) * radius,
-                                                   y = player_spawn.y + (float)Math.Sin(theta1) * radius },
+                                    new Position { x = player_pos.x + (float)Math.Cos(theta1) * radius,
+                                                   y = player_pos.y + (float)Math.Sin(theta1) * radius },
 
                                     new Velocity { x = (float)Math.Cos(theta2) * speed,
                                                    y = (float)Math.Sin(theta2) * speed },
@@ -346,6 +348,8 @@ public class Playing_State : Game_State {
             ai.get_component<Position>().y = ai_spawn.y;
             ai.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
 
+            var player_pos = ai.get_component<Position>();
+
             for (int j = 0; j < 20; j++) {
                 Fab5_Game.inst().create_entity(new Component[] {
                     new TTL {
@@ -361,8 +365,8 @@ public class Playing_State : Game_State {
                                                  scale      = 0.8f + (float)rand.NextDouble(),
                                                  texture    = Fab5_Game.inst().get_content<Texture2D>("particle") },
 
-                                    new Position { x = ai_spawn.x + (float)Math.Cos(theta1) * radius,
-                                                   y = ai_spawn.y + (float)Math.Sin(theta1) * radius },
+                                    new Position { x = player_pos.x + (float)Math.Cos(theta1) * radius,
+                                                   y = player_pos.y + (float)Math.Sin(theta1) * radius },
 
                                     new Velocity { x = (float)Math.Cos(theta2) * speed,
                                                    y = (float)Math.Sin(theta2) * speed },

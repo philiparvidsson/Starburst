@@ -624,6 +624,7 @@ namespace Fab5.Starburst.States.Playing {
                             player.get_component<Ship_Info>().spawn_time = Fab5_Game.inst().get_time();
                             player.get_component<Ship_Info>().is_dead = false;
                             player.get_component<Angle>().angle = 3.141592f*2.0f * (float)rand.NextDouble();
+                            var player_pos = player.get_component<Position>();
 
                             for (int i = 0; i < 20; i++) {
                                 Fab5_Game.inst().create_entity(new Component[] {
@@ -640,8 +641,8 @@ namespace Fab5.Starburst.States.Playing {
                                                                scale      = 0.8f + (float)rand.NextDouble(),
                                                                texture    = Fab5_Game.inst().get_content<Texture2D>("particle") },
 
-                                                new Position { x = spawn_pos.x + (float)Math.Cos(theta1) * radius,
-                                                               y = spawn_pos.y + (float)Math.Sin(theta1) * radius },
+                                                new Position { x = player_pos.x + (float)Math.Cos(theta1) * radius,
+                                                               y = player_pos.y + (float)Math.Sin(theta1) * radius },
 
                                                 new Velocity { x = (float)Math.Cos(theta2) * speed,
                                                                y = (float)Math.Sin(theta2) * speed },
