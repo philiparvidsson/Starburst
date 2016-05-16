@@ -48,6 +48,7 @@ namespace Fab5.Starburst.States {
         private const float BTN_DELAY = .25f;
         float btnDelay = BTN_DELAY;
         private SpriteFont largeFont;
+        private SpriteFont smallFont;
         private Texture2D downArrow;
         private bool canStartGame = true;
         private bool goingBack = false;
@@ -261,6 +262,7 @@ namespace Fab5.Starburst.States {
             rectBg = new Texture2D(Fab5_Game.inst().GraphicsDevice, 1, 1);
             rectBg.SetData(new Color[]{Color.Black},1,1);//Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>(!lowRes ? "sector034" : "small");
+            smallFont = Starburst.inst().get_content<SpriteFont>(!lowRes ? "small" : "tiny");
             largeFont = Starburst.inst().get_content<SpriteFont>("sector034");
             controller_a_button = Starburst.inst().get_content<Texture2D>("menu/Xbox_A_white");
             keyboard_key = Starburst.inst().get_content<Texture2D>("menu/Key");
@@ -425,23 +427,23 @@ namespace Fab5.Starburst.States {
                 String teamText = "Red Team";
                 Vector2 teamTextSize = font.MeasureString(teamText);
                 sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f, rectangleY - 50), new Color(1.0f, 0.2f, 0.2f));
-                String botText = parent.gameConfig.red_bots + " AI Players";
-                Vector2 botTextSize = font.MeasureString(botText);
-                sprite_batch.DrawString(font, botText, new Vector2(startPos + rectSize + spacing * .5f - botTextSize.X * .5f, rectangleY - 30), new Color(Color.White, .5f));
+                String botText = parent.gameConfig.red_bots + " AI Player" + (parent.gameConfig.red_bots != 1 ? "s" : "");
+                Vector2 botTextSize = smallFont.MeasureString(botText);
+                sprite_batch.DrawString(smallFont, botText, new Vector2(startPos + rectSize + spacing * .5f - botTextSize.X * .5f, rectangleY - 25), Color.White);
 
 
                 teamText = "Blue Team";
                 teamTextSize = font.MeasureString(teamText);
                 teamTextSize = font.MeasureString(teamText);
                 sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f + (vp.Width * .5f), rectangleY - 50), new Color(0.0f, 0.5f, 1.0f));
-                botText = parent.gameConfig.blue_bots + " AI Players";
-                botTextSize = font.MeasureString(botText);
-                sprite_batch.DrawString(font, botText, new Vector2(startPos + rectSize + spacing * .5f - botTextSize.X * .5f + (vp.Width * .5f), rectangleY - 30), new Color(Color.White, .5f));
+                botText = parent.gameConfig.blue_bots + " AI Player" + (parent.gameConfig.blue_bots != 1 ? "s" : "");
+                botTextSize = smallFont.MeasureString(botText);
+                sprite_batch.DrawString(smallFont, botText, new Vector2(startPos + rectSize + spacing * .5f - botTextSize.X * .5f + (vp.Width * .5f), rectangleY - 25), Color.White);
             }
             else {
-                String botText = parent.gameConfig.red_bots+parent.gameConfig.blue_bots + " AI Players";
-                Vector2 botTextSize = font.MeasureString(botText);
-                sprite_batch.DrawString(font, botText, new Vector2((vp.Width * .5f) - botTextSize.X * .5f, rectangleY - 30), new Color(Color.White, .5f));
+                String botText = parent.gameConfig.red_bots+parent.gameConfig.blue_bots + " AI Player" + (parent.gameConfig.red_bots + parent.gameConfig.blue_bots!=1 ? "s":"");
+                Vector2 botTextSize = smallFont.MeasureString(botText);
+                sprite_batch.DrawString(smallFont, botText, new Vector2((vp.Width * .5f) - botTextSize.X * .5f, rectangleY - 25), Color.White);
             }
 
             /**
