@@ -454,6 +454,11 @@ public static class Dummy_Enemy {
                 targetpos = (Position)data.data["escape_point"];
             }
 
+            if (targetpos == null)
+            {
+                targetpos = new Position { x = 0.0f, y = 0.0f };
+            }
+
 
             var tx = (int)((targetpos.x + 2048.0f) / 16.0f);
             var ty = (int)((targetpos.y + 2048.0f) / 16.0f);
