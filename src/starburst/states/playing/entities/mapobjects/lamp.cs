@@ -17,21 +17,21 @@ public static class Lamp {
         var tex  = Starburst.inst().get_content<Texture2D>("particle2");
 
         return new Component[] {
-            new Light_Source { color = Color.White, intensity = 0.1f, size = 2.0f },
+            new Light_Source { color = Color.White, intensity = 0.35f, size = 2.0f },
             pos,
             new Particle_Emitter() {
                 emit_fn = () => {
                     var theta1 = 2.0f * 3.1415f * (float)rand.NextDouble();
                     var theta2 = 2.0f * 3.1415f * (float)rand.NextDouble();
                     var radius = 13.0f          * (float)rand.NextDouble();
-                    var speed  = 50.0f          * (float)(rand.NextDouble()+0.05);
+                    var speed  = 15.0f          * (float)(rand.NextDouble()+0.05);
 
                     return new Component[] {
                         new Sprite {
                             blend_mode  = Sprite.BM_ADD,
                             color       = new Color(1.0f, 1.0f, 1.0f, 0.4f),
                             layer_depth = 0.3f,
-                            scale       = 2.5f,
+                            scale       = 0.5f + (float)rand.NextDouble(),
                             texture     = tex
                         },
                         new Position { x = pos.x + (float)Math.Cos(theta1) * radius,
@@ -42,7 +42,7 @@ public static class Lamp {
                                   max_time = 0.35f + (float)(rand.NextDouble() * 0.7f) }
                     };
                 },
-                interval               = 0.1f,
+                interval               = 0.5f,
                 num_particles_per_emit = 1
             }
         };
