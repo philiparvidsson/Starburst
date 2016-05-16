@@ -625,6 +625,7 @@ namespace Fab5.Starburst.States.Playing {
                             player.get_component<Ship_Info>().is_dead = false;
                             player.get_component<Angle>().angle = 3.141592f*2.0f * (float)rand.NextDouble();
                             var player_pos = player.get_component<Position>();
+                            var player_vel = player.get_component<Velocity>();
 
                             for (int i = 0; i < 20; i++) {
                                 Fab5_Game.inst().create_entity(new Component[] {
@@ -644,8 +645,8 @@ namespace Fab5.Starburst.States.Playing {
                                                 new Position { x = player_pos.x + (float)Math.Cos(theta1) * radius,
                                                                y = player_pos.y + (float)Math.Sin(theta1) * radius },
 
-                                                new Velocity { x = (float)Math.Cos(theta2) * speed,
-                                                               y = (float)Math.Sin(theta2) * speed },
+                                                new Velocity { x = 0.5f*player_vel.x + (float)Math.Cos(theta2) * speed,
+                                                               y = 0.5f*player_vel.y + (float)Math.Sin(theta2) * speed },
 
                                                 new Mass     { drag_coeff = 2.0f },
 
