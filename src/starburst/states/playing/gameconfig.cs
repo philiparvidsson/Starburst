@@ -19,6 +19,10 @@ public class Game_Config {
 
     public float match_time = 1800.0f;
 
+    public bool soccer_mode = true;
+
+    public int red_bots = 0;
+    public int blue_bots = 0;
 }
 
 }

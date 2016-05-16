@@ -119,7 +119,10 @@ public class Playing_State : Game_State {
                         typeof (Red_Fountain),
                         typeof (Blue_Fountain),
                         typeof (Red_Turret),
-                        typeof (Blue_Turret)
+                        typeof (Blue_Turret),
+                        typeof (Lamp),
+                        typeof (Red_Lamp),
+                        typeof (Blue_Lamp),
                     };
 
                     int k = c.R % types.Length;
@@ -183,8 +186,8 @@ public class Playing_State : Game_State {
                     renderer = new Rendering_System(Starburst.inst().GraphicsDevice) {
                         tile_map = tile_map,
                         match_time = game_conf.match_time
-                    }
-                    //new Window_Title_Writer()
+                    },
+                    new Window_Title_Writer()
                )
             )
         );
@@ -330,20 +333,20 @@ public class Playing_State : Game_State {
         var turbo2 = create_entity(Powerup.create(new Turbo_Powerup()));
         turbo2.get_component<Position>().x = 1500.0f; turbo2.get_component<Position>().y = -1500.0f;*/
 
-        int num_ai = 2;
-        int ai_team = 2;
-        for(int i = 0; i < num_ai; i++) {
-            var ai = Starburst.inst().create_entity(Dummy_Enemy.create_components(game_conf, ai_team));
+        Dummy_Enemy.ai_index = 1;
+
+        for(int i = 0; i < game_conf.red_bots; i++) {
+            var ai = Starburst.inst().create_entity(Dummy_Enemy.create_components(game_conf, 1 /* red team */));
             var aisi = ai.get_component<Ship_Info>();
-            aisi.team = ai_team;
-            Console.WriteLine("created ai for team {0}", ai_team);
-            ai.get_component<Bounding_Circle>().ignore_collisions2 = ai_team;
+            if (game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH) aisi.team = 1;
+            Console.WriteLine("created ai for team {0}", aisi.team);
+            ai.get_component<Bounding_Circle>().ignore_collisions2 = aisi.team;
             var ai_spawn = spawner.get_player_spawn_pos(ai, tile_map);
             ai.get_component<Position>().x = ai_spawn.x;
             ai.get_component<Position>().y = ai_spawn.y;
             ai.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
 
-            /*for (int j = 0; j < 20; j++) {
+            for (int j = 0; j < 20; j++) {
                 Fab5_Game.inst().create_entity(new Component[] {
                     new TTL {
                         max_time = j*0.05f,
@@ -371,10 +374,50 @@ public class Playing_State : Game_State {
                                 });
                         }
                     }
-                });*/
+                });
+            }
+        }
 
-            if (++ai_team > 2) {
-                ai_team = 1;
+        for(int i = 0; i < game_conf.blue_bots; i++) {
+            var ai = Starburst.inst().create_entity(Dummy_Enemy.create_components(game_conf, 2 /* blue team */));
+            var aisi = ai.get_component<Ship_Info>();
+            if (game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH) aisi.team = 2;
+            Console.WriteLine("created ai for team {0}", aisi.team);
+            ai.get_component<Bounding_Circle>().ignore_collisions2 = aisi.team;
+            var ai_spawn = spawner.get_player_spawn_pos(ai, tile_map);
+            ai.get_component<Position>().x = ai_spawn.x;
+            ai.get_component<Position>().y = ai_spawn.y;
+            ai.get_component<Angle>().angle = (float)rand.NextDouble() * 6.28f;
+
+            for (int j = 0; j < 20; j++) {
+                Fab5_Game.inst().create_entity(new Component[] {
+                    new TTL {
+                        max_time = j*0.05f,
+                        destroy_cb = () => {
+                            var theta1 = 2.0f*3.1415f*(float)rand.NextDouble();
+                            var theta2 = 2.0f*3.1415f*(float)rand.NextDouble();
+                            var radius = 13.0f * (float)rand.NextDouble();
+                            var speed  = (30.0f + 110.0f * (float)Math.Pow(rand.NextDouble(), 2.0f));
+
+                            Fab5_Game.inst().create_entity(new Component[] {
+                                    new Sprite { blend_mode = Sprite.BM_ADD,
+                                                 scale      = 0.8f + (float)rand.NextDouble(),
+                                                 texture    = Fab5_Game.inst().get_content<Texture2D>("particle") },
+
+                                    new Position { x = ai_spawn.x + (float)Math.Cos(theta1) * radius,
+                                                   y = ai_spawn.y + (float)Math.Sin(theta1) * radius },
+
+                                    new Velocity { x = (float)Math.Cos(theta2) * speed,
+                                                   y = (float)Math.Sin(theta2) * speed },
+
+                                    new Mass { drag_coeff = 2.0f },
+
+                                    new TTL { alpha_fn = (x, max) => 1.0f - (x*x)/(max*max),
+                                              max_time = 1.5f + (float)rand.NextDouble() }
+                                });
+                        }
+                    }
+                });
             }
         }
 
@@ -391,7 +434,7 @@ public class Playing_State : Game_State {
                           var scoreEntities = gameState.get_entities_fast(typeof(Score));
                           List<Entity> players = new List<Entity>();
                           for(int i=0; i < scoreEntities.Count; i++) {
-                              if(scoreEntities[i].get_component<Input>() != null)
+                              if((scoreEntities[i].get_component<Ship_Info>() != null) && (scoreEntities[i].get_component<Velocity>() != null))
                                   players.Add(scoreEntities[i]);
                           }
                           Starburst.inst().leave_state();
@@ -404,16 +447,21 @@ public class Playing_State : Game_State {
 
     private Entity new_random_powerup() {
         var types = new Type[] {
-            typeof (Turbo_Powerup)
-            /*typeof (Free_Fire_Powerup),
+            typeof (Turbo_Powerup),
+            typeof (Free_Fire_Powerup),
             typeof (Shield_Powerup),
             typeof (Multifire_Powerup),
             typeof (Bouncy_Bullets_Powerup),
-            typeof (Fast_Bombs_Powerup)*/
+            typeof (Fast_Bombs_Powerup)
             //typeof (Nanobots_Powerup)
         };
 
         var i = rand.Next(0, types.Length);
+
+        if (game_conf.soccer_mode) {
+            i = 0; // only turbo in soccer mode
+        }
+
         object impl = Activator.CreateInstance(types[i]);
 
         return create_entity(Powerup.create((Powerup_Impl)impl));

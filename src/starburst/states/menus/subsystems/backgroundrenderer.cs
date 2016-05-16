@@ -30,7 +30,7 @@ namespace Fab5.Starburst.States.Menus.Subsystems {
             stardrop = Starburst.inst().get_content<Texture2D>("backdrops/stardrop");
         }
         public override void draw(float t, float dt) {
-            draw_backdrop(sprite_batch, t);
+            draw_backdrop(sprite_batch, Starburst.inst().get_global_time());
         }
         private void draw_backdrop(SpriteBatch sprite_batch, float t) {
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.Additive);

@@ -19,6 +19,14 @@
         public static Component[] create_components(Input input, Game_Config conf, int team)
         {
             int pindex = lol;
+            float mass_fac = 1.0f;
+            float acc_fac = 1.0f;
+            float vel_fac = 1.0f;
+            if (conf.soccer_mode) {
+                mass_fac = 2.0f;
+                acc_fac = 1.4f;
+                vel_fac = 1.1f;
+            }
             /*
             var inputhandler = new Input() {
             };
@@ -74,11 +82,13 @@
                 System.Console.WriteLine("unknown game mode!");
             }
 
+            //System.Console.WriteLine("ignore value: " + ig_value + ", " + team + ", " + pindex);
+
             var playerrot = new  Angle() { angle = 0 };
             var playerpos = new Position() {x = 300, y = 200 };
             var playervel = new Velocity() {x = 0.0f, y = 0.0f };
             var particle_tex = Starburst.inst().get_content<Texture2D>("particle");
-            var ship_info = new Ship_Info(5,130,100,100) { team = team, pindex = pindex };
+            var ship_info = new Ship_Info(1,130,100.0f*vel_fac,100.0f*acc_fac) { team = team, pindex = pindex };
             return new Component[] {
                 input,
                 new Particle_Emitter() {
@@ -151,7 +161,7 @@
                 },
                 ship_info,
                 new Bounding_Circle() { radius = 20.0f, ignore_collisions2 = ig_value },
-                new Mass() { mass = 15.0f, restitution_coeff = 0.6f, friction = 0.1f },
+                new Mass() { mass = 15.0f*mass_fac, restitution_coeff = 0.6f, friction = 0.1f },
                 new Primary_Weapon(),
                 new Secondary_Weapon(),
                 new Score(),

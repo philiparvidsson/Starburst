@@ -88,6 +88,7 @@
     <Compile Include="src\starburst\components\bulletinfo.cs" />
     <Compile Include="src\starburst\gfxutil.cs" />
     <Compile Include="src\starburst\states\menus\entities\player.cs" />
+    <Compile Include="src\starburst\states\menus\mapconfig.cs" />
     <Compile Include="src\starburst\states\menus\resultsstate.cs" />
     <Compile Include="src\starburst\states\menus\playerselectionmenu.cs" />
     <Compile Include="src\starburst\states\menus\mainmenustate.cs" />
@@ -104,8 +105,11 @@
     <Compile Include="src\starburst\starburst.cs" />
     <Compile Include="src\starburst\states\playing\entities\enemies\dummy_enemy.cs" />
     <Compile Include="src\starburst\states\playing\entities\mapobjects\bluefountain.cs" />
+    <Compile Include="src\starburst\states\playing\entities\mapobjects\bluelamp.cs" />
     <Compile Include="src\starburst\states\playing\entities\mapobjects\blueturret.cs" />
+    <Compile Include="src\starburst\states\playing\entities\mapobjects\lamp.cs" />
     <Compile Include="src\starburst\states\playing\entities\mapobjects\redfountain.cs" />
+    <Compile Include="src\starburst\states\playing\entities\mapobjects\redlamp.cs" />
     <Compile Include="src\starburst\states\playing\entities\mapobjects\redturret.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\bouncybulletspowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\fastbombspowerup.cs" />
@@ -153,10 +157,6 @@
     <Content Include="src\starburst\content\light.png" />
     <Content Include="src\starburst\content\lightcone.png" />
     <Content Include="src\starburst\content\map.png" />
-    <Content Include="src\starburst\content\maps\map1.png" />
-    <Content Include="src\starburst\content\maps\map2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="src\starburst\content\maps\preview1.png" />
     <Content Include="src\starburst\content\maps\preview2.png" />
     <Content Include="src\starburst\content\map\bgtiles.png" />

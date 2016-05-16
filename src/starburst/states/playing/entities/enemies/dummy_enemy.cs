@@ -12,7 +12,11 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
+    using Fab5.Starburst.States.Playing;
+
 public static class Dummy_Enemy {
+    public static int ai_index = 1;
+
     private const float THINK_INTERVAL = 1.0f/30.0f; // think 5 times per sec
 
     private static Random rand = new Random();
@@ -406,7 +410,7 @@ public static class Dummy_Enemy {
                         continue;
                     }
 
-                    if (other_si.team == si.team) {
+                    if (((Playing_State)self.state).game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH && other_si.team == si.team) {
                         // following team mate behavior?
                         var other_p = player.get_component<Position>();
                         var distd = new Vector2(p.x-other_p.x, p.y-other_p.y).Length();
@@ -415,8 +419,6 @@ public static class Dummy_Enemy {
                         }
                     }
                     else {
-
-
                         var other_p = player.get_component<Position>();
                         var distd = new Vector2(p.x-other_p.x, p.y-other_p.y).Length();
                         if (distd < 900.0f) {
@@ -435,7 +437,7 @@ public static class Dummy_Enemy {
                 data.data["num_enemies"] = num_enemies_nearby;
                 data.data["num_friends"] = num_friends_nearby;
 
-                if (num_enemies_nearby > 1+2*num_friends_nearby) {
+                if (((Playing_State)self.state).game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH && num_enemies_nearby > 1+2*num_friends_nearby) {
                     escape = true;
                 }
                 else {
@@ -487,12 +489,13 @@ public static class Dummy_Enemy {
         Entity target = (Entity)data.get_data("target", null);
         if (target == null) {
             fac = 1.0f; // shouldnt really happen much
+            return;
         }
         else if (target.has_component<Ship_Info>()) {
             // player or other ai, move close but not pin-point
             fac = 5.0f;
             var tsi = target.get_component<Ship_Info>();
-            target_is_friend = tsi.team == si.team;
+            target_is_friend = ((Playing_State)self.state).game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH && tsi.team == si.team;
         }
         else if (target.has_component<Powerup>()) {
             // powerup, pin-point
@@ -690,6 +693,7 @@ public static class Dummy_Enemy {
 
         var data = new Data{};
         data.data["input"] = input;
+        data.data["ai_index"] = ai_index++;
         components.Add(data);
 
         return components.ToArray();

@@ -19,6 +19,7 @@ public static class Soccer_Ball {
         var pos = new Position() {x=600, y = 200};
         var vel = new Velocity();
         return new Component[] {
+            new Shadow{},
             new Particle_Emitter() {
                 emit_fn = () => {
                     //var speed = vel.x * vel.x + vel.y*vel.y;
@@ -108,6 +109,7 @@ public static class Soccer_Ball {
                                 if (score != null) {
                                     score.score += 1500;
                                 }
+                                score.num_goals++;
                             }
                         }
 
@@ -115,11 +117,11 @@ public static class Soccer_Ball {
                         Fab5_Game.inst().create_entity(new Component[] {
                             new Post_Render_Hook  {
                                 render_fn = (camera, sprite_batch) => {
-                                    if (((camera.index-1) % 2)+1 != scoring_team) {
+                                    /*if (((camera.index-1) % 2)+1 != scoring_team) {
                                         return;
-                                    }
+                                    }*/
 
-                                    var text = string.Format("GOAL!!!");
+                                    var text = string.Format("{0} TEAM SCORED A GOAL!!", scoring_team == 1 ? "RED" : "BLUE");
                                     var ts   = GFX_Util.measure_string(text);
 
                                     // @To-do: larger text plz

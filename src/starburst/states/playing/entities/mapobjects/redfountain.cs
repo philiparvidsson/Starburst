@@ -17,7 +17,7 @@ public static class Red_Fountain {
         var tex  = Starburst.inst().get_content<Texture2D>("particle");
 
         return new Component[] {
-            new Light_Source { color = Color.Red, intensity = 0.1f, size = 2.0f },
+            //new Light_Source { color = Color.Red, intensity = 0.1f, size = 2.0f },
             pos,
             new Particle_Emitter() {
                 emit_fn = () => {

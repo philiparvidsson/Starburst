@@ -26,7 +26,9 @@
         public float linear_start_score; // Last score when doing smooth increasing of score.
         public float current_time_span; // Time since starting the increase of score.
         public int num_kills;
+        public int num_kills_since_death;
         public int num_deaths;
+        public int num_goals = 0;
         public int score_mult = 1;
 
         public Score()

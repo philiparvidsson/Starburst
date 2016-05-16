@@ -13,11 +13,19 @@
     public static class Player
     {
         public static Component[] create_components(Input inputhandler) {
-            string sprite = "keys2";
-            if (inputhandler.up == Keys.W)
-                sprite = "keys1";
-            if (inputhandler.device == Input.InputType.Controller) {
-                sprite = "controller" + (int)(inputhandler.gp_index+1);
+            string sprite ="";
+            if (inputhandler == null)
+                sprite = "bot";
+            else
+            {
+                if (inputhandler.up == Keys.W)
+                    sprite = "keys1";
+                if (inputhandler.up == Keys.Up)
+                    sprite = "keys2";
+                if (inputhandler.device == Input.InputType.Controller)
+                {
+                    sprite = "controller" + (int)(inputhandler.gp_index + 1);
+                }
             }
 
             var playerpos = new Position() { x = 0, y = 0 };

@@ -8,6 +8,7 @@ using Fab5.Engine.Components;
 
 // DEN HÄR SKA INTE VARA HÄR WTF
 using Fab5.Starburst.States.Playing.Entities;
+using Fab5.Starburst.States;
 
 namespace Fab5.Engine.Subsystems {
     public class Weapon_System : Subsystem {
@@ -21,6 +22,10 @@ namespace Fab5.Engine.Subsystems {
         }
         public override void on_message(string msg, dynamic data) {
             if(msg.Equals("fireInput")) {
+                if (((Playing_State)state).game_conf.soccer_mode) {
+                    return;
+                }
+
                 Entity origin = data.Origin;
                 Weapon weapon = data.Weapon;
                 Ship_Info ship = data.Ship;
