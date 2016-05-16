@@ -383,7 +383,7 @@ namespace Fab5.Starburst.States {
                 soccerBall = true,
                 soccerMode = true,
                 gameMode = Playing.Game_Config.GM_TEAM_DEATHMATCH,
-                preview = Fab5_Game.inst().get_content<Texture2D>("maps/preview2"),
+                preview = Fab5_Game.inst().get_content<Texture2D>("maps/preview3_soccer"),
                 asteroidAmounts = new int[]{ 5, 10, 20 }
             });
             updateMapSettings();
