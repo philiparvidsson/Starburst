@@ -118,7 +118,7 @@ namespace Fab5.Engine.Subsystems
                     asset = soundlib[asset];
                 }
 
-                Console.WriteLine("playing " + asset);
+                //Console.WriteLine("playing " + asset);
 
                 var varying_pitchprop = data.GetType().GetProperty("varying_pitch");
                 float pitchval = 0.0f;
@@ -231,8 +231,7 @@ namespace Fab5.Engine.Subsystems
                             else if (texttureName.Contains("ship") && texttureName2.Contains("ship"))
                                 Fab5_Game.inst().message("play_sound", new { name = "bang", pos = p1, volume = vol });
                         }
-
-                        if (texttureName.Contains("beams1") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams1"))
+                        else if (texttureName.Contains("beams1") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams1"))
                             Fab5_Game.inst().message("play_sound", new { name = "laser_impact", pos = p1, volume = vol });
                         else if (texttureName.Contains("beams2") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams2"))
                             Fab5_Game.inst().message("play_sound", new { name = "small_explosion", pos = p1, volume = vol });
@@ -269,6 +268,7 @@ namespace Fab5.Engine.Subsystems
                             {
                                 var ins = effect.SoundEffect.CreateInstance();
                                 ins.Play();
+                                ins.Volume = 0.4f;
                                 lib.ActiveSoundIns.Add(data.name + data.gp_index, new ActiveSound() { SoundEffectIns = ins });
                             }
                             else
