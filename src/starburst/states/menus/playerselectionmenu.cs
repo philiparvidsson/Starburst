@@ -24,7 +24,7 @@ namespace Fab5.Starburst.States {
         int playerCount = 0;
         int redPlayerCount = 0;
         int bluePlayerCount = 0;
-        int minPlayers = 1;
+        int minPlayers = 2;
 
         // animation mellan states
         float animateInTime = 1.4f;
@@ -575,8 +575,9 @@ namespace Fab5.Starburst.States {
         }
 
         private bool haveEnoughPlayers() {
-            if (playerCount < minPlayers)
+            if (playerCount < 1)
                 return false;
+
             if (parent.gameConfig.mode == Playing.Game_Config.GM_DEATHMATCH) {
                 int totalPlayers = playerCount + parent.gameConfig.red_bots;
                 return totalPlayers >= minPlayers;
