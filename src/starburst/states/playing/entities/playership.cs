@@ -82,7 +82,7 @@
                 System.Console.WriteLine("unknown game mode!");
             }
 
-            System.Console.WriteLine("ignore value: " + ig_value + ", " + team + ", " + pindex);
+            //System.Console.WriteLine("ignore value: " + ig_value + ", " + team + ", " + pindex);
 
             var playerrot = new  Angle() { angle = 0 };
             var playerpos = new Position() {x = 300, y = 200 };
