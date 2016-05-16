@@ -527,23 +527,16 @@ namespace Fab5.Starburst.States {
 
             MapConfig currentMap = maps[currentMapIndex];
             if (currentMap.bots) {
-                sprite_batch.DrawString(font, (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH) ? "Bots" : "Red bots", new Vector2(leftTextX, settingOffset + rowHeight * 4), Color.White);
-                sprite_batch.DrawString(font, "< " + (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH ? (redBots * 2) : redBots) + " >", new Vector2(rightTextX, settingOffset + rowHeight * 4), (position.y == (int)options.redBots ? new Color(Color.Gold, textOpacity) : Color.White));
+                sprite_batch.DrawString(font, (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH) ? "AI Player" : "Red AI Players", new Vector2(leftTextX, settingOffset + rowHeight * 4), Color.White);
+                sprite_batch.DrawString(font, "< " + (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH ? (redBots == 0 ? "off" : (redBots * 2).ToString()) : redBots == 0 ? "off" : redBots.ToString()) + " >", new Vector2(rightTextX, settingOffset + rowHeight * 4), (position.y == (int)options.redBots ? new Color(Color.Gold, textOpacity) : Color.White));
 
                 if(currentMap.gameMode == Playing.Game_Config.GM_TEAM_DEATHMATCH) {
-                    sprite_batch.DrawString(font, "Blue bots", new Vector2(leftTextX, settingOffset + rowHeight * 5), Color.White);
-                    sprite_batch.DrawString(font, "< " + (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH ? (blueBots * 2) : blueBots) + " >", new Vector2(rightTextX, settingOffset + rowHeight * 5), (position.y == (int)options.blueBots ? new Color(Color.Gold, textOpacity) : Color.White));
+                    sprite_batch.DrawString(font, "Blue AI Players", new Vector2(leftTextX, settingOffset + rowHeight * 5), Color.White);
+                    sprite_batch.DrawString(font, "< " + (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH ? (blueBots == 0 ? "off" : (blueBots * 2).ToString()) : blueBots == 0 ? "off" : blueBots.ToString()) + " >", new Vector2(rightTextX, settingOffset + rowHeight * 5), (position.y == (int)options.blueBots ? new Color(Color.Gold, textOpacity) : Color.White));
                 }
             }
-             /*
-            sprite_batch.DrawString(font, ctfString, new Vector2(leftTextX, settingOffset+ rowHeight*3), Color.White);
-            if(ctfModeEnabled)
-                sprite_batch.DrawString(font, (captureTheFlag ? "< on >" : "< off >"), new Vector2(rightTextX, settingOffset+ rowHeight*3), (position.y == (int)options.flag ? new Color(Color.Gold, textOpacity) : Color.White));
-            else
-                sprite_batch.DrawString(font, "< off >", new Vector2(rightTextX, settingOffset + rowHeight*3), (position.y == (int)options.flag ? new Color(Color.Gray, textOpacity) : Color.Gray));
-                */
-            // kontroll-"tutorial"
 
+            // kontroll-"tutorial"
             if (gamepads.Contains(true)) {
                 sprite_batch.Draw(controller_a_button, new Rectangle(20, yPos, controllerBtnSize, controllerBtnSize), Color.White);
                 sprite_batch.DrawString(font, text_ok, new Vector2(20 + controllerBtnSize + 10, yPos + heightDiff * .5f), Color.White);

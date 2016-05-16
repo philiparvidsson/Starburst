@@ -105,8 +105,11 @@
     <Compile Include="src\starburst\starburst.cs" />
     <Compile Include="src\starburst\states\playing\entities\enemies\dummy_enemy.cs" />
     <Compile Include="src\starburst\states\playing\entities\mapobjects\bluefountain.cs" />
+    <Compile Include="src\starburst\states\playing\entities\mapobjects\bluelamp.cs" />
     <Compile Include="src\starburst\states\playing\entities\mapobjects\blueturret.cs" />
+    <Compile Include="src\starburst\states\playing\entities\mapobjects\lamp.cs" />
     <Compile Include="src\starburst\states\playing\entities\mapobjects\redfountain.cs" />
+    <Compile Include="src\starburst\states\playing\entities\mapobjects\redlamp.cs" />
     <Compile Include="src\starburst\states\playing\entities\mapobjects\redturret.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\bouncybulletspowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\fastbombspowerup.cs" />
