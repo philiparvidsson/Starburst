@@ -119,7 +119,8 @@ public class Playing_State : Game_State {
                         typeof (Red_Fountain),
                         typeof (Blue_Fountain),
                         typeof (Red_Turret),
-                        typeof (Blue_Turret)
+                        typeof (Blue_Turret),
+                        typeof (Lamp)
                     };
 
                     int k = c.R % types.Length;
