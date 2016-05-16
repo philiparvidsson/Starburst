@@ -153,9 +153,9 @@
                 }
 
                 var tm_team = team_mate.get_component<Ship_Info>().team;
-                if (tm_team != team) {
+                /*if (tm_team != team) {
                     continue;
-                }
+                }*/
 
                 var color = Color.White;
                 if (team_mate != player) {
