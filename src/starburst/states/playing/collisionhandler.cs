@@ -462,7 +462,8 @@ namespace Fab5.Starburst.States.Playing {
                 {
                     shooterScore.give_points(250);
                     shooterScore.num_kills++;
-                    if (shooterScore.num_kills > 2 && ((shooterScore.num_kills) % 3) == 0) {
+                    shooterScore.num_kills_since_death++;
+                    if (shooterScore.num_kills_since_death > 2 && ((shooterScore.num_kills_since_death) % 3) == 0) {
                         shooterScore.score_mult++;
                         if (shooterScore.score_mult > 3) {
                             shooterScore.score_mult = 3;
@@ -526,6 +527,7 @@ namespace Fab5.Starburst.States.Playing {
                 }
 
                 player.get_component<Ship_Info>().is_dead = true;
+                player.get_component<Score>().num_kills_since_death = 0;
 
                 var old_particle_emitter = player.remove_component<Particle_Emitter>();
                 var old_bounding_circle  = player.remove_component<Bounding_Circle>();
