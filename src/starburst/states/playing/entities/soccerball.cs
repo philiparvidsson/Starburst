@@ -115,11 +115,11 @@ public static class Soccer_Ball {
                         Fab5_Game.inst().create_entity(new Component[] {
                             new Post_Render_Hook  {
                                 render_fn = (camera, sprite_batch) => {
-                                    if (((camera.index-1) % 2)+1 != scoring_team) {
+                                    /*if (((camera.index-1) % 2)+1 != scoring_team) {
                                         return;
-                                    }
+                                    }*/
 
-                                    var text = string.Format("GOAL!!!");
+                                    var text = string.Format("{0} TEAM\nSCORED A GOAL!!", scoring_team == 1 ? "RED" : "BLUE");
                                     var ts   = GFX_Util.measure_string(text);
 
                                     // @To-do: larger text plz
