@@ -109,7 +109,7 @@ public static class Red_Turret {
     }
 
         private static Component[] shoot(Entity self, Angle shipAngle) {
-            Fab5_Game.inst().message("play_sound_asset", new { name = "sound/effects/turret", varying_pitch = true });
+            Fab5_Game.inst().message("turretsound", new { name = "turret", varying_pitch = true, entity1 = self });
 
             float shipRadian = 21f; // offset frÃ¥n skeppets mitt dÃ¤r skottet utgÃ¥r ifrÃ¥n
             float speed      = 900f; // skottets hastighet (kanske ska vara vapenberoende?)
@@ -117,6 +117,7 @@ public static class Red_Turret {
 
             Position position = self.get_component<Position>();
             Velocity shipVel  = self.get_component<Velocity>() ?? new Velocity();
+
 
             double dAngle = (double)shipAngle.angle + ((float)rand.NextDouble()-0.5f)*0.08f;
             float sfa     = (float)Math.Sin(dAngle);

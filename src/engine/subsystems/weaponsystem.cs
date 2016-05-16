@@ -29,7 +29,6 @@ namespace Fab5.Engine.Subsystems {
                 Entity origin = data.Origin;
                 Weapon weapon = data.Weapon;
                 Ship_Info ship = data.Ship;
-
                 Bullet_Factory.fire_weapon(origin, weapon);
                 if (!ship.has_powerup(typeof (Free_Fire_Powerup))) {
                     ship.energy_value -= weapon.energy_cost;
@@ -42,7 +41,7 @@ namespace Fab5.Engine.Subsystems {
                     input.left_vib += weapon.vib_left;
                     input.right_vib += weapon.vib_right;
                 }
-                Fab5_Game.inst().message("play_sound", new { name = weapon.sound });
+                Fab5_Game.inst().message("weapon_fired", new { name = weapon.sound ,entity1= origin } );
                 weapon.timeSinceLastShot = 0f;
                 if (weapon.GetType() == typeof (Secondary_Weapon) && ship.has_powerup(typeof (Fast_Bombs_Powerup))) {
                     weapon.timeSinceLastShot = weapon.fire_rate * 0.8f;

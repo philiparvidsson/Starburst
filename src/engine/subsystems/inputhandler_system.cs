@@ -82,6 +82,7 @@
             for (int i = 0; i < num_components; i++)
             {
                 var entity = entities[i];
+                var pos = entity.get_component<Position>();
                 var input = entity.get_component<Input>();
                 var angle = entity.get_component<Angle>();
 
@@ -195,7 +196,7 @@
                     angle.angle += ang_acc * turn;
                 }
                 if (Math.Abs(input.throttle) > 0.01f) {
-                    //Fab5_Game.inst().message("play_sound", new { name = "thrust", gp_index = input.gp_index, pos = pos });
+                    Fab5_Game.inst().message("play_sound", new { name = "thrust", gp_index = input.gp_index, pos = pos });
 
                     velocity.x += dt * (float)(Math.Cos(angle.angle)) * acc * input.throttle;
                     velocity.y += dt * (float)(Math.Sin(angle.angle)) * acc * input.throttle;
@@ -208,7 +209,7 @@
                     }
                 }
                 else {
-                    //Fab5_Game.inst().message("stop_sound", new { name = "thrust", gp_index = input.gp_index, pos = pos });
+                    Fab5_Game.inst().message("stop_sound", new { name = "thrust", gp_index = input.gp_index, pos = pos });
                 }
 
 
