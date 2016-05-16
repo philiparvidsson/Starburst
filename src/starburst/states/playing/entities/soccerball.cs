@@ -120,7 +120,7 @@ public static class Soccer_Ball {
                                         return;
                                     }*/
 
-                                    var text = string.Format("{0} TEAM\nSCORED A GOAL!!", scoring_team == 1 ? "RED" : "BLUE");
+                                    var text = string.Format("{0} TEAM SCORED A GOAL!!", scoring_team == 1 ? "RED" : "BLUE");
                                     var ts   = GFX_Util.measure_string(text);
 
                                     // @To-do: larger text plz
