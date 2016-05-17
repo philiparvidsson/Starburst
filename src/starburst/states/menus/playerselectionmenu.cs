@@ -427,7 +427,7 @@ namespace Fab5.Starburst.States {
                 String teamText = "Red Team";
                 Vector2 teamTextSize = font.MeasureString(teamText);
                 sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f, rectangleY - 50), new Color(1.0f, 0.2f, 0.2f));
-                String botText = parent.gameConfig.red_bots + " AI Player" + (parent.gameConfig.red_bots != 1 ? "s" : "");
+                String botText = parent.gameConfig.red_bots + " AI Bot" + (parent.gameConfig.red_bots != 1 ? "s" : "");
                 Vector2 botTextSize = smallFont.MeasureString(botText);
                 sprite_batch.DrawString(smallFont, botText, new Vector2(startPos + rectSize + spacing * .5f - botTextSize.X * .5f, rectangleY - 25), Color.White);
 
@@ -436,12 +436,12 @@ namespace Fab5.Starburst.States {
                 teamTextSize = font.MeasureString(teamText);
                 teamTextSize = font.MeasureString(teamText);
                 sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f + (vp.Width * .5f), rectangleY - 50), new Color(0.0f, 0.5f, 1.0f));
-                botText = parent.gameConfig.blue_bots + " AI Player" + (parent.gameConfig.blue_bots != 1 ? "s" : "");
+                botText = parent.gameConfig.blue_bots + " AI Bot" + (parent.gameConfig.blue_bots != 1 ? "s" : "");
                 botTextSize = smallFont.MeasureString(botText);
                 sprite_batch.DrawString(smallFont, botText, new Vector2(startPos + rectSize + spacing * .5f - botTextSize.X * .5f + (vp.Width * .5f), rectangleY - 25), Color.White);
             }
             else {
-                String botText = parent.gameConfig.red_bots+parent.gameConfig.blue_bots + " AI Player" + (parent.gameConfig.red_bots + parent.gameConfig.blue_bots!=1 ? "s":"");
+                String botText = parent.gameConfig.red_bots+parent.gameConfig.blue_bots + " AI Bot" + (parent.gameConfig.red_bots + parent.gameConfig.blue_bots!=1 ? "s":"");
                 Vector2 botTextSize = smallFont.MeasureString(botText);
                 sprite_batch.DrawString(smallFont, botText, new Vector2((vp.Width * .5f) - botTextSize.X * .5f, rectangleY - 25), Color.White);
             }
