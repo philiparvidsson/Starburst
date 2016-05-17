@@ -699,7 +699,7 @@ public static class Dummy_Enemy {
 
         var data = new Data{};
         data.data["input"] = input;
-        data.data["ai_index"] = ai_index++;
+        data.data["ai_index"] = string.Format("{0:00}", ai_index++);
         data.data["path_recalc_time"] = Fab5_Game.inst().get_time() + 0.5f - (float)rand.NextDouble() * 2.0f;
         components.Add(data);
 
