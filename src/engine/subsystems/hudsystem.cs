@@ -12,6 +12,7 @@
     using Fab5.Starburst.States;
     public class Hudsystem
     {
+        public Game_State state;
         SpriteBatch sprite_batch;
         Ship_Info ship_info;
         Sprite enball;
@@ -71,7 +72,7 @@
             int num_inv = si.max_powerups_inv;
 
             int x = (int)(cam.viewport.Width * 0.5f - 0.5f*((num_inv-1)*smallSize+size+(num_inv-1)*spacing));
-            int y = 40;
+            int y = 65;
 
             for (int i = 0; i < num_inv; i++) {
                 int mySize = (i == si.powerup_inv_index ? size : smallSize);
@@ -181,6 +182,27 @@
                                   SpriteEffects.None,
                                   1.0f);
             }
+
+            var ball = ((Playing_State)state).ball;
+
+            if (ball != null && ((Playing_State)state).game_conf.soccer_mode) {
+                var ballpos = ((Playing_State)state).ball.get_component<Position>();
+
+                var tw = 16.0f;
+                var th = 16.0f;
+                var map_pos_x = minimap_left + scale*0.5f*(ballpos.x+2048.0f) / tw;
+                var map_pos_y = minimap_top + scale*0.5f*(ballpos.y+2048.0f)  / th;
+
+                sprite_batch.Draw(white_pixel_tex,
+                                  new Vector2(map_pos_x, map_pos_y),
+                                  null,
+                                  Color.Gold,
+                                  0.0f,
+                                  new Vector2(0.5f, 0.5f),
+                                  new Vector2(6.0f, 6.0f),
+                                  SpriteEffects.None,
+                                  1.0f);
+            }
         }
 
         public void drawHUD(Entity player, float dt, Camera camera)
@@ -246,10 +268,10 @@
             if (energy_blink_timer > 1.0f/5.0f) {
                 energy_blink_timer -= 1.0f/5.0f;
             }
-            
+
             //var source_rect = new Rectangle(enball.frame_x, enball.frame_y, enball.frame_width, enball.frame_height);
 
-            
+
            // Console.WriteLine(                new Vector2((shipPos.x - camera.position.x - camera.displacement.X) * camera.zoom, (shipPos.y - camera.position.y - camera.displacement.Y) * camera.zoom));
             if (energy_blink_timer < 1.0f/10.0f) {
             sprite_batch.Draw(enball.texture,
@@ -267,30 +289,30 @@
         // private void updateEnergySprite(float dt)
 //         {
 //             var players = Fab5_Game.inst().get_entities_fast(typeof(Input));
-// 
-// 
+//
+//
 //             this.number_of_players = 0;
-// 
+//
 //             foreach(Entity p in players)
 //             {
 //                 if(p.get_component<Input>().enabled)
 //                     this.number_of_players++;
 //             }
-//             
-// 
+//
+//
 //             enball.fps = 20.0f / this.number_of_players;
-// 
+//
 //             enball.frame_timer += dt;
 //             if (enball.frame_timer > (1.0f / enball.fps))
 //             {
 //                 enball.frame_counter++;
 //                 enball.frame_timer -= (1.0f / enball.fps);
-// 
+//
 //                 enball.frame_x += enball.frame_width;
 //                 if (enball.frame_x >= enball.texture.Width || enball.frame_counter >= enball.num_frames)
 //                 {
 //                     enball.frame_x = 0;
-// 
+//
 //                     if (enball.frame_counter >= enball.num_frames)
 //                     {
 //                         enball.frame_counter = 0;

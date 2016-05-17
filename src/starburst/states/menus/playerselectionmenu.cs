@@ -4,7 +4,7 @@ namespace Fab5.Starburst.States {
     using Fab5.Engine.Components;
     using Fab5.Engine.Core;
     using Fab5.Engine.Subsystems;
-    
+
     using Main_Menu.Entities;
     using Main_Menu.Subsystems;
     using Menus.Subsystems;
@@ -361,7 +361,7 @@ namespace Fab5.Starburst.States {
 
             sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             //sprite_batch.Draw(background, destinationRectangle: new Rectangle(0, 0, vp.Width, vp.Height), color: Color.White);
-            
+
             if (!started) {
                 startTime = t;
                 started = true;
@@ -391,7 +391,7 @@ namespace Fab5.Starburst.States {
                 int boxAnimationDistance = (int)(i < 2 ? animationDistance*0.5 : -animationDistance*0.5);
                 int startLeftX = currentLeftX - boxAnimationDistance;
 
-                if (t - startTime < animateInTime) 
+                if (t - startTime < animateInTime)
                     currentLeftX = (int)Easing.ElasticEaseOut((t - startTime), startLeftX, boxAnimationDistance, animateInTime);
 
                 Rectangle destRect = new Rectangle(currentLeftX, rectangleY, rectSize, rectSize);
@@ -427,7 +427,7 @@ namespace Fab5.Starburst.States {
                 String teamText = "Red Team";
                 Vector2 teamTextSize = font.MeasureString(teamText);
                 sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f, rectangleY - 50), new Color(1.0f, 0.2f, 0.2f));
-                String botText = (parent.gameConfig.red_bots == 0 ? "No" : parent.gameConfig.red_bots.ToString()) + " AI Bot" + (parent.gameConfig.red_bots != 1 ? "s" : "");
+                String botText = (parent.gameConfig.red_bots == 0 ? "No" : parent.gameConfig.red_bots.ToString()) + " Bot" + (parent.gameConfig.red_bots != 1 ? "s" : "");
                 Vector2 botTextSize = smallFont.MeasureString(botText);
                 sprite_batch.DrawString(smallFont, botText, new Vector2(startPos + rectSize + spacing * .5f - botTextSize.X * .5f, rectangleY - 25), Color.White);
 
@@ -435,12 +435,12 @@ namespace Fab5.Starburst.States {
                 teamText = "Blue Team";
                 teamTextSize = font.MeasureString(teamText);
                 sprite_batch.DrawString(font, teamText, new Vector2(startPos + rectSize + spacing * .5f - teamTextSize.X * .5f + (vp.Width * .5f), rectangleY - 50), new Color(0.0f, 0.5f, 1.0f));
-                botText = (parent.gameConfig.blue_bots == 0 ? "No" : parent.gameConfig.blue_bots.ToString()) + " AI Bot" + (parent.gameConfig.blue_bots != 1 ? "s" : "");
+                botText = (parent.gameConfig.blue_bots == 0 ? "No" : parent.gameConfig.blue_bots.ToString()) + " Bot" + (parent.gameConfig.blue_bots != 1 ? "s" : "");
                 botTextSize = smallFont.MeasureString(botText);
                 sprite_batch.DrawString(smallFont, botText, new Vector2(startPos + rectSize + spacing * .5f - botTextSize.X * .5f + (vp.Width * .5f), rectangleY - 25), Color.White);
             }
             else {
-                String botText = parent.gameConfig.red_bots+parent.gameConfig.blue_bots + " AI Bot" + (parent.gameConfig.red_bots + parent.gameConfig.blue_bots!=1 ? "s":"");
+                String botText = (parent.gameConfig.red_bots + parent.gameConfig.blue_bots == 0 ? "No" : (parent.gameConfig.red_bots + parent.gameConfig.blue_bots).ToString()) + (((parent.gameConfig.red_bots + parent.gameConfig.blue_bots) == 1) ? " Bot" : " Bots");
                 Vector2 botTextSize = smallFont.MeasureString(botText);
                 sprite_batch.DrawString(smallFont, botText, new Vector2((vp.Width * .5f) - botTextSize.X * .5f, rectangleY - 25), Color.White);
             }

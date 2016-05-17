@@ -605,8 +605,8 @@ namespace Fab5.Starburst.States.Playing {
                             var ts    = GFX_Util.measure_string(text);
                             String points = "+" + (250*shooter_score_mult).ToString();
                             var ps    = GFX_Util.measure_string(points);
-                            GFX_Util.draw_def_text(sprite_batch, text, (camera.viewport.Width-ts.X)*0.5f, 90.0f, a);
-                            GFX_Util.draw_def_text(sprite_batch, points, (camera.viewport.Width-ps.X)*0.5f, 90.0f + ts.Y + 10, a);
+                            GFX_Util.draw_def_text(sprite_batch, text, (camera.viewport.Width-ts.X)*0.5f, 145.0f, a);
+                            GFX_Util.draw_def_text(sprite_batch, points, (camera.viewport.Width-ps.X)*0.5f, 145.0f + ts.Y + 10, a);
                         }
                     },
 
@@ -619,12 +619,15 @@ namespace Fab5.Starburst.States.Playing {
                 Fab5_Game.inst().create_entity(new Component[] {
                     new TTL {
                         destroy_cb = () => {
+                            Fab5_Game.inst().message("spawn", new { entity1 = player ,name="spawn", varying_pitch=false});
+
                             player.add_components(old_particle_emitter, old_bounding_circle, old_sprite, old_shadow, old_light);
                             if (player.has_component<Input>()) {
                                 player.get_component<Input>().enabled = true;
                             }
 
                             var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
+
                             player.get_component<Position>().x = spawn_pos.x;
                             player.get_component<Position>().y = spawn_pos.y;
                             player.get_component<Ship_Info>().spawn_time = Fab5_Game.inst().get_time();
