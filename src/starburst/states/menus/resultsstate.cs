@@ -302,7 +302,7 @@ namespace Fab5.Starburst.States
                         var player_input = blueTeam[i].get_component<Input>();
                         if (player_input != null && player_input.device == Input.InputType.Controller)
                         {
-                            Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + player_input.gp_index);
+                            Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + (int)player_input.gp_index);
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 100, rowY, 63, 45));
                             GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
                         }
