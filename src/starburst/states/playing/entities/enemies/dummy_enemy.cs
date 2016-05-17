@@ -610,7 +610,25 @@ public static class Dummy_Enemy {
                 //Console.WriteLine("pew");
                 if ((bool)data.get_data("shoot", false)) {
                     if (shoot_bomb) {
-                        fire(self, si, self.get_component<Secondary_Weapon>());
+                        var va = new Vector2(v.x, v.y);
+                        var vb = new Vector2(tpos.x-p.x,tpos.y-p.y);
+                        va.Normalize();
+                        vb.Normalize();
+                        var vdot = Vector2.Dot(va, vb);
+                        var curspeed = (float)Math.Sqrt(v.x*v.x+v.y*v.y) * vdot;
+                        if (curspeed < 150.0f) {
+                            Console.WriteLine("cur speed is " + curspeed);
+                            v.ax = si.top_velocity * (float)Math.Cos(w.angle) - v.x;
+                            v.ay = si.top_velocity * (float)Math.Sin(w.angle) - v.y;
+                            input.throttle = 1.0f;
+
+                            if (curspeed < 100.0f) {
+                                fire(self, si, self.get_component<Primary_Weapon>());
+                            }
+                        }
+                        else {
+                            fire(self, si, self.get_component<Secondary_Weapon>());
+                        }
                     }
                     else {
                         fire(self, si, self.get_component<Primary_Weapon>());
@@ -702,9 +720,9 @@ public static class Dummy_Enemy {
         data.data["ai_index"] = string.Format("{0:00}", ai_index++);
         data.data["path_recalc_time"] = Fab5_Game.inst().get_time() + 0.5f - (float)rand.NextDouble() * 2.0f;
 
-        data.data["courage_fac"] = 1.0f + 2.0f * (float)Math.Pow((float)rand.NextDouble(), 2.0f);
+        data.data["courage_fac"] = 1.0f + 3.0f * (float)Math.Pow((float)rand.NextDouble(), 3.0f);
         data.data["aggression_fac"] = 0.5f + 10.0f * (float)Math.Pow((float)rand.NextDouble(), 2.0f);
-        data.data["greed_fac"] = 0.2f + 10.0f * (float)Math.Pow((float)rand.NextDouble(), 2.0f);
+        data.data["greed_fac"] = 0.2f + 10.0f * (float)Math.Pow((float)rand.NextDouble(), 3.0f);
 
 
         components.Add(data);
