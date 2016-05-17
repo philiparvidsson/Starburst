@@ -236,6 +236,7 @@ public abstract class Fab5_Game : Game {
     public void enter_state(Game_State state) {
         states.Push(state);
         top_state = state;
+        time = state.update_t;
         state.init();
 
     }

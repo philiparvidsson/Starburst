@@ -187,7 +187,7 @@ public class Collision_Solver : Subsystem {
         }
 
         var e = Math.Abs(m1.restitution_coeff);
-        var friction = m1.friction;
+        var friction = Math.Abs(m1.friction);
 
         var v_dot_n = (v_x*n_x+v_y*n_y);
         var v_n_x = v_dot_n*n_x;
@@ -596,7 +596,7 @@ public class Collision_Solver : Subsystem {
         var v_t_x = v_x - v_n_x;
         var v_t_y = v_y - v_n_y;
 
-        var friction = Math.Max(m1.friction, m1.friction);
+        var friction = Math.Max(Math.Abs(m1.friction), Math.Abs(m1.friction));
 
         /*var v_t = (float)Math.Sqrt(v_t_x*v_t_x+v_t_y*v_t_y);
         if (v_t < 0.01f) {
@@ -622,7 +622,7 @@ public class Collision_Solver : Subsystem {
 
         if (a1 != null) {
             var w = (-p1_y*i_x+p1_x*i_y);
-            a1.ang_vel += (w/(p1_x*p1_x+p1_y*p1_y) - a1.ang_vel)  *friction;
+            a1.ang_vel += (w/(p1_x*p1_x+p1_y*p1_y) - a1.ang_vel) * friction;
         }
 
         if (a2 != null) {

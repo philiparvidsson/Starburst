@@ -828,6 +828,7 @@ namespace Fab5.Engine.Subsystems {
 
             for (int i = 0; i < currentPlayerNumber; i++) {
                 hudsystem_instances[i] = new Hudsystem(sprite_batch, tile_map);
+                hudsystem_instances[i].state = state;
             }
 
         }

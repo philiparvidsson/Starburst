@@ -18,6 +18,8 @@ using System;
 
 public class Playing_State : Game_State {
 
+    public Entity ball;
+
     bool can_pause = false;
     public static System.Random rand = new System.Random();
     private Collision_Handler coll_handler;
@@ -43,7 +45,7 @@ public class Playing_State : Game_State {
         }
         else if(msg.Equals("fullscreen")) {
             Starburst.inst().GraphicsMgr.ToggleFullScreen();
-            System.Threading.Thread.Sleep(150);
+            System.Threading.Thread.Sleep(500);
         }
     }
         private void tryPause() {
@@ -298,7 +300,7 @@ public class Playing_State : Game_State {
         }
 
         if (game_conf.enable_soccer) {
-            var ball = create_entity(Soccer_Ball.create_components());
+            ball = create_entity(Soccer_Ball.create_components());
             var ball_pos = spawner.get_soccerball_spawn_pos(tile_map);
             ball.get_component<Position>().x = ball_pos.x;
             ball.get_component<Position>().y = ball_pos.y;

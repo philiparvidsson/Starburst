@@ -386,6 +386,7 @@ public static class Dummy_Enemy {
         }
 
         float path_recalc_time = (float)data.get_data("path_recalc_time", 0.0f);
+        //Console.WriteLine("{0}, {1}", Fab5_Game.inst().get_time(), path_recalc_time);
         var tile_map = ((Playing_State)self.state).tile_map;
         if (calc_state == 0 && Fab5_Game.inst().get_time() - path_recalc_time > 0.5f) {
 
@@ -718,7 +719,9 @@ public static class Dummy_Enemy {
         var data = new Data{};
         data.data["input"] = input;
         data.data["ai_index"] = string.Format("{0:00}", ai_index++);
-        data.data["path_recalc_time"] = Fab5_Game.inst().get_time() + 0.5f - (float)rand.NextDouble() * 2.0f;
+        data.data["path_recalc_time"] = Fab5_Game.inst().get_time() - 0.5f + (float)rand.NextDouble() * 2.0f;
+
+        //Console.WriteLine(data.data["path_recalc_time"]);
 
         data.data["courage_fac"] = 1.0f + 3.0f * (float)Math.Pow((float)rand.NextDouble(), 3.0f);
         data.data["aggression_fac"] = 0.5f + 10.0f * (float)Math.Pow((float)rand.NextDouble(), 2.0f);
