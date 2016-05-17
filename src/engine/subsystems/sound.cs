@@ -160,21 +160,12 @@ namespace Fab5.Engine.Subsystems
                     }
                 });
             }
-            else if (msg == "weapon_fired")
+            else if (msg == "weapon_fired" || msg == "turretsound" || msg=="spawn")
             {
                 var p1 = data.entity1.get_component<Position>();
                 var vol = ShouldBePlayed(p1);
                 if (vol > 0)
-                    Fab5_Game.inst().message("play_sound", new { name = data.name, volume = vol, varying_pitch = true });
-                else
-                    return;
-            }
-            else if (msg == "turretsound")
-            {
-                var p1 = data.entity1.get_component<Position>();
-                var vol = ShouldBePlayed(p1);
-                if (vol > 0)
-                    Fab5_Game.inst().message("play_sound", new { name = "turret", volume = vol, varying_pitch = true });
+                    Fab5_Game.inst().message("play_sound", new { name = data.name, volume = vol, varying_pitch = data.varying_pitch });
                 else
                     return;
             }
@@ -347,25 +338,6 @@ namespace Fab5.Engine.Subsystems
         }
         public static float ShouldBePlayed(Position p1)
         {
-            /*float[] volume = new float[4];
-            var entities = Fab5_Game.inst().get_entities_fast(typeof(Input));
-            var num_entites = entities.Count;
-            for (int i = 0; i < num_entites; i++)
-            {
-                var entity = entities[i];
-                var playerpos = entity.get_component<Position>();
-                var r = Math.Sqrt((Math.Pow((playerpos.y - p1.y), 2) + Math.Pow((playerpos.x - p1.x), 2)));
-                var playerscreensizeWidth = Fab5_Game.inst().GraphicsMgr.PreferredBackBufferWidth / num_entites;
-                var playerscreensizeHeight = Fab5_Game.inst().GraphicsMgr.PreferredBackBufferHeight / num_entites;
-
-                if (r <= playerscreensizeWidth || r <= playerscreensizeWidth)
-                    volume[i] = 1f;
-                else
-                    volume[i] = 0;
-
-            }
-            return volume.Max();*/
-
             var min_dist = 99999999.0f;
             foreach (var e in Fab5_Game.inst().get_entities_fast(typeof (Input))) {
                 var p = e.get_component<Position>();

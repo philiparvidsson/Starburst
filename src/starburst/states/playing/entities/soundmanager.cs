@@ -48,7 +48,9 @@
             effectlib.Library.Add("laser_impact", new Fab5SoundEffect("sound/effects/laser_impact", "laser_impact"));
             effectlib.Library.Add("small_explosion", new Fab5SoundEffect("sound/effects/small_explosion", "small_explosion"));
             effectlib.Library.Add("pickup", new Fab5SoundEffect("sound/effects/pickup", "pickup"));
-            effectlib.Library.Add("turret", new Fab5SoundEffect("sound /effects/turret", "turret"));
+            effectlib.Library.Add("turret", new Fab5SoundEffect("sound/effects/turret", "turret"));
+            effectlib.Library.Add("spawn", new Fab5SoundEffect("sound/effects/spawn", "spawn"));
+
             
             return (Component)effectlib;
         }

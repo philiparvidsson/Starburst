@@ -41,7 +41,7 @@ namespace Fab5.Engine.Subsystems {
                     input.left_vib += weapon.vib_left;
                     input.right_vib += weapon.vib_right;
                 }
-                Fab5_Game.inst().message("weapon_fired", new { name = weapon.sound ,entity1= origin } );
+                Fab5_Game.inst().message("weapon_fired", new { name = weapon.sound ,entity1= origin , varying_pitch= true} );
                 weapon.timeSinceLastShot = 0f;
                 if (weapon.GetType() == typeof (Secondary_Weapon) && ship.has_powerup(typeof (Fast_Bombs_Powerup))) {
                     weapon.timeSinceLastShot = weapon.fire_rate * 0.8f;
