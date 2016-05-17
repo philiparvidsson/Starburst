@@ -220,7 +220,13 @@ namespace Fab5.Engine.Subsystems
                         if (colspeed > 30)
                         {
                             if ((texttureName.Contains("ship") && texttureName2 == "soccerball") || (texttureName == "soccerball" && texttureName2.Contains("ship")))
-                                Fab5_Game.inst().message("play_sound", new { name = "BatmanPunch", pos = p1, volume = vol });
+                                if (texttureName.Contains("ship"))
+                                {
+                                    Fab5_Game.inst().message("play_sound", new { name = "BatmanPunch", pos = p1, volume = vol, entity1 = data.entity1, timedependent = true, });
+                                }
+                                else {
+                                    Fab5_Game.inst().message("play_sound", new { name = "BatmanPunch", pos = p1, volume = vol, entity1 = data.entity2, timedependent = true, });
+                                }
                             else if ((texttureName.Contains("asteroid") && texttureName2.Contains("ship")) || (texttureName2.Contains("asteroid") && texttureName.Contains("ship")))
                             {
                                 if(texttureName.Contains("ship")){
@@ -229,7 +235,6 @@ namespace Fab5.Engine.Subsystems
                                 else { 
                                     Fab5_Game.inst().message("play_sound", new { name = "rockslide_small", pos = p1, volume = vol, entity1 = data.entity2, timedependent = true, });
                                 }
-
                             }
                             else if (texttureName.Contains("ship") && texttureName2.Contains("ship"))
                                 Fab5_Game.inst().message("play_sound", new { name = "bang", pos = p1, volume = vol,timedependent = true , entity1 = data.entity1 });
