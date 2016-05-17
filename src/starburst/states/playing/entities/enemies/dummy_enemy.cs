@@ -618,7 +618,7 @@ public static class Dummy_Enemy {
                         var vdot = Vector2.Dot(va, vb);
                         var curspeed = (float)Math.Sqrt(v.x*v.x+v.y*v.y) * vdot;
                         if (curspeed < 150.0f) {
-                            Console.WriteLine("cur speed is " + curspeed);
+                            //Console.WriteLine("cur speed is " + curspeed);
                             v.ax = si.top_velocity * (float)Math.Cos(w.angle) - v.x;
                             v.ay = si.top_velocity * (float)Math.Sin(w.angle) - v.y;
                             input.throttle = 1.0f;

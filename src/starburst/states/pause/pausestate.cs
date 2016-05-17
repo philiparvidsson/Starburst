@@ -43,6 +43,7 @@ namespace Fab5.Starburst.States {
             Gamepad_Util.vibrate(3, 0.0f, 0.0f);
             graphicsDevice = Starburst.inst().GraphicsDevice;
             sprite_batch = new SpriteBatch(graphicsDevice);
+            
 
             add_subsystems(
                 new Menu_Input_Handler(),
@@ -90,86 +91,9 @@ namespace Fab5.Starburst.States {
             var ty = (h - text_size.Y) * 0.5f;
 
             var pl = last_state.get_entities_fast(typeof(Score));
-            List<Entity> pList = new List<Entity>();
-            for (int i = 0; i < pl.Count; i++) {
-                //if (pl[i].get_component<Input>() != null)
-                    pList.Add(pl[i]);
-            }
-
-            int rowHeight = 50;
+            
             int vertSpacing = 10;
-            int totalScoreHeight = rowHeight * pList.Count+1 + vertSpacing*(pList.Count-1+1);
-            int startY = (int)(vp.Height*.25f-totalScoreHeight*.5f);
-
-            int horSpacing = 20;
-            int nameWidth = 300;
-
-            String killsHeader = "Kills";
-            String deathsHeader = "Deaths";
-            String scoreHeader = "Score";
-            String goalHeader = "Goals";
-            Vector2 killsSize = font.MeasureString(killsHeader);
-            Vector2 deathsSize = font.MeasureString(deathsHeader);
-            Vector2 scoreSize = font.MeasureString("999999");
-            Vector2 goalSize = font.MeasureString(goalHeader);
-
-            int totalScoreWidth = (int)(nameWidth + horSpacing + killsSize.X + horSpacing + deathsSize.X + horSpacing + scoreSize.X);
-            int nameX = (int)(vp.Width * .5f - totalScoreWidth * .5f);
-            int killsX = nameX + nameWidth + horSpacing;
-            int deathsX = (int)(killsX + killsSize.X + horSpacing);
-            int scoreX = (int)(deathsX + deathsSize.X + horSpacing);
-            int goalX = (int)(scoreX + goalSize.X + horSpacing);
-
-            // header row
-            // TODO: måla en rektangel bakom
-
-            //GFX_Util.draw_def_text(sprite_batch, "Player", nameX, startY);
-            GFX_Util.draw_def_text(sprite_batch, killsHeader, killsX, startY);
-            GFX_Util.draw_def_text(sprite_batch, deathsHeader, deathsX, startY);
-            GFX_Util.draw_def_text(sprite_batch, scoreHeader, scoreX, startY);
-            GFX_Util.draw_def_text(sprite_batch, goalHeader, goalX, startY);
-
-            startY += rowHeight + vertSpacing;
-
-            for (int p = 0; p < pList.Count; p++) {
-                var player = pList[p];
-                Score player_score = player.get_component<Score>();
-                Ship_Info player_shipinfo = player.get_component<Ship_Info>();
-
-                if (player_score == null || player_shipinfo.pindex >= 5) continue;
-
-                int rowY = startY + rowHeight * p + vertSpacing * p;
-                if (player.get_component<Input>() == null)
-                {
-                    Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/bot");
-                    sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 90, rowY, 42, 30));
-                    GFX_Util.draw_def_text(sprite_batch, "Bot #" + (player.get_component<Data>().data["ai_index"]), nameX, rowY);
-                }
-                else
-                {
-                    var player_input = player.get_component<Input>();
-                    if (player_input != null && player_input.device == Input.InputType.Controller)
-                    {
-                        Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + (int)(player_input.gp_index+1));
-                        sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 100, rowY, 63, 45));
-                        GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_shipinfo.pindex - 1], nameX, rowY);
-                    }
-                    else
-                    {
-                        int key_index;
-                        if (player_input.up == Keys.W) key_index = 1;
-                        else key_index = 2;
-                        Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/keys" + key_index);
-                        sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 100, rowY, 63, 45));
-                        GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_shipinfo.pindex - 1], nameX, rowY);
-                    }
-                }
-                GFX_Util.draw_def_text(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
-                GFX_Util.draw_def_text(sprite_batch, player_score.num_deaths.ToString(), deathsX, rowY);
-                GFX_Util.draw_def_text(sprite_batch, player_score.display_score.ToString(), scoreX, rowY);
-                GFX_Util.draw_def_text(sprite_batch, player_score.num_goals.ToString(), goalX, rowY);
-
-            }
+            int startY = (int)(vp.Height*.25f);
 
             GFX_Util.draw_def_text(sprite_batch, "Paused", tx, ty);
 
@@ -247,7 +171,7 @@ namespace Fab5.Starburst.States {
                 var scoreEntities = gameState.get_entities_fast(typeof(Score));
                 List<Entity> players = new List<Entity>();
                 for(int i=0; i < scoreEntities.Count; i++) {
-                    if ((scoreEntities[i].get_component<Ship_Info>() != null) && (scoreEntities[i].get_component<Velocity>() != null))
+                    if ((scoreEntities[i].get_component<Ship_Info>() != null))
                         players.Add(scoreEntities[i]);
                 }
                 Starburst.inst().leave_state();

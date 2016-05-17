@@ -26,6 +26,10 @@ public static class GFX_Util {
         var font = Starburst.inst().get_content<SpriteFont>(!lowRes?"sector034":"small");        
         return font.MeasureString(text);
     }
+    public static Vector2 measure_string_small(string text) {
+        var font = Starburst.inst().get_content<SpriteFont>("small");
+        return font.MeasureString(text);
+    }
 
     public static void draw_def_text(SpriteBatch sprite_batch, string text, float x, float y, float alpha = 1.0f, bool shadow = true) {
         if (alpha < 0.0f) alpha = 0.0f;
@@ -38,6 +42,14 @@ public static class GFX_Util {
         if (shadow)
             sprite_batch.DrawString(font, text, new Vector2(x-4.0f, y-4.0f), Color.Black*0.75f*alpha);
         sprite_batch.DrawString(font, text, new Vector2(x, y), Color.White*alpha);
+    }
+    public static void draw_def_text_small(SpriteBatch sprite_batch, string text, float x, float y, float alpha = 1.0f, bool shadow = true) {
+        if (alpha < 0.0f) alpha = 0.0f;
+        if (alpha > 1.0f) alpha = 1.0f;
+        var font = Starburst.inst().get_content<SpriteFont>("small");
+        if (shadow)
+            sprite_batch.DrawString(font, text, new Vector2(x - 4.0f, y - 4.0f), Color.Black * 0.75f * alpha);
+        sprite_batch.DrawString(font, text, new Vector2(x, y), Color.White * alpha);
     }
 
     public static void draw_def_text(SpriteBatch sprite_batch, string text, float x, float y, Color color, float alpha = 1.0f, bool shadow = true) {
