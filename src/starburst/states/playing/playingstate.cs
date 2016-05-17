@@ -125,6 +125,7 @@ public class Playing_State : Game_State {
                         typeof (Lamp),
                         typeof (Red_Lamp),
                         typeof (Blue_Lamp),
+                        typeof (Lamp2)
                     };
 
                     int k = c.R % types.Length;

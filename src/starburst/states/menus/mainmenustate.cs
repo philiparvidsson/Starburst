@@ -72,7 +72,12 @@ namespace Fab5.Starburst.States {
         int currentMapIndex;
         int gameMode;
         int redBots, blueBots;
-        private const int MaxNumBots = 10;
+        private int MaxNumBots {
+            get {
+                if (gameMode == Playing.Game_Config.GM_DEATHMATCH) return 20;
+                return 10;
+            }
+        }
 
         public Playing.Game_Config gameConfig; //configen som ska skickas till playingstate
 
@@ -238,6 +243,10 @@ namespace Fab5.Starburst.States {
                 animateMap = true;
                 mapAnimationStartTime = Starburst.inst().get_time();
             }
+
+            if (redBots > MaxNumBots) {
+                redBots = MaxNumBots;
+            }
         }
 
         private void proceed() {
@@ -298,7 +307,7 @@ namespace Fab5.Starburst.States {
                 enable_soccer       = selectedMap.soccerBall,
                 soccer_mode         = selectedMap.soccerMode,
                 red_bots            = (selectedMap.bots ? (selectedMap.gameMode == Playing.Game_Config.GM_TEAM_DEATHMATCH ? redBots : redBots) : 0),
-                blue_bots           = (selectedMap.bots ? (selectedMap.gameMode == Playing.Game_Config.GM_TEAM_DEATHMATCH ? blueBots : redBots) : 0)
+                blue_bots           = (selectedMap.bots ? (selectedMap.gameMode == Playing.Game_Config.GM_TEAM_DEATHMATCH ? blueBots : 0) : 0)
             };
             MediaPlayer.Volume = 0.7f;
             vol = 0.7f;
@@ -563,7 +572,7 @@ namespace Fab5.Starburst.States {
             MapConfig currentMap = maps[currentMapIndex];
             if (currentMap.bots) {
                 sprite_batch.DrawString(font, (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH) ? "AI" : "Red AI", new Vector2(leftTextX, settingOffset + rowHeight * 4), Color.White);
-                sprite_batch.DrawString(font, "< " + (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH ? (redBots == 0 ? "off" : (redBots * 2).ToString() + " bots") : redBots == 0 ? "off" : redBots.ToString() + " bot" + (redBots != 1 ? "s" : "")) + " >", new Vector2(rightTextX, settingOffset + rowHeight * 4), (position.y == (int)options.redBots ? new Color(Color.Gold, textOpacity) : Color.White));
+                sprite_batch.DrawString(font, "< " + (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH ? (redBots == 0 ? "off" : (redBots).ToString() + " bots") : redBots == 0 ? "off" : redBots.ToString() + " bot" + (redBots != 1 ? "s" : "")) + " >", new Vector2(rightTextX, settingOffset + rowHeight * 4), (position.y == (int)options.redBots ? new Color(Color.Gold, textOpacity) : Color.White));
 
                 if(currentMap.gameMode == Playing.Game_Config.GM_TEAM_DEATHMATCH) {
                     sprite_batch.DrawString(font, "Blue AI", new Vector2(leftTextX, settingOffset + rowHeight * 5), Color.White);
