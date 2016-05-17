@@ -440,7 +440,7 @@ namespace Fab5.Starburst.States {
                 sprite_batch.DrawString(smallFont, botText, new Vector2(startPos + rectSize + spacing * .5f - botTextSize.X * .5f + (vp.Width * .5f), rectangleY - 25), Color.White);
             }
             else {
-                String botText = parent.gameConfig.red_bots + parent.gameConfig.blue_bots + " AI Bots";
+                String botText = (parent.gameConfig.red_bots + parent.gameConfig.blue_bots == 0 ? "No" : (parent.gameConfig.red_bots + parent.gameConfig.blue_bots).ToString()) + " Bots";
                 Vector2 botTextSize = smallFont.MeasureString(botText);
                 sprite_batch.DrawString(smallFont, botText, new Vector2((vp.Width * .5f) - botTextSize.X * .5f, rectangleY - 25), Color.White);
             }
