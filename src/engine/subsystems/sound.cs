@@ -187,7 +187,7 @@ namespace Fab5.Engine.Subsystems
                         {
                             var texttureName = sprite1.texture.Name;
                             if (texttureName.Contains("ship") && speed > 27)
-                                Fab5_Game.inst().message("play_sound", new { pos = p1, name = "bang2", volume = vol });
+                                Fab5_Game.inst().message("play_sound", new { pos = p1, name = "bang2", volume = vol , entity1=data.entity1, timedependent= true});
                             else if (texttureName.Contains("beams1"))
                                 Fab5_Game.inst().message("play_sound", new { name = "laser_impact", pos = p1, volume = vol });
                             else if (texttureName.Contains("beams2"))
@@ -217,17 +217,29 @@ namespace Fab5.Engine.Subsystems
                         var speed2 = Math.Sqrt(Math.Pow(velo2.x, 2) + Math.Pow(velo2.y, 2));
                         var colspeed = (float)Math.Abs(speed - speed2 * ((velo.x * velo2.x + velo.y * velo2.y) / (speed * speed2)));
 
-                        if (colspeed > 27)
+                        if (colspeed > 30)
                         {
                             if ((texttureName.Contains("ship") && texttureName2 == "soccerball") || (texttureName == "soccerball" && texttureName2.Contains("ship")))
                                 Fab5_Game.inst().message("play_sound", new { name = "BatmanPunch", pos = p1, volume = vol });
                             else if ((texttureName.Contains("asteroid") && texttureName2.Contains("ship")) || (texttureName2.Contains("asteroid") && texttureName.Contains("ship")))
-                                Fab5_Game.inst().message("play_sound", new { name = "rockslide_small", pos = p1, volume = vol });
+                            {
+                                if(texttureName.Contains("ship")){
+                                    Fab5_Game.inst().message("play_sound", new { name = "rockslide_small", pos = p1, volume = vol, entity1 = data.entity1, timedependent = true, });
+                                }
+                                else { 
+                                    Fab5_Game.inst().message("play_sound", new { name = "rockslide_small", pos = p1, volume = vol, entity1 = data.entity2, timedependent = true, });
+                                }
+
+                            }
                             else if (texttureName.Contains("ship") && texttureName2.Contains("ship"))
-                                Fab5_Game.inst().message("play_sound", new { name = "bang", pos = p1, volume = vol });
+                                Fab5_Game.inst().message("play_sound", new { name = "bang", pos = p1, volume = vol,timedependent = true , entity1 = data.entity1 });
                         }
 
-                        if (texttureName.Contains("beams1") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams1"))
+                        if (texttureName.Contains("beams1") && texttureName2.Contains("asteroid") || texttureName.Contains("asteroid") && texttureName2.Contains("beams1"))
+                            Fab5_Game.inst().message("play_sound", new { name = "laser_impact", pos = p1, volume = vol });
+                        else if (texttureName.Contains("beams2") && texttureName2.Contains("asteroid") || texttureName.Contains("asteroid") && texttureName2.Contains("beams2"))
+                            Fab5_Game.inst().message("play_sound", new { name = "small_explosion", pos = p1, volume = vol });
+                        else if (texttureName.Contains("beams1") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams1"))
                             Fab5_Game.inst().message("play_sound", new { name = "laser_impact", pos = p1, volume = vol });
                         else if (texttureName.Contains("beams2") && texttureName2.Contains("ship") || texttureName.Contains("ship") && texttureName2.Contains("beams2"))
                             Fab5_Game.inst().message("play_sound", new { name = "small_explosion", pos = p1, volume = vol });
@@ -243,7 +255,10 @@ namespace Fab5.Engine.Subsystems
                 bool varying_pitch = false;
                 if (varying_pitchprop != null)
                     varying_pitch = true;
-
+                bool timedependent = false;
+                var timedependentprop = data.GetType().GetProperty("timedependent");
+                if (timedependentprop != null)
+                    timedependent = true;
 
                 var entities = Fab5_Game.inst().get_entities_fast(typeof(SoundLibrary));
                 int num_components = entities.Count;
@@ -282,10 +297,21 @@ namespace Fab5.Engine.Subsystems
                         }
                         else
                         {
+                            Entity e1 = null;
+                            //if timedependent och nyckeln inte finns.. safe att spela.. och om timedependent och ljudet spelades för mer än 0.2 sec
+                            if (timedependent){ 
+                                e1 = data.entity1;
+                                if (!effect.LastPLayedDic.ContainsKey(e1.id) || (DateTime.Now - effect.LastPLayedDic[e1.id]).Seconds > 0.2)
+                                    effect.LastPLayedDic[e1.id] = DateTime.Now;
+                                else
+                                    return;
+                            }
                             if (varying_pitch)
                                 pitchval = 0.2f * (float)Math.Sign((float)rand.NextDouble() - 0.5f) * (float)Math.Pow(rand.NextDouble(), 3.0f);
                             effect.SoundEffect.Play(volume: (float)data.volume,pan:0,pitch:pitchval);
+                            
                         }
+                     
                     }
                     else if (music != null)
                     {
