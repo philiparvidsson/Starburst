@@ -80,6 +80,8 @@ namespace Fab5.Starburst.States
         int rowHeight = 30;
         int vertSpacing = 5;
         private int totalResultsHeight;
+        private bool scrollable;
+        private int resultsViewHeight;
 
         public Results_State(List<Entity> players, Game_Config config)
         {
@@ -149,7 +151,7 @@ namespace Fab5.Starburst.States
                 create_entity(Player.create_components(players[i].get_component<Input>()));
             }
             graphicsDevice = sprite_batch.GraphicsDevice;
-            int resultsViewHeight = (int)(vp.Height*.83f);
+            resultsViewHeight = (int)(vp.Height*.83f);
             resultsRT = new RenderTarget2D(graphicsDevice, vp.Width, resultsViewHeight);
 
             Comparer<Entity> sort_on_score = Comparer<Entity>.Create((e1, e2) => -e1.get_component<Score>().score.CompareTo(e2.get_component<Score>().score));
@@ -185,8 +187,8 @@ namespace Fab5.Starburst.States
                 blueTeamHeight = rowHeight * (blueTeam.Count + 0) + vertSpacing * (blueTeam.Count - 1);
 
                 totalResultsHeight = redTeamHeight + 50 + blueTeamHeight + 50 - resultsViewHeight + 100;
-                if (resultsViewHeight > redTeamHeight + 50 + blueTeamHeight + 50 + 100)
-                    autoAnimating = false;
+                if (resultsViewHeight < redTeamHeight + 50 + blueTeamHeight + 50 + 100)
+                    scrollable = true;
             }
             else {
                 bestScore = 0;
@@ -277,11 +279,11 @@ namespace Fab5.Starburst.States
             int currentOffset = 50;
             int animDistance = totalResultsHeight;
             int startY = currentOffset - animDistance;
-            if (autoAnimating && t < animateInTime)
+            if (scrollable && t < animateInTime)
                 currentOffset = (int)Easing.QuadEaseInOut((t), startY, animDistance, animateInTime);
-            else if (autoAnimating && t < animateInTime*2)
+            else if (scrollable && t < animateInTime*2)
                 currentOffset = (int)Easing.QuadEaseInOut((t-animateInTime), startY+animDistance, -animDistance, animateInTime);
-            else if (autoAnimating && t < animateInTime * 3)
+            else if (scrollable && t < animateInTime * 3)
                 currentOffset = (int)Easing.QuadEaseInOut((t - animateInTime*2), startY, animDistance, animateInTime);
 
             //GFX_Util.draw_def_text(sprite_batch, "Player", nameX, startY);
@@ -480,6 +482,10 @@ namespace Fab5.Starburst.States
 
                 GFX_Util.draw_def_text_small(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY);
 
+            }
+
+            if(scrollable) {
+                GFX_Util.fill_rect(sprite_batch, new Rectangle((int)(vp.Width * .5f - totalScoreWidth * .5f - horPadding*.5f - 30), resultsViewHeight, (int)(totalScoreWidth + horPadding + 60), 2), Color.White);
             }
 
             sprite_batch.End();
