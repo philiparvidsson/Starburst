@@ -82,6 +82,7 @@ namespace Fab5.Starburst.States
         private int totalResultsHeight;
         private bool scrollable;
         private int resultsViewHeight;
+        private int totalPlayerHeight;
 
         public Results_State(List<Entity> players, Game_Config config)
         {
@@ -210,6 +211,11 @@ namespace Fab5.Starburst.States
                     }
                 }
                 players.Sort(sort_on_score);
+
+                totalPlayerHeight = rowHeight * (players.Count + 0) + vertSpacing * (players.Count - 1);
+                totalResultsHeight = totalPlayerHeight + 100 - resultsViewHeight;
+                if (resultsViewHeight < totalPlayerHeight + 100)
+                    scrollable = true;
             }
 
         }
@@ -347,7 +353,6 @@ namespace Fab5.Starburst.States
                 // avstånd mellan rutorna
                 currentOffset += 50;
                 // måla ut lagruta inkl lag-header
-                int blueTeamHeight = rowHeight * (blueTeam.Count + 0) + vertSpacing * (blueTeam.Count - 1);
                 destRect = new Rectangle(iconX - horPadding, currentOffset - vertPadding, totalScoreWidth + horPadding * 2, blueTeamHeight + vertPadding * 2);
                 col = new Color(0.0f, 0.5f, 1.0f, 0.7f);
                 GFX_Util.fill_rect(sprite_batch, destRect, col);
@@ -471,13 +476,16 @@ namespace Fab5.Starburst.States
                 int totalScoreHeight = rowHeight * players.Count + 1 + vertSpacing * (players.Count - 1 + 1);
                 // skriv ut vilken person som vann
                 currentOffset += totalScoreHeight + vertSpacing + textOffset;
-                String winner = "";
-                for (int i = 0; i < bestPlayers.Count; i++) {
-                    if (i > 0)
-                        winner += " & ";
-                    winner += player_string(bestPlayers[i]);
+                String winText = "Nobody won";
+                if (bestScore > 0) {
+                    String winner = "";
+                    for (int i = 0; i < bestPlayers.Count; i++) {
+                        if (i > 0)
+                            winner += " & ";
+                        winner += player_string(bestPlayers[i]);
+                    }
+                    winText = winner + " won!";
                 }
-                String winText = winner + " won!";
                 Vector2 winSize = GFX_Util.measure_string_small(winText);
 
                 GFX_Util.draw_def_text_small(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY);
