@@ -150,6 +150,8 @@ namespace Fab5.Starburst.States {
                 cursorPosition.y = (int)options.proceed;
             else if (cursorPosition.y < (int)options.proceed)
                 cursorPosition.y++;
+            else if (cursorPosition.y == (int)options.proceed)
+                cursorPosition.y = 0;
             Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
         }
 
@@ -164,6 +166,8 @@ namespace Fab5.Starburst.States {
                 else
                     position.y = (int)options.powerups;
             }
+            else if (position.y == 0)
+                position.y = (int)options.proceed;
             else if (position.y > 0) {
                 position.y--;
                 Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
@@ -285,16 +289,16 @@ namespace Fab5.Starburst.States {
             MapConfig selectedMap = maps[currentMapIndex];
 
             gameConfig = new Playing.Game_Config() {
-                match_time = time*60,
-                num_asteroids = asteroid,
-                num_powerups = powerup,
-                powerup_spawn_time = powerupTime,
-                map_name = selectedMap.fileName,
-                mode = selectedMap.gameMode,
-                enable_soccer = selectedMap.soccerBall,
-                soccer_mode = selectedMap.soccerMode,
-                red_bots = (selectedMap.bots ? (selectedMap.gameMode == Playing.Game_Config.GM_TEAM_DEATHMATCH ? redBots : redBots) : 0),
-                blue_bots = (selectedMap.bots ? (selectedMap.gameMode == Playing.Game_Config.GM_TEAM_DEATHMATCH ? blueBots : redBots) : 0)
+                match_time          = time*60,
+                num_asteroids       = asteroid,
+                num_powerups        = redBots + blueBots + powerup,
+                powerup_spawn_time  = redBots + blueBots == 0 ? powerupTime : ((powerupTime - (int)((redBots + blueBots) * 0.5f)) <= 2 ? 2 : (powerupTime - (int)((redBots + blueBots) * 0.5f))),
+                map_name            = selectedMap.fileName,
+                mode                = selectedMap.gameMode,
+                enable_soccer       = selectedMap.soccerBall,
+                soccer_mode         = selectedMap.soccerMode,
+                red_bots            = (selectedMap.bots ? (selectedMap.gameMode == Playing.Game_Config.GM_TEAM_DEATHMATCH ? redBots : redBots) : 0),
+                blue_bots           = (selectedMap.bots ? (selectedMap.gameMode == Playing.Game_Config.GM_TEAM_DEATHMATCH ? blueBots : redBots) : 0)
             };
             MediaPlayer.Volume = 0.7f;
             vol = 0.7f;
