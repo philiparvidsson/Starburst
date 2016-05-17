@@ -558,12 +558,12 @@ namespace Fab5.Starburst.States {
 
             MapConfig currentMap = maps[currentMapIndex];
             if (currentMap.bots) {
-                sprite_batch.DrawString(font, (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH) ? "AI Players" : "Red AI Players", new Vector2(leftTextX, settingOffset + rowHeight * 4), Color.White);
-                sprite_batch.DrawString(font, "< " + (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH ? (redBots == 0 ? "off" : (redBots * 2).ToString() + " player" + (redBots != 1 ? "s" : "")) : redBots == 0 ? "off" : redBots.ToString() + " player" + (redBots != 1 ? "s" : "")) + " >", new Vector2(rightTextX, settingOffset + rowHeight * 4), (position.y == (int)options.redBots ? new Color(Color.Gold, textOpacity) : Color.White));
+                sprite_batch.DrawString(font, (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH) ? "AI" : "Red AI", new Vector2(leftTextX, settingOffset + rowHeight * 4), Color.White);
+                sprite_batch.DrawString(font, "< " + (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH ? (redBots == 0 ? "off" : (redBots * 2).ToString() + " bot" + (redBots != 1 ? "s" : "")) : redBots == 0 ? "off" : redBots.ToString() + " bot" + (redBots != 1 ? "s" : "")) + " >", new Vector2(rightTextX, settingOffset + rowHeight * 4), (position.y == (int)options.redBots ? new Color(Color.Gold, textOpacity) : Color.White));
 
                 if(currentMap.gameMode == Playing.Game_Config.GM_TEAM_DEATHMATCH) {
-                    sprite_batch.DrawString(font, "Blue AI Players", new Vector2(leftTextX, settingOffset + rowHeight * 5), Color.White);
-                    sprite_batch.DrawString(font, "< " + (currentMap.gameMode == Playing.Game_Config.GM_DEATHMATCH ? (blueBots == 0 ? "off" : (blueBots * 2).ToString() + " player" + (blueBots != 1 ? "s" : "")) : blueBots == 0 ? "off" : blueBots.ToString() + " player" + (blueBots != 1 ? "s" : "")) + " >", new Vector2(rightTextX, settingOffset + rowHeight * 5), (position.y == (int)options.blueBots ? new Color(Color.Gold, textOpacity) : Color.White));
+                    sprite_batch.DrawString(font, "Blue AI", new Vector2(leftTextX, settingOffset + rowHeight * 5), Color.White);
+                    sprite_batch.DrawString(font, "< " + (blueBots == 0 ? "off" : blueBots.ToString() + " bot" + (blueBots != 1 ? "s" : "")) + " >", new Vector2(rightTextX, settingOffset + rowHeight * 5), (position.y == (int)options.blueBots ? new Color(Color.Gold, textOpacity) : Color.White));
                 }
             }
 
