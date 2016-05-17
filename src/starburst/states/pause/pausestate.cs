@@ -171,7 +171,7 @@ namespace Fab5.Starburst.States {
                 var scoreEntities = gameState.get_entities_fast(typeof(Score));
                 List<Entity> players = new List<Entity>();
                 for(int i=0; i < scoreEntities.Count; i++) {
-                    if ((scoreEntities[i].get_component<Ship_Info>() != null) && (scoreEntities[i].get_component<Velocity>() != null))
+                    if ((scoreEntities[i].get_component<Ship_Info>() != null))
                         players.Add(scoreEntities[i]);
                 }
                 Starburst.inst().leave_state();

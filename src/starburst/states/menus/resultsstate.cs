@@ -168,6 +168,13 @@ namespace Fab5.Starburst.States
                 for (int p = 0; p < players.Count; p++) {
                     Ship_Info player_info = players[p].get_component<Ship_Info>();
                     Score player_score = players[p].get_component<Score>();
+                    if (players[p].get_component<Velocity>() == null) {// turret, lägg till poäng men inte entiteten i laget 
+                        if (player_info.team == 1)
+                            redScore += (int)player_score.score;
+                        else
+                            blueScore += (int)player_score.score;
+                        continue;
+                    }
                     if (player_info == null) continue;
                     if (player_info.team == 1) {
                         redTeam.Add(players[p]);
@@ -194,6 +201,13 @@ namespace Fab5.Starburst.States
             else {
                 bestScore = 0;
                 bestPlayers = new List<Entity>();
+                List<Entity> checkedPlayers = new List<Entity>();
+                // ta bort turrets (ska inte finnas några här, men tas bort utifall att)
+                for (int i = 0; i < players.Count; i++) {
+                    if (players[i].get_component<Velocity>() != null)
+                        checkedPlayers.Add(players[i]);
+                }
+                players = checkedPlayers;
                 for (int i = 0; i < players.Count; i++) {
                     Score player_score = players[i].get_component<Score>();
                     Ship_Info player_info = players[i].get_component<Ship_Info>();
