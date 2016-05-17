@@ -241,7 +241,7 @@ namespace Fab5.Starburst.States
                     {
                         Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/bot");
                         sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 90, rowY, 42, 30));
-                        GFX_Util.draw_def_text(sprite_batch, "Bot  " + (player_info.pindex - 1), nameX, rowY);
+                        GFX_Util.draw_def_text(sprite_batch, "Bot #" + (redTeam[i].get_component<Data>().data["ai_index"]), nameX, rowY);
                     }
                     else
                     {
@@ -295,7 +295,7 @@ namespace Fab5.Starburst.States
                     {
                         Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/bot");
                         sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 90, rowY, 42, 30));
-                        GFX_Util.draw_def_text(sprite_batch, "Bot  " + (player_info.pindex - 1), nameX, rowY);
+                        GFX_Util.draw_def_text(sprite_batch, "Bot #" + (blueTeam[i].get_component<Data>().data["ai_index"]), nameX, rowY);
                     }
                     else
                     {
@@ -368,7 +368,7 @@ namespace Fab5.Starburst.States
                     {
                         Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/bot");
                         sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 90, rowY, 42, 30));
-                        GFX_Util.draw_def_text(sprite_batch, "Bot  " + (player_info.pindex - 1), nameX, rowY);
+                        GFX_Util.draw_def_text(sprite_batch, "Bot #" + (players[i].get_component<Data>().data["ai_index"]), nameX, rowY);
                     }
                     else
                     {

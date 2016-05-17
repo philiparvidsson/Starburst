@@ -813,7 +813,7 @@ namespace Fab5.Starburst.States.Playing {
             return ("player " + s[(int)e.get_component<Input>().gp_index]);
         }
 
-        return "bot " + (int)e.get_component<Data>().get_data("ai_index", 0);
+        return "Bot #" + e.get_component<Data>().get_data("ai_index", "xx");
     }
 
     public void on_collision(Entity a, Entity b, object data) {

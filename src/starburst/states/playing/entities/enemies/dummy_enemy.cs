@@ -310,7 +310,7 @@ public static class Dummy_Enemy {
         return true;
     }
 
-    private static Position closest_pos(Position p, out Entity target, params List<Entity>[] entities) {
+    private static Position closest_pos(Position p, out Entity target, float greed_fac, params List<Entity>[] entities) {
         var min_dist = 99999999.0f;
         Position closest = null;
         Entity targ = null;
@@ -327,7 +327,7 @@ public static class Dummy_Enemy {
                 var dy = p2.y-p.y;
                 var dist = dx*dx+dy*dy;
                 if (e.has_component<Powerup>()) {
-                    dist *= 4; // double distance for powerups
+                    dist *= 4.0f / greed_fac; // double distance for powerups
                 }
 
                 if (dist < min_dist) {
@@ -437,12 +437,12 @@ public static class Dummy_Enemy {
                 data.data["num_enemies"] = num_enemies_nearby;
                 data.data["num_friends"] = num_friends_nearby;
 
-                if (((Playing_State)self.state).game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH && num_enemies_nearby > 1+2*num_friends_nearby) {
+                if (((Playing_State)self.state).game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH && num_enemies_nearby > 1+2*num_friends_nearby*(float)data.data["courage_fac"]) {
                     escape = true;
                 }
                 else {
                     Entity etarget;
-                    targetpos = closest_pos(p, out etarget, players, powerups);
+                    targetpos = closest_pos(p, out etarget, (float)data.data["greed_fac"], players, powerups);
                     data.data["target"] = etarget;
                 }
             }
@@ -567,7 +567,7 @@ public static class Dummy_Enemy {
 
         var target_energy = target.get_component<Ship_Info>()?.energy_value ?? 1.0f;
         var target_max_energy = target.get_component<Ship_Info>()?.top_energy ?? 1.0f;
-        var inv_aggression = 0.1f + (target_energy/target_max_energy)*(float)((int)data.get_data("num_enemies", 0));
+        var inv_aggression = 0.1f + (target_energy/target_max_energy)*(float)((int)data.get_data("num_enemies", 0)) / (float)data.data["aggression_fac"];
         if (inv_aggression > 1.0f) inv_aggression = 1.0f;
         if (si.energy_value > si.top_energy*0.7f*inv_aggression) {
             data.data["shoot"] = true;
@@ -610,7 +610,25 @@ public static class Dummy_Enemy {
                 //Console.WriteLine("pew");
                 if ((bool)data.get_data("shoot", false)) {
                     if (shoot_bomb) {
-                        fire(self, si, self.get_component<Secondary_Weapon>());
+                        var va = new Vector2(v.x, v.y);
+                        var vb = new Vector2(tpos.x-p.x,tpos.y-p.y);
+                        va.Normalize();
+                        vb.Normalize();
+                        var vdot = Vector2.Dot(va, vb);
+                        var curspeed = (float)Math.Sqrt(v.x*v.x+v.y*v.y) * vdot;
+                        if (curspeed < 150.0f) {
+                            Console.WriteLine("cur speed is " + curspeed);
+                            v.ax = si.top_velocity * (float)Math.Cos(w.angle) - v.x;
+                            v.ay = si.top_velocity * (float)Math.Sin(w.angle) - v.y;
+                            input.throttle = 1.0f;
+
+                            if (curspeed < 100.0f) {
+                                fire(self, si, self.get_component<Primary_Weapon>());
+                            }
+                        }
+                        else {
+                            fire(self, si, self.get_component<Secondary_Weapon>());
+                        }
                     }
                     else {
                         fire(self, si, self.get_component<Primary_Weapon>());
@@ -699,8 +717,14 @@ public static class Dummy_Enemy {
 
         var data = new Data{};
         data.data["input"] = input;
-        data.data["ai_index"] = ai_index++;
+        data.data["ai_index"] = string.Format("{0:00}", ai_index++);
         data.data["path_recalc_time"] = Fab5_Game.inst().get_time() + 0.5f - (float)rand.NextDouble() * 2.0f;
+
+        data.data["courage_fac"] = 1.0f + 3.0f * (float)Math.Pow((float)rand.NextDouble(), 3.0f);
+        data.data["aggression_fac"] = 0.5f + 10.0f * (float)Math.Pow((float)rand.NextDouble(), 2.0f);
+        data.data["greed_fac"] = 0.2f + 10.0f * (float)Math.Pow((float)rand.NextDouble(), 3.0f);
+
+
         components.Add(data);
 
         return components.ToArray();
