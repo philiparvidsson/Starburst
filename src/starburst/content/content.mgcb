@@ -1015,3 +1015,9 @@
 /processorParam:TextureFormat=Compressed
 /build:tiny.spritefont
 
+#begin sound/effects/spawn.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/spawn.mp3
+

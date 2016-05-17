@@ -619,12 +619,15 @@ namespace Fab5.Starburst.States.Playing {
                 Fab5_Game.inst().create_entity(new Component[] {
                     new TTL {
                         destroy_cb = () => {
+                            Fab5_Game.inst().message("spawn", new { entity1 = player ,name="spawn", varying_pitch=false});
+
                             player.add_components(old_particle_emitter, old_bounding_circle, old_sprite, old_shadow, old_light);
                             if (player.has_component<Input>()) {
                                 player.get_component<Input>().enabled = true;
                             }
 
                             var spawn_pos = spawner.get_player_spawn_pos(player, tile_map);
+
                             player.get_component<Position>().x = spawn_pos.x;
                             player.get_component<Position>().y = spawn_pos.y;
                             player.get_component<Ship_Info>().spawn_time = Fab5_Game.inst().get_time();
