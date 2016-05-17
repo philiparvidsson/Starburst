@@ -108,6 +108,7 @@
     <Compile Include="src\starburst\states\playing\entities\mapobjects\bluelamp.cs" />
     <Compile Include="src\starburst\states\playing\entities\mapobjects\blueturret.cs" />
     <Compile Include="src\starburst\states\playing\entities\mapobjects\lamp.cs" />
+    <Compile Include="src\starburst\states\playing\entities\mapobjects\lamp2.cs" />
     <Compile Include="src\starburst\states\playing\entities\mapobjects\redfountain.cs" />
     <Compile Include="src\starburst\states\playing\entities\mapobjects\redlamp.cs" />
     <Compile Include="src\starburst\states\playing\entities\mapobjects\redturret.cs" />
