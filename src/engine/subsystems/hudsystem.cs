@@ -71,7 +71,7 @@
             int num_inv = si.max_powerups_inv;
 
             int x = (int)(cam.viewport.Width * 0.5f - 0.5f*((num_inv-1)*smallSize+size+(num_inv-1)*spacing));
-            int y = 60;
+            int y = 65;
 
             for (int i = 0; i < num_inv; i++) {
                 int mySize = (i == si.powerup_inv_index ? size : smallSize);
