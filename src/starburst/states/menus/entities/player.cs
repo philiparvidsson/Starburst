@@ -14,25 +14,21 @@
     {
         public static Component[] create_components(Input inputhandler) {
             string sprite ="";
-            if (inputhandler == null)
-                sprite = "bot";
-            else
+            if (inputhandler != null)
             {
                 if (inputhandler.up == Keys.W)
                     sprite = "keys1";
-                if (inputhandler.up == Keys.Up)
+                else if (inputhandler.up == Keys.Up)
                     sprite = "keys2";
-                if (inputhandler.device == Input.InputType.Controller)
-                {
+                else if (inputhandler.device == Input.InputType.Controller)
                     sprite = "controller" + (int)(inputhandler.gp_index + 1);
-                }
             }
 
             var playerpos = new Position() { x = 0, y = 0 };
             return new Component[] {
                 inputhandler,
                 playerpos,
-                new Sprite() { texture = Starburst.inst().get_content<Texture2D>("menu/"+sprite) }
+                new Sprite() { texture = (inputhandler != null) ? Starburst.inst().get_content<Texture2D>("menu/"+sprite) : null }
             };
         }
         public static Component[] create_components()

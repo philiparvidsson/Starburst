@@ -41,9 +41,7 @@ namespace Fab5.Engine.Subsystems {
 
         private Texture2D backdrop;
         private Texture2D stardrop;
-
-        private Texture2D timer_tex;
-
+        
         private Texture2D player_indicator_tex;
         private Texture2D player_indicator2_tex;
         private bool team_play;
@@ -693,8 +691,6 @@ namespace Fab5.Engine.Subsystems {
             light_tex = Fab5_Game.inst().get_content<Texture2D>("light");
             lightcone_tex = Fab5_Game.inst().get_content<Texture2D>("lightcone");
 
-            timer_tex = Fab5_Game.inst().get_content<Texture2D>("clock");
-
             team_play = ((Playing_State)state).game_conf.mode == Game_Config.GM_TEAM_DEATHMATCH;
 
             sprite_batch = new SpriteBatch(graphicsDevice);
@@ -834,7 +830,6 @@ namespace Fab5.Engine.Subsystems {
         }
 
         private void draw_match_info() {
-            //sprite_batch.Draw(timer_tex, new Vector2(760.0f, 40.0f), null, Color.White, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0.5f);
             var min = 0;
             var sec = match_time;
 
