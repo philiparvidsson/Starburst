@@ -300,7 +300,7 @@ namespace Fab5.Starburst.States {
             gameConfig = new Playing.Game_Config() {
                 match_time          = time*60,
                 num_asteroids       = asteroid,
-                num_powerups        = redBots + blueBots + powerup,
+                num_powerups        = powerup == 0 ? 0 : redBots + blueBots + powerup,
                 powerup_spawn_time  = redBots + blueBots == 0 ? powerupTime : ((powerupTime - (int)((redBots + blueBots) * 0.5f)) <= 2 ? 2 : (powerupTime - (int)((redBots + blueBots) * 0.5f))),
                 map_name            = selectedMap.fileName,
                 mode                = selectedMap.gameMode,
