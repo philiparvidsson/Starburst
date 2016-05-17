@@ -1033,3 +1033,9 @@
 /processorParam:Quality=Best
 /build:sound/effects/drillPowerup.mp3
 
+#begin sound/effects/nextpowerup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/nextpowerup.wav
+

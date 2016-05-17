@@ -149,7 +149,7 @@
                         fire(entity, ship, secondaryWeapon);
 
                     if (is_key_clicked(input.powerup_next, currentKeyboardState, input.keyboardState)) { 
-                        Fab5_Game.inst().message("play_sound", new { name = "menu_click", volume = 1 });
+                        Fab5_Game.inst().message("play_sound", new { name = "nextpowerup", volume = 1 });
                         ship.powerup_inv_index = ship.powerup_inv_index >= ship.max_powerups_inv - 1 ? 0 : ship.powerup_inv_index + 1;
                    }
                     if (is_key_clicked(input.powerup_use, currentKeyboardState, input.keyboardState))
@@ -179,11 +179,11 @@
                     }
                     if (is_gamepad_clicked(Buttons.LeftShoulder, state, input.gamepadState)) {
                         ship.powerup_inv_index = ship.powerup_inv_index > 0 ? ship.powerup_inv_index-1 : ship.max_powerups_inv-1;
-                        Fab5_Game.inst().message("play_sound", new { name = "menu_click", volume =1 });
+                        Fab5_Game.inst().message("play_sound", new { name = "nextpowerup", volume =1 });
                     }
                     if (is_gamepad_clicked(Buttons.RightShoulder, state, input.gamepadState)) {
                         ship.powerup_inv_index = ship.powerup_inv_index >= ship.max_powerups_inv-1 ? 0 : ship.powerup_inv_index + 1;
-                        Fab5_Game.inst().message("play_sound", new { name = "menu_click", volume = 1 });
+                        Fab5_Game.inst().message("play_sound", new { name = "nextpowerup", volume = 1 });
                     }
                     if (is_gamepad_clicked(Buttons.Y, state, input.gamepadState) && ship.powerup_inv_index < ship.powerup_inv.Length) {
                         ship.use_powerup(ship.powerup_inv_index);

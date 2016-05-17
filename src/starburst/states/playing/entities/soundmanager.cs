@@ -52,6 +52,8 @@
             effectlib.Library.Add("spawn", new Fab5SoundEffect("sound/effects/spawn", "spawn"));
             effectlib.Library.Add("use_powerup", new Fab5SoundEffect("sound/effects/userpowerup", "use_powerup"));
             effectlib.Library.Add("use_powerup2", new Fab5SoundEffect("sound/effects/drillPowerup", "use_powerup2"));
+            effectlib.Library.Add("nextpowerup", new Fab5SoundEffect("sound/effects/nextpowerup", "nextpowerup"));
+
 
             return (Component)effectlib;
         }
