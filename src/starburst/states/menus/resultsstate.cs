@@ -76,7 +76,7 @@ namespace Fab5.Starburst.States
         private bool autoAnimating = true;
         private int redTeamHeight;
         private int blueTeamHeight;
-        
+
         int rowHeight = 30;
         int vertSpacing = 5;
         private int totalResultsHeight;
@@ -106,8 +106,14 @@ namespace Fab5.Starburst.States
             }
         }
 
+        private bool can_leave_state = true;
         private void proceed()
         {
+            if (!can_leave_state) {
+                return;
+            }
+
+            can_leave_state = false;
             Starburst.inst().leave_state();
         }
 
@@ -168,7 +174,7 @@ namespace Fab5.Starburst.States
                 for (int p = 0; p < players.Count; p++) {
                     Ship_Info player_info = players[p].get_component<Ship_Info>();
                     Score player_score = players[p].get_component<Score>();
-                    if (players[p].get_component<Velocity>() == null) {// turret, lägg till poäng men inte entiteten i laget 
+                    if (players[p].get_component<Velocity>() == null) {// turret, lägg till poäng men inte entiteten i laget
                         if (player_info.team == 1)
                             redScore += (int)player_score.score;
                         else
@@ -190,7 +196,7 @@ namespace Fab5.Starburst.States
                 // sortera lag efter bäst score
                 redTeam.Sort(sort_on_score);
                 blueTeam.Sort(sort_on_score);
-                
+
                 redTeamHeight = rowHeight * (redTeam.Count + 0) + vertSpacing * (redTeam.Count - 1);
                 blueTeamHeight = rowHeight * (blueTeam.Count + 0) + vertSpacing * (blueTeam.Count - 1);
 
@@ -311,7 +317,7 @@ namespace Fab5.Starburst.States
             GFX_Util.draw_def_text_small(sprite_batch, deathsHeader, deathsX, currentOffset);
             GFX_Util.draw_def_text_small(sprite_batch, scoreHeader, scoreX, currentOffset);
             currentOffset += rowHeight + vertSpacing;
-            
+
             if (gameConfig.mode == Game_Config.GM_TEAM_DEATHMATCH)
             {
                 // måla ut lagruta inkl lag-header
@@ -327,7 +333,7 @@ namespace Fab5.Starburst.States
                 {
                     Score player_score = redTeam[i].get_component<Score>();
                     Ship_Info player_info = redTeam[i].get_component<Ship_Info>();
-                    
+
                     int rowY = currentOffset + rowHeight * i + textOffset + vertSpacing * i;
                     int iconY = (int)(rowY + rowHeight * .5f - iconSizeY * .5f - 3);
                     if (redTeam[i].get_component<Input>() == null)
@@ -420,7 +426,7 @@ namespace Fab5.Starburst.States
             }
             else
             {
-                
+
                 for (int i = 0; i < players.Count; i++)
                 {
                     int rowY = currentOffset + rowHeight * i + textOffset + vertSpacing * i;
@@ -462,7 +468,7 @@ namespace Fab5.Starburst.States
             }
             sprite_batch.End();
             graphicsDevice.SetRenderTarget(null);
-            
+
             sprite_batch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
             String text = "Press Enter to continue";
             Vector2 textSize = font.MeasureString(text);
@@ -470,7 +476,7 @@ namespace Fab5.Starburst.States
             int heightDiff = (int)(controllerBtnSize - textSize.Y);
 
             sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), yPos + heightDiff * .5f), new Color(Color.Gold, textOpacity));
-            
+
             int winnerTextY = (int)(yPos - textSize.Y * 2);
             if (gameConfig.mode == Game_Config.GM_TEAM_DEATHMATCH) {
                 // skriv ut vem som vann
