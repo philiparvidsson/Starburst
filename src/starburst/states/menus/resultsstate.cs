@@ -513,7 +513,7 @@ namespace Fab5.Starburst.States
             }
 
             if(scrollable) {
-                GFX_Util.fill_rect(sprite_batch, new Rectangle((int)(vp.Width * .5f - totalScoreWidth * .5f - horPadding*.5f - 30), resultsViewHeight, (int)(totalScoreWidth + horPadding + 60), 2), Color.White);
+                GFX_Util.fill_rect(sprite_batch, new Rectangle((int)(vp.Width * .5f - totalScoreWidth * .5f - horPadding*.5f - 30), resultsViewHeight, (int)(totalScoreWidth + horPadding + 60), 2), Color.White * 0.5f);
             }
 
             sprite_batch.End();
