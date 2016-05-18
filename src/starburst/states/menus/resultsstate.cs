@@ -506,12 +506,18 @@ namespace Fab5.Starburst.States
                 if (redScore == blueScore) {
                     String tieText = "Match ended in a tie";
                     Vector2 tieSize = GFX_Util.measure_string_small(tieText);
-                    GFX_Util.draw_def_text_small(sprite_batch, tieText, (int)(vp.Width * .5f - tieSize.X * .5f), winnerTextY);
+                    if(lowRes)
+                        GFX_Util.draw_def_text_small(sprite_batch, tieText, (int)(vp.Width * .5f - tieSize.X * .5f), winnerTextY);
+                    else
+                        GFX_Util.draw_def_text(sprite_batch, tieText, (int)(vp.Width * .5f - tieSize.X * .5f), winnerTextY);
                 }
                 else {
                     String winText = (redScore > blueScore ? "Red" : "Blue") + " team won!";
                     Vector2 winSize = GFX_Util.measure_string_small(winText);
-                    GFX_Util.draw_def_text_small(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY);
+                    if(lowRes)
+                        GFX_Util.draw_def_text_small(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY, (redScore > blueScore ? Color.Red : Color.Blue));
+                    else
+                        GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY, (redScore>blueScore ? Color.Red : Color.Blue));
                 }
             }
             else {
@@ -529,8 +535,10 @@ namespace Fab5.Starburst.States
                     winText = winner + " won!";
                 }
                 Vector2 winSize = GFX_Util.measure_string_small(winText);
-
-                GFX_Util.draw_def_text_small(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY);
+                if (lowRes)
+                    GFX_Util.draw_def_text_small(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY);
+                else
+                    GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY);
 
             }
 
