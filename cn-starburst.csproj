@@ -111,6 +111,7 @@
     <Compile Include="src\starburst\states\playing\entities\mapobjects\redfountain.cs" />
     <Compile Include="src\starburst\states\playing\entities\mapobjects\redlamp.cs" />
     <Compile Include="src\starburst\states\playing\entities\mapobjects\redturret.cs" />
+    <Compile Include="src\starburst\states\playing\entities\powerups\boostpowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\bouncybulletspowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\fastbombspowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\freefirepowerup.cs" />

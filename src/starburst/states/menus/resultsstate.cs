@@ -160,7 +160,8 @@ namespace Fab5.Starburst.States
 
             for (int i = 0; i < players.Count; i++)
             {
-                create_entity(Player.create_components(players[i].get_component<Input>()));
+                if (players[i].get_component<Input>() != null)
+                    create_entity(Player.create_components(players[i].get_component<Input>()));
             }
             graphicsDevice = sprite_batch.GraphicsDevice;
             resultsViewHeight = (int)(vp.Height*.83f);
