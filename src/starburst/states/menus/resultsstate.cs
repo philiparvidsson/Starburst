@@ -119,6 +119,11 @@ namespace Fab5.Starburst.States
 
         public override void init()
         {
+            Gamepad_Util.vibrate(0, 0.0f, 0.0f);
+            Gamepad_Util.vibrate(1, 0.0f, 0.0f);
+            Gamepad_Util.vibrate(2, 0.0f, 0.0f);
+            Gamepad_Util.vibrate(3, 0.0f, 0.0f);
+
             sprite_batch = new SpriteBatch(Starburst.inst().GraphicsDevice);
 
             add_subsystems(

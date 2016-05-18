@@ -482,11 +482,13 @@ namespace Fab5.Starburst.States {
 
         var i = rand.Next(0, types.Length);
 
+        var type = types[i];
+
         if (game_conf.soccer_mode) {
-            i = 0; // only turbo in soccer mode
+            type = typeof (Boost_Powerup);
         }
 
-        object impl = Activator.CreateInstance(types[i]);
+        object impl = Activator.CreateInstance(type);
 
         return create_entity(Powerup.create((Powerup_Impl)impl));
     }
