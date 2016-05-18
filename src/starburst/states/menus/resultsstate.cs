@@ -305,12 +305,29 @@ namespace Fab5.Starburst.States
             int currentOffset = 50;
             int animDistance = totalResultsHeight;
             int startY = currentOffset - animDistance;
-            if (scrollable && t < animateInTime)
+
+            if (scrollable) {
+                for (int mul = 1; mul < 9999; mul++) {
+                    if (t < animateInTime*mul) {
+                        bool even = (mul&1)==0;
+
+                        if (!even) {
+                            currentOffset = (int)Easing.QuadEaseInOut((t-animateInTime*(mul-1)), startY, animDistance, animateInTime);
+                        }
+                        else {
+                            currentOffset = (int)Easing.QuadEaseInOut((t-animateInTime*(mul-1)), startY+animDistance, -animDistance, animateInTime);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            /*if (scrollable && t < animateInTime)
                 currentOffset = (int)Easing.QuadEaseInOut((t), startY, animDistance, animateInTime);
             else if (scrollable && t < animateInTime*2)
                 currentOffset = (int)Easing.QuadEaseInOut((t-animateInTime), startY+animDistance, -animDistance, animateInTime);
             else if (scrollable && t < animateInTime * 3)
-                currentOffset = (int)Easing.QuadEaseInOut((t - animateInTime*2), startY, animDistance, animateInTime);
+                currentOffset = (int)Easing.QuadEaseInOut((t - animateInTime*2), startY, animDistance, animateInTime);*/
 
             //GFX_Util.draw_def_text(sprite_batch, "Player", nameX, startY);
             GFX_Util.draw_def_text_small(sprite_batch, killsHeader, killsX, currentOffset);
