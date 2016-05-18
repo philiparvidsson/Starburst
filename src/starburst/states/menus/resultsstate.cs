@@ -73,7 +73,7 @@ namespace Fab5.Starburst.States
         private int blueGoals;
         private int bestScore;
         private List<Entity> bestPlayers;
-        private bool autoAnimating = true;
+        //private bool autoAnimating = true;
         private int redTeamHeight;
         private int blueTeamHeight;
 
@@ -119,6 +119,11 @@ namespace Fab5.Starburst.States
 
         public override void init()
         {
+            Gamepad_Util.vibrate(0, 0.0f, 0.0f);
+            Gamepad_Util.vibrate(1, 0.0f, 0.0f);
+            Gamepad_Util.vibrate(2, 0.0f, 0.0f);
+            Gamepad_Util.vibrate(3, 0.0f, 0.0f);
+
             sprite_batch = new SpriteBatch(Starburst.inst().GraphicsDevice);
 
             add_subsystems(
@@ -155,7 +160,8 @@ namespace Fab5.Starburst.States
 
             for (int i = 0; i < players.Count; i++)
             {
-                create_entity(Player.create_components(players[i].get_component<Input>()));
+                if (players[i].get_component<Input>() != null)
+                    create_entity(Player.create_components(players[i].get_component<Input>()));
             }
             graphicsDevice = sprite_batch.GraphicsDevice;
             resultsViewHeight = (int)(vp.Height*.83f);
@@ -305,12 +311,29 @@ namespace Fab5.Starburst.States
             int currentOffset = 50;
             int animDistance = totalResultsHeight;
             int startY = currentOffset - animDistance;
-            if (scrollable && t < animateInTime)
+
+            if (scrollable) {
+                for (int mul = 1; mul < 9999; mul++) {
+                    if (t < animateInTime*mul) {
+                        bool even = (mul&1)==0;
+
+                        if (!even) {
+                            currentOffset = (int)Easing.QuadEaseInOut((t-animateInTime*(mul-1)), startY, animDistance, animateInTime);
+                        }
+                        else {
+                            currentOffset = (int)Easing.QuadEaseInOut((t-animateInTime*(mul-1)), startY+animDistance, -animDistance, animateInTime);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            /*if (scrollable && t < animateInTime)
                 currentOffset = (int)Easing.QuadEaseInOut((t), startY, animDistance, animateInTime);
             else if (scrollable && t < animateInTime*2)
                 currentOffset = (int)Easing.QuadEaseInOut((t-animateInTime), startY+animDistance, -animDistance, animateInTime);
             else if (scrollable && t < animateInTime * 3)
-                currentOffset = (int)Easing.QuadEaseInOut((t - animateInTime*2), startY, animDistance, animateInTime);
+                currentOffset = (int)Easing.QuadEaseInOut((t - animateInTime*2), startY, animDistance, animateInTime);*/
 
             //GFX_Util.draw_def_text(sprite_batch, "Player", nameX, startY);
             GFX_Util.draw_def_text_small(sprite_batch, killsHeader, killsX, currentOffset);
@@ -349,7 +372,7 @@ namespace Fab5.Starburst.States
                         {
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + (int)(player_input.gp_index + 1));
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, iconSizeX, iconSizeY));
-                            GFX_Util.draw_def_text_small(sprite_batch, player_string(redTeam[i]), nameX, rowY);
+                            GFX_Util.draw_def_text(sprite_batch, player_string(redTeam[i]), nameX, rowY - (!lowRes ? 5 : 0));
                         }
                         else
                         {
@@ -358,7 +381,7 @@ namespace Fab5.Starburst.States
                             else key_index = 2;
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/keys" + key_index);
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, iconSizeX, iconSizeY));
-                            GFX_Util.draw_def_text_small(sprite_batch, player_string(redTeam[i]), nameX, rowY);
+                            GFX_Util.draw_def_text(sprite_batch, player_string(redTeam[i]), nameX, rowY - (!lowRes?5:0));
                         }
                     }
 
@@ -366,7 +389,7 @@ namespace Fab5.Starburst.States
                     GFX_Util.draw_def_text_small(sprite_batch, player_score.num_deaths.ToString(), deathsX, rowY);
                     GFX_Util.draw_def_text_small(sprite_batch, player_score.score.ToString(), scoreX, rowY);
                 }
-                currentOffset += redTeamHeight + vertSpacing + textOffset;
+                currentOffset += redTeamHeight + vertSpacing + textOffset+10;
                 // måla ut lagpoäng
                 GFX_Util.draw_def_text_small(sprite_batch, "Red team score: " + redScore + "        Goals: " + redGoals, nameX, currentOffset);
 
@@ -400,8 +423,8 @@ namespace Fab5.Starburst.States
                         if (player_input != null && player_input.device == Input.InputType.Controller)
                         {
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + (int)(player_input.gp_index + 1));
-                            sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 100, rowY, 63, 45));
-                            GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
+                            sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, rowY, 63, 45));
+                            GFX_Util.draw_def_text(sprite_batch, player_string(blueTeam[i]), nameX, rowY - (!lowRes ? 10 : 0));
                         }
                         else
                         {
@@ -410,7 +433,7 @@ namespace Fab5.Starburst.States
                             else key_index = 2;
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/keys" + key_index);
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, iconSizeX, iconSizeY));
-                            GFX_Util.draw_def_text_small(sprite_batch, player_string(blueTeam[i]), nameX, rowY);
+                            GFX_Util.draw_def_text(sprite_batch, player_string(blueTeam[i]), nameX, rowY- (!lowRes ? 10 : 0));
                         }
                     }
 
@@ -420,7 +443,7 @@ namespace Fab5.Starburst.States
 
                 }
                 // måla ut lagpoäng
-                currentOffset += blueTeamHeight + vertSpacing + textOffset;
+                currentOffset += blueTeamHeight + vertSpacing + textOffset+10;
                 GFX_Util.draw_def_text_small(sprite_batch, "Blue team score: " + blueScore + "        Goals: " + blueGoals, nameX, currentOffset);
 
             }
@@ -449,7 +472,7 @@ namespace Fab5.Starburst.States
                         {
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + (int)(player_input.gp_index + 1));
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 100, rowY, 63, 45));
-                            GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
+                            GFX_Util.draw_def_text(sprite_batch, player_string(players[i]), nameX, rowY);
                         }
                         else
                         {
@@ -484,12 +507,18 @@ namespace Fab5.Starburst.States
                 if (redScore == blueScore) {
                     String tieText = "Match ended in a tie";
                     Vector2 tieSize = GFX_Util.measure_string_small(tieText);
-                    GFX_Util.draw_def_text_small(sprite_batch, tieText, (int)(vp.Width * .5f - tieSize.X * .5f), winnerTextY);
+                    if(lowRes)
+                        GFX_Util.draw_def_text_small(sprite_batch, tieText, (int)(vp.Width * .5f - tieSize.X * .5f), winnerTextY);
+                    else
+                        GFX_Util.draw_def_text(sprite_batch, tieText, (int)(vp.Width * .5f - tieSize.X * .5f), winnerTextY);
                 }
                 else {
                     String winText = (redScore > blueScore ? "Red" : "Blue") + " team won!";
                     Vector2 winSize = GFX_Util.measure_string_small(winText);
-                    GFX_Util.draw_def_text_small(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY);
+                    if(lowRes)
+                        GFX_Util.draw_def_text_small(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY, (redScore > blueScore ? Color.Red : Color.Blue));
+                    else
+                        GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY, (redScore>blueScore ? Color.Red : Color.Blue));
                 }
             }
             else {
@@ -507,8 +536,10 @@ namespace Fab5.Starburst.States
                     winText = winner + " won!";
                 }
                 Vector2 winSize = GFX_Util.measure_string_small(winText);
-
-                GFX_Util.draw_def_text_small(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY);
+                if (lowRes)
+                    GFX_Util.draw_def_text_small(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY);
+                else
+                    GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY);
 
             }
 

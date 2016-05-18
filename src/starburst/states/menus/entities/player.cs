@@ -12,23 +12,21 @@
 
     public static class Player
     {
-        public static Component[] create_components(Input inputhandler) {
-            string sprite ="";
-            if (inputhandler != null)
+        public static Component[] create_components(Input inputhandler)
+        {
+            string sprite = "keys2";
+            if (inputhandler.up == Keys.W)
+                sprite = "keys1";
+            if (inputhandler.device == Input.InputType.Controller)
             {
-                if (inputhandler.up == Keys.W)
-                    sprite = "keys1";
-                else if (inputhandler.up == Keys.Up)
-                    sprite = "keys2";
-                else if (inputhandler.device == Input.InputType.Controller)
-                    sprite = "controller" + (int)(inputhandler.gp_index + 1);
+                sprite = "controller" + (int)(inputhandler.gp_index + 1);
             }
 
             var playerpos = new Position() { x = 0, y = 0 };
             return new Component[] {
                 inputhandler,
                 playerpos,
-                new Sprite() { texture = (inputhandler != null) ? Starburst.inst().get_content<Texture2D>("menu/"+sprite) : null }
+                new Sprite() { texture = Starburst.inst().get_content<Texture2D>("menu/"+sprite) }
             };
         }
         public static Component[] create_components()
