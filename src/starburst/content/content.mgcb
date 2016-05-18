@@ -943,3 +943,15 @@
 /processorParam:Quality=Best
 /build:sound/effects/nextpowerup.wav
 
+#begin sound/effects/_pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/_pickup.wav
+
+#begin sound/effects/soccer_kick.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sound/effects/soccer_kick.wav
+

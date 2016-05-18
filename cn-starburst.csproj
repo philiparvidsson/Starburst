@@ -155,8 +155,11 @@
     <Content Include="src\starburst\content\indicator2.png" />
     <Content Include="src\starburst\content\light.png" />
     <Content Include="src\starburst\content\lightcone.png" />
+    <Content Include="src\starburst\content\lightcone_old.png" />
+    <Content Include="src\starburst\content\maps\preview0.png" />
     <Content Include="src\starburst\content\maps\preview1.png" />
     <Content Include="src\starburst\content\maps\preview2.png" />
+    <Content Include="src\starburst\content\maps\preview3_soccer.png" />
     <Content Include="src\starburst\content\map\bgtiles.png" />
     <Content Include="src\starburst\content\map\tiles.png" />
     <Content Include="src\starburst\content\menu\arrow_down.png" />
@@ -173,6 +176,7 @@
     <Content Include="src\starburst\content\menu\Xbox_X_white.png" />
     <Content Include="src\starburst\content\menu\Xbox_Y_white.png" />
     <Content Include="src\starburst\content\nanobot.png" />
+    <Content Include="src\starburst\content\old_splash.png" />
     <Content Include="src\starburst\content\particle.png" />
     <Content Include="src\starburst\content\particle2.png" />
     <Content Include="src\starburst\content\powerup.png" />
@@ -202,6 +206,7 @@
     <Content Include="src\starburst\content\sound\effects\BatmanPunch2.wav" />
     <Content Include="src\starburst\content\sound\effects\Cheering.wav" />
     <Content Include="src\starburst\content\sound\effects\click.wav" />
+    <Content Include="src\starburst\content\sound\effects\drillPowerup.mp3" />
     <Content Include="src\starburst\content\sound\effects\explosion.wav" />
     <Content Include="src\starburst\content\sound\effects\glassbreak.wav" />
     <Content Include="src\starburst\content\sound\effects\goal.wav" />
@@ -215,17 +220,22 @@
     <Content Include="src\starburst\content\sound\effects\menu_positive.wav" />
     <Content Include="src\starburst\content\sound\effects\Minigun.wav" />
     <Content Include="src\starburst\content\sound\effects\missile_impact.wav" />
+    <Content Include="src\starburst\content\sound\effects\nextpowerup.wav" />
     <Content Include="src\starburst\content\sound\effects\pickup.wav" />
     <Content Include="src\starburst\content\sound\effects\rockslide_small.wav" />
     <Content Include="src\starburst\content\sound\effects\rockslide_smallcombo.wav" />
     <Content Include="src\starburst\content\sound\effects\SharpPunch.wav" />
     <Content Include="src\starburst\content\sound\effects\small_explosion.wav" />
     <Content Include="src\starburst\content\sound\effects\smashing.wav" />
+    <Content Include="src\starburst\content\sound\effects\soccer_kick.wav" />
     <Content Include="src\starburst\content\sound\effects\song_victory.mp3" />
+    <Content Include="src\starburst\content\sound\effects\spawn.mp3" />
     <Content Include="src\starburst\content\sound\effects\throw_knife.wav" />
     <Content Include="src\starburst\content\sound\effects\thrust.wav" />
     <Content Include="src\starburst\content\sound\effects\thud1m.wav" />
     <Content Include="src\starburst\content\sound\effects\turret.wav" />
+    <Content Include="src\starburst\content\sound\effects\userpowerup.wav" />
+    <Content Include="src\starburst\content\sound\effects\_pickup.wav" />
     <Content Include="src\starburst\content\splash.png" />
     <Content Include="src\starburst\content\wbeam.png" />
   </ItemGroup>
@@ -236,6 +246,7 @@
     <None Include="src\starburst\content\large.spritefont" />
     <None Include="src\starburst\content\sector034.spritefont" />
     <None Include="src\starburst\content\small.spritefont" />
+    <None Include="src\starburst\content\tiny.spritefont" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="doc\" />
