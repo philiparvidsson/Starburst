@@ -372,7 +372,7 @@ namespace Fab5.Starburst.States
                         {
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + (int)(player_input.gp_index + 1));
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, iconSizeX, iconSizeY));
-                            GFX_Util.draw_def_text(sprite_batch, player_string(redTeam[i]), nameX, rowY - (!lowRes ? 8 : 0));
+                            GFX_Util.draw_def_text(sprite_batch, player_string(redTeam[i]), nameX, rowY - (!lowRes ? 3 : 0));
                         }
                         else
                         {
@@ -381,7 +381,7 @@ namespace Fab5.Starburst.States
                             else key_index = 2;
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/keys" + key_index);
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, iconSizeX, iconSizeY));
-                            GFX_Util.draw_def_text(sprite_batch, player_string(redTeam[i]), nameX, rowY - (!lowRes?8:0));
+                            GFX_Util.draw_def_text(sprite_batch, player_string(redTeam[i]), nameX, rowY - (!lowRes?3:0));
                         }
                     }
 
@@ -424,7 +424,7 @@ namespace Fab5.Starburst.States
                         {
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + (int)(player_input.gp_index + 1));
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, rowY, 63, 45));
-                            GFX_Util.draw_def_text(sprite_batch, player_string(blueTeam[i]), nameX, rowY - (!lowRes ? 8 : 0));
+                            GFX_Util.draw_def_text(sprite_batch, player_string(blueTeam[i]), nameX, rowY - (!lowRes ? 3 : 0));
                         }
                         else
                         {
@@ -433,7 +433,7 @@ namespace Fab5.Starburst.States
                             else key_index = 2;
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/keys" + key_index);
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, iconSizeX, iconSizeY));
-                            GFX_Util.draw_def_text(sprite_batch, player_string(blueTeam[i]), nameX, rowY- (!lowRes ? 8 : 0));
+                            GFX_Util.draw_def_text(sprite_batch, player_string(blueTeam[i]), nameX, rowY- (!lowRes ? 3 : 0));
                         }
                     }
 
@@ -472,7 +472,7 @@ namespace Fab5.Starburst.States
                         {
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + (int)(player_input.gp_index + 1));
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, 63, 45));
-                            GFX_Util.draw_def_text(sprite_batch, player_string(players[i]), nameX, rowY - (!lowRes ? 8 : 0));
+                            GFX_Util.draw_def_text(sprite_batch, player_string(players[i]), nameX, rowY - (!lowRes ? 3 : 0));
                         }
                         else
                         {
@@ -481,7 +481,7 @@ namespace Fab5.Starburst.States
                             else key_index = 2;
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/keys" + key_index);
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, iconSizeX, iconSizeY));
-                            GFX_Util.draw_def_text(sprite_batch, player_string(players[i]), nameX, rowY - (!lowRes ? 8 : 0));
+                            GFX_Util.draw_def_text(sprite_batch, player_string(players[i]), nameX, rowY - (!lowRes ? 3 : 0));
                         }
                     }
                     GFX_Util.draw_def_text_small(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
