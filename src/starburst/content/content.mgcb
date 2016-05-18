@@ -463,18 +463,6 @@
 /processorParam:Quality=Best
 /build:sound/effects/BatmanPunch.wav
 
-#begin sound/effects/BatmanPunch2.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/BatmanPunch2.wav
-
-#begin sound/effects/Cheering.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/Cheering.wav
-
 #begin sound/effects/click.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -486,12 +474,6 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sound/effects/explosion.wav
-
-#begin sound/effects/glassbreak.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/glassbreak.wav
 
 #begin sound/effects/goal.wav
 /importer:WavImporter
@@ -511,53 +493,17 @@
 /processorParam:Quality=Best
 /build:sound/effects/LaserBlaster2.wav
 
-#begin sound/effects/Minigun.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/Minigun.wav
-
 #begin sound/effects/missile_impact.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sound/effects/missile_impact.wav
 
-#begin sound/effects/rockslide_small.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/rockslide_small.wav
-
 #begin sound/effects/rockslide_smallcombo.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sound/effects/rockslide_smallcombo.wav
-
-#begin sound/effects/SharpPunch.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/SharpPunch.wav
-
-#begin sound/effects/smashing.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/smashing.wav
-
-#begin sound/effects/song_victory.mp3
-/importer:Mp3Importer
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/song_victory.mp3
-
-#begin sound/effects/throw_knife.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/throw_knife.wav
 
 #begin sound/effects/thrust.wav
 /importer:WavImporter
@@ -829,18 +775,6 @@
 /processorParam:Quality=Best
 /build:sound/effects/knock1m.wav
 
-#begin sound/effects/knock2m.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/knock2m.wav
-
-#begin sound/effects/knock3m.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/knock3m.wav
-
 #begin sound/effects/laser_impact.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -852,12 +786,6 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sound/effects/pickup.wav
-
-#begin sound/effects/thud1m.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/thud1m.wav
 
 #begin sound/effects/small_explosion.wav
 /importer:WavImporter
@@ -931,27 +859,15 @@
 /processorParam:Quality=Best
 /build:sound/effects/userpowerup.wav
 
-#begin sound/effects/drillPowerup.mp3
-/importer:Mp3Importer
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/drillPowerup.mp3
-
 #begin sound/effects/nextpowerup.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sound/effects/nextpowerup.wav
 
-#begin sound/effects/_pickup.wav
+#begin sound/effects/song_victory.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:sound/effects/_pickup.wav
-
-#begin sound/effects/soccer_kick.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sound/effects/soccer_kick.wav
+/build:sound/effects/song_victory.wav
 

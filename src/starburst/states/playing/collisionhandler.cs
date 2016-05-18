@@ -541,7 +541,7 @@ namespace Fab5.Starburst.States.Playing {
                 var old_shadow           = player.remove_component<Shadow>();
                 var old_light            = player.remove_component<Light_Source>();
 
-                Starburst.inst().message("play_sound_asset", new { name = "sound/effects/explosion", pos = player.get_component<Position>() });
+                Starburst.inst().message("explosion", new { name = "explosion", entity1=player, varying_pitch = true });
 
                 Score player_score = player.get_component<Score>();
                 player_score.num_deaths++;

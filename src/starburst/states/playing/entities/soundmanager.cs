@@ -30,29 +30,21 @@
             effectlib.Library.Add("thrust", new Fab5SoundEffect("sound/effects/thrust", "thrust"));
             effectlib.Library.Add("bang", new Fab5SoundEffect("sound/effects/bang1", "bang"));
             effectlib.Library.Add("bang2", new Fab5SoundEffect("sound/effects/bang2", "bang2"));
-            effectlib.Library.Add("minigun", new Fab5SoundEffect("sound/effects/Minigun", "minigun"));
-            effectlib.Library.Add("SharpPunch", new Fab5SoundEffect("sound/effects/SharpPunch", "SharpPunch"));
             effectlib.Library.Add("BatmanPunch", new Fab5SoundEffect("sound/effects/BatmanPunch", "BatmanPunch"));
-            effectlib.Library.Add("throw_knife", new Fab5SoundEffect("sound/effects/throw_knife", "throw_knife"));
             effectlib.Library.Add("LaserBlaster", new Fab5SoundEffect("sound/effects/LaserBlaster", "LaserBlaster"));
             effectlib.Library.Add("LaserBlaster2", new Fab5SoundEffect("sound/effects/LaserBlaster2", "LaserBlaster2"));
             effectlib.Library.Add("menu_click", new Fab5SoundEffect("sound/effects/click", "menu_click"));
             effectlib.Library.Add("begin_game", new Fab5SoundEffect("sound/effects/air_horn", "begin_game"));
             effectlib.Library.Add("menu_positive", new Fab5SoundEffect("sound/effects/menu_positive", "menu_positive"));
-
-            effectlib.Library.Add("bang1m", new Fab5SoundEffect("sound/effects/bang1m", "bang1m"));
             effectlib.Library.Add("knock1m", new Fab5SoundEffect("sound/effects/knock1m", "knock1m"));
-            effectlib.Library.Add("thud1m", new Fab5SoundEffect("sound/effects/thud1m", "thud1m"));
-            effectlib.Library.Add("knock2m", new Fab5SoundEffect("sound/effects/knock2m", "knock2m"));
-            effectlib.Library.Add("knock3m", new Fab5SoundEffect("sound/effects/knock3m", "knock3m"));
             effectlib.Library.Add("laser_impact", new Fab5SoundEffect("sound/effects/laser_impact", "laser_impact"));
             effectlib.Library.Add("small_explosion", new Fab5SoundEffect("sound/effects/small_explosion", "small_explosion"));
             effectlib.Library.Add("pickup", new Fab5SoundEffect("sound/effects/pickup", "pickup"));
             effectlib.Library.Add("turret", new Fab5SoundEffect("sound/effects/turret", "turret"));
             effectlib.Library.Add("spawn", new Fab5SoundEffect("sound/effects/spawn", "spawn"));
             effectlib.Library.Add("use_powerup", new Fab5SoundEffect("sound/effects/userpowerup", "use_powerup"));
-            effectlib.Library.Add("use_powerup2", new Fab5SoundEffect("sound/effects/drillPowerup", "use_powerup2"));
             effectlib.Library.Add("nextpowerup", new Fab5SoundEffect("sound/effects/nextpowerup", "nextpowerup"));
+            effectlib.Library.Add("explosion", new Fab5SoundEffect("sound/effects/explosion", "explosion"));
 
 
             return (Component)effectlib;
