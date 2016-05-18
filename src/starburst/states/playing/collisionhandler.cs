@@ -812,9 +812,11 @@ namespace Fab5.Starburst.States.Playing {
         if (e.has_component<Input>()) {
             return ("player " + s[(int)e.get_component<Input>().gp_index]);
         }
-
-        return "Bot #" + e.get_component<Data>().get_data("ai_index", "xx");
-    }
+        else if (e.has_component<Velocity>())
+            return "Bot #" + e.get_component<Data>().get_data("ai_index", "xx");
+        else
+            return "Turret";
+        }
 
     public void on_collision(Entity a, Entity b, object data) {
         string name1 = a?.get_component<Sprite>()?.texture?.Name ?? "";
