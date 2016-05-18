@@ -259,22 +259,6 @@ namespace Fab5.Starburst.States {
                 time = 30;
 
             int asteroid = (asteroidCount == 0) ? 0 : maps[currentMapIndex].asteroidAmounts[(int)asteroidCount-1];
-            if (currentMapIndex != 2) {
-                if (asteroidCount == Amount.few)
-                    asteroid = 20;
-                else if (asteroidCount == Amount.medium)
-                    asteroid = 40;
-                else if (asteroidCount == Amount.many)
-                    asteroid = 60;
-            }
-            else {
-                if (asteroidCount == Amount.few)
-                    asteroid = 5;
-                else if (asteroidCount == Amount.medium)
-                    asteroid = 10;
-                else if (asteroidCount == Amount.many)
-                    asteroid = 25;
-            }
 
             int powerup = 0;
             int powerupTime = 0;
