@@ -26,7 +26,7 @@ namespace Fab5.Starburst.States
         private SpriteFont largeFont;
         SpriteBatch sprite_batch;
 
-        private const float BTN_DELAY = .25f;
+        private const float BTN_DELAY = 5.0f;
         float animateInTime = 7.0f;
 
         float elapsedTime;
@@ -324,7 +324,7 @@ namespace Fab5.Starburst.States
                     }
                 }
             }
-            
+
             GFX_Util.draw_def_text_small(sprite_batch, killsHeader, killsX, currentOffset);
             GFX_Util.draw_def_text_small(sprite_batch, deathsHeader, deathsX, currentOffset);
             GFX_Util.draw_def_text_small(sprite_batch, scoreHeader, scoreX, currentOffset);
