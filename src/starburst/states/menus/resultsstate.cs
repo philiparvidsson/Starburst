@@ -366,7 +366,7 @@ namespace Fab5.Starburst.States
                         {
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + (int)(player_input.gp_index + 1));
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, iconSizeX, iconSizeY));
-                            GFX_Util.draw_def_text_small(sprite_batch, player_string(redTeam[i]), nameX, rowY);
+                            GFX_Util.draw_def_text(sprite_batch, player_string(redTeam[i]), nameX, rowY);
                         }
                         else
                         {
@@ -375,7 +375,7 @@ namespace Fab5.Starburst.States
                             else key_index = 2;
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/keys" + key_index);
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, iconSizeX, iconSizeY));
-                            GFX_Util.draw_def_text_small(sprite_batch, player_string(redTeam[i]), nameX, rowY);
+                            GFX_Util.draw_def_text(sprite_batch, player_string(redTeam[i]), nameX, rowY);
                         }
                     }
 
@@ -418,7 +418,7 @@ namespace Fab5.Starburst.States
                         {
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + (int)(player_input.gp_index + 1));
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 100, rowY, 63, 45));
-                            GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
+                            GFX_Util.draw_def_text(sprite_batch, player_string(blueTeam[i]), nameX, rowY);
                         }
                         else
                         {
@@ -427,7 +427,7 @@ namespace Fab5.Starburst.States
                             else key_index = 2;
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/keys" + key_index);
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, iconSizeX, iconSizeY));
-                            GFX_Util.draw_def_text_small(sprite_batch, player_string(blueTeam[i]), nameX, rowY);
+                            GFX_Util.draw_def_text(sprite_batch, player_string(blueTeam[i]), nameX, rowY);
                         }
                     }
 
@@ -466,7 +466,7 @@ namespace Fab5.Starburst.States
                         {
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + (int)(player_input.gp_index + 1));
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 100, rowY, 63, 45));
-                            GFX_Util.draw_def_text(sprite_batch, "Player " + s[player_info.pindex - 1], nameX, rowY);
+                            GFX_Util.draw_def_text(sprite_batch, player_string(players[i]), nameX, rowY);
                         }
                         else
                         {
