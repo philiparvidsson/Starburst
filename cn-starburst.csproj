@@ -36,8 +36,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="src\engine\components\data.cs" />
@@ -139,6 +138,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="favicon.ico" />
     <Content Include="src\starburst\content\asteroid.png" />
     <Content Include="src\starburst\content\asteroid2.png" />
     <Content Include="src\starburst\content\backdrops\backdrop4.jpg" />
