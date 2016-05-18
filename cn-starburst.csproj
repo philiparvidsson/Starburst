@@ -139,7 +139,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="fabicon.ico" />
-    <Content Include="favicon.ico" />
     <Content Include="src\starburst\content\asteroid.png" />
     <Content Include="src\starburst\content\asteroid2.png" />
     <Content Include="src\starburst\content\backdrops\backdrop4.jpg" />

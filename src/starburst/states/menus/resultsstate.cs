@@ -366,7 +366,7 @@ namespace Fab5.Starburst.States
                         {
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + (int)(player_input.gp_index + 1));
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, iconSizeX, iconSizeY));
-                            GFX_Util.draw_def_text(sprite_batch, player_string(redTeam[i]), nameX, rowY);
+                            GFX_Util.draw_def_text(sprite_batch, player_string(redTeam[i]), nameX, rowY - (!lowRes ? 5 : 0));
                         }
                         else
                         {
@@ -375,7 +375,7 @@ namespace Fab5.Starburst.States
                             else key_index = 2;
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/keys" + key_index);
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, iconSizeX, iconSizeY));
-                            GFX_Util.draw_def_text(sprite_batch, player_string(redTeam[i]), nameX, rowY);
+                            GFX_Util.draw_def_text(sprite_batch, player_string(redTeam[i]), nameX, rowY - (!lowRes?5:0));
                         }
                     }
 
@@ -383,7 +383,7 @@ namespace Fab5.Starburst.States
                     GFX_Util.draw_def_text_small(sprite_batch, player_score.num_deaths.ToString(), deathsX, rowY);
                     GFX_Util.draw_def_text_small(sprite_batch, player_score.score.ToString(), scoreX, rowY);
                 }
-                currentOffset += redTeamHeight + vertSpacing + textOffset;
+                currentOffset += redTeamHeight + vertSpacing + textOffset+10;
                 // måla ut lagpoäng
                 GFX_Util.draw_def_text_small(sprite_batch, "Red team score: " + redScore + "        Goals: " + redGoals, nameX, currentOffset);
 
@@ -417,8 +417,8 @@ namespace Fab5.Starburst.States
                         if (player_input != null && player_input.device == Input.InputType.Controller)
                         {
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + (int)(player_input.gp_index + 1));
-                            sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 100, rowY, 63, 45));
-                            GFX_Util.draw_def_text(sprite_batch, player_string(blueTeam[i]), nameX, rowY);
+                            sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, rowY, 63, 45));
+                            GFX_Util.draw_def_text(sprite_batch, player_string(blueTeam[i]), nameX, rowY - (!lowRes ? 10 : 0));
                         }
                         else
                         {
@@ -427,7 +427,7 @@ namespace Fab5.Starburst.States
                             else key_index = 2;
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/keys" + key_index);
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, iconSizeX, iconSizeY));
-                            GFX_Util.draw_def_text(sprite_batch, player_string(blueTeam[i]), nameX, rowY);
+                            GFX_Util.draw_def_text(sprite_batch, player_string(blueTeam[i]), nameX, rowY- (!lowRes ? 10 : 0));
                         }
                     }
 
@@ -437,7 +437,7 @@ namespace Fab5.Starburst.States
 
                 }
                 // måla ut lagpoäng
-                currentOffset += blueTeamHeight + vertSpacing + textOffset;
+                currentOffset += blueTeamHeight + vertSpacing + textOffset+10;
                 GFX_Util.draw_def_text_small(sprite_batch, "Blue team score: " + blueScore + "        Goals: " + blueGoals, nameX, currentOffset);
 
             }
