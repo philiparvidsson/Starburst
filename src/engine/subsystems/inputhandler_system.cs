@@ -148,7 +148,7 @@
                     if (currentKeyboardState.IsKeyDown(input.secondary_fire))
                         fire(entity, ship, secondaryWeapon);
 
-                    if (is_key_clicked(input.powerup_next, currentKeyboardState, input.keyboardState)) { 
+                    if (is_key_clicked(input.powerup_next, currentKeyboardState, input.keyboardState)) {
                         Fab5_Game.inst().message("play_sound", new { name = "nextpowerup", volume = 1 });
                         ship.powerup_inv_index = ship.powerup_inv_index >= ship.max_powerups_inv - 1 ? 0 : ship.powerup_inv_index + 1;
                    }
@@ -209,7 +209,7 @@
 
                     var speed = (float)Math.Sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
 
-                    if (speed > max_speed) {
+                    if (speed > max_speed && !ship.has_powerup(typeof (Boost_Powerup))) {
                         velocity.x = max_speed * (velocity.x / speed);
                         velocity.y = max_speed * (velocity.y / speed);
                     }
