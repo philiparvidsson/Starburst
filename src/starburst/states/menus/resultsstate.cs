@@ -471,8 +471,8 @@ namespace Fab5.Starburst.States
                         if (player_input != null && player_input.device == Input.InputType.Controller)
                         {
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/controller" + (int)(player_input.gp_index + 1));
-                            sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 100, rowY, 63, 45));
-                            GFX_Util.draw_def_text(sprite_batch, player_string(players[i]), nameX, rowY);
+                            sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, 63, 45));
+                            GFX_Util.draw_def_text(sprite_batch, player_string(players[i]), nameX, rowY - (!lowRes ? 10 : 0));
                         }
                         else
                         {
@@ -481,7 +481,7 @@ namespace Fab5.Starburst.States
                             else key_index = 2;
                             Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/keys" + key_index);
                             sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(iconX, iconY, iconSizeX, iconSizeY));
-                            GFX_Util.draw_def_text_small(sprite_batch, player_string(players[i]), nameX, rowY);
+                            GFX_Util.draw_def_text_small(sprite_batch, player_string(players[i]), nameX, rowY - (!lowRes ? 10 : 0));
                         }
                     }
                     GFX_Util.draw_def_text_small(sprite_batch, player_score.num_kills.ToString(), killsX, rowY);
@@ -516,9 +516,9 @@ namespace Fab5.Starburst.States
                     String winText = (redScore > blueScore ? "Red" : "Blue") + " team won!";
                     Vector2 winSize = GFX_Util.measure_string_small(winText);
                     if(lowRes)
-                        GFX_Util.draw_def_text_small(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY, (redScore > blueScore ? Color.Red : Color.Blue));
+                        GFX_Util.draw_def_text_small(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY, (redScore > blueScore ? new Color(1.0f, 0.2f, 0.2f) : new Color(0.0f, 0.5f, 1.0f)));
                     else
-                        GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY, (redScore>blueScore ? Color.Red : Color.Blue));
+                        GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY, (redScore>blueScore ? new Color(1.0f, 0.2f, 0.2f) : new Color(0.0f, 0.5f, 1.0f)));
                 }
             }
             else {
