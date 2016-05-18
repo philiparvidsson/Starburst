@@ -82,11 +82,6 @@ namespace Fab5.Starburst.States {
                     if (position.y == 2)
                         inputs[(int)position.x] = input;
                 }
-                /*
-                // ta bort tomma inputs
-                while (inputs.Contains(null))
-                    inputs.Remove(null);
-                */
                 btnDelay = BTN_DELAY;
                 Starburst.inst().message("play_sound_asset", new { name = "menu_positive" });
                 Starburst.inst().leave_state(); // ta bort nuvarande state för att man ska gå till "huvudmeny" från spelläge
@@ -254,11 +249,8 @@ namespace Fab5.Starburst.States {
             Viewport vp = Starburst.inst().GraphicsDevice.Viewport;
             lowRes = (vp.Height < 800 && vp.Width < 1600);
 
-            //create_entity(SoundManager.create_backmusic_component()).get_component<SoundLibrary>().song_index = 1;
-
             // load textures
             background = Starburst.inst().get_content<Texture2D>("backdrops/menubg");
-            //rectBg = Starburst.inst().get_content<Texture2D>("controller_rectangle");
             rectBg = new Texture2D(Fab5_Game.inst().GraphicsDevice, 1, 1);
             rectBg.SetData(new Color[]{Color.Black},1,1);//Starburst.inst().get_content<Texture2D>("controller_rectangle");
             font = Starburst.inst().get_content<SpriteFont>(!lowRes ? "sector034" : "small");
@@ -309,10 +301,6 @@ namespace Fab5.Starburst.States {
 
             if (elapsedTime >= animationTime) {
                 elapsedTime -= animationTime;
-                /*
-                outDelay = delay + duration + displayTime;
-                animationTime = outDelay + duration;
-                */
             }
 
             // fade in
@@ -360,7 +348,6 @@ namespace Fab5.Starburst.States {
             var entities = Starburst.inst().get_entities_fast(typeof(Input));
 
             sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
-            //sprite_batch.Draw(background, destinationRectangle: new Rectangle(0, 0, vp.Width, vp.Height), color: Color.White);
 
             if (!started) {
                 startTime = t;
@@ -374,7 +361,6 @@ namespace Fab5.Starburst.States {
             String text = "Choose players";
             Vector2 textSize = largeFont.MeasureString(text);
             sprite_batch.DrawString(largeFont, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), headerY), Color.White);
-            //GFX_Util.draw_def_text(sprite_batch, text, (int)((vp.Width * .5f) - (textSize.X * .5f)), 100);
 
             // rita ut kontrollrutor (4 st)
             int maxPlayers = 4;
@@ -396,14 +382,12 @@ namespace Fab5.Starburst.States {
 
                 Rectangle destRect = new Rectangle(currentLeftX, rectangleY, rectSize, rectSize);
 
-                //sprite_batch.Draw(rectBg, destinationRectangle: destRect, color: Color.White, layerDepth: .1f);
                 var col = new Color(0.0f, 0.0f, 0.0f, 0.4f);
                 if (parent.gameConfig.mode == 0) {
                     col = (team==1) ? new Color(1.0f, 0.2f, 0.2f, 0.3f) : new Color(0.0f, 0.5f, 1.0f, 0.3f);
                 }
 
                 if(i < playerSlots.Count && playerSlots[i] == SlotStatus.Selected) {
-                    //var q = 0.75f + (float)Math.Cos(t*16.0f)*0.25f;// <-- kan ersättas med textOpacity
                     var q = 0.5f+textOpacity*0.5f;
                     col = Color.Gold * q;
                     GFX_Util.fill_rect(sprite_batch, destRect, Color.Gold * 0.2f);
@@ -514,15 +498,6 @@ namespace Fab5.Starburst.States {
                     }
                 }
                 sprite_batch.Draw(texture, destinationRectangle: iconRect, color: new Color(Color.White, controllerOpacity), layerDepth: .5f);
-                //sprite_batch.DrawString(font, subtitle, new Vector2((int)(iconRect.Center.X - subtitleSize.X * .5f), iconRect.Y - subtitleSize.Y + 10), Color.White);
-                /*
-                // debug fÃ¶r handkontroll-thumbsticks
-                float x = input.gamepadState.ThumbSticks.Left.X;
-                float y = input.gamepadState.ThumbSticks.Left.Y;
-                string sticks = "X: " + x + ", Y: " + y;
-                Vector2 stickSize = font.MeasureString(sticks);
-                sprite_batch.DrawString(font, sticks, new Vector2(vp.Width-stickSize.X, i * stickSize.Y), Color.White);
-                */
             }
 
             for (int i=0; i< playerSlots.Count; i++) {
@@ -538,17 +513,7 @@ namespace Fab5.Starburst.States {
                     int currentRectStartPos = startPos + rectSize * i + spacing * i;
                     int positionX = (int)(currentRectStartPos + rectSize * .5f - (int)(size.X * .5f));
                     sprite_batch.DrawString(font, ready, new Vector2(positionX, rectangleY + rectSize * .5f - controllerIconSize.Y * .5f - selectTextSize.Y * .5f + controllerIconSize.Y), Color.White);
-                    /*
-                    // undo text
-                    String undoText = "press secondary";
-                    String undoText2 = "fire to undo";
-                    Vector2 undoTextSize = smallFont.MeasureString(undoText);
-                    sprite_batch.DrawString(smallFont, undoText, new Vector2(currentRectStartPos + rectSize * .5f - undoTextSize.X*.5f, rectangleY + rectSize - undoTextSize.Y*2 - 20), new Color(Color.White, textOpacity));
-                    undoTextSize = smallFont.MeasureString(undoText2);
-                    sprite_batch.DrawString(smallFont, undoText2, new Vector2(currentRectStartPos + rectSize * .5f - undoTextSize.X * .5f, rectangleY + rectSize - undoTextSize.Y - 20), new Color(Color.White, textOpacity));
-                    */
                 }
-                //sprite_batch.DrawString(font, "Player slot " + (i+1) + ": " + playerSlots[i], new Vector2(0, i * selectTextSize.Y), Color.White);
             }
 
             // kontroll-"tutorial"
@@ -568,7 +533,6 @@ namespace Fab5.Starburst.States {
             text = "Press Enter to start game";
             textSize = font.MeasureString(text);
             sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), yPos + heightDiff * .5f), haveEnoughPlayers() ? new Color(Color.Gold, (textOpacity*.8f)+.2f) : Color.Gray);
-            //sprite_batch.DrawString(font, "Number of players: " + playerCount, new Vector2(0, 4 * selectTextSize.Y), Color.White);
 
             sprite_batch.End();
 

@@ -13,15 +13,6 @@ namespace Fab5.Starburst.States.Menus.Subsystems {
         private Texture2D backdrop;
         private Texture2D stardrop;
 
-//        private float elapsedTime;
-//        private float animationTime = 5f; //tid att komma till slut av animation (lika lång tid för att komma tillbaka)
-//        private float halfwayTime;
-
-//        private float posX = 200; // ursprungsposition
-//        private float posY = 200;
-//        private float goalX = 500;
-//        private float goalY = 500;
-
         public Background_Renderer(SpriteBatch sb) {
             sprite_batch = sb;
         }
@@ -53,20 +44,6 @@ namespace Fab5.Starburst.States.Menus.Subsystems {
                               new Vector2(scale, scale),
                               SpriteEffects.None,
                               1.0f);
-
-
-            /*var fac2 = 2.2f;
-            var x1 = x*fac2;
-            var y1 = y*fac2;
-            sprite_batch.Draw(stardrop,
-                              new Vector2(hw - (stardrop.Width * 0.5f) * scale + x1, hh - (stardrop.Height * 0.5f) * scale + y1),
-                              null,
-                              Color.White,
-                              0.0f,
-                              Vector2.Zero,
-                              new Vector2(scale, scale),
-                              SpriteEffects.None,
-                              1.0f);*/
 
             sprite_batch.End();
 

@@ -82,8 +82,6 @@ namespace Fab5.Starburst.States {
                 preloaded = !Starburst.inst().preload_next();
                 elapsedTime -= dt; // wait until loaded
             }
-
-            //System.Threading.Thread.Sleep(1);
         }
 
         public override void draw(float t, float dt) {
@@ -98,11 +96,9 @@ namespace Fab5.Starburst.States {
             Rectangle destRect = new Rectangle((int)(vp.Width * .5 - tex_w * .5), (int)(vp.Height * .5 - tex_h * .5), tex_w, tex_h);
             if (elapsedTime > delay && elapsedTime < outDelay) {
                 sprite_batch.Draw(splash, destRect, new Color(255, 255, 255, quadInOut(delay, 0, 1)));
-                //sprite_batch.DrawString(font, "In: " + quadInOut(delay, 0, 1), new Vector2(20, 20), Color.White);
             }
             else if (elapsedTime >= outDelay){
                 sprite_batch.Draw(splash, destRect, new Color(255, 255, 255, 1-quadInOut(outDelay, 0, 1)));
-                //sprite_batch.DrawString(font, "Out: " + (1-quadInOut(outDelay, 0, 1)), new Vector2(20, 20), Color.White);
             }
 
             if (preloaded || preloading) {

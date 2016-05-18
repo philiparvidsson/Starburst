@@ -28,7 +28,6 @@ namespace Fab5.Starburst.States
 
         private const float BTN_DELAY = .25f;
         float animateInTime = 7.0f;
-        //float startTime = 0;
 
         float elapsedTime;
         float delay = .1f; // tid innan första animation startar
@@ -57,7 +56,6 @@ namespace Fab5.Starburst.States
         int controllerBtnSize;
         int heightDiff;
         int yPos;
-        //private bool started;
 
         private List<Entity> players;
         private Game_Config gameConfig;
@@ -73,7 +71,6 @@ namespace Fab5.Starburst.States
         private int blueGoals;
         private int bestScore;
         private List<Entity> bestPlayers;
-        //private bool autoAnimating = true;
         private int redTeamHeight;
         private int blueTeamHeight;
 
@@ -327,15 +324,7 @@ namespace Fab5.Starburst.States
                     }
                 }
             }
-
-            /*if (scrollable && t < animateInTime)
-                currentOffset = (int)Easing.QuadEaseInOut((t), startY, animDistance, animateInTime);
-            else if (scrollable && t < animateInTime*2)
-                currentOffset = (int)Easing.QuadEaseInOut((t-animateInTime), startY+animDistance, -animDistance, animateInTime);
-            else if (scrollable && t < animateInTime * 3)
-                currentOffset = (int)Easing.QuadEaseInOut((t - animateInTime*2), startY, animDistance, animateInTime);*/
-
-            //GFX_Util.draw_def_text(sprite_batch, "Player", nameX, startY);
+            
             GFX_Util.draw_def_text_small(sprite_batch, killsHeader, killsX, currentOffset);
             GFX_Util.draw_def_text_small(sprite_batch, deathsHeader, deathsX, currentOffset);
             GFX_Util.draw_def_text_small(sprite_batch, scoreHeader, scoreX, currentOffset);
@@ -361,8 +350,6 @@ namespace Fab5.Starburst.States
                     int iconY = (int)(rowY + rowHeight * .5f - iconSizeY * .5f - 3);
                     if (redTeam[i].get_component<Input>() == null)
                     {
-                        //Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/bot");
-                        //sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 90, rowY, 42, 30));
                         GFX_Util.draw_def_text_small(sprite_batch, player_string(redTeam[i]), nameX, rowY);
                     }
                     else
@@ -413,8 +400,6 @@ namespace Fab5.Starburst.States
                     int iconY = (int)(rowY + rowHeight*.5f - iconSizeY*.5f - 3);
                     if (blueTeam[i].get_component<Input>() == null)
                     {
-                        //Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/bot");
-                        //sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 90, rowY, 42, 30));
                         GFX_Util.draw_def_text_small(sprite_batch, player_string(blueTeam[i]), nameX, rowY);
                     }
                     else
@@ -461,8 +446,6 @@ namespace Fab5.Starburst.States
                         continue;
                     if (players[i].get_component<Input>() == null)
                     {
-                        //Texture2D ph_icon = Starburst.inst().get_content<Texture2D>("menu/bot");
-                        //sprite_batch.Draw(ph_icon, destinationRectangle: new Rectangle(nameX - 90, rowY, 42, 30));
                         GFX_Util.draw_def_text_small(sprite_batch, player_string(players[i]), nameX, rowY);
                     }
                     else

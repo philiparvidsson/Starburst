@@ -199,24 +199,6 @@ public abstract class Fab5_Game : Game {
         return (null);
     }
 
-    /*     public List<Entity> get_entities_safe(Type component_type) {
-        if (top_state != null) {
-            return (top_state.get_entities_safe(component_type));
-        }
-
-        return (null);
-    }*/
-
-    /*    public Entity[] get_entities(out int num_entities, params Type[] component_types) {
-        num_entities = 0;
-
-        if (states.Count > 0) {
-            return (states.Peek().get_entities(out num_entities, component_types));
-        }
-
-        return (null);
-    }*/
-
     float time;
     float global_time;
 
@@ -260,8 +242,6 @@ public abstract class Fab5_Game : Game {
     public static Fab5_Game inst() {
         return (s_inst);
     }
-
-    //private Dictionary<string, object> content_dic = new Dictionary<string, object>();
     public T get_content<T>(string asset) {
         var c = Content.Load<T>(asset);
         if (c.GetType() == typeof(Texture2D)) {
