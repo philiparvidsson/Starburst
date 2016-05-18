@@ -73,7 +73,7 @@ namespace Fab5.Starburst.States
         private int blueGoals;
         private int bestScore;
         private List<Entity> bestPlayers;
-        private bool autoAnimating = true;
+        //private bool autoAnimating = true;
         private int redTeamHeight;
         private int blueTeamHeight;
 
