@@ -1,22 +1,22 @@
 namespace Fab5.Starburst.States {
 
-using Fab5.Engine;
-using Fab5.Engine.Components;
-using Fab5.Engine.Core;
-using Fab5.Engine.Subsystems;
+    using Fab5.Engine;
+    using Fab5.Engine.Components;
+    using Fab5.Engine.Core;
+    using Fab5.Engine.Subsystems;
 
-using Fab5.Starburst.States.Playing;
-using Fab5.Starburst.States.Playing.Entities;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
+    using Fab5.Starburst.States.Playing;
+    using Fab5.Starburst.States.Playing.Entities;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
+    using Microsoft.Xna.Framework.Media;
 
-using System.Collections.Generic;
+    using System.Collections.Generic;
 
-using System;
-
-public class Playing_State : Game_State {
+    using System;
+    using static Engine.Components.Input;
+    public class Playing_State : Game_State {
 
     public Entity ball;
 
@@ -251,7 +251,22 @@ public class Playing_State : Game_State {
         create_entity(SoundManager.create_backmusic_component());
         create_entity(SoundManager.create_soundeffects_component());
 
-        for (int i = 0; i < game_conf.num_asteroids; i++) {
+            int keyboardplayers = 0;
+            int n = 0;
+            for (int i = 0; i < inputs.Count; i++)
+            {
+                if (inputs[i] == null)
+                    continue;
+                if (inputs[i].device == InputType.Keyboard)
+                {
+                    keyboardplayers++;
+                    n = i;
+                }
+            }
+            if (keyboardplayers == 1)
+                inputs[n].gp_index = PlayerIndex.One;
+
+            for (int i = 0; i < game_conf.num_asteroids; i++) {
             var asteroid = create_entity(Asteroid.create_components());
             var r = asteroid.get_component<Bounding_Circle>().radius;
 
