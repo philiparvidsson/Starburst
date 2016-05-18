@@ -160,7 +160,7 @@ namespace Fab5.Engine.Subsystems
                     }
                 });
             }
-            else if (msg == "weapon_fired" || msg == "turretsound" || msg=="spawn")
+            else if (msg == "weapon_fired" || msg == "turretsound" || msg=="spawn" || msg=="explosion")
             {
                 var p1 = data.entity1.get_component<Position>();
                 var vol = ShouldBePlayed(p1);
