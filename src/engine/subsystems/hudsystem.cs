@@ -74,6 +74,10 @@
             int x = (int)(cam.viewport.Width * 0.5f - 0.5f*((num_inv-1)*smallSize+size+(num_inv-1)*spacing));
             int y = 65;
 
+            if (Fab5_Game.inst().get_entities_fast(typeof (Input)).Count > 1) {
+                y = 20;
+            }
+
             for (int i = 0; i < num_inv; i++) {
                 int mySize = (i == si.powerup_inv_index ? size : smallSize);
                 int myY = (int)(i == si.powerup_inv_index ? y - (size - smallSize) * .5f : y);
