@@ -189,8 +189,8 @@ public class Playing_State : Game_State {
                     renderer = new Rendering_System(Starburst.inst().GraphicsDevice) {
                         tile_map = tile_map,
                         match_time = game_conf.match_time
-                    },
-                    new Window_Title_Writer()
+                    }
+                    //new Window_Title_Writer()
                )
             )
         );

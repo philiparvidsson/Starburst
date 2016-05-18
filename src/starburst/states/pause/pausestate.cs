@@ -159,7 +159,15 @@ namespace Fab5.Starburst.States {
                 }
             }
         }
+
+        private bool can_leave_state = true;
         private void select() {
+            if (!can_leave_state) {
+                return;
+            }
+
+            can_leave_state = false;
+
             var entities = get_entities_fast(typeof(Input));
             Entity cursor = entities[0];
             Position cursorPosition = cursor.get_component<Position>();
@@ -183,6 +191,6 @@ namespace Fab5.Starburst.States {
             MediaPlayer.Volume = restore_vol;
             Starburst.inst().leave_state();
         }
-        
+
 }
 }
