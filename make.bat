@@ -25,7 +25,7 @@ set OutputDir=%BaseDir%\bin
 set SourcesDir=%BaseDir%\src
 
 :: Output executable name.
-set Exe=Program.exe
+set Exe=cn-starburst.exe
 
 :: Build tool paths.
 set Csc="C:\Program Files (x86)\MSBuild\14.0\Bin\amd64\csc.exe"
@@ -129,3 +129,4 @@ if "%Target%"=="all" (
 ) else (
      echo Unknown target: %Target%
 )
+rcedit "bin/cn-starburst.exe" --set-icon "fabicon.ico"
