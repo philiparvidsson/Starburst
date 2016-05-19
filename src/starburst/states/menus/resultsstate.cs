@@ -26,7 +26,7 @@ namespace Fab5.Starburst.States
         private SpriteFont largeFont;
         SpriteBatch sprite_batch;
 
-        private const float BTN_DELAY = 5.0f;
+        private const float BTN_DELAY = 3.0f;
         float animateInTime = 7.0f;
 
         float elapsedTime;
@@ -370,10 +370,10 @@ namespace Fab5.Starburst.States
                 printScore(redTeam, currentOffset);
                 currentOffset += redTeamHeight + vertSpacing + textOffset+10;
                 printTeamScore("Red team", redScore, redGoals, currentOffset);
-                
+
                 // avstånd mellan rutorna
                 currentOffset += 50;
-                
+
                 // måla ut lagruta inkl lag-header
                 destRect = new Rectangle(iconX - horPadding, currentOffset - vertPadding, totalScoreWidth + horPadding * 2, blueTeamHeight + vertPadding * 2);
                 col = new Color(0.0f, 0.5f, 1.0f, 0.7f);
@@ -437,7 +437,7 @@ namespace Fab5.Starburst.States
                     }
                     winText += " won!";
                 }
-                if (lowRes){                
+                if (lowRes){
                     Vector2 winSize = GFX_Util.measure_string_small(winText);
                     GFX_Util.draw_def_text_small(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY);
                 }
