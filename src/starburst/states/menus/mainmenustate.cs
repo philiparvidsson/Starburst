@@ -460,7 +460,7 @@ namespace Fab5.Starburst.States {
 
             var s ="v" + Starburst.VERSION;
             var ts = GFX_Util.measure_string_small(s);
-            GFX_Util.draw_def_text_small(sprite_batch, s, 10, vp.Height - 10 - ts.Y);
+            GFX_Util.draw_def_text_small(sprite_batch, s, vp.Width - ts.X - 10, vp.Height - 10 - ts.Y);
 
             String logo = "Starburst";
             Vector2 logoSize = largeFont.MeasureString(logo);
