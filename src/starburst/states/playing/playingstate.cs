@@ -153,13 +153,9 @@ namespace Fab5.Starburst.States {
         Player_Ship.lol = 1; // @To-do: lol
 
         MediaPlayer.Volume = game_conf.music_vol;
-//        Starburst.inst().IsMouseVisible = true;        // @To-do: Load map here.
 
         tile_map = new Tile_Map();
         coll_handler = new Collision_Handler(this, tile_map, spawner);
-
-//        game_conf.powerup_spawn_time = 1.0f;
-//        game_conf.num_powerups = 50;
 
         var map_name = System.IO.Path.GetFileNameWithoutExtension(game_conf.map_name);
         var s = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), map_name + ".png");
@@ -190,7 +186,6 @@ namespace Fab5.Starburst.States {
                         tile_map = tile_map,
                         match_time = game_conf.match_time
                     }
-                    //new Window_Title_Writer()
                )
             )
         );
@@ -239,13 +234,6 @@ namespace Fab5.Starburst.States {
                     }
                 });
             }
-
-            /*if (i == 0) {
-                player.get_component<Position>().x = -1800;
-                player.get_component<Position>().y = 1500;
-                player.get_component<Velocity>().x = 55.0f;
-                player.get_component<Velocity>().y = 0.0f;
-            }*/
         }
 
         create_entity(SoundManager.create_backmusic_component());
@@ -322,37 +310,6 @@ namespace Fab5.Starburst.States {
             ball.get_component<Position>().y = ball_pos.y;
             ball.get_component<Angle>().ang_vel = 3.141592f * 2.0f * -2.0f;
         }
-
-        //create_entity(Multifire_Powerup.create_components());
-        //create_entity(Turbo_Powerup.create_components());
-
-
-        /*var shield1 = create_entity(Powerup.create(new Fast_Bombs_Powerup()));
-        shield1.get_component<Position>().x = -1800.0f; shield1.get_component<Position>().y = 1500.0f;
-
-        var multi1 = create_entity(Powerup.create(new Free_Fire_Powerup()));
-        multi1.get_component<Position>().x = -1700.0f; multi1.get_component<Position>().y = 1500.0f;
-
-        var nano1 = create_entity(Powerup.create(new Bouncy_Bullets_Powerup()));
-        nano1.get_component<Position>().x = -1600.0f; multi1.get_component<Position>().y = 1500.0f;*/
-
-        /*var freefire1 = create_entity(Powerup.create(new Free_Fire_Powerup()));
-        freefire1.get_component<Position>().x = -1600.0f; freefire1.get_component<Position>().y = 1500.0f;
-
-        var turbo1 = create_entity(Powerup.create(new Turbo_Powerup()));
-        turbo1.get_component<Position>().x = -1500.0f; turbo1.get_component<Position>().y = 1500.0f;
-
-        var shield2 = create_entity(Powerup.create(new Shield_Powerup()));
-        shield2.get_component<Position>().x = 1800.0f; shield2.get_component<Position>().y = -1500.0f;
-
-        var multi2 = create_entity(Powerup.create(new Multifire_Powerup()));
-        multi2.get_component<Position>().x = 1700.0f; multi2.get_component<Position>().y = -1500.0f;
-
-        var freefire2 = create_entity(Powerup.create(new Free_Fire_Powerup()));
-        freefire2.get_component<Position>().x = 1600.0f; freefire2.get_component<Position>().y = -1500.0f;
-
-        var turbo2 = create_entity(Powerup.create(new Turbo_Powerup()));
-        turbo2.get_component<Position>().x = 1500.0f; turbo2.get_component<Position>().y = -1500.0f;*/
 
         Dummy_Enemy.ai_index = 1;
 
@@ -444,10 +401,6 @@ namespace Fab5.Starburst.States {
                 });
             }
         }
-
-        //var nme = create_entity(Dummy_Enemy.create_components());
-        //nme.get_component<Position>().x = -1800.0f;
-        //nme.get_component<Position>().y = 1800.0f;
 
         Starburst.inst().message("play_sound_asset", new { name = "begin_game" });
 
