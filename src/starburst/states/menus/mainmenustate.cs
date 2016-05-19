@@ -441,7 +441,9 @@ namespace Fab5.Starburst.States {
 
             Starburst.inst().GraphicsDevice.Clear(Color.Black);
             base.draw(t, dt);
+
             Viewport vp = sprite_batch.GraphicsDevice.Viewport;
+
 
             int middleSpacing = 20;
 
@@ -454,6 +456,11 @@ namespace Fab5.Starburst.States {
                 position = new Position();
 
             sprite_batch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+
+
+            var s ="v" + Starburst.VERSION;
+            var ts = GFX_Util.measure_string_small(s);
+            GFX_Util.draw_def_text_small(sprite_batch, s, 10, vp.Height - 10 - ts.Y);
 
             String logo = "Starburst";
             Vector2 logoSize = largeFont.MeasureString(logo);

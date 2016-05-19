@@ -11,6 +11,8 @@ namespace Fab5.Starburst {
 
     // Starburst game implementation.
     public class Starburst : Fab5_Game {
+        public const string VERSION = "1.0";
+
         public Starburst() {
             GraphicsMgr.HardwareModeSwitch = false;
         }

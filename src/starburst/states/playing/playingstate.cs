@@ -461,6 +461,9 @@ namespace Fab5.Starburst.States {
                               if((scoreEntities[i].get_component<Ship_Info>() != null) && (scoreEntities[i].get_component<Velocity>() != null))
                                   players.Add(scoreEntities[i]);
                           }
+
+                          Starburst.inst().message("play_sound_asset", new { name = "begin_game" });
+
                           Starburst.inst().leave_state();
                           Starburst.inst().leave_state();
                           Starburst.inst().enter_state(new Results_State(players, gameState.game_conf));
