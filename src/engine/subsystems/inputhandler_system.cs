@@ -163,7 +163,7 @@
                     GamePadState state = GamePad.GetState(input.gp_index);
                     turn = state.ThumbSticks.Left.X;
                     //turn = Math.Sign((float)Math.Atan2(-state.ThumbSticks.Left.Y, state.ThumbSticks.Left.X) - angle.angle) * 10.0f;;
-                    input.throttle = state.Triggers.Right - state.Triggers.Left;
+                    input.throttle = (float)Math.Pow(state.Triggers.Right, 1.5f) - (float)Math.Pow(state.Triggers.Left, 1.5f);
 
                     if (state.Buttons.A == ButtonState.Pressed) {
                         fire(entity, ship, primaryWeapon);
