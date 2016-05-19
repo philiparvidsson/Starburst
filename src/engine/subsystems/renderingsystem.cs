@@ -840,9 +840,10 @@ namespace Fab5.Engine.Subsystems {
             var str = string.Format("{0:00}:{1:00.00}", min, sec);
 
             var strw = GFX_Util.measure_string("00:00.00").X * 0.75f;
+            var strh = GFX_Util.measure_string("00:00.00").Y;
             var x = Fab5_Game.inst().GraphicsDevice.Viewport.Width * 0.5f - strw*0.5f;
-            var y = 20.0f;
-            GFX_Util.draw_def_text(sprite_batch, str, x, y, new Vector2(0.75f, 0.75f));
+            float y = currentPlayerNumber > 2 ? Fab5_Game.inst().GraphicsDevice.Viewport.Height*.5f : 20.0f;
+            GFX_Util.draw_def_text(sprite_batch, str, x, currentPlayerNumber > 2 ? y - strh * .5f + 3 : y, new Vector2(0.75f, 0.75f));
 
             if (!team_play)
                 return;
@@ -870,9 +871,10 @@ namespace Fab5.Engine.Subsystems {
             else if (team1_score > 9)      strstr="00";
             else strstr= "0";
             var strw2 = GFX_Util.measure_string(strstr).X;
+            var strh2 = GFX_Util.measure_string(strstr).Y;
 
-            GFX_Util.draw_def_text(sprite_batch, ((int)team1_score).ToString(), x-strw2-30, y+5, new Color(1.0f, 0.3f, 0.3f));
-            GFX_Util.draw_def_text(sprite_batch, ((int)team2_score).ToString(), x+strw+30, y+5, new Color(0.3f, 0.3f, 1.0f));
+            GFX_Util.draw_def_text(sprite_batch, ((int)team1_score).ToString(), x-strw2-30, currentPlayerNumber > 2 ? y - strh2 * .5f : y +5, new Color(1.0f, 0.3f, 0.3f));
+            GFX_Util.draw_def_text(sprite_batch, ((int)team2_score).ToString(), x+strw+30, currentPlayerNumber > 2 ? y - strh2 * .5f : y +5, new Color(0.3f, 0.3f, 1.0f));
         }
 
 
