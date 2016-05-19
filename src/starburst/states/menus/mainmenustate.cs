@@ -460,7 +460,7 @@ namespace Fab5.Starburst.States {
 
             var s ="v" + Starburst.VERSION;
             var ts = GFX_Util.measure_string_small(s);
-            GFX_Util.draw_def_text_small(sprite_batch, s, 10, vp.Height - 10 - ts.Y);
+            GFX_Util.draw_def_text_small(sprite_batch, s, vp.Width - ts.X - 10, vp.Height - 10 - ts.Y);
 
             String logo = "Starburst";
             Vector2 logoSize = largeFont.MeasureString(logo);
@@ -501,14 +501,14 @@ namespace Fab5.Starburst.States {
             sprite_batch.DrawString(font, map, new Vector2(vp.Width*.5f - mapTextSize.X*.5f, currentTopY), Color.White);
 
             int mapY = currentTopY+50;
-            sprite_batch.Draw(map0, new Rectangle((int)(vp.Width*.5f - (currentMapSize* .85f + currentMapSize * .15f) * .5f - smallMapSize - 20), (int)(mapY + (largeMapSize - smallMapSize) * .5f), smallMapSize, smallMapSize), Color.White*0.5f);
-            sprite_batch.Draw(map2, new Rectangle((int)(vp.Width*.5f + (currentMapSize*.85f + currentMapSize*.15f) * .5f + 20), (int)(mapY + (largeMapSize-smallMapSize)*.5f), smallMapSize, smallMapSize), Color.White*0.5f);
+            sprite_batch.Draw(map0, new Rectangle((int)(vp.Width*.5f - (currentMapSize* .85f + currentMapSize * .15f) * .5f - smallMapSize - 20), (int)(mapY + (largeMapSize - smallMapSize) * .5f), smallMapSize, smallMapSize), Color.White*0.75f);
+            sprite_batch.Draw(map2, new Rectangle((int)(vp.Width*.5f + (currentMapSize*.85f + currentMapSize*.15f) * .5f + 20), (int)(mapY + (largeMapSize-smallMapSize)*.5f), smallMapSize, smallMapSize), Color.White*0.75f);
             sprite_batch.Draw(map1, new Rectangle((int)(vp.Width*.5f - currentMapSize * .5f), (int)(mapY + (largeMapSize-currentMapSize)*.5f), (int)currentMapSize, (int)currentMapSize), Color.White);
 
             String arrow = "<";
             Vector2 arrowSize = font.MeasureString(arrow);
-            sprite_batch.DrawString(font, "<", new Vector2((int)(vp.Width * .5f - largeMapSize * .5f - smallMapSize - 20 - 20 - arrowSize.X), mapY + largeMapSize*.5f - mapTextSize.Y*.5f), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
-            sprite_batch.DrawString(font, ">", new Vector2((int)(vp.Width * .5f + largeMapSize * .5f + 20 + smallMapSize + 20), mapY + largeMapSize * .5f - mapTextSize.Y * .5f), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, "<", new Vector2((int)(vp.Width * .5f - largeMapSize * .5f - 20 - smallMapSize - 20 - arrowSize.X), mapY + largeMapSize*.5f - arrowSize.Y*.5f), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, ">", new Vector2((int)(vp.Width * .5f + largeMapSize * .5f + 20 + smallMapSize + 20), mapY + largeMapSize * .5f - arrowSize.Y * .5f), (position.y == (int)options.map ? new Color(Color.Gold, textOpacity) : Color.White));
 
             int settingOffset = (int)(vp.Height * .5f + 75);
             String ctfString = "Capture the flag";
