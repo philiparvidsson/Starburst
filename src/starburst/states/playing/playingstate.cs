@@ -1,15 +1,14 @@
 namespace Fab5.Starburst.States {
 
-    using Fab5.Engine;
-    using Fab5.Engine.Components;
-    using Fab5.Engine.Core;
-    using Fab5.Engine.Subsystems;
+    using Engine;
+    using Engine.Components;
+    using Engine.Core;
+    using Engine.Subsystems;
 
-    using Fab5.Starburst.States.Playing;
-    using Fab5.Starburst.States.Playing.Entities;
+    using Playing;
+    using Playing.Entities;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-    using Microsoft.Xna.Framework.Input;
     using Microsoft.Xna.Framework.Media;
 
     using System.Collections.Generic;
@@ -21,7 +20,7 @@ namespace Fab5.Starburst.States {
     public Entity ball;
 
     bool can_pause = false;
-    public static System.Random rand = new System.Random();
+    public static Random rand = new Random();
     private Collision_Handler coll_handler;
     private List<Input> inputs;
     public Spawn_Util spawner;
@@ -29,8 +28,8 @@ namespace Fab5.Starburst.States {
     public Playing_State(List<Input> inputs, Game_Config conf = null) {
         this.inputs = inputs;
 
-        this.game_conf = conf ?? new Game_Config();
-        this.spawner = new Spawn_Util(game_conf);
+        game_conf = conf ?? new Game_Config();
+        spawner = new Spawn_Util(game_conf);
     }
 
     public readonly Game_Config game_conf = new Game_Config();
@@ -433,7 +432,6 @@ namespace Fab5.Starburst.States {
             typeof (Multifire_Powerup),
             typeof (Bouncy_Bullets_Powerup),
             typeof (Fast_Bombs_Powerup)
-            //typeof (Nanobots_Powerup)
         };
 
         var i = rand.Next(0, types.Length);
@@ -478,24 +476,7 @@ namespace Fab5.Starburst.States {
         }
 
         if (!can_pause) {
-                can_pause = true;
-                /*
-            bool no_buttons_pressed = true;
-
-            for (int i = 0; i <= 3; i++) {
-                if (GamePad.GetState((PlayerIndex)i).IsConnected && GamePad.GetState((PlayerIndex)i).Buttons.Start == ButtonState.Pressed) {
-                    no_buttons_pressed = false;
-                    break;
-                }
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.P)) {
-                no_buttons_pressed = false;
-            }
-
-            if (no_buttons_pressed) {
-                can_pause = true;
-            }*/
+            can_pause = true;
         }
     }
 
