@@ -137,10 +137,14 @@ namespace Fab5.Starburst.States
 
         public override void init()
         {
-            Gamepad_Util.vibrate(0, 0.0f, 0.0f);
-            Gamepad_Util.vibrate(1, 0.0f, 0.0f);
-            Gamepad_Util.vibrate(2, 0.0f, 0.0f);
-            Gamepad_Util.vibrate(3, 0.0f, 0.0f);
+            Gamepad_Util.vibrate(0, 0.0f, 0.0f);
+
+            Gamepad_Util.vibrate(1, 0.0f, 0.0f);
+
+            Gamepad_Util.vibrate(2, 0.0f, 0.0f);
+
+            Gamepad_Util.vibrate(3, 0.0f, 0.0f);
+
 
             sprite_batch = new SpriteBatch(Starburst.inst().GraphicsDevice);
 
@@ -399,19 +403,25 @@ namespace Fab5.Starburst.States
                 currentOffset += 100;
                 if (redScore == blueScore) {
                     String tieText = "Match ended in a tie";
-                    Vector2 tieSize = GFX_Util.measure_string_small(tieText);
-                    if(lowRes)
+                    if(lowRes){
+                        Vector2 tieSize = GFX_Util.measure_string_small(tieText);
                         GFX_Util.draw_def_text_small(sprite_batch, tieText, (int)(vp.Width * .5f - tieSize.X * .5f), winnerTextY);
-                    else
+                    }
+                    else{
+                        Vector2 tieSize = GFX_Util.measure_string(tieText);
                         GFX_Util.draw_def_text(sprite_batch, tieText, (int)(vp.Width * .5f - tieSize.X * .5f), winnerTextY);
+                    }
                 }
                 else {
                     String winText = (redScore > blueScore ? "Red" : "Blue") + " team won!";
-                    Vector2 winSize = GFX_Util.measure_string_small(winText);
-                    if(lowRes)
+                    if(lowRes){
+                        Vector2 winSize = GFX_Util.measure_string_small(winText);
                         GFX_Util.draw_def_text_small(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY, (redScore > blueScore ? new Color(1.0f, 0.2f, 0.2f) : new Color(0.0f, 0.5f, 1.0f)));
-                    else
+                    }
+                    else{
+                        Vector2 winSize = GFX_Util.measure_string(winText);
                         GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY, (redScore>blueScore ? new Color(1.0f, 0.2f, 0.2f) : new Color(0.0f, 0.5f, 1.0f)));
+                    }
                 }
             }
             else {
@@ -427,11 +437,14 @@ namespace Fab5.Starburst.States
                     }
                     winText += " won!";
                 }
-                Vector2 winSize = GFX_Util.measure_string_small(winText);
-                if (lowRes)
+                if (lowRes){                
+                    Vector2 winSize = GFX_Util.measure_string_small(winText);
                     GFX_Util.draw_def_text_small(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY);
-                else
+                }
+                else{
+                    Vector2 winSize = GFX_Util.measure_string(winText);
                     GFX_Util.draw_def_text(sprite_batch, winText, (int)(vp.Width * .5f - winSize.X * .5f), winnerTextY);
+                }
 
             }
 
