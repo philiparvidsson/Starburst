@@ -129,4 +129,4 @@ if "%Target%"=="all" (
 ) else (
      echo Unknown target: %Target%
 )
-rcedit "bin/cn-starburst.exe" --set-icon "fabicon.ico"
+::rcedit "bin/cn-starburst.exe" --set-icon "fabicon.ico"
