@@ -30,6 +30,8 @@ namespace Fab5.Starburst.States {
 
         game_conf = conf ?? new Game_Config();
         spawner = new Spawn_Util(game_conf);
+
+        game_conf.match_time = 40.0f;
     }
 
     public readonly Game_Config game_conf = new Game_Config();
@@ -403,6 +405,49 @@ namespace Fab5.Starburst.States {
 
         Starburst.inst().message("play_sound_asset", new { name = "begin_game" });
 
+        for (int i = 1; i <= 10; i++) {
+            int j = i;
+            create_entity(new Component[] {
+                new TTL { max_time = game_conf.match_time-(float)(j),
+                          destroy_cb = () => {
+                            create_entity(new Component[] {
+                                new Post_Render_Hook {
+                                    render_fn = (camera, sprite_batch) => {
+                                        var ts = GFX_Util.measure_string("0...");
+                                        var x = camera.viewport.Width * 0.5f - ts.X * 0.5f;
+                                        var y = camera.viewport.Height - ts.Y - 60.0f;
+                                        GFX_Util.draw_def_text(sprite_batch, string.Format("{0}...", j), x, y);
+                                    }
+                                },
+                                new TTL {
+                                    max_time = 1.0f
+                                }
+                            });
+                          }
+                }
+            });
+        }
+
+        create_entity(new Component[] {
+            new TTL { max_time = game_conf.match_time-30.0f,
+                      destroy_cb = () => {
+                        create_entity(new Component[] {
+                            new Post_Render_Hook {
+                                render_fn = (camera, sprite_batch) => {
+                                    var ts = GFX_Util.measure_string("30 seconds left!");
+                                    var x = camera.viewport.Width * 0.5f - ts.X * 0.5f;
+                                    var y = camera.viewport.Height - ts.Y - 60.0f;
+                                    GFX_Util.draw_def_text(sprite_batch, "30 seconds left!", x, y);
+                                }
+                            },
+                            new TTL {
+                                max_time = 3.0f
+                            }
+                        });
+                      }
+            }
+        });
+
         create_entity(new Component[] {
             new TTL { max_time = game_conf.match_time,
                       destroy_cb = () => {
@@ -418,7 +463,7 @@ namespace Fab5.Starburst.States {
 
                           Starburst.inst().leave_state();
                           Starburst.inst().leave_state();
-                          Starburst.inst().enter_state(new Results_State(players, gameState.game_conf));
+                          Starburst.inst().enter_state(new Pre_Results_State(players, gameState.game_conf));
                       }
             }
         });

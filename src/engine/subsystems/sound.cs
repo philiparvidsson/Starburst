@@ -232,7 +232,7 @@ namespace Fab5.Engine.Subsystems
                                 if(texttureName.Contains("ship")){
                                     Fab5_Game.inst().message("play_sound", new { name = "rockslide_small", pos = p1, volume = vol, entity1 = data.entity1, timedependent = true, });
                                 }
-                                else { 
+                                else {
                                     Fab5_Game.inst().message("play_sound", new { name = "rockslide_small", pos = p1, volume = vol, entity1 = data.entity2, timedependent = true, });
                                 }
                             }
@@ -289,7 +289,7 @@ namespace Fab5.Engine.Subsystems
                             }
                             else
                             {
-                                if ((DateTime.Now - effect.LastPlayed).Seconds > 0.5)
+                                if ((DateTime.Now - effect.LastPlayed).Seconds > 0.1)
                                 {
                                     var active = lib.ActiveSoundIns[data.name + data.gp_index] as ActiveSound;
                                     if (active.SoundEffectIns.State == SoundState.Stopped)
@@ -304,7 +304,7 @@ namespace Fab5.Engine.Subsystems
                         {
                             Entity e1 = null;
                             //if timedependent och nyckeln inte finns.. safe att spela.. och om timedependent och ljudet spelades för mer än 0.2 sec
-                            if (timedependent){ 
+                            if (timedependent){
                                 e1 = data.entity1;
                                 if (!effect.LastPLayedDic.ContainsKey(e1.id) || (DateTime.Now - effect.LastPLayedDic[e1.id]).Seconds > 0.2)
                                     effect.LastPLayedDic[e1.id] = DateTime.Now;
@@ -314,9 +314,9 @@ namespace Fab5.Engine.Subsystems
                             if (varying_pitch)
                                 pitchval = 0.2f * (float)Math.Sign((float)rand.NextDouble() - 0.5f) * (float)Math.Pow(rand.NextDouble(), 3.0f);
                             effect.SoundEffect.Play(volume: (float)data.volume,pan:0,pitch:pitchval);
-                            
+
                         }
-                     
+
                     }
                     else if (music != null)
                     {

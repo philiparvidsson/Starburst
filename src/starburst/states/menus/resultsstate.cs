@@ -26,7 +26,7 @@ namespace Fab5.Starburst.States
         private SpriteFont largeFont;
         SpriteBatch sprite_batch;
 
-        private const float BTN_DELAY = 3.0f;
+        private const float BTN_DELAY = 1.0f;
         float animateInTime = 7.0f;
 
         float elapsedTime;
