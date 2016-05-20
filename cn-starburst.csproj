@@ -205,7 +205,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="make.bat" />
-    <None Include="README.md" />
     <MonoGameContentReference Include="src\starburst\content\content.mgcb" />
     <None Include="src\starburst\content\large.spritefont" />
     <None Include="src\starburst\content\sector034.spritefont" />
