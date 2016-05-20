@@ -31,7 +31,7 @@ namespace Fab5.Starburst.States {
         game_conf = conf ?? new Game_Config();
         spawner = new Spawn_Util(game_conf);
 
-        game_conf.match_time = 40.0f;
+        //game_conf.match_time = 40.0f;
     }
 
     public readonly Game_Config game_conf = new Game_Config();
