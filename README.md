@@ -21,3 +21,4 @@ Starburst is an action-packed 2.5D multiplayer (one to four players) game. It wa
 * Implementera fler powerups
 * Om möjligt: AI för fotbollsspel
 * Möjlighet att välja "dummare" AI
+* Kom på ett bättre namn (fyll på med förslag här):
