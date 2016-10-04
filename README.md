@@ -10,17 +10,3 @@ Starburst is an action-packed 2.5D multiplayer (one to four players) game. It wa
 * Real-time physics
 * Amazing particle effects
 * Several different game modes for endless fun
-
-# TO BE DONE BEFORE PUBLISHING:
-
-* Här fyller vi på med saker som måste göras innan vi publicerar spelet.
-
-* Kontrollera om vi måste byta ut något (ex. grafik)
-* Lägg in quit-alternativ i menyn (går endast avsluta med esc-knappen just nu, inte med gamepad)
-* Finslipa path-finding för AI (den fastnar i väggar ibland)
-* Implementera fler powerups
-* Om möjligt: AI för fotbollsspel
-* Möjlighet att välja "dummare" AI
-* Kom på ett bättre namn (fyll på med förslag här):
-* Gör powerups-grafiken mer tydlig (annan färg?)
-* Fler powerups?
