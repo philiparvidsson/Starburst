@@ -47,7 +47,8 @@ namespace Fab5.Starburst.States {
             powerups,
             redBots,
             blueBots,
-            proceed
+            proceed,
+            exit
         };
         enum Amount {
             off,
@@ -133,6 +134,7 @@ namespace Fab5.Starburst.States {
                     Entity cursor = entities[0];
                     Position cursorPosition = cursor.get_component<Position>();
                     if (cursorPosition.y == (int)options.proceed) proceed();
+                    else if (cursorPosition.y == (int)options.exit) Starburst.inst().Quit();
                     else moveRight();
                 }
                 else if (msg.Equals("start")) {
@@ -150,12 +152,12 @@ namespace Fab5.Starburst.States {
             Position cursorPosition = entity.get_component<Position>();
 
             if (cursorPosition.y == (int)options.powerups)
-                cursorPosition.y = (!maps[currentMapIndex].bots) ? (int)options.proceed : cursorPosition.y + 1;
+                cursorPosition.y = (!maps[currentMapIndex].bots) ? (int)options.exit : cursorPosition.y + 1;
             else if (cursorPosition.y == (int)options.redBots && maps[currentMapIndex].gameMode == Playing.Game_Config.GM_DEATHMATCH)
-                cursorPosition.y = (int)options.proceed;
-            else if (cursorPosition.y < (int)options.proceed)
+                cursorPosition.y = (int)options.exit;
+            else if (cursorPosition.y < (int)options.exit)
                 cursorPosition.y++;
-            else if (cursorPosition.y == (int)options.proceed)
+            else if (cursorPosition.y == (int)options.exit)
                 cursorPosition.y = 0;
             Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
         }
@@ -165,14 +167,14 @@ namespace Fab5.Starburst.States {
             Entity entity = entities[0];
             var position = entity.get_component<Position>();
 
-            if (position.y == (int)options.proceed) {
+            if (position.y == (int)options.exit) {
                 if (maps[currentMapIndex].bots)
                     position.y = (maps[currentMapIndex].gameMode == Playing.Game_Config.GM_DEATHMATCH) ? (int)options.redBots : position.y-1;
                 else
                     position.y = (int)options.powerups;
             }
             else if (position.y == 0)
-                position.y = (int)options.proceed;
+                position.y = (int)options.exit;
             else if (position.y > 0) {
                 position.y--;
                 Starburst.inst().message("play_sound_asset", new { name = "menu_click" });
@@ -581,7 +583,11 @@ namespace Fab5.Starburst.States {
 
             String text = "Continue to player selection";
             Vector2 textSize = font.MeasureString(text);
-            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), yPos + heightDiff * .5f), (position.y == (int)options.proceed ? new Color(Color.Gold, textOpacity) : Color.White));
+            sprite_batch.DrawString(font, text, new Vector2((int)((vp.Width * .5f) - (textSize.X * .5f)), vp.Height - (lowRes ? 50 : 80)), (position.y == (int)options.proceed ? new Color(Color.Gold, textOpacity) : Color.White));
+
+            String exitText = "Exit game";
+            Vector2 exitTextSize = font.MeasureString(exitText);
+            sprite_batch.DrawString(font, exitText, new Vector2((int)((vp.Width * .5f) - (exitTextSize.X * .5f)), vp.Height - (lowRes ? 25 : 40)), (position.y == (int)options.exit ? new Color(Color.Gold, textOpacity) : Color.White));
 
             GFX_Util.fill_rect(sprite_batch, new Rectangle(0, 0, vp.Width, vp.Height), Color.Black * (1.0f-fade));
             sprite_batch.End();
