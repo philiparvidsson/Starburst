@@ -410,13 +410,19 @@ namespace Fab5.Starburst.States {
             create_entity(new Component[] {
                 new TTL { max_time = game_conf.match_time-(float)(j),
                           destroy_cb = () => {
+                            var creation_time = Fab5_Game.inst().get_time();
                             create_entity(new Component[] {
                                 new Post_Render_Hook {
                                     render_fn = (camera, sprite_batch) => {
-                                        var ts = GFX_Util.measure_string("0...");
-                                        var x = camera.viewport.Width * 0.5f - ts.X * 0.5f;
-                                        var y = camera.viewport.Height - ts.Y - 60.0f;
-                                        GFX_Util.draw_def_text(sprite_batch, string.Format("{0}...", j), x, y);
+                                        var ts = GFX_Util.measure_string_extraLarge(string.Format("{0}", j));
+                                        var x = camera.viewport.Width * 0.5f;
+                                        var y = camera.viewport.Height - ts.Y - 200.0f;
+
+                                        var t = Fab5_Game.inst().get_time() - creation_time;
+                                        var textOpacity = (float)Easing.QuadEaseIn(t, 0, 1, 1.0f);
+                                        var temp = ((float)Easing.QuadEaseOut(t, 0, 0.5, 1.0f) * 1.6f);
+                                        var textScale = 1 - temp * temp;
+                                        GFX_Util.draw_def_text_extraLarge(sprite_batch, string.Format("{0}", j), x, y, origin: new Vector2(ts.X * 0.5f, ts.Y * 0.5f), scale: new Vector2(textScale, textScale), alpha: textOpacity, shadow: false);
                                     }
                                 },
                                 new TTL {
@@ -431,13 +437,19 @@ namespace Fab5.Starburst.States {
         create_entity(new Component[] {
             new TTL { max_time = game_conf.match_time-30.0f,
                       destroy_cb = () => {
+                        var creation_time = Fab5_Game.inst().get_time();
                         create_entity(new Component[] {
                             new Post_Render_Hook {
                                 render_fn = (camera, sprite_batch) => {
-                                    var ts = GFX_Util.measure_string("30 seconds left!");
-                                    var x = camera.viewport.Width * 0.5f - ts.X * 0.5f;
+                                    var ts = GFX_Util.measure_string_extraLarge("30 seconds left!");
+                                    var x = camera.viewport.Width * 0.5f;
                                     var y = camera.viewport.Height - ts.Y - 60.0f;
-                                    GFX_Util.draw_def_text(sprite_batch, "30 seconds left!", x, y);
+
+                                    var t = Fab5_Game.inst().get_time() - creation_time;
+                                    var textOpacity = (float)Easing.QuadEaseIn(Math.Min(1, t), 0, 1, 1.0f);
+                                    var temp = ((float)Easing.QuadEaseOut(Math.Min(1, t), 0, 0.5, 1.0f) * 1.6f);
+                                    var textScale = 1 - temp * temp;
+                                    GFX_Util.draw_def_text_extraLarge(sprite_batch, "30 seconds left!", x, y, origin: new Vector2(ts.X * 0.5f, ts.Y * 0.5f), scale: new Vector2(textScale, textScale), alpha: textOpacity, shadow: false);
                                 }
                             },
                             new TTL {

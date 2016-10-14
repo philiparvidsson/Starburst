@@ -839,11 +839,11 @@ namespace Fab5.Engine.Subsystems {
             }
             var str = string.Format("{0:00}:{1:00.00}", min, sec);
 
-            var strw = GFX_Util.measure_string("00:00.00").X * 0.75f;
+            var strw = GFX_Util.measure_string("00:00.00").X;
             var strh = GFX_Util.measure_string("00:00.00").Y;
             var x = Fab5_Game.inst().GraphicsDevice.Viewport.Width * 0.5f - strw*0.5f;
             float y = currentPlayerNumber > 2 ? Fab5_Game.inst().GraphicsDevice.Viewport.Height*.5f : 20.0f;
-            GFX_Util.draw_def_text(sprite_batch, str, x, currentPlayerNumber > 2 ? y - strh * .5f + 3 : y, new Vector2(0.75f, 0.75f));
+            GFX_Util.draw_def_text(sprite_batch, str, x, currentPlayerNumber > 2 ? y - strh * .5f + 3 : y, new Vector2(1.0f, 1.0f));
 
             if (!team_play)
                 return;

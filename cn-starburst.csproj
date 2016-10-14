@@ -206,6 +206,7 @@
   <ItemGroup>
     <None Include="make.bat" />
     <MonoGameContentReference Include="src\starburst\content\content.mgcb" />
+    <None Include="src\starburst\content\countdownFont.spritefont" />
     <None Include="src\starburst\content\large.spritefont" />
     <None Include="src\starburst\content\sector034.spritefont" />
     <None Include="src\starburst\content\small.spritefont" />

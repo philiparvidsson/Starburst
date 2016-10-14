@@ -19,7 +19,12 @@ public static class GFX_Util {
     public static void fill_rect(SpriteBatch sprite_batch, Rectangle rect, Color color) {
         sprite_batch.Draw(white_pixel_tex, rect, color);
     }
+    public static Vector2 measure_string_extraLarge(string text){
 
+        bool lowRes = (viewPort.Height < 800 && viewPort.Width < 1600);
+        var font = Starburst.inst().get_content<SpriteFont>(!lowRes ? "countdownFont" : "large");
+        return font.MeasureString(text);
+    }
     public static Vector2 measure_string(string text) {
 
         bool lowRes = (viewPort.Height < 800 && viewPort.Width < 1600);
@@ -88,6 +93,18 @@ public static class GFX_Util {
             sprite_batch.DrawString(font, text, new Vector2(x-4.0f, y-4.0f), Color.Black*0.75f*alpha, 0.0f, Vector2.Zero, scale, SpriteEffects.None, 0.0f);
         sprite_batch.DrawString(font, text, new Vector2(x, y), Color.White*alpha, 0.0f, Vector2.Zero, scale, SpriteEffects.None, 0.0f);
     }
-}
+    public static void draw_def_text_extraLarge(SpriteBatch sprite_batch, string text, float x, float y, Vector2 scale, Vector2 origin, float alpha = 1.0f, bool shadow = true){
+        if (alpha < 0.0f) alpha = 0.0f;
+        if (alpha > 1.0f) alpha = 1.0f;
+
+        Viewport vp = sprite_batch.GraphicsDevice.Viewport;
+        bool lowRes = (vp.Height < 800 && vp.Width < 1600);
+        var font = Starburst.inst().get_content<SpriteFont>(!lowRes ? "countdownFont" : "large");
+
+        if (shadow)
+            sprite_batch.DrawString(font, text, new Vector2(x - 4.0f, y - 4.0f), Color.Black * 0.75f * alpha, 0.0f, Vector2.Zero, scale, SpriteEffects.None, 0.0f);
+        sprite_batch.DrawString(font, text, new Vector2(x, y), Color.White * alpha, 0.0f, origin, scale, SpriteEffects.None, 0.0f);
+    }
+    }
 
 }

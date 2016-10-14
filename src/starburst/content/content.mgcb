@@ -835,3 +835,9 @@
 /processorParam:Quality=Best
 /build:sound/effects/song_victory.wav
 
+#begin countdownFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:countdownFont.spritefont
+
