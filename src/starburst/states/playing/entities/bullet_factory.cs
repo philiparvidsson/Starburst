@@ -235,7 +235,24 @@
                 new Light_Source { color = new Color(0.9f, 0.7f, 1.0f), size = 0.75f, intensity = 0.6f }
             };
         }
+        public static void fire_burst_powerup(Entity origin, Weapon weapon)
+        {
+            
+            var a = origin.get_component<Angle>();
 
+            var rand = new Random();
+
+            for(int i = 0; i < 100; i++)
+            {
+                Fab5_Game.inst().create_entity(weapon1(origin, weapon, new Angle { angle = a.angle - (360.0f * (float)rand.NextDouble()) * 3.141592f / 180.0f, ang_vel = a.ang_vel}));
+            }
+
+            var theta = 2.0f * 3.141592f * (float)rand.NextDouble();
+            var force = 16.0f;
+            var dx = (float)Math.Cos(theta) * force;
+            var dy = (float)Math.Sin(theta) * force;
+            Fab5_Game.inst().message("shake_camera", new { player = origin, disp_x = dx, disp_y = dy });
+        }
         public static void fire_weapon(Entity origin, Weapon weapon) {
             if (weapon.GetType() == typeof (Secondary_Weapon)) {
                 Fab5_Game.inst().create_entity(weapon2(origin, weapon));

@@ -488,7 +488,9 @@ namespace Fab5.Starburst.States {
             typeof (Shield_Powerup),
             typeof (Multifire_Powerup),
             typeof (Bouncy_Bullets_Powerup),
-            typeof (Fast_Bombs_Powerup)
+            typeof (Fast_Bombs_Powerup),
+            typeof (Mass_Powerup),
+            typeof (Burst_Powerup)
         };
 
         var i = rand.Next(0, types.Length);

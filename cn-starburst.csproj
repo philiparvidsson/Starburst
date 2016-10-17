@@ -114,8 +114,10 @@
     <Compile Include="src\starburst\states\playing\entities\mapobjects\redturret.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\boostpowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\bouncybulletspowerup.cs" />
+    <Compile Include="src\starburst\states\playing\entities\powerups\burstpowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\fastbombspowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\freefirepowerup.cs" />
+    <Compile Include="src\starburst\states\playing\entities\powerups\moremasspowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\multifirepowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\nanobotspowerup.cs" />
     <Compile Include="src\starburst\states\playing\entities\powerups\shieldpowerup.cs" />
