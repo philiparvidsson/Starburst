@@ -1,6 +1,22 @@
-# Starburst
+# What is Starburst?
 
-Starburst is an action-packed 2.5D multiplayer (one to four players) game. It was developed as a school assignment over the course of four weeks, by five students. Everything is written from the ground up; physics, rendering, sound, particles are all developed as part of this project and no third party libraries were used (except XNA/MonoGame since it was a requirement for the assignment!).
+**Starburst** is an action-packed 2.5D party game. It features local split-screen multiplayer for up to four players, advanced physics with great-looking particle effects, 3D aspects with amazing lighting as well as challenging AI players!
+
+### -> [Download now!](http://github.com/) <-
+
+## About the Game
+
+The game was developed as a school assignment over the course of four weeks, by five comp.sci. students. Everything is written from the ground up; physics, rendering, sound, particles are all developed as part of this project and no third party software components were used.
+
+Using XNA was part of the assignment, although we did not utilize it further than as a wrapper for rendering. All game mechanics were implemented in C# by the development team.
+
+### Prerequisites
+
+* Windows 7 (or newer)
+
+### Installation
+
+n/a
 
 ## Gameplay Trailer
 
@@ -11,4 +27,6 @@ Starburst is an action-packed 2.5D multiplayer (one to four players) game. It wa
 * Local multiplayer with up to four players
 * Real-time physics
 * Amazing particle effects
+* Lighting effects
 * Several different game modes for endless fun
+* Challenging AI
