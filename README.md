@@ -30,3 +30,11 @@ n/a
 * Lighting effects
 * Several different game modes for endless fun
 * Challenging AI
+
+## Developers
+
+* **Philip Arvidsson** - *Core engine and physics* - [philiparvidsson](https://github.com/philiparvidsson)
+* **Martin Bergqvist** - *Core engine* - [Tkocz](https.//github.com/Tkocz)
+* **Christoffer Olsson** - *Design and UI* - [crippa9](https://github.com/crippa9)
+* **Tobias Öhrström** - *Audio system/design* - [tobohr](https://github.com/tobohr)
+* **Tobias Ånhed** - *Level design and gameplay mechanics* - [tobiasanhed](https://github.com/tobiasanhed)
