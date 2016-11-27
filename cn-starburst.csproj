@@ -206,7 +206,6 @@
     <Content Include="src\starburst\content\wbeam.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="make.bat" />
     <MonoGameContentReference Include="src\starburst\content\content.mgcb" />
     <None Include="src\starburst\content\countdownFont.spritefont" />
     <None Include="src\starburst\content\large.spritefont" />

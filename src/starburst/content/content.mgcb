@@ -187,17 +187,17 @@
 /processorParam:TextureFormat=Color
 /build:ships/ship14.png
 
-#begin sound/BoxCat_Games_-_03_-_Battle_Special.mp3
+#begin sound/music/BoxCat_Games_-_03_-_Battle_Special.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:sound/BoxCat_Games_-_03_-_Battle_Special.mp3
+/build:sound/music/BoxCat_Games_-_03_-_Battle_Special.mp3
 
-#begin sound/BoxCat_Games_-_10_-_Epic_Song.mp3
+#begin sound/music/BoxCat_Games_-_10_-_Epic_Song.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:sound/BoxCat_Games_-_10_-_Epic_Song.mp3
+/build:sound/music/BoxCat_Games_-_10_-_Epic_Song.mp3
 
 #begin menu/Xbox_A_white.png
 /importer:TextureImporter
@@ -553,11 +553,11 @@
 /processorParam:Quality=Best
 /build:sound/effects/menu_positive.wav
 
-#begin sound/BoxCat_Games_-_25_-_Victory.mp3
+#begin sound/music/BoxCat_Games_-_25_-_Victory.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:sound/BoxCat_Games_-_25_-_Victory.mp3
+/build:sound/music/BoxCat_Games_-_25_-_Victory.mp3
 
 #begin backdrops/backdrop4.jpg
 /importer:TextureImporter
@@ -864,4 +864,3 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:powerups/burst.png
-
