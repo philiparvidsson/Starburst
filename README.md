@@ -15,6 +15,13 @@ Using XNA was part of the assignment, although we did not utilize it further tha
 * Windows 7 (or newer)
 * DirectX 11.0
 
+### Building from Sources
+
+1. Clone this repository.
+2. Chdir into the Starburst directory.
+3. Type `python make.py`.
+4. Run Starburst.exe in the bin directory.
+
 ### Installation
 
 n/a
