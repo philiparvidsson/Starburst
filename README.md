@@ -15,7 +15,7 @@ Using XNA was part of the assignment, although we did not utilize it further tha
 * Windows 7 (or newer)
 * DirectX 11.0
 
-### Building from Sources
+### Building from Source Code
 
 1. Clone this repository.
 2. Chdir into the Starburst directory.
