@@ -25,7 +25,7 @@ Using XNA was part of the assignment, although we did not utilize it further tha
 
 Or, copy this and run it to download, build and run the game:
 
-`git clone https://github.com/philiparvidsson/Starburst.git && cd Starburst && make all run`
+`git clone https://github.com/philiparvidsson/Starburst.git && cd Starburst && python make.py all run`
 
 ### Installing the Game
 
