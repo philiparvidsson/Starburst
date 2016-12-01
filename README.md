@@ -14,17 +14,22 @@ Using XNA was part of the assignment, although we did not utilize it further tha
 
 * Windows 7 (or newer)
 * DirectX 11.0
+* Python 2.7 (for building the game from sources)
 
 ### Building from Source Code
 
-1. Clone this repository.
+1. Clone this repository by typing `git clone https://github.com/philiparvidsson/Starburst.git`.
 2. Chdir into the Starburst directory.
 3. Type `python make.py`.
 4. Run Starburst.exe in the bin directory.
 
-### Installation
+Or, copy this and run it to download, build and run the game:
 
-n/a
+`git clone https://github.com/philiparvidsson/Starburst.git && cd Starburst && make all run`
+
+### Installing the Game
+
+*not yet available - build the game from source code instead*
 
 ## Gameplay Trailer
 
