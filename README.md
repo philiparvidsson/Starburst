@@ -42,7 +42,7 @@ Or, copy this and run it to download, build and run the game:
 * Amazing particle effects
 * Lighting effects
 * Several different game modes for endless fun
-* Challenging AI
+* Challenging AI (yes, it seriously is challenging...)
 * Massive battles with up to 24 players (including AI players)
 
 ## Development Team
