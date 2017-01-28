@@ -43,6 +43,7 @@ Or, copy this and run it to download, build and run the game:
 * Lighting effects
 * Several different game modes for endless fun
 * Challenging AI
+* Massive battles with up to 24 players (including AI players)
 
 ## Development Team
 
