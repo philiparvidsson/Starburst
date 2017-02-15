@@ -1,6 +1,6 @@
 # What is Starburst? <img align="right" src="assets/images/fab5-logo.png" />
 
-**Starburst** is an action-packed 2.5D party game. It features local split-screen multiplayer for up to four players, advanced physics with great-looking particle effects, 3D aspects with amazing lighting as well as challenging AI players!
+**Starburst** is an action-packed 2.5D party game. It features local split-screen multiplayer for up to four players, advanced physics with great-looking particle effects, 3D effects with amazing lighting as well as challenging AI players!
 
 ### -> [Download now!](http://github.com/philiparvidsson/Starburst/releases/) <-
 
