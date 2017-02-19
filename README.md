@@ -29,7 +29,7 @@ Or, copy this and run it to download, build and run the game:
 
 `git clone https://github.com/philiparvidsson/Starburst-Game.git && cd Starburst-Game && python make.py all run`
 
-<sub>**NOTE: You must install the Sector 034 font (found in the assets directory) before building the game!**</sub>
+<sub>**NOTE: You must install the [Sector 034](http://www.dafont.com/sector-034.font) font (found in the assets directory) before building the game!**</sub>
 
 ### Installing the Game
 
