@@ -20,7 +20,7 @@ Using XNA was part of the assignment, although we did not utilize it further tha
 
 Requires: [git](https://git-scm.com/downloads), [Python 2.7](https://www.python.org/downloads/release/python-2712/)
 
-1. Clone this repository by typing `git clone https://github.com/philiparvidsson/Starburst.git` in your terminal.
+1. Clone this repository by typing `git clone https://github.com/philiparvidsson/Starburst-Game.git` in your terminal.
 2. Chdir into the Starburst directory.
 3. Type `python make.py`.
 4. Run Starburst.exe in the bin directory.
