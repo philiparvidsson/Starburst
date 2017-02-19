@@ -31,7 +31,7 @@ Or, copy this and run it to download, build and run the game:
 
 ### Installing the Game
 
-*not yet available - build the game from source code instead*
+*n/a - see above; build the game from source*
 
 ## Gameplay Trailer
 
